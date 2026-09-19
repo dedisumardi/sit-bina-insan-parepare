@@ -660,7 +660,7 @@
       document.getElementById('editor-modal-title').textContent = 'Tulis Berita / Artikel Baru';
       editorForm.reset();
       document.getElementById('article-date').value = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-      document.getElementById('article-image').value = 'assets/images/hero_school.jpg';
+      document.getElementById('article-image').value = '/assets/images/hero_school.jpg?v=2';
       articleModal.classList.add('open');
     });
 

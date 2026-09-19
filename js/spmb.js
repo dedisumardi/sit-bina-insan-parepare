@@ -281,7 +281,7 @@
         <!-- Ticket Header -->
         <div class="ticket-header">
           <div class="ticket-brand">
-            <img src="assets/icons/logo.svg" alt="Logo SIT Bina Insan" class="ticket-logo" style="background:#fff; border-radius:8px; padding:4px;">
+            <img src="/assets/icons/logo.svg?v=2" alt="Logo SIT Bina Insan" class="ticket-logo" style="background:#fff; border-radius:8px; padding:4px;">
             <div>
               <div class="ticket-header-title">KARTU TANDA PESERTA SPMB</div>
               <div class="ticket-header-sub">SEKOLAH ISLAM TERPADU BINA INSAN PAREPARE • TP 2025/2026</div>

@@ -533,7 +533,7 @@ ul, ol {
 .hero-bg-overlay {
   position: absolute;
   inset: 0;
-  background-image: url('../assets/images/hero_school.jpg');
+  background-image: url('../assets/images/hero_school.jpg?v=2');
   background-size: cover;
   background-position: center;
   opacity: 0.22;

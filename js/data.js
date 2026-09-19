@@ -37,7 +37,7 @@ const SchoolData = {
       badge: "PAUD & Usia Dini (4 - 6 Tahun)",
       name: "TKIT Bina Insan Parepare",
       fullName: "Taman Kanak-kanak Islam Terpadu Bina Insan",
-      heroImage: "assets/images/tkit_activity.jpg",
+      heroImage: "/assets/images/tkit_activity.jpg?v=2",
       accentColor: "#10b981",
       tagline: "Tumbuh Ceria, Berakhlak Mulia, Cinta Al-Qur'an Sejak Dini",
       description: "TKIT Bina Insan Parepare menyelenggarakan pendidikan anak usia dini berbasis fitrah dengan pendekatan Beyond Centers and Circle Time (BCCT) / Pembelajaran Sentra yang menyenangkan, mengasah motorik, menanamkan nilai-nilai tauhid, serta kecintaan membaca dan menghafal Al-Qur'an sejak usia emas.",
@@ -77,7 +77,7 @@ const SchoolData = {
       badge: "Pendidikan Dasar (Kelas 1 - 6)",
       name: "SDIT Bina Insan Parepare",
       fullName: "Sekolah Dasar Islam Terpadu Bina Insan",
-      heroImage: "assets/images/sdit_recitation.jpg",
+      heroImage: "/assets/images/sdit_recitation.jpg?v=2",
       accentColor: "#059669",
       tagline: "Melejitkan Potensi Akademik dan Karakter Qur'ani Generasi Robbani",
       description: "SDIT Bina Insan Parepare mengintegrasikan Kurikulum Nasional (Kurikulum Merdeka) dengan Kurikulum Kekhasan Jaringan Sekolah Islam Terpadu (JSIT). Fokus kami membimbing peserta didik menguasai ilmu pengetahuan, teknologi, sains, literasi, hafalan Al-Qur'an 3 hingga 5 Juz, serta kepribadian islami yang tangguh.",
@@ -101,15 +101,16 @@ const SchoolData = {
         }
       ],
       facilities: [
-        "Ruang Kelas Multimedia Proyektor",
-        "Masjid Sekolah Representatif",
-        "Laboratorium Sains & Komputer",
-        "Perpustakaan Ramah Anak & E-Library",
-        "Lapangan Futsal, Basket & Area Panahan",
-        "Kantin Bersih & Sehat Terstandar BPOM"
+        "Ruang Kelas Ber-AC & Multimedia Interaktif",
+        "Masjid & Musholla Sekolah Terpadu",
+        "Laboratorium Sains & Komputer Siswa",
+        "Perpustakaan Tematik JSIT & Pojok Literasi",
+        "Lapangan Olahraga Futsal & Basket Mini",
+        "Kantin Sehat Halalan Thayyiban",
+        "Klinik UKS & Konseling Karakter Siswa"
       ],
       spmbFee: "Rp 250.000",
-      ageRequirement: "Usia minimal 6 tahun (atau rekomendasi psikolog jika 5 tahun 8 bulan) per 1 Juli 2025"
+      ageRequirement: "Usia minimal 6 tahun pada 1 Juli 2025"
     },
 
     smpit: {
@@ -117,7 +118,7 @@ const SchoolData = {
       badge: "Menengah Pertama (Kelas 7 - 9)",
       name: "SMPIT Bina Insan Parepare",
       fullName: "Sekolah Menengah Pertama Islam Terpadu Bina Insan",
-      heroImage: "assets/images/smpit_students.jpg",
+      heroImage: "/assets/images/smpit_students.jpg?v=2",
       accentColor: "#047857",
       tagline: "Mencetak Calon Pemimpin Peradaban Berwawasan Global dan Berjiwa Da'i",
       description: "SMPIT Bina Insan Parepare menyediakan sistem Full Day School dan opsi Boarding (Pesantren Tahfizh). Mempersiapkan remaja muslim menghadapi era global melalui penguasaan sains mutakhir, robotik, dwibahasa (Arab & Inggris), tahfizh Al-Qur'an mutqin, serta pembentukan karakter mandiri dan berdaya saing tinggi.",
@@ -162,7 +163,7 @@ const SchoolData = {
       date: "10 Januari 2025",
       author: "Humas & Panitia SPMB",
       readTime: "3 menit baca",
-      image: "assets/images/hero_school.jpg",
+      image: "/assets/images/hero_school.jpg?v=2",
       excerpt: "Pendaftaran peserta didik baru jenjang TKIT, SDIT, dan SMPIT Bina Insan Parepare telah dibuka. Dapatkan penawaran Infaq Pembangunan Gelombang 1 serta beasiswa tahfizh.",
       content: `
         <p>Alhamdulillah, seiring komitmen kami mencetak generasi Qur'ani berakhlak mulia di Kota Parepare dan sekitarnya, Panitia Sistem Penerimaan Murid Baru (SPMB) SIT Bina Insan Parepare secara resmi mengumumkan pembukaan pendaftaran santri/peserta didik baru untuk Tahun Pelajaran 2025/2026.</p>
@@ -189,7 +190,7 @@ const SchoolData = {
       date: "18 Desember 2024",
       author: "Tim Kesiswaan",
       readTime: "4 menit baca",
-      image: "assets/images/smpit_students.jpg",
+      image: "/assets/images/smpit_students.jpg?v=2",
       excerpt: "Prestasi membanggakan kembali dipersembahkan oleh ananda santri SMPIT Bina Insan Parepare dalam ajang Olimpiade Sains dan Teknologi JSIT Sulsel 2024.",
       content: `
         <p>Prestasi gemilang ditorehkan oleh kontingen santri SMPIT Bina Insan Parepare pada perhelatan akbar Festival & Olimpiade Pelajar Islam se-Sulawesi Selatan yang diselenggarakan di Makassar pekan lalu.</p>
@@ -210,7 +211,7 @@ const SchoolData = {
       date: "05 Desember 2024",
       author: "Koordinator Al-Qur'an",
       readTime: "3 menit baca",
-      image: "assets/images/sdit_recitation.jpg",
+      image: "/assets/images/sdit_recitation.jpg?v=2",
       excerpt: "Suasana haru dan penuh keberkahan mewarnai Gedung Islamic Centre Parepare saat 85 santri SIT Bina Insan memasangkan mahkota kemuliaan kepada kedua orang tuanya.",
       content: `
         <p>Gedung pertemuan di Kota Parepare dipenuhi isak tangis haru bahagia para orang tua saat prosesi penyerahan mahkota simbolis dari santri wisudawan tahfizh kepada ayah dan bunda tercinta pada acara <em>Wisuda Tahfizh Akbar SIT Bina Insan 2024</em>.</p>
@@ -228,7 +229,7 @@ const SchoolData = {
       date: "22 November 2024",
       author: "Dr. Ahmad Fauzi, S.Ag., M.Ed.",
       readTime: "5 menit baca",
-      image: "assets/images/principal.jpg",
+      image: "/assets/images/principal.jpg?v=2",
       excerpt: "Tantangan mendidik anak saat ini bukan lagi sekadar memberi ilmu, melainkan membentengi hati anak dengan iman dan adab agar bijak menyikapi teknologi.",
       content: `
         <p>Perkembangan teknologi kecerdasan buatan, media sosial, dan gawai pintar menghadirkan pedang bermata dua bagi tumbuh kembang anak-anak kita. Jika tidak dilandasi pondasi adab yang kokoh, keterbukaan informasi ini dapat mengikis nilai-nilai luhur dan empati generasi muda.</p>
@@ -247,7 +248,7 @@ const SchoolData = {
       date: "14 November 2024",
       author: "Humas TKIT",
       readTime: "3 menit baca",
-      image: "assets/images/tkit_activity.jpg",
+      image: "/assets/images/tkit_activity.jpg?v=2",
       excerpt: "Penuh keceriaan, murid-murid cilik TKIT belajar bertransaksi jual beli makanan sehat dan prakarya buatan sendiri dengan uang kupon edukatif.",
       content: `
         <p>Halaman TKIT Bina Insan Parepare disulap menjadi pasar cilik tematik dalam kegiatan tahunan <em>Market Day Kids 2024</em>. Para ananda yang terbagi dalam stan-stan kecil menjajakan aneka kue sehat buatan bersama bunda serta hasil karya kreasi seni tangan.</p>
@@ -261,19 +262,19 @@ const SchoolData = {
     {
       name: "dr. H. Hendra Saputra, Sp.A",
       role: "Orang Tua Siswa SDIT & SMPIT Bina Insan",
-      photo: "assets/images/principal.jpg",
+      photo: "/assets/images/principal.jpg?v=2",
       quote: "Mempercayakan pendidikan anak-anak kami di SIT Bina Insan Parepare adalah keputusan terbaik keluarga kami. Pembiasaan shalat berjamaah dan hafalan Qur'annya luar biasa, anak-anak pulang ke rumah dengan adab yang sangat santun dan mandiri."
     },
     {
       name: "Hj. Nurhaedah, S.Pd., M.Si",
       role: "Orang Tua Siswa TKIT Bina Insan",
-      photo: "assets/images/tkit_activity.jpg",
+      photo: "/assets/images/tkit_activity.jpg?v=2",
       quote: "Anak saya di TKIT dulu pemalu sekali. Setelah 6 bulan di SIT Bina Insan dengan metode sentra bermainnya, sekarang sangat ceria, hafal puluhan doa harian, dan lancar membaca Iqro. Gurunya sabar dan penuh kasih sayang."
     },
     {
       name: "Ir. M. Ridwan Hakim, M.T",
       role: "Alumni Wali Murid & Dosen",
-      photo: "assets/images/smpit_students.jpg",
+      photo: "/assets/images/smpit_students.jpg?v=2",
       quote: "Lulusan SMPIT Bina Insan memiliki bekal akademik sains yang kuat sekaligus kepribadian islami yang tangguh. Anak sulung saya kini lulus seleksi di SMA Unggulan Nasional tanpa kesulitan."
     }
   ],

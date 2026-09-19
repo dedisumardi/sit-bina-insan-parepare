@@ -391,6 +391,21 @@
   }
 
   // =========================================================================
+  // Image Error Recovery & Cache Buster Fallback
+  // =========================================================================
+  window.addEventListener('error', function (e) {
+    if (e.target && e.target.tagName === 'IMG') {
+      const img = e.target;
+      if (!img.dataset.retry) {
+        img.dataset.retry = '1';
+        const cleanSrc = img.src.split('?')[0];
+        // Retry with fresh timestamp to bypass any stale 404 cache
+        img.src = cleanSrc + '?t=' + Date.now();
+      }
+    }
+  }, true);
+
+  // =========================================================================
   // App Initialization
   // =========================================================================
   function init() {
