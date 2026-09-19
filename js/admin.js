@@ -355,15 +355,29 @@
     }
 
     recentWrap.innerHTML = recent.map(item => `
-      <tr>
-        <td><strong>${item.regNumber}</strong></td>
-        <td><strong>${escapeHtml(item.namaSiswa)}</strong></td>
-        <td><span class="badge-tag">${item.jenjang.toUpperCase()}</span></td>
-        <td>${item.tanggalDaftar}</td>
-        <td>${renderStatusBadge(item.status)}</td>
-        <td>
-          <button type="button" class="btn-icon btn-icon-view" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Lihat Detail & Verifikasi">
-            ${ICONS.eye}
+      <tr class="hover:bg-slate-50/80 transition duration-150">
+        <td class="py-4 px-6 whitespace-nowrap font-mono text-xs font-semibold text-slate-700">
+          ${item.regNumber}
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap">
+          <div class="font-bold text-slate-900">${escapeHtml(item.namaSiswa)}</div>
+          <span class="text-xs text-slate-400">Jalur ${escapeHtml(item.jalur ? item.jalur.toUpperCase() : 'Reguler')}</span>
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap">
+          ${renderJenjangBadge(item.jenjang)}
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap text-xs text-slate-600">
+          <span class="font-medium text-slate-800">${item.tanggalDaftar}</span>
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap">
+          ${renderStatusBadge(item.status)}
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap text-center">
+          <button class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 border border-transparent hover:border-emerald-200 transition-colors" title="Lihat Detail Pendaftar" type="button" onclick="window.viewApplicantDetail('${item.regNumber}')">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
           </button>
         </td>
       </tr>
@@ -412,35 +426,41 @@
     }
 
     tableBody.innerHTML = filtered.map(item => `
-      <tr>
-        <td><strong style="color:var(--adm-primary);">${item.regNumber}</strong></td>
-        <td>
-          <strong>${escapeHtml(item.namaSiswa)}</strong>
-          <div style="font-size:0.78rem; color:#64748b;">NIK: ${item.nik}</div>
+      <tr class="hover:bg-slate-50/80 transition duration-150">
+        <td class="py-4 px-6 whitespace-nowrap font-mono text-xs font-bold text-emerald-700">
+          ${item.regNumber}
         </td>
-        <td>
-          <span class="badge-tag">${item.jenjang.toUpperCase()}</span>
-          <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">${item.jalur.toUpperCase()}</div>
+        <td class="py-4 px-6 whitespace-nowrap">
+          <div class="font-bold text-slate-900">${escapeHtml(item.namaSiswa)}</div>
+          <span class="text-xs text-slate-400 font-mono">NIK: ${item.nik}</span>
         </td>
-        <td>
-          <div>${escapeHtml(item.namaAyah || '-')}</div>
-          <a href="https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent('Assalamu\'alaikum Bapak/Ibu wali dari ' + item.namaSiswa + ', kami dari Panitia SPMB SIT Bina Insan Parepare ingin mengonfirmasi pendaftaran ' + item.regNumber + '.')}" target="_blank" rel="noopener" class="adm-wa-link" title="Kirim WhatsApp ke Orang Tua">
-            ${ICONS.whatsapp}
+        <td class="py-4 px-6 whitespace-nowrap">
+          ${renderJenjangBadge(item.jenjang)}
+          <span class="text-[11px] text-slate-400 block mt-1 uppercase font-medium tracking-wider">${item.jalur ? item.jalur.toUpperCase() : 'REGULER'}</span>
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap">
+          <div class="font-medium text-slate-800 text-xs">${escapeHtml(item.namaAyah || '-')}</div>
+          <a href="https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent('Assalamu\'alaikum Bapak/Ibu wali dari ' + item.namaSiswa + ', kami dari Panitia SPMB SIT Bina Insan Parepare ingin mengonfirmasi pendaftaran ' + item.regNumber + '.')}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 mt-1" title="Kirim WhatsApp ke Orang Tua">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.573 1.761.854 2.806.854 3.18 0 5.767-2.587 5.768-5.766.001-3.182-2.585-5.769-5.768-5.769zm10.024 5.828c0 5.549-4.512 10.063-10.063 10.063-1.745 0-3.385-.45-4.821-1.242l-5.171 1.357 1.381-5.042c-.878-1.488-1.389-3.23-1.389-5.136 0-5.551 4.514-10.063 10.063-10.063 5.551 0 10.063 4.512 10.063 10.063z"/></svg>
             <span>${item.waAyah}</span>
           </a>
         </td>
-        <td><span style="font-size:0.825rem; color:#475569;">${item.tanggalDaftar}</span></td>
-        <td>${renderStatusBadge(item.status)}</td>
-        <td>
-          <div class="action-btn-group">
-            <button type="button" class="btn-icon btn-icon-edit" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail & Verifikasi Berkas">
-              ${ICONS.pencil}
+        <td class="py-4 px-6 whitespace-nowrap text-xs text-slate-600">
+          <span class="font-medium text-slate-800">${item.tanggalDaftar}</span>
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap">
+          ${renderStatusBadge(item.status)}
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap text-center">
+          <div class="flex items-center justify-center gap-1.5">
+            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 border border-transparent hover:border-emerald-200 transition-colors" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail & Verifikasi Berkas">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
             </button>
-            <button type="button" class="btn-icon btn-icon-print" onclick="window.printApplicantCard('${item.regNumber}')" title="Cetak Kartu Tanda Peserta">
-              ${ICONS.printer}
+            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-700 hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-colors" onclick="window.printApplicantCard('${item.regNumber}')" title="Cetak Kartu Tanda Peserta">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24-1.047-.37-2.14-.37-3.26 0-5.523 4.477-10 10-10 1.12 0 2.213.13 3.26.37m-3.26 19.63c-1.047.24-2.14.37-3.26.37-5.523 0-10-4.477-10-10 0-1.12.13-2.213.37-3.26M6.75 6.75h10.5a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25H6.75a2.25 2.25 0 01-2.25-2.25v-7.5a2.25 2.25 0 012.25-2.25z" /></svg>
             </button>
-            <button type="button" class="btn-icon btn-icon-danger" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus Data Siswa">
-              ${ICONS.trash}
+            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus Data Siswa">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
             </button>
           </div>
         </td>
@@ -631,24 +651,30 @@
     }
 
     tableBody.innerHTML = articleList.map(item => `
-      <tr>
-        <td style="width: 70px;">
-          <img src="${item.image}" alt="" style="width: 54px; height: 38px; object-fit: cover; border-radius: 6px;">
+      <tr class="hover:bg-slate-50/80 transition duration-150">
+        <td class="py-4 px-6 whitespace-nowrap">
+          <img src="${item.image}" alt="" class="w-14 h-10 object-cover rounded-lg border border-slate-200 shadow-sm">
         </td>
-        <td>
-          <strong style="color:#0f172a;">${escapeHtml(item.title)}</strong>
-          <div style="font-size:0.8rem; color:#64748b;">${escapeHtml((item.excerpt || '').slice(0, 75))}...</div>
+        <td class="py-4 px-6">
+          <div class="font-bold text-slate-900 text-sm">${escapeHtml(item.title)}</div>
+          <div class="text-xs text-slate-400 line-clamp-1 mt-0.5">${escapeHtml((item.excerpt || '').slice(0, 75))}...</div>
         </td>
-        <td><span class="badge-tag">${item.category}</span></td>
-        <td><span style="font-size:0.85rem; color:#475569;">${item.date}</span></td>
-        <td><span style="font-size:0.85rem; color:#475569;">${escapeHtml(item.author)}</span></td>
-        <td>
-          <div class="action-btn-group">
-            <button type="button" class="btn-icon btn-icon-edit" onclick="window.editArticle(${item.id})" title="Sunting Berita">
-              ${ICONS.pencil}
+        <td class="py-4 px-6 whitespace-nowrap">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">${item.category}</span>
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap text-xs text-slate-600">
+          <span class="font-medium text-slate-800">${item.date}</span>
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap text-xs text-slate-600">
+          ${escapeHtml(item.author)}
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap text-center">
+          <div class="flex items-center justify-center gap-1.5">
+            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 border border-transparent hover:border-emerald-200 transition-colors" onclick="window.editArticle(${item.id})" title="Sunting Berita">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
             </button>
-            <button type="button" class="btn-icon btn-icon-danger" onclick="window.deleteArticle(${item.id})" title="Hapus Berita">
-              ${ICONS.trash}
+            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors" onclick="window.deleteArticle(${item.id})" title="Hapus Berita">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
             </button>
           </div>
         </td>
@@ -857,21 +883,32 @@
   // =========================================================================
   // Helpers
   // =========================================================================
+  function renderJenjangBadge(jenjang) {
+    const j = (jenjang || '').toLowerCase();
+    if (j === 'tkit') {
+      return `<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">TKIT</span>`;
+    }
+    if (j === 'smpit') {
+      return `<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">SMPIT</span>`;
+    }
+    return `<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">SDIT</span>`;
+  }
+
   function renderStatusBadge(status) {
     const s = (status || '').toLowerCase();
     if (s.includes('lulus') || s.includes('diterima')) {
-      return `<span class="badge-status status-passed">${ICONS.checkCircle} <span>${status}</span></span>`;
+      return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200"><svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>${escapeHtml(status)}</span></span>`;
     }
     if (s.includes('terverifikasi') || s.includes('jadwal')) {
-      return `<span class="badge-status status-verified">${ICONS.clock} <span>${status}</span></span>`;
+      return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200"><svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>${escapeHtml(status)}</span></span>`;
     }
     if (s.includes('menunggu') || s.includes('pembayaran')) {
-      return `<span class="badge-status status-pending">${ICONS.hourglass} <span>${status}</span></span>`;
+      return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200"><svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>${escapeHtml(status)}</span></span>`;
     }
     if (s.includes('tidak') || s.includes('tolak')) {
-      return `<span class="badge-status status-rejected">${ICONS.xCircle} <span>${status}</span></span>`;
+      return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>${escapeHtml(status)}</span></span>`;
     }
-    return `<span class="badge-status status-pending">${status}</span>`;
+    return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200"><span>${escapeHtml(status)}</span></span>`;
   }
 
   function formatWa(num) {

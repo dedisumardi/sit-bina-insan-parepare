@@ -1,247 +1,516 @@
 <!DOCTYPE html>
-<html lang="id">
+<html class="h-full bg-slate-50" lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal Admin & SPMB | SIT Bina Insan Parepare</title>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Dashboard SPMB - SIT Bina Insan Parepare</title>
+  
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/assets/icons/logo.svg?v=2">
-  <link rel="stylesheet" href="css/admin.css">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS v3 with Plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              950: '#022c22',
+            },
+            sidebar: {
+              bg: '#0b1329',
+              active: '#059669',
+              hover: '#152140',
+              border: 'rgba(255, 255, 255, 0.08)'
+            }
+          },
+          boxShadow: {
+            'card': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
+            'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -4px rgba(0, 0, 0, 0.02)',
+          }
+        }
+      }
+    }
+  </script>
+  <style data-purpose="custom-scrollbars">
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Panel and Modal Control */
+    .admin-panel {
+      display: none;
+    }
+    .admin-panel.active {
+      display: block;
+    }
+    .sidebar-item-btn.active {
+      background-color: #059669 !important;
+      color: #ffffff !important;
+      box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.3);
+    }
+    .sidebar-item-btn.active svg {
+      color: #ffffff !important;
+    }
+    .sidebar-item-btn.active .sidebar-active-indicator {
+      display: block !important;
+    }
+
+    /* Modals & Overlay */
+    .adm-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background-color: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .adm-modal-overlay.open {
+      display: flex !important;
+    }
+
+    /* Toast */
+    .adm-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 60;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 0.85rem 1.25rem;
+      border-radius: 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    .adm-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
 </head>
-<body>
+<body class="h-full font-sans antialiased text-slate-800 bg-[#f8fafc] flex overflow-hidden">
 
   <!-- =========================================================================
-       1. LOGIN OVERLAY GATE
+       0. LOGIN OVERLAY GATE (Pop-up Keamanan Admin)
        ========================================================================= -->
-  <div class="admin-login-overlay" id="admin-login-overlay">
-    <div class="login-card">
-      <img src="/assets/icons/logo.svg?v=2" alt="SIT Bina Insan" class="login-logo">
-      <h2 class="login-title">Portal Admin Sekolah</h2>
-      <p class="login-sub">SIT Bina Insan Parepare • Sistem Kepanitiaan SPMB & CMS</p>
+  <div class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-300" id="admin-login-overlay">
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-200 text-center">
+      <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-50 p-2.5 shadow-md flex items-center justify-center ring-2 ring-emerald-500/20 mb-4">
+        <img alt="Logo SIT Bina Insan Parepare" class="w-full h-full object-contain" src="/assets/icons/logo.svg?v=2">
+      </div>
+      <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Portal Admin Sekolah</h2>
+      <p class="text-xs text-slate-500 mt-1 mb-6">SIT Bina Insan Parepare • Sistem Kepanitiaan SPMB &amp; CMS</p>
 
-      <div id="admin-login-error" style="display:none; background:#fee2e2; color:#dc2626; padding:0.6rem; border-radius:8px; font-size:0.825rem; font-weight:700; margin-bottom:1rem;"></div>
+      <div id="admin-login-error" style="display:none;" class="bg-red-50 border border-red-200 text-red-600 font-bold text-xs p-3 rounded-xl mb-4 text-left"></div>
 
-      <form id="admin-login-form">
-        <div class="login-input-group">
-          <label for="login-username" class="login-label">Username</label>
-          <input type="text" id="login-username" class="login-input" placeholder="Ketik username admin" required value="admin">
+      <form id="admin-login-form" class="space-y-4 text-left">
+        <div>
+          <label for="login-username" class="block text-xs font-bold text-slate-700 mb-1">Username</label>
+          <input type="text" id="login-username" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5" placeholder="Ketik username admin" required value="admin">
         </div>
-        <div class="login-input-group">
-          <label for="login-password" class="login-label">Password</label>
-          <input type="password" id="login-password" class="login-input" placeholder="Ketik password" required value="adminbina2025">
+        <div>
+          <label for="login-password" class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+          <input type="password" id="login-password" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5" placeholder="Ketik password" required value="adminbina2025">
         </div>
-        <button type="submit" class="login-btn">
+        <button type="submit" class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-900/20 transition-all duration-150">
           Masuk ke Dashboard
         </button>
       </form>
 
-      <div class="login-demo-tip">
-        <div style="display:inline-flex; align-items:center; gap:0.4rem; margin-bottom:0.25rem;">
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M14.5 1A4.5 4.5 0 0 0 10 5.5c0 .324.034.64.1.944L1.879 14.697A1.5 1.5 0 0 0 1.44 15.75v1.5A1.5 1.5 0 0 0 2.94 18.75h1.5a1.5 1.5 0 0 0 1.06-.44l.88-.88H7.5a.75.75 0 0 0 .75-.75v-1.125h1.125a.75.75 0 0 0 .75-.75V13.68l1.432-1.432c.304.066.62.1.943.1A4.5 4.5 0 1 0 14.5 1Zm1.5 3.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" clip-rule="evenodd"/>
-          </svg>
-          <strong>Akun Demo Otomatis:</strong>
-        </div><br>
-        Username: <code>admin</code> &bull; Password: <code>adminbina2025</code>
+      <div class="mt-6 p-3.5 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-500 text-center">
+        <div class="font-bold text-slate-700 mb-1 flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" /></svg>
+          Akun Demo Otomatis:
+        </div>
+        Username: <code class="bg-white px-1.5 py-0.5 rounded border border-slate-200 font-bold text-slate-800">admin</code> &bull; Password: <code class="bg-white px-1.5 py-0.5 rounded border border-slate-200 font-bold text-slate-800">adminbina2025</code>
       </div>
     </div>
   </div>
 
-  <!-- =========================================================================
-       2. MAIN ADMIN LAYOUT
-       ========================================================================= -->
-  <div class="admin-layout">
-    
-    <!-- Sidebar -->
-    <aside class="admin-sidebar">
-      <div class="sidebar-header">
-        <img src="/assets/icons/logo.svg?v=2" alt="SIT Bina Insan" class="sidebar-logo">
-        <div>
-          <div class="sidebar-title">SIT Bina Insan</div>
-          <div class="sidebar-badge">Administrator</div>
+  <!-- BEGIN: MainSidebar -->
+  <aside class="w-72 bg-[#0d172e] flex-shrink-0 flex flex-col justify-between border-r border-slate-800/80 shadow-2xl z-30 transition-all duration-300" data-purpose="sidebar-navigation">
+    <!-- Top Part: School Brand & Navigation -->
+    <div class="flex flex-col h-full overflow-hidden">
+      <!-- School Brand Header -->
+      <div class="px-6 py-6 border-b border-slate-800/80 flex items-center space-x-3.5">
+        <div class="w-12 h-12 rounded-xl bg-white p-1.5 shadow-md flex items-center justify-center flex-shrink-0 ring-2 ring-emerald-500/20">
+          <img alt="Logo SIT Bina Insan Parepare" class="w-full h-full object-contain" src="/assets/icons/logo.svg?v=2">
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span class="text-sm font-bold tracking-tight text-white truncate">SIT Bina Insan</span>
+          <span class="text-[11px] text-slate-400 font-medium tracking-wide truncate">Parepare, Sulawesi Selatan</span>
+          <div class="mt-1 flex items-center gap-1.5">
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/30">
+              Administrator
+            </span>
+          </div>
         </div>
       </div>
 
-      <ul class="sidebar-menu">
-        <li>
-          <button type="button" class="sidebar-item-btn active" data-panel="dashboard">
-            <span class="sidebar-icon">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M2 4.25A2.25 2.25 0 0 1 4.25 2h2.5A2.25 2.25 0 0 1 9 4.25v2.5A2.25 2.25 0 0 1 6.75 9h-2.5A2.25 2.25 0 0 1 2 6.75v-2.5ZM2 13.25A2.25 2.25 0 0 1 4.25 11h2.5A2.25 2.25 0 0 1 9 13.25v2.5A2.25 2.25 0 0 1 6.75 18h-2.5A2.25 2.25 0 0 1 2 15.75v-2.5ZM11 4.25A2.25 2.25 0 0 1 13.25 2h2.5A2.25 2.25 0 0 1 18 4.25v2.5A2.25 2.25 0 0 1 15.75 9h-2.5A2.25 2.25 0 0 1 11 6.75v-2.5ZM11 13.25A2.25 2.25 0 0 1 13.25 11h2.5A2.25 2.25 0 0 1 18 13.25v2.5A2.25 2.25 0 0 1 15.75 18h-2.5A2.25 2.25 0 0 1 11 15.75v-2.5Z"/>
-              </svg>
-            </span>
-            <span>Dashboard</span>
-          </button>
-        </li>
-        <li>
-          <button type="button" class="sidebar-item-btn" data-panel="spmb">
-            <span class="sidebar-icon">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9.664 1.319a.75.75 0 0 1 .672 0 41.05 41.05 0 0 1 6.966 3.966.75.75 0 0 1-.03 1.258 37.904 37.904 0 0 1-6.936 2.455.75.75 0 0 1-.672 0A37.904 37.904 0 0 1 2.728 6.543a.75.75 0 0 1-.03-1.258 41.05 41.05 0 0 1 6.966-3.966ZM2.617 8.528A39.426 39.426 0 0 0 10 10.5c2.56 0 4.982-.423 7.383-1.972v2.247c0 2.21-1.79 4-4 4H6.617c-2.21 0-4-1.79-4-4V8.528Z" clip-rule="evenodd"/>
-              </svg>
-            </span>
-            <span>Data Siswa Baru</span>
-            <span class="sidebar-count-badge" id="sidebar-spmb-count">0</span>
-          </button>
-        </li>
-        <li>
-          <button type="button" class="sidebar-item-btn" data-panel="berita">
-            <span class="sidebar-icon">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4 2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.414A2 2 0 0 0 17.414 6L14 2.586A2 2 0 0 0 12.586 2H4Zm1 5a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
-              </svg>
-            </span>
-            <span>Kelola Berita/Artikel</span>
-            <span class="sidebar-count-badge" id="sidebar-news-count">0</span>
-          </button>
-        </li>
-        <li>
-          <button type="button" class="sidebar-item-btn" data-panel="settings">
-            <span class="sidebar-icon">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M8.34 1.804A1 1 0 0 1 9.32 1h1.36a1 1 0 0 1 .98.804l.295 1.473c.497.144.971.342 1.416.587l1.29-.75a1 1 0 0 1 1.258.261l.962.962a1 1 0 0 1 .261 1.258l-.75 1.29c.245.445.443.919.587 1.416l1.473.294a1 1 0 0 1 .804.981v1.36a1 1 0 0 1-.804.98l-1.473.295a7.962 7.962 0 0 1-.587 1.416l.75 1.29a1 1 0 0 1-.261 1.258l-.962.962a1 1 0 0 1-1.258.261l-1.29-.75a7.974 7.974 0 0 1-1.416.587l-.294 1.473a1 1 0 0 1-.981.804h-1.36a1 1 0 0 1-.98-.804l-.295-1.473a7.962 7.962 0 0 1-1.416-.587l-1.29.75a1 1 0 0 1-1.258-.261l-.962-.962a1 1 0 0 1-.261-1.258l.75-1.29a7.974 7.974 0 0 1-.587-1.416l-1.473-.294A1 1 0 0 1 1 10.68v-1.36a1 1 0 0 1 .804-.98l1.473-.295c.144-.497.342-.971.587-1.416l-.75-1.29a1 1 0 0 1 .261-1.258l.962-.962a1 1 0 0 1 1.258-.261l1.29.75c.445-.245.919-.443 1.416-.587l.294-1.473ZM10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/>
-              </svg>
-            </span>
-            <span>Pengaturan SPMB</span>
-          </button>
-        </li>
-      </ul>
+      <!-- Main Navigation Menu -->
+      <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto" data-purpose="sidebar-menu">
+        <div class="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400/80">Menu Utama</div>
 
-      <div class="sidebar-footer">
-        <a href="index.html" target="_blank" class="adm-btn adm-btn-secondary" style="justify-content: center;">
-          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM3.53 11a6.52 6.52 0 0 0 1.26 3.09 7.02 7.02 0 0 1 1.77-2.34A5.96 5.96 0 0 1 6.5 11h-3Zm3.54 0a4.49 4.49 0 0 0 1.46 3.42A6.52 6.52 0 0 0 10 16.5a6.52 6.52 0 0 0 1.46-2.08A4.49 4.49 0 0 0 12.92 11H7.07Zm5.86 0c-.04.42-.14.82-.29 1.2a7.02 7.02 0 0 1 1.83 2.89A6.52 6.52 0 0 0 16.47 11h-3.54ZM16.47 9h-3.54a4.49 4.49 0 0 0-1.47-3.42A6.52 6.52 0 0 0 10 3.5a6.52 6.52 0 0 0-1.46 2.08A4.49 4.49 0 0 0 7.07 9H3.53A6.52 6.52 0 0 1 5.3 5.4a7.02 7.02 0 0 1 2.38 2.39c.35-.47.78-.88 1.26-1.21A6.5 6.5 0 0 1 10 3.5c.37 0 .73.04 1.06.1a7.02 7.02 0 0 1 3.64 5.4Z" clip-rule="evenodd"/>
+        <!-- Dashboard (Active) -->
+        <button type="button" class="sidebar-item-btn active w-full group relative flex items-center gap-3 px-3.5 py-3 rounded-xl font-semibold text-sm text-white bg-emerald-600 shadow-lg shadow-emerald-900/30 transition-all duration-200 text-left" data-panel="dashboard">
+          <svg class="w-5 h-5 text-white flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
-          <span>Buka Website Utama</span>
-        </a>
-        <button type="button" class="adm-btn adm-btn-danger" id="admin-logout-btn" style="justify-content: center;">
-          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M3 4.25A2.25 2.25 0 0 1 5.25 2h5.5A2.25 2.25 0 0 1 13 4.25v2a.75.75 0 0 1-1.5 0v-2a.75.75 0 0 0-.75-.75h-5.5a.75.75 0 0 0-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 0 0 .75-.75v-2a.75.75 0 0 1 1.5 0v2A2.25 2.25 0 0 1 10.75 18h-5.5A2.25 2.25 0 0 1 3 15.75V4.25Zm13.03 5.22a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h4.69l-1.72-1.72a.75.75 0 0 1 1.06-1.06l3 3Z" clip-rule="evenodd"/>
-          </svg>
-          <span>Keluar (Logout)</span>
+          <span class="flex-1 truncate">Dashboard</span>
+          <span class="sidebar-active-indicator w-2 h-2 rounded-full bg-emerald-200 animate-pulse"></span>
         </button>
-      </div>
-    </aside>
 
-    <!-- Main Content -->
-    <main class="admin-main">
-      
-      <!-- Topbar Header -->
-      <header class="admin-topbar">
-        <div class="topbar-page-info">
-          <h1 id="admin-page-title">Dashboard & Ringkasan</h1>
-          <p id="admin-page-desc">Ringkasan statistik SPMB, pendaftar terbaru, dan status sekolah.</p>
-        </div>
-        <div class="topbar-actions">
-          <a href="index.html" target="_blank" class="btn-view-site">
-            <span>Lihat Website</span>
-            <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 0-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 0 0 .75-.75v-4a.75.75 0 0 1 1.5 0v4A2.25 2.25 0 0 1 12.75 17h-8.5A2.25 2.25 0 0 1 2 14.75v-8.5A2.25 2.25 0 0 1 4.25 4h4a.75.75 0 0 1 0 1.5h-4Zm6.5 0a.75.75 0 0 1 .75-.75h5.75c.414 0 .75.336.75.75v5.75a.75.75 0 0 1-1.5 0V7.56l-5.22 5.22a.75.75 0 1 1-1.06-1.06l5.22-5.22h-3.94a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"/>
+        <!-- Data Siswa Baru -->
+        <button type="button" class="sidebar-item-btn w-full group flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all duration-200 text-left" data-panel="spmb">
+          <div class="flex items-center gap-3 truncate">
+            <svg class="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
-          </a>
-          <div class="admin-user-pill">
-            <div class="admin-avatar">AD</div>
-            <span>Panitia SPMB</span>
+            <span class="truncate">Data Siswa Baru</span>
+          </div>
+          <span id="sidebar-spmb-count" class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold rounded-full bg-slate-700 text-emerald-300 border border-slate-600 group-hover:bg-emerald-500/20 group-hover:border-emerald-500/40 ml-2">
+            0
+          </span>
+        </button>
+
+        <!-- Kelola Berita / Artikel -->
+        <button type="button" class="sidebar-item-btn w-full group flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all duration-200 text-left" data-panel="berita">
+          <div class="flex items-center gap-3 truncate">
+            <svg class="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span class="truncate">Kelola Berita/Artikel</span>
+          </div>
+          <span id="sidebar-news-count" class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold rounded-full bg-slate-700 text-purple-300 border border-slate-600 group-hover:bg-purple-500/20 group-hover:border-purple-500/40 ml-2">
+            0
+          </span>
+        </button>
+
+        <!-- Pengaturan SPMB -->
+        <button type="button" class="sidebar-item-btn w-full group flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all duration-200 text-left" data-panel="settings">
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.38.138.75.431.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.6 6.6 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <span class="truncate">Pengaturan SPMB</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Bottom Actions: External link & Logout -->
+    <div class="p-4 border-t border-slate-800/80 space-y-2" data-purpose="sidebar-footer">
+      <a class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-200 bg-slate-800/90 hover:bg-slate-700/80 hover:text-white border border-slate-700 transition duration-150" href="/" target="_blank">
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span>Buka Website Utama</span>
+      </a>
+      <button id="admin-logout-btn" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-red-400 bg-red-950/30 hover:bg-red-900/40 hover:text-red-300 border border-red-900/40 transition duration-150" type="button">
+        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span>Keluar (Logout)</span>
+      </button>
+    </div>
+  </aside>
+  <!-- END: MainSidebar -->
+
+  <!-- BEGIN: ContentAreaWrapper -->
+  <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+    <!-- BEGIN: TopNavbar -->
+    <header class="h-20 bg-white border-b border-slate-200/80 px-8 flex items-center justify-between flex-shrink-0 z-20" data-purpose="top-navigation-bar">
+      <!-- Page Title & Subtitle -->
+      <div>
+        <div class="flex items-center gap-2.5">
+          <h1 class="text-xl font-extrabold tracking-tight text-slate-900" id="admin-page-title">Dashboard &amp; Ringkasan</h1>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            T.A. 2025/2026 Aktif
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 mt-0.5" id="admin-page-desc">Ringkasan statistik SPMB, pendaftar terbaru, dan status sekolah.</p>
+      </div>
+      <!-- Top Right Actions & User Profile -->
+      <div class="flex items-center gap-4">
+        <!-- Quick View Site Button -->
+        <a class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 rounded-lg transition duration-150" href="/" target="_blank">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <span>Lihat Website</span>
+        </a>
+        <div class="h-8 w-px bg-slate-200"></div>
+        <!-- Admin Profile Pill -->
+        <div class="flex items-center gap-3 p-1.5 pl-2 pr-3 bg-slate-50 border border-slate-200 rounded-full hover:bg-slate-100 transition duration-150 cursor-default">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-bold text-xs flex items-center justify-center shadow-sm">
+            AD
+          </div>
+          <div class="flex flex-col text-left">
+            <span class="text-xs font-bold text-slate-800 leading-tight">Panitia SPMB</span>
+            <span class="text-[10px] text-slate-500 font-medium">superadmin@binaisn</span>
           </div>
         </div>
-      </header>
+      </div>
+    </header>
+    <!-- END: TopNavbar -->
 
+    <!-- BEGIN: MainContentScrollable -->
+    <main class="flex-1 overflow-y-auto p-8" data-purpose="dashboard-main-content">
+      
       <!-- =====================================================================
-           PANEL 1: DASHBOARD
+           PANEL 1: DASHBOARD & RINGKASAN (Sesuai Desain User)
            ===================================================================== -->
-      <section class="admin-panel active" id="panel-dashboard">
-        
-        <!-- Stats Row -->
-        <div class="stats-row">
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#ecfdf5; color:#059669;">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <section class="admin-panel active space-y-8" id="panel-dashboard">
+        <!-- BEGIN: MetricSummaryCards -->
+        <div class="space-y-5" data-purpose="metrics-container">
+          <!-- Top Primary Metrics: Overview & Revenue -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- Card 1: Total Pendaftar -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all duration-200 flex items-start justify-between relative overflow-hidden group">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center ring-1 ring-emerald-500/20 group-hover:scale-105 transition-transform duration-200">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-3xl font-extrabold text-slate-900 tracking-tight leading-none" id="stat-total-spmb">2</div>
+                  <p class="text-xs font-semibold text-slate-500 mt-1">Total Pendaftar SPMB</p>
+                </div>
+                <div class="flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 bg-emerald-50/80 px-2.5 py-0.5 rounded-md inline-flex border border-emerald-100">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  <span>Pendaftar Masuk Online</span>
+                </div>
+              </div>
+              <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-emerald-500/5 rounded-full blur-xl pointer-events-none"></div>
             </div>
-            <div class="stat-info">
-              <span class="stat-val" id="stat-total-spmb">0</span>
-              <span class="stat-title">Total Pendaftar SPMB</span>
+
+            <!-- Card 2: Estimasi Infaq Formulir -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all duration-200 flex items-start justify-between relative overflow-hidden group">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center ring-1 ring-amber-500/20 group-hover:scale-105 transition-transform duration-200">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-3xl font-extrabold text-slate-900 tracking-tight leading-none" id="stat-infaq-est">Rp 450.000</div>
+                  <p class="text-xs font-semibold text-slate-500 mt-1">Estimasi Infaq Formulir</p>
+                </div>
+                <div class="flex items-center gap-1.5 text-[11px] font-medium text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-md inline-flex border border-amber-200/70">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  <span>Kalkulasi Otomatis</span>
+                </div>
+              </div>
+              <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-amber-500/5 rounded-full blur-xl pointer-events-none"></div>
+            </div>
+
+            <!-- Card 3: Artikel & Publikasi -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all duration-200 flex items-start justify-between relative overflow-hidden group">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center ring-1 ring-purple-500/20 group-hover:scale-105 transition-transform duration-200">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-3xl font-extrabold text-slate-900 tracking-tight leading-none" id="stat-articles">5</div>
+                  <p class="text-xs font-semibold text-slate-500 mt-1">Artikel &amp; Berita Aktif</p>
+                </div>
+                <div class="flex items-center gap-1.5 text-[11px] font-medium text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-md inline-flex border border-purple-200/70">
+                  <span>Status: Terpublikasi</span>
+                </div>
+              </div>
+              <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-purple-500/5 rounded-full blur-xl pointer-events-none"></div>
             </div>
           </div>
 
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#fef3c7; color:#d97706;">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+          <!-- Distinct Jenjang Breakdown Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- TKIT Card -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all duration-200 relative overflow-hidden group">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center ring-1 ring-amber-500/20 group-hover:scale-105 transition-transform duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-slate-900 tracking-tight block">TKIT Bina Insan</span>
+                    <span class="text-[11px] text-slate-400 font-medium">Taman Kanak-Kanak</span>
+                  </div>
+                </div>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                  TKIT
+                </span>
+              </div>
+              <div class="mt-4 flex items-baseline justify-between">
+                <div class="flex items-baseline gap-1.5">
+                  <span class="text-2xl font-extrabold text-slate-900" id="stat-tkit">1</span>
+                  <span class="text-xs text-slate-500 font-medium">Pendaftar Masuk</span>
+                </div>
+              </div>
             </div>
-            <div class="stat-info">
-              <span class="stat-val" id="stat-infaq-est">Rp 0</span>
-              <span class="stat-title">Estimasi Infaq Formulir</span>
-            </div>
-          </div>
 
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#e0f2fe; color:#0284c7;">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+            <!-- SDIT Card -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all duration-200 relative overflow-hidden group">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center ring-1 ring-emerald-500/20 group-hover:scale-105 transition-transform duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-slate-900 tracking-tight block">SDIT Bina Insan</span>
+                    <span class="text-[11px] text-slate-400 font-medium">Sekolah Dasar</span>
+                  </div>
+                </div>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  SDIT
+                </span>
+              </div>
+              <div class="mt-4 flex items-baseline justify-between">
+                <div class="flex items-baseline gap-1.5">
+                  <span class="text-2xl font-extrabold text-slate-900" id="stat-sdit">1</span>
+                  <span class="text-xs text-slate-500 font-medium">Pendaftar Masuk</span>
+                </div>
+              </div>
             </div>
-            <div class="stat-info">
-              <span class="stat-val">
-                <span id="stat-tkit">0</span> TK / <span id="stat-sdit">0</span> SD / <span id="stat-smpit">0</span> SMP
-              </span>
-              <span class="stat-title">Distribusi per Jenjang</span>
-            </div>
-          </div>
 
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#f3e8ff; color:#7c3aed;">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            </div>
-            <div class="stat-info">
-              <span class="stat-val" id="stat-articles">0</span>
-              <span class="stat-title">Artikel & Berita Aktif</span>
+            <!-- SMPIT Card -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all duration-200 relative overflow-hidden group">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center ring-1 ring-sky-500/20 group-hover:scale-105 transition-transform duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-slate-900 tracking-tight block">SMPIT Bina Insan</span>
+                    <span class="text-[11px] text-slate-400 font-medium">Sekolah Menengah Pertama</span>
+                  </div>
+                </div>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-sky-50 text-sky-600 border border-slate-200">
+                  SMPIT
+                </span>
+              </div>
+              <div class="mt-4 flex items-baseline justify-between">
+                <div class="flex items-baseline gap-1.5">
+                  <span class="text-2xl font-extrabold text-slate-900" id="stat-smpit">0</span>
+                  <span class="text-xs text-slate-500 font-medium">Pendaftar Masuk</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <!-- END: MetricSummaryCards -->
 
-        <!-- Recent Registrations Table -->
-        <div class="table-card">
-          <div class="table-header-bar">
-            <h2 class="table-title">5 Pendaftar SPMB Terbaru</h2>
-            <button type="button" class="adm-btn adm-btn-secondary" onclick="document.querySelector('.sidebar-item-btn[data-panel=\'spmb\']').click()">
-              <span>Lihat Semua Pendaftar</span>
-              <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/>
-              </svg>
-            </button>
+        <!-- BEGIN: TableSection -->
+        <section class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden" data-purpose="recent-registrations">
+          <!-- Table Card Header -->
+          <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <h2 class="text-base font-bold text-slate-900 tracking-tight">5 Pendaftar SPMB Terbaru</h2>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                Pendaftar Baru
+              </span>
+            </div>
+            <div class="flex items-center gap-3">
+              <button type="button" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3.5 py-2 rounded-lg transition duration-150" onclick="document.querySelector('.sidebar-item-btn[data-panel=\'spmb\']').click()">
+                <span>Lihat Semua Pendaftar</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </button>
+            </div>
           </div>
-          <div style="overflow-x: auto;">
-            <table class="admin-table">
+          <!-- Table Container -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
               <thead>
-                <tr>
-                  <th>No. Reg</th>
-                  <th>Nama Calon Siswa</th>
-                  <th>Jenjang</th>
-                  <th>Waktu Mendaftar</th>
-                  <th>Status</th>
-                  <th>Aksi</th>
+                <tr class="border-b border-slate-100 bg-slate-50/75 text-[11px] uppercase tracking-wider font-bold text-slate-500">
+                  <th class="py-3.5 px-6" scope="col">NO. REG</th>
+                  <th class="py-3.5 px-6" scope="col">NAMA CALON SISWA</th>
+                  <th class="py-3.5 px-6" scope="col">JENJANG</th>
+                  <th class="py-3.5 px-6" scope="col">WAKTU MENDAFTAR</th>
+                  <th class="py-3.5 px-6" scope="col">STATUS</th>
+                  <th class="py-3.5 px-6 text-center" scope="col">AKSI</th>
                 </tr>
               </thead>
-              <tbody id="dashboard-recent-table">
-                <!-- Dynamically rendered -->
+              <tbody id="dashboard-recent-table" class="divide-y divide-slate-100 text-sm">
+                <!-- Dynamically populated via js/admin.js -->
               </tbody>
             </table>
           </div>
-        </div>
-
+          <!-- Table Footer Info -->
+          <div class="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <div>Sistem SPMB Online Terpadu SIT Bina Insan Parepare</div>
+            <div class="text-slate-400">Tahun Pelajaran 2025/2026</div>
+          </div>
+        </section>
+        <!-- END: TableSection -->
       </section>
 
       <!-- =====================================================================
-           PANEL 2: KELOLA SISWA BARU (SPMB)
+           PANEL 2: KELOLA DATA SISWA BARU (SPMB)
            ===================================================================== -->
-      <section class="admin-panel" id="panel-spmb">
-        
-        <div class="table-card">
-          <div class="table-header-bar">
+      <section class="admin-panel space-y-6" id="panel-spmb">
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden">
+          <div class="px-6 py-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h2 class="table-title">Daftar Seluruh Pendaftar SPMB</h2>
-              <div id="spmb-filter-count" style="font-size:0.825rem; color:#64748b; margin-top:2px;">Memuat data...</div>
+              <h2 class="text-base font-bold text-slate-900 tracking-tight">Daftar Seluruh Pendaftar SPMB Online</h2>
+              <div id="spmb-filter-count" class="text-xs text-slate-500 mt-0.5">Memuat data santri...</div>
             </div>
-
-            <div class="table-filters">
+            <div class="flex flex-wrap items-center gap-3">
               <!-- Filter Jenjang -->
-              <select id="spmb-filter-jenjang" class="filter-select" aria-label="Filter Jenjang">
+              <select id="spmb-filter-jenjang" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50">
                 <option value="all">Semua Jenjang</option>
                 <option value="tkit">TKIT Saja</option>
                 <option value="sdit">SDIT Saja</option>
@@ -249,7 +518,7 @@
               </select>
 
               <!-- Filter Status -->
-              <select id="spmb-filter-status" class="filter-select" aria-label="Filter Status">
+              <select id="spmb-filter-status" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50">
                 <option value="all">Semua Status</option>
                 <option value="menunggu">Menunggu Pembayaran</option>
                 <option value="terverifikasi">Terverifikasi</option>
@@ -257,95 +526,87 @@
               </select>
 
               <!-- Search -->
-              <input type="search" id="spmb-search-input" class="filter-search" placeholder="Cari nama, No. Reg, NIK..." aria-label="Cari pendaftar">
+              <input type="search" id="spmb-search-input" class="text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 w-48 lg:w-64" placeholder="Cari nama, No. Reg, NIK...">
 
               <!-- Export CSV Button -->
-              <button type="button" class="adm-btn adm-btn-accent" id="spmb-export-btn">
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M4.5 2A1.5 1.5 0 0 0 3 3.5v13A1.5 1.5 0 0 0 4.5 18h11a1.5 1.5 0 0 0 1.5-1.5V7.621a1.5 1.5 0 0 0-.44-1.06l-4.12-4.122A1.5 1.5 0 0 0 11.378 2H4.5ZM10 8a.75.75 0 0 1 .75.75v3.69l1.22-1.22a.75.75 0 1 1 1.06 1.06l-2.5 2.5a.75.75 0 0 1-1.06 0l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.22 1.22V8.75A.75.75 0 0 1 10 8Z" clip-rule="evenodd"/>
-                </svg>
-                <span>Export ke Excel/CSV</span>
+              <button type="button" id="spmb-export-btn" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition duration-150">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                <span>Export CSV/Excel</span>
               </button>
             </div>
           </div>
 
-          <div style="overflow-x: auto;">
-            <table class="admin-table">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
               <thead>
-                <tr>
-                  <th>No. Registrasi</th>
-                  <th>Nama Siswa & NIK</th>
-                  <th>Jenjang & Jalur</th>
-                  <th>Orang Tua & WhatsApp</th>
-                  <th>Tanggal Daftar</th>
-                  <th>Status Berkas</th>
-                  <th>Aksi</th>
+                <tr class="border-b border-slate-100 bg-slate-50/75 text-[11px] uppercase tracking-wider font-bold text-slate-500">
+                  <th class="py-3.5 px-6">No. Registrasi</th>
+                  <th class="py-3.5 px-6">Nama Siswa &amp; NIK</th>
+                  <th class="py-3.5 px-6">Jenjang &amp; Jalur</th>
+                  <th class="py-3.5 px-6">Orang Tua &amp; WhatsApp</th>
+                  <th class="py-3.5 px-6">Waktu Daftar</th>
+                  <th class="py-3.5 px-6">Status Berkas</th>
+                  <th class="py-3.5 px-6 text-center">Aksi</th>
                 </tr>
               </thead>
-              <tbody id="spmb-table-body">
+              <tbody id="spmb-table-body" class="divide-y divide-slate-100 text-sm">
                 <!-- Dynamically populated via js/admin.js -->
               </tbody>
             </table>
           </div>
         </div>
-
       </section>
 
       <!-- =====================================================================
            PANEL 3: KELOLA BERITA & ARTIKEL
            ===================================================================== -->
-      <section class="admin-panel" id="panel-berita">
-        
-        <div class="table-card">
-          <div class="table-header-bar">
+      <section class="admin-panel space-y-6" id="panel-berita">
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden">
+          <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 class="table-title">Manajemen Berita & Artikel Sekolah</h2>
-              <p style="font-size:0.825rem; color:#64748b;">Artikel yang disimpan di sini akan langsung tampil pada website utama.</p>
+              <h2 class="text-base font-bold text-slate-900 tracking-tight">Manajemen Berita &amp; Artikel Sekolah</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Artikel yang disimpan di sini langsung tampil di halaman berita website utama.</p>
             </div>
-            <button type="button" class="adm-btn adm-btn-primary" id="btn-add-article">
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-11.25a.75.75 0 0 0-1.5 0v2.5h-2.5a.75.75 0 0 0 0 1.5h2.5v2.5a.75.75 0 0 0 1.5 0v-2.5h2.5a.75.75 0 0 0 0-1.5h-2.5v-2.5Z" clip-rule="evenodd"/>
-              </svg>
+            <button type="button" id="btn-add-article" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition duration-150">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
               <span>Tulis Berita Baru</span>
             </button>
           </div>
 
-          <div style="overflow-x: auto;">
-            <table class="admin-table">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
               <thead>
-                <tr>
-                  <th>Foto</th>
-                  <th>Judul & Ringkasan</th>
-                  <th>Kategori</th>
-                  <th>Tanggal Terbit</th>
-                  <th>Penulis</th>
-                  <th>Aksi</th>
+                <tr class="border-b border-slate-100 bg-slate-50/75 text-[11px] uppercase tracking-wider font-bold text-slate-500">
+                  <th class="py-3.5 px-6">Foto</th>
+                  <th class="py-3.5 px-6">Judul &amp; Ringkasan</th>
+                  <th class="py-3.5 px-6">Kategori</th>
+                  <th class="py-3.5 px-6">Tanggal Terbit</th>
+                  <th class="py-3.5 px-6">Penulis</th>
+                  <th class="py-3.5 px-6 text-center">Aksi</th>
                 </tr>
               </thead>
-              <tbody id="articles-table-body">
+              <tbody id="articles-table-body" class="divide-y divide-slate-100 text-sm">
                 <!-- Dynamically populated via js/admin.js -->
               </tbody>
             </table>
           </div>
         </div>
-
       </section>
 
       <!-- =====================================================================
            PANEL 4: PENGATURAN SPMB & SEKOLAH
            ===================================================================== -->
-      <section class="admin-panel" id="panel-settings">
-        
-        <div class="table-card" style="max-width: 800px; margin-inline: auto;">
-          <div class="table-header-bar">
-            <h2 class="table-title">Konfigurasi Sistem SPMB & Informasi Sekolah</h2>
+      <section class="admin-panel space-y-6" id="panel-settings">
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-card max-w-4xl mx-auto overflow-hidden">
+          <div class="px-6 py-5 border-b border-slate-100">
+            <h2 class="text-base font-bold text-slate-900 tracking-tight">Konfigurasi Sistem SPMB &amp; Informasi Sekolah</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Atur status pendaftaran, infaq formulir, kontak panitia, dan rekening pembayaran.</p>
           </div>
 
-          <form id="form-school-settings" style="padding: 1.75rem;">
-            
-            <div style="margin-bottom: 1.5rem;">
-              <label for="set-wave" style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Status Gelombang SPMB yang Sedang Aktif</label>
-              <select id="set-wave" class="login-input">
+          <form id="form-school-settings" class="p-6 space-y-6">
+            <div>
+              <label for="set-wave" class="block text-xs font-bold text-slate-700 mb-1.5">Status Gelombang SPMB Aktif</label>
+              <select id="set-wave" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5">
                 <option value="Gelombang 1 (Early Bird)">Gelombang 1 (Early Bird) - 1 Nov 2024 s/d 31 Jan 2025</option>
                 <option value="Gelombang 2 (Reguler)">Gelombang 2 (Reguler) - 1 Feb 2025 s/d 30 Apr 2025</option>
                 <option value="Gelombang 3">Gelombang 3 - 1 Mei 2025 s/d Kuota Terpenuhi</option>
@@ -353,249 +614,236 @@
               </select>
             </div>
 
-            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label for="set-tkit-fee" style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Infaq TKIT</label>
-                <input type="text" id="set-tkit-fee" class="login-input" required>
+                <label for="set-tkit-fee" class="block text-xs font-bold text-slate-700 mb-1.5">Infaq Formulir TKIT</label>
+                <input type="text" id="set-tkit-fee" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5" required>
               </div>
               <div>
-                <label for="set-sdit-fee" style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Infaq SDIT</label>
-                <input type="text" id="set-sdit-fee" class="login-input" required>
+                <label for="set-sdit-fee" class="block text-xs font-bold text-slate-700 mb-1.5">Infaq Formulir SDIT</label>
+                <input type="text" id="set-sdit-fee" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5" required>
               </div>
               <div>
-                <label for="set-smpit-fee" style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Infaq SMPIT</label>
-                <input type="text" id="set-smpit-fee" class="login-input" required>
+                <label for="set-smpit-fee" class="block text-xs font-bold text-slate-700 mb-1.5">Infaq Formulir SMPIT</label>
+                <input type="text" id="set-smpit-fee" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5" required>
               </div>
             </div>
 
-            <div style="margin-bottom: 1.5rem;">
-              <label for="set-wa" style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Nomor WhatsApp Panitia SPMB Parepare</label>
-              <input type="text" id="set-wa" class="login-input" placeholder="Contoh: 6281234567890" required>
-              <div style="font-size:0.78rem; color:#64748b; margin-top:3px;">Format diawali 62 (contoh: 6281234567890).</div>
+            <div>
+              <label for="set-wa" class="block text-xs font-bold text-slate-700 mb-1.5">Nomor WhatsApp Helpdesk Panitia</label>
+              <input type="text" id="set-wa" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5" placeholder="Contoh: 6281234567890" required>
+              <p class="text-[11px] text-slate-400 mt-1">Gunakan format angka diawali 62 (tanpa tanda + atau spasi).</p>
             </div>
 
-            <div style="margin-bottom: 2rem;">
-              <label for="set-bank" style="display:block; font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Rekening Pembayaran Infaq Pendaftaran</label>
-              <textarea id="set-bank" class="login-input" rows="2" required></textarea>
+            <div>
+              <label for="set-bank" class="block text-xs font-bold text-slate-700 mb-1.5">Instruksi Rekening Transfer Bank</label>
+              <textarea id="set-bank" rows="2" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5" required></textarea>
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-top:1px solid var(--adm-border); padding-top:1.5rem;">
-              <button type="button" class="adm-btn adm-btn-secondary" id="btn-reset-sample-data">
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.451a.75.75 0 0 0 0-1.5H4.5a.75.75 0 0 0-.75.75v3.75a.75.75 0 0 0 1.5 0v-2.072l.462.462a7 7 0 0 0 11.712-3.145.75.75 0 0 0-1.112-.89ZM4.688 8.576a5.5 5.5 0 0 1 9.201-2.466l.312.311h-2.451a.75.75 0 0 0 0 1.5H15.5a.75.75 0 0 0 .75-.75V3.42a.75.75 0 0 0-1.5 0v2.072l-.462-.462a7 7 0 0 0-11.712 3.145.75.75 0 0 0 1.112.89Z" clip-rule="evenodd"/>
-                </svg>
-                <span>Reset Data Simulasi</span>
+            <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <button type="button" id="btn-reset-sample-data" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition duration-150">
+                Reset Data Simulasi
               </button>
-              <button type="submit" class="adm-btn adm-btn-primary">
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/>
-                </svg>
-                <span>Simpan Pengaturan</span>
+              <button type="submit" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-xs font-bold text-white shadow-md shadow-emerald-900/10 transition duration-150">
+                Simpan Pengaturan
               </button>
             </div>
-
           </form>
         </div>
-
       </section>
 
     </main>
+    <!-- END: MainContentScrollable -->
   </div>
+  <!-- END: ContentAreaWrapper -->
 
   <!-- =========================================================================
-       3. MODAL DETAIL & VERIFIKASI SISWA SPMB
+       MODAL 1: DETAIL & VERIFIKASI SISWA SPMB
        ========================================================================= -->
   <div class="adm-modal-overlay" id="modal-applicant-detail">
-    <div class="adm-modal-box">
-      <div class="adm-modal-header">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div>
-          <h3>Verifikasi Berkas Calon Siswa</h3>
-          <div style="font-size:0.85rem; color:#64748b;">No. Registrasi: <strong id="modal-app-reg" style="color:var(--adm-primary);"></strong></div>
+          <h3 class="text-base font-bold text-slate-900">Verifikasi Berkas Calon Santri</h3>
+          <p class="text-xs text-slate-500">No. Registrasi: <strong class="text-emerald-700 font-mono" id="modal-app-reg"></strong></p>
         </div>
-        <button type="button" class="btn-icon adm-modal-close" aria-label="Tutup Modal">
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"/>
-          </svg>
+        <button type="button" class="adm-modal-close text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
 
-      <div class="adm-modal-body">
-        
-        <div class="detail-grid">
-          <div class="detail-item">
-            <div class="detail-label">Nama Lengkap Siswa</div>
-            <div class="detail-val" id="modal-app-name"></div>
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-6 overflow-y-auto space-y-4 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+            <span class="text-slate-400 block text-[10px] font-bold uppercase">Nama Lengkap</span>
+            <span class="font-bold text-slate-800 text-sm" id="modal-app-name"></span>
           </div>
-          <div class="detail-item">
-            <div class="detail-label">Jenjang & Jalur</div>
-            <div class="detail-val" id="modal-app-jenjang"></div>
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+            <span class="text-slate-400 block text-[10px] font-bold uppercase">Jenjang &amp; Jalur</span>
+            <span class="font-bold text-slate-800 text-sm" id="modal-app-jenjang"></span>
           </div>
-          <div class="detail-item">
-            <div class="detail-label">NIK / No. KK</div>
-            <div class="detail-val" id="modal-app-nik"></div>
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+            <span class="text-slate-400 block text-[10px] font-bold uppercase">NIK Calon Siswa</span>
+            <span class="font-bold text-slate-800" id="modal-app-nik"></span>
           </div>
-          <div class="detail-item">
-            <div class="detail-label">Tempat, Tanggal Lahir</div>
-            <div class="detail-val" id="modal-app-ttl"></div>
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+            <span class="text-slate-400 block text-[10px] font-bold uppercase">Tempat, Tgl Lahir</span>
+            <span class="font-bold text-slate-800" id="modal-app-ttl"></span>
           </div>
-          <div class="detail-item">
-            <div class="detail-label">Jenis Kelamin</div>
-            <div class="detail-val" id="modal-app-jk"></div>
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+            <span class="text-slate-400 block text-[10px] font-bold uppercase">Jenis Kelamin</span>
+            <span class="font-bold text-slate-800" id="modal-app-jk"></span>
           </div>
-          <div class="detail-item">
-            <div class="detail-label">Asal Sekolah</div>
-            <div class="detail-val" id="modal-app-sekolah"></div>
-          </div>
-          <div class="detail-item" style="grid-column: 1 / -1;">
-            <div class="detail-label">Alamat Domisili</div>
-            <div class="detail-val" id="modal-app-alamat"></div>
-          </div>
-          <div class="detail-item">
-            <div class="detail-label">Nama Ayah (Pekerjaan)</div>
-            <div class="detail-val" id="modal-app-ayah"></div>
-          </div>
-          <div class="detail-item">
-            <div class="detail-label">Nama Ibu</div>
-            <div class="detail-val" id="modal-app-ibu"></div>
-          </div>
-          <div class="detail-item">
-            <div class="detail-label">No. WhatsApp Orang Tua</div>
-            <div class="detail-val" id="modal-app-wa"></div>
-          </div>
-          <div class="detail-item">
-            <div class="detail-label">Email Kontak</div>
-            <div class="detail-val" id="modal-app-email"></div>
-          </div>
-          <div class="detail-item" style="grid-column: 1 / -1;">
-            <div class="detail-label">Riwayat Hafalan Al-Qur'an</div>
-            <div class="detail-val" id="modal-app-hafalan" style="color:var(--adm-primary);"></div>
-          </div>
-          <div class="detail-item" style="grid-column: 1 / -1;">
-            <div class="detail-label">Prestasi yang Pernah Diraih</div>
-            <div class="detail-val" id="modal-app-prestasi"></div>
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+            <span class="text-slate-400 block text-[10px] font-bold uppercase">Asal Sekolah</span>
+            <span class="font-bold text-slate-800" id="modal-app-sekolah"></span>
           </div>
         </div>
 
-        <div style="background:#f1f5f9; padding:1.25rem; border-radius:10px; margin-top:1rem;">
-          <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:0.75rem; color:#0f172a;">Perbarui Status & Jadwal Seleksi</h4>
-          
-          <div style="margin-bottom:1rem;">
-            <label for="modal-app-status-select" style="display:block; font-size:0.8rem; font-weight:700; margin-bottom:0.35rem;">Status Seleksi</label>
-            <select id="modal-app-status-select" class="login-input">
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+          <span class="text-slate-400 block text-[10px] font-bold uppercase">Alamat Domisili</span>
+          <span class="font-medium text-slate-700" id="modal-app-alamat"></span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+            <span class="text-slate-400 block text-[10px] font-bold uppercase">Nama Ayah Kandung</span>
+            <span class="font-bold text-slate-800" id="modal-app-ayah"></span>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+            <span class="text-slate-400 block text-[10px] font-bold uppercase">Nama Ibu Kandung</span>
+            <span class="font-bold text-slate-800" id="modal-app-ibu"></span>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+            <span class="text-slate-400 block text-[10px] font-bold uppercase">WhatsApp Wali</span>
+            <span class="font-bold text-slate-800 font-mono" id="modal-app-wa"></span>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+            <span class="text-slate-400 block text-[10px] font-bold uppercase">Email Wali</span>
+            <span class="font-bold text-slate-800" id="modal-app-email"></span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-3 bg-emerald-50/50 rounded-xl border border-emerald-100">
+            <span class="text-emerald-700 block text-[10px] font-bold uppercase">Riwayat Hafalan Al-Qur'an</span>
+            <span class="font-medium text-slate-700" id="modal-app-hafalan"></span>
+          </div>
+          <div class="p-3 bg-amber-50/50 rounded-xl border border-amber-100">
+            <span class="text-amber-700 block text-[10px] font-bold uppercase">Prestasi yang Pernah Diraih</span>
+            <span class="font-medium text-slate-700" id="modal-app-prestasi"></span>
+          </div>
+        </div>
+
+        <!-- Status & Observasi Update Box -->
+        <div class="p-4 bg-slate-100 rounded-xl border border-slate-200 space-y-3">
+          <div>
+            <label for="modal-app-status-select" class="block text-xs font-bold text-slate-800 mb-1">Status Verifikasi Calon Siswa</label>
+            <select id="modal-app-status-select" class="w-full text-xs font-semibold rounded-lg border-slate-300 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-white">
               <option value="Menunggu Konfirmasi Pembayaran">Menunggu Konfirmasi Pembayaran</option>
-              <option value="Berkas Lengkap (Menunggu Jadwal Observasi)">Berkas Lengkap (Menunggu Jadwal Observasi)</option>
-              <option value="Terverifikasi (Jadwal Observasi Ditentukan)">Terverifikasi (Jadwal Observasi Ditentukan)</option>
-              <option value="Lulus Seleksi & Diterima">Lulus Seleksi & Diterima</option>
-              <option value="Tidak Lulus / Berkas Belum Lengkap">Tidak Lulus / Berkas Belum Lengkap</option>
+              <option value="Terverifikasi (Jadwal Observasi Ditetapkan)">Terverifikasi (Jadwal Observasi Ditetapkan)</option>
+              <option value="Lulus Seleksi Observasi & Diterima">Lulus Seleksi Observasi &amp; Diterima</option>
+              <option value="Cadangan">Cadangan</option>
+              <option value="Berkas Belum Lengkap">Berkas Belum Lengkap</option>
             </select>
           </div>
 
           <div>
-            <label for="modal-app-jadwal" style="display:block; font-size:0.8rem; font-weight:700; margin-bottom:0.35rem;">Keterangan Jadwal Observasi & Tes</label>
-            <input type="text" id="modal-app-jadwal" class="login-input" placeholder="Contoh: Sabtu, 15 Maret 2025 | Pukul 08.30 WITA | Gedung Utama SDIT">
+            <label for="modal-app-jadwal" class="block text-xs font-bold text-slate-800 mb-1">Jadwal Observasi / Catatan Panitia</label>
+            <input type="text" id="modal-app-jadwal" class="w-full text-xs rounded-lg border-slate-300 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-white" placeholder="Contoh: Sabtu, 22 Feb 2025 | Pukul 08.30 WITA">
           </div>
         </div>
-
       </div>
 
-      <div class="adm-modal-footer">
-        <a id="modal-app-wa-btn" href="#" target="_blank" rel="noopener" class="adm-btn adm-btn-accent">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.573 1.761.854 2.806.854 3.18 0 5.767-2.587 5.768-5.766.001-3.182-2.585-5.769-5.768-5.769zm10.024 5.828c0 5.549-4.512 10.063-10.063 10.063-1.745 0-3.385-.45-4.821-1.242l-5.171 1.357 1.381-5.042c-.878-1.488-1.389-3.23-1.389-5.136 0-5.551 4.514-10.063 10.063-10.063 5.551 0 10.063 4.512 10.063 10.063zm-5.077 3.563c-.22-.11-1.3-.641-1.501-.715-.201-.073-.347-.11-.494.11-.146.22-.567.715-.695.861-.128.147-.256.165-.476.055-.22-.11-.931-.343-1.774-1.094-.656-.585-1.099-1.308-1.227-1.528-.128-.22-.014-.339.096-.449.099-.098.22-.256.33-.385.11-.128.146-.22.22-.366.073-.147.037-.275-.018-.385-.055-.11-.494-1.191-.677-1.631-.178-.429-.359-.371-.494-.378l-.421-.007c-.146 0-.384.055-.585.275-.202.22-.769.751-.769 1.831s.787 2.124.897 2.271c.11.147 1.549 2.366 3.753 3.318.524.227.933.362 1.252.464.526.167 1.005.144 1.383.087.422-.063 1.3-.532 1.483-1.044.183-.513.183-.952.128-1.044-.055-.092-.201-.147-.421-.257z"/>
-          </svg>
-          <span>Chat WhatsApp Orang Tua</span>
+      <!-- Modal Footer -->
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <a id="modal-app-wa-btn" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.573 1.761.854 2.806.854 3.18 0 5.767-2.587 5.768-5.766.001-3.182-2.585-5.769-5.768-5.769zm10.024 5.828c0 5.549-4.512 10.063-10.063 10.063-1.745 0-3.385-.45-4.821-1.242l-5.171 1.357 1.381-5.042c-.878-1.488-1.389-3.23-1.389-5.136 0-5.551 4.514-10.063 10.063-10.063 5.551 0 10.063 4.512 10.063 10.063z"/></svg>
+          <span>Chat WhatsApp Wali</span>
         </a>
-        <button type="button" class="adm-btn adm-btn-secondary adm-modal-close">Batal</button>
-        <button type="button" class="adm-btn adm-btn-primary" id="modal-app-save-btn">
-          <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/>
-          </svg>
-          <span>Simpan Verifikasi</span>
-        </button>
+        <div class="flex items-center gap-2">
+          <button type="button" class="adm-modal-close px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition">Tutup</button>
+          <button type="button" id="modal-app-save-btn" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition">Simpan Perubahan</button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- =========================================================================
-       4. MODAL EDITOR BERITA & ARTIKEL
+       MODAL 2: TULIS & EDIT BERITA SEKOLAH
        ========================================================================= -->
   <div class="adm-modal-overlay" id="modal-article-editor">
-    <div class="adm-modal-box">
-      <div class="adm-modal-header">
-        <h3 id="editor-modal-title">Tulis Berita / Artikel Baru</h3>
-        <button type="button" class="btn-icon adm-modal-close" aria-label="Tutup Modal">
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"/>
-          </svg>
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="text-base font-bold text-slate-900" id="editor-modal-title">Tulis Berita / Artikel Baru</h3>
+        <button type="button" class="adm-modal-close text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
 
-      <form id="form-article-editor">
-        <div class="adm-modal-body">
-          
-          <div style="margin-bottom:1.25rem;">
-            <label for="article-title" class="login-label">Judul Berita / Artikel</label>
-            <input type="text" id="article-title" class="login-input" placeholder="Ketik judul yang menarik..." required>
+      <!-- Form Body -->
+      <form id="form-article-editor" class="flex-1 flex flex-col overflow-hidden">
+        <div class="p-6 overflow-y-auto space-y-4 text-xs">
+          <div>
+            <label for="article-title" class="block font-bold text-slate-700 mb-1">Judul Berita</label>
+            <input type="text" id="article-title" class="w-full text-xs rounded-xl border-slate-200 py-2.5 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Ketik judul artikel..." required>
           </div>
 
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="article-category" class="login-label">Kategori</label>
-              <select id="article-category" class="login-input" required>
+              <label for="article-category" class="block font-bold text-slate-700 mb-1">Kategori</label>
+              <select id="article-category" class="w-full text-xs rounded-xl border-slate-200 py-2.5 px-3 focus:ring-emerald-500 focus:border-emerald-500">
                 <option value="Info SPMB">Info SPMB</option>
                 <option value="Prestasi">Prestasi</option>
                 <option value="Kegiatan Sekolah">Kegiatan Sekolah</option>
-                <option value="Opini Islami">Opini & Parenting Islami</option>
+                <option value="Opini Islami">Opini Islami</option>
               </select>
             </div>
             <div>
-              <label for="article-author" class="login-label">Penulis / Humas</label>
-              <input type="text" id="article-author" class="login-input" placeholder="Contoh: Tim Humas SIT Bina Insan" required value="Humas SIT Bina Insan">
+              <label for="article-author" class="block font-bold text-slate-700 mb-1">Penulis / Humas</label>
+              <input type="text" id="article-author" class="w-full text-xs rounded-xl border-slate-200 py-2.5 px-3 focus:ring-emerald-500 focus:border-emerald-500" value="Humas SIT Bina Insan" required>
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1.25rem;">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="article-date" class="login-label">Tanggal Terbit</label>
-              <input type="text" id="article-date" class="login-input" placeholder="Contoh: 15 Januari 2025" required>
+              <label for="article-date" class="block font-bold text-slate-700 mb-1">Tanggal Terbit</label>
+              <input type="text" id="article-date" class="w-full text-xs rounded-xl border-slate-200 py-2.5 px-3 focus:ring-emerald-500 focus:border-emerald-500" required>
             </div>
             <div>
-              <label for="article-readtime" class="login-label">Estimasi Baca</label>
-              <input type="text" id="article-readtime" class="login-input" placeholder="Contoh: 3 menit baca" value="3 menit baca">
+              <label for="article-readtime" class="block font-bold text-slate-700 mb-1">Estimasi Baca</label>
+              <input type="text" id="article-readtime" class="w-full text-xs rounded-xl border-slate-200 py-2.5 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="3 menit baca">
             </div>
           </div>
 
-          <div style="margin-bottom:1.25rem;">
-            <label for="article-image" class="login-label">Pilihan Foto Banner Berita</label>
-            <select id="article-image" class="login-input">
-              <option value="/assets/images/hero_school.jpg?v=2">Foto Gedung Utama Sekolah (/assets/images/hero_school.jpg)</option>
-              <option value="/assets/images/tkit_activity.jpg?v=2">Foto Kegiatan Sentra TKIT (/assets/images/tkit_activity.jpg)</option>
-              <option value="/assets/images/sdit_recitation.jpg?v=2">Foto Tahfizh Al-Qur'an SDIT (/assets/images/sdit_recitation.jpg)</option>
-              <option value="/assets/images/smpit_students.jpg?v=2">Foto Lab Robotik SMPIT (/assets/images/smpit_students.jpg)</option>
+          <div>
+            <label for="article-image" class="block font-bold text-slate-700 mb-1">Pilihan Banner Gambar</label>
+            <select id="article-image" class="w-full text-xs rounded-xl border-slate-200 py-2.5 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+              <option value="/assets/images/hero_school.jpg?v=2">Foto Gedung Utama Kampus (/assets/images/hero_school.jpg)</option>
+              <option value="/assets/images/tkit_activity.jpg?v=2">Foto Sentra TKIT (/assets/images/tkit_activity.jpg)</option>
+              <option value="/assets/images/sdit_recitation.jpg?v=2">Foto Tahfizh SDIT (/assets/images/sdit_recitation.jpg)</option>
+              <option value="/assets/images/smpit_students.jpg?v=2">Foto Robotik SMPIT (/assets/images/smpit_students.jpg)</option>
               <option value="/assets/images/principal.jpg?v=2">Foto Pimpinan / Direktur (/assets/images/principal.jpg)</option>
             </select>
           </div>
 
-          <div style="margin-bottom:1.25rem;">
-            <label for="article-excerpt" class="login-label">Ringkasan Singkat (Excerpt)</label>
-            <textarea id="article-excerpt" class="login-input" rows="2" placeholder="1-2 kalimat ringkasan yang muncul di kartu depan..." required></textarea>
+          <div>
+            <label for="article-excerpt" class="block font-bold text-slate-700 mb-1">Ringkasan (Excerpt)</label>
+            <textarea id="article-excerpt" rows="2" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Ringkasan 1-2 kalimat yang tampil di kartu depan..." required></textarea>
           </div>
 
           <div>
-            <label for="article-content" class="login-label">Konten Lengkap Berita (Paragraf / HTML)</label>
-            <textarea id="article-content" class="login-input" rows="6" placeholder="Ketik isi berita lengkap di sini..." required></textarea>
+            <label for="article-content" class="block font-bold text-slate-700 mb-1">Konten Lengkap Berita (Paragraf)</label>
+            <textarea id="article-content" rows="6" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Isi berita lengkap..." required></textarea>
           </div>
-
         </div>
 
-        <div class="adm-modal-footer">
-          <button type="button" class="adm-btn adm-btn-secondary adm-modal-close">Batal</button>
-          <button type="submit" class="adm-btn adm-btn-primary">
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M3.105 2.288a.75.75 0 0 0-.826.95l1.414 4.926A1.5 1.5 0 0 0 5.135 9.25h6.115a.75.75 0 0 1 0 1.5H5.135a1.5 1.5 0 0 0-1.442 1.086l-1.414 4.926a.75.75 0 0 0 .826.95 28.897 28.897 0 0 0 15.293-7.155.75.75 0 0 0 0-1.114A28.897 28.897 0 0 0 3.105 2.288Z"/>
-            </svg>
-            <span>Publikasikan ke Website</span>
-          </button>
+        <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2">
+          <button type="button" class="adm-modal-close px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition">Batal</button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition">Publikasikan ke Website</button>
         </div>
       </form>
     </div>
