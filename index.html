@@ -557,7 +557,7 @@
           <!-- Pendaftaran TKIT Box -->
           <div style="background: var(--neutral-50); border: 2px dashed var(--primary-400); border-radius: var(--radius-xl); padding: 2.5rem; margin-top: 3.5rem; text-align: center;">
             <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900); margin-bottom: 0.5rem;">Informasi Pendaftaran TKIT TP 2025/2026</h3>
-            <p style="color: var(--neutral-600); margin-bottom: 1.5rem;">Usia minimal 4 tahun (TK-A) dan 5 tahun (TK-B) per 1 Juli 2025. Infaq Pendaftaran: <strong>Rp 200.000</strong></p>
+            <p style="color: var(--neutral-600); margin-bottom: 1.5rem;">Usia minimal 4 tahun (TK-A) dan 5 tahun (TK-B) per 1 Juli 2025. Infaq Pendaftaran: <strong id="tkit-info-fee">Rp 200.000</strong></p>
             <button type="button" class="btn btn-primary btn-lg" onclick="window.selectJenjangSpmb('tkit')">
               Isi Formulir Pendaftaran TKIT Online
             </button>
@@ -943,7 +943,7 @@
                         </div>
                         <div class="option-card-title">TKIT Bina Insan</div>
                         <div class="option-card-sub">Usia 4 - 6 Tahun (Sentra)</div>
-                        <div class="option-card-price">Infaq: Rp 200.000</div>
+                        <div class="option-card-price" id="spmb-price-tkit">Infaq: Rp 200.000</div>
                       </div>
                     </label>
 
@@ -956,7 +956,7 @@
                         </div>
                         <div class="option-card-title">SDIT Bina Insan</div>
                         <div class="option-card-sub">Kelas 1 - 6 (Full Day)</div>
-                        <div class="option-card-price">Infaq: Rp 250.000</div>
+                        <div class="option-card-price" id="spmb-price-sdit">Infaq: Rp 250.000</div>
                       </div>
                     </label>
 
@@ -969,7 +969,7 @@
                         </div>
                         <div class="option-card-title">SMPIT Bina Insan</div>
                         <div class="option-card-sub">Kelas 7 - 9 (Full Day / Boarding)</div>
-                        <div class="option-card-price">Infaq: Rp 300.000</div>
+                        <div class="option-card-price" id="spmb-price-smpit">Infaq: Rp 300.000</div>
                       </div>
                     </label>
                   </div>

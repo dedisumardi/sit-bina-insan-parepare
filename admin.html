@@ -604,15 +604,15 @@
           </div>
 
           <form id="form-school-settings" class="p-6 space-y-6">
-            <!-- Kelola Gelombang SPMB Aktif (Editable) -->
+            <!-- Kelola Gelombang SPMB Aktif (Editable & Real-Time) -->
             <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/90 space-y-4">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/70">
                 <div>
                   <div class="flex items-center gap-2">
                     <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Status Gelombang SPMB Aktif</h3>
-                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded-md bg-emerald-100 text-emerald-800">Dapat Diedit</span>
+                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded-md bg-emerald-100 text-emerald-800">Real-Time Sync</span>
                   </div>
-                  <p class="text-[11px] text-slate-500 mt-0.5">Pilih template gelombang atau ubah/edit nama, rentang tanggal, status pendaftaran, dan notifikasi website.</p>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Ubah nama gelombang, rentang tanggal, status, dan teks notifikasi. Perubahan langsung terupdate otomatis di website utama tanpa refresh.</p>
                 </div>
                 <div id="badge-wave-preview" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm">
                   <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
@@ -620,26 +620,14 @@
                 </div>
               </div>
 
-              <!-- Pilihan Cepat Preset Gelombang -->
-              <div>
-                <label for="set-wave" class="block text-xs font-bold text-slate-700 mb-1.5">Pilihan Cepat Gelombang (Pilih &amp; Edit Langsung)</label>
-                <select id="set-wave" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5 bg-white">
-                  <option value="Gelombang 1 (Early Bird)">Gelombang 1 (Early Bird) - 1 Nov 2024 s/d 31 Jan 2025</option>
-                  <option value="Gelombang 2 (Reguler)">Gelombang 2 (Reguler) - 1 Feb 2025 s/d 30 Apr 2025</option>
-                  <option value="Gelombang 3">Gelombang 3 - 1 Mei 2025 s/d Kuota Terpenuhi</option>
-                  <option value="Pendaftaran Ditutup">Pendaftaran Ditutup Sementara</option>
-                  <option value="custom">✏️ Kustom (Tulis Gelombang Sendiri)</option>
-                </select>
-              </div>
-
               <!-- Detail Editable: Nama, Tanggal, Status, Notifikasi -->
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label for="set-wave-name" class="block text-xs font-bold text-slate-700 mb-1.5">Nama Gelombang (Bisa Diedit)</label>
+                  <label for="set-wave-name" class="block text-xs font-bold text-slate-700 mb-1.5">Nama Gelombang SPMB</label>
                   <input type="text" id="set-wave-name" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5 bg-white" placeholder="Contoh: Gelombang 1 (Early Bird)" required>
                 </div>
                 <div>
-                  <label for="set-wave-dates" class="block text-xs font-bold text-slate-700 mb-1.5">Periode / Rentang Tanggal (Bisa Diedit)</label>
+                  <label for="set-wave-dates" class="block text-xs font-bold text-slate-700 mb-1.5">Periode / Rentang Tanggal</label>
                   <input type="text" id="set-wave-dates" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5 bg-white" placeholder="Contoh: 1 Nov 2024 s/d 31 Jan 2025" required>
                 </div>
               </div>

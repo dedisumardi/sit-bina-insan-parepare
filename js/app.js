@@ -411,18 +411,25 @@
     // 2. Active Wave Notice in Topbar
     const topbarWave = document.getElementById('home-topbar-wave');
     if (topbarWave) {
-      if (settings.waveNotice) {
+      if (settings.waveStatus === 'closed') {
+        topbarWave.textContent = settings.waveNotice || 'Pendaftaran SPMB Ditutup Sementara';
+      } else if (settings.waveNotice) {
         topbarWave.textContent = settings.waveNotice;
-      } else if (settings.activeWave) {
-        topbarWave.textContent = `Pendaftaran ${settings.activeWave} Sedang Berlangsung!`;
+      } else if (settings.waveName || settings.activeWave) {
+        const name = settings.waveName || settings.activeWave;
+        topbarWave.textContent = `Pendaftaran ${name} Sedang Berlangsung!`;
       }
     }
 
     // 3. Hero Card Title in Beranda
     const heroWaveTitle = document.getElementById('home-hero-wave-title');
-    if (heroWaveTitle && (settings.waveName || settings.activeWave)) {
-      const activeName = settings.waveName || settings.activeWave;
-      heroWaveTitle.textContent = `Penerimaan Santri Baru ${activeName}`;
+    if (heroWaveTitle) {
+      const activeName = settings.waveName || settings.activeWave || 'Gelombang 1 (Early Bird)';
+      if (settings.waveStatus === 'closed') {
+        heroWaveTitle.textContent = `Pendaftaran SPMB (${activeName}) Ditutup Sementara`;
+      } else {
+        heroWaveTitle.textContent = `Penerimaan Santri Baru ${activeName}`;
+      }
     }
 
     // 4. SPMB Timeline Waves Highlighting & Dates
@@ -441,6 +448,8 @@
           isCurrent = true;
         } else if (activeName.includes('gelombang 3') && idx === 2) {
           isCurrent = true;
+        } else if (idx === 0 && !activeName.includes('gelombang 2') && !activeName.includes('gelombang 3')) {
+          isCurrent = settings.waveStatus !== 'closed';
         }
 
         pill.classList.toggle('active', isCurrent);
@@ -460,12 +469,112 @@
           const span = pill.querySelector('span');
           if (span) {
             const waveLabel = idx === 0 ? 'Gelombang 1' : (idx === 1 ? 'Gelombang 2' : 'Gelombang 3');
-            span.innerHTML = `<strong>${waveLabel}:</strong> ${settings.waveDates} (Sedang Buka)`;
+            span.innerHTML = `<strong>${settings.waveName || waveLabel}:</strong> ${settings.waveDates} (Sedang Buka)`;
           }
         }
       });
     }
+
+    // 5. Infaq Fee Dynamic Updates
+    if (settings.tkitFee) {
+      const tkitPrice = document.getElementById('spmb-price-tkit');
+      if (tkitPrice) tkitPrice.textContent = 'Infaq: ' + settings.tkitFee;
+      const tkitInfoFee = document.getElementById('tkit-info-fee');
+      if (tkitInfoFee) tkitInfoFee.textContent = settings.tkitFee;
+    }
+    if (settings.sditFee) {
+      const sditPrice = document.getElementById('spmb-price-sdit');
+      if (sditPrice) sditPrice.textContent = 'Infaq: ' + settings.sditFee;
+    }
+    if (settings.smpitFee) {
+      const smpitPrice = document.getElementById('spmb-price-smpit');
+      if (smpitPrice) smpitPrice.textContent = 'Infaq: ' + settings.smpitFee;
+    }
   }
+
+  // =========================================================================
+  // Real-Time Cross-Tab / Cross-Window Synchronization
+  // =========================================================================
+  function showRealtimeToast(msg) {
+    let toast = document.getElementById('realtime-sync-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'realtime-sync-toast';
+      toast.style.cssText = 'position:fixed; bottom:24px; right:24px; z-index:99999; background:#047857; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; box-shadow:0 10px 25px -5px rgba(0,0,0,0.3); display:flex; align-items:center; gap:8px; transition:opacity 0.3s ease, transform 0.3s ease; opacity:0; transform:translateY(20px); pointer-events:none; font-family:"Plus Jakarta Sans", sans-serif;';
+      toast.innerHTML = `<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#34d399;"></span><span id="realtime-sync-toast-text"></span>`;
+      document.body.appendChild(toast);
+    }
+    const textEl = document.getElementById('realtime-sync-toast-text');
+    if (textEl) textEl.textContent = msg;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(20px)';
+    }, 3200);
+  }
+
+  // 1. BroadcastChannel API (0ms instant cross-tab sync)
+  try {
+    const realtimeChannel = new BroadcastChannel('sit_spmb_realtime');
+    realtimeChannel.onmessage = (event) => {
+      const msg = event.data;
+      if (!msg) return;
+      if (msg.type === 'settings_updated' && msg.data) {
+        applySchoolSettings(msg.data);
+        showRealtimeToast('Informasi SPMB & Gelombang baru saja diperbarui dari Admin');
+      } else if (msg.type === 'articles_updated' && msg.data) {
+        window.SchoolData.articles = msg.data;
+        renderHomeNews();
+        renderNewsPortal();
+        showRealtimeToast('Berita & pengumuman baru diterbitkan dari Admin');
+      }
+    };
+  } catch (e) {
+    console.log('BroadcastChannel fallback');
+  }
+
+  // 2. Storage event listener (Reliable native cross-tab fallback)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'sit_bina_insan_settings' && e.newValue) {
+      try {
+        const newSettings = JSON.parse(e.newValue);
+        applySchoolSettings(newSettings);
+        showRealtimeToast('Informasi SPMB & Gelombang diperbarui');
+      } catch (err) {}
+    } else if (e.key === 'sit_bina_insan_articles_data' && e.newValue) {
+      try {
+        const newArticles = JSON.parse(e.newValue);
+        if (Array.isArray(newArticles)) {
+          window.SchoolData.articles = newArticles;
+          renderHomeNews();
+          renderNewsPortal();
+        }
+      } catch (err) {}
+    }
+  });
+
+  // 3. Auto-sync polling on tab visibility change
+  let lastSettingsHash = '';
+  function checkLiveSettings() {
+    if (document.hidden) return;
+    try {
+      const raw = localStorage.getItem('sit_bina_insan_settings');
+      if (raw && raw !== lastSettingsHash) {
+        lastSettingsHash = raw;
+        const data = JSON.parse(raw);
+        applySchoolSettings(data);
+      }
+    } catch (e) {}
+  }
+  setInterval(checkLiveSettings, 2500);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      checkLiveSettings();
+      syncPublicData();
+    }
+  });
 
   // =========================================================================
   // Image Error Recovery & Cache Buster Fallback
@@ -504,6 +613,7 @@
   window.renderHomeNews = renderHomeNews;
   window.renderTestimonials = renderTestimonials;
   window.renderFaqs = renderFaqs;
+  window.applySchoolSettings = applySchoolSettings;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

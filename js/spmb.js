@@ -480,6 +480,13 @@
     existing.unshift(newRecord);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
 
+    // Broadcast real-time ke Dashboard Admin jika terbuka di tab/jendela lain
+    try {
+      const ch = new BroadcastChannel('sit_spmb_realtime');
+      ch.postMessage({ type: 'spmb_new_registration', data: newRecord, timestamp: Date.now() });
+      ch.close();
+    } catch (e) {}
+
     // Kirim data ke API MySQL di cPanel secara asinkron
     if (window.fetch) {
       fetch('api/spmb.php', {
