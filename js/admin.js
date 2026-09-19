@@ -213,13 +213,27 @@
       const user = document.getElementById('login-username').value.trim();
       const pass = document.getElementById('login-password').value.trim();
 
-      // Coba verifikasi dengan MySQL API di cPanel
+      // 1. Verifikasi kredensial default admin terlebih dahulu (kompatibel penuh di Vercel & offline)
+      if (user === DEFAULT_USER && pass === DEFAULT_PASS) {
+        localStorage.setItem(STORAGE_SESSION, 'authenticated');
+        loginOverlay.classList.add('hidden');
+        loginError.style.display = 'none';
+        showToast('Berhasil masuk ke Dashboard Admin SIT Bina Insan!');
+        syncFromDatabase();
+        refreshAllViews();
+        return;
+      }
+
+      // 2. Jika bukan kredensial default, cek ke MySQL API cPanel jika backend tersedia
       fetch('api/auth.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: user, password: pass })
       })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('API status ' + res.status);
+        return res.json();
+      })
       .then(resData => {
         if (resData && resData.success) {
           localStorage.setItem(STORAGE_SESSION, 'authenticated');
@@ -234,17 +248,8 @@
         }
       })
       .catch(() => {
-        // Fallback autentikasi lokal
-        if (user === DEFAULT_USER && pass === DEFAULT_PASS) {
-          localStorage.setItem(STORAGE_SESSION, 'authenticated');
-          loginOverlay.classList.add('hidden');
-          loginError.style.display = 'none';
-          showToast('Berhasil masuk ke Dashboard Admin SIT Bina Insan!');
-          refreshAllViews();
-        } else {
-          loginError.textContent = 'Username atau Password salah! Gunakan admin / adminbina2025.';
-          loginError.style.display = 'block';
-        }
+        loginError.textContent = 'Username atau Password salah! Gunakan admin / adminbina2025.';
+        loginError.style.display = 'block';
       });
     });
 
