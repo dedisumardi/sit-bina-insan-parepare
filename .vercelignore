@@ -1,0 +1,9 @@
+# Ignore local dev server
+dev-server.js
+
+# Ignore PHP backend on Vercel (preserved for cPanel MySQL hosting)
+api/
+database.sql
+
+# Ignore archive files
+*.zip
