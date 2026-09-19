@@ -7,31 +7,39 @@ if (fs.existsSync(dist)) {
 }
 fs.mkdirSync(dist, { recursive: true });
 
-function copyDir(src, dest) {
-  if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
-  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
-    if (entry.isDirectory()) {
-      copyDir(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
+function copyRecursive(src, dest) {
+  if (typeof fs.cpSync === 'function') {
+    fs.cpSync(src, dest, { recursive: true });
+  } else {
+    if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
+    for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+      const s = path.join(src, entry.name);
+      const d = path.join(dest, entry.name);
+      if (entry.isDirectory()) {
+        copyRecursive(s, d);
+      } else {
+        fs.copyFileSync(s, d);
+      }
     }
   }
 }
 
-// Copy static asset directories
+// Copy asset directories
 ['css', 'js', 'assets'].forEach(dir => {
-  if (fs.existsSync(dir)) {
-    copyDir(dir, path.join(dist, dir));
+  const src = path.join(__dirname, dir);
+  const dest = path.join(dist, dir);
+  if (fs.existsSync(src)) {
+    copyRecursive(src, dest);
   }
 });
 
 // Copy root static files
 ['index.html', 'admin.html', 'robots.txt', 'sitemap.xml'].forEach(file => {
-  if (fs.existsSync(file)) {
-    fs.copyFileSync(file, path.join(dist, file));
+  const src = path.join(__dirname, file);
+  const dest = path.join(dist, file);
+  if (fs.existsSync(src)) {
+    fs.copyFileSync(src, dest);
   }
 });
 
-console.log('Build finished successfully: static files copied to dist/');
+console.log('Build completed: all static files ready in dist/');
