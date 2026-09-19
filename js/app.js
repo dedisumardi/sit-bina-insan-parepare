@@ -380,13 +380,90 @@
         .then(resData => {
           if (resData && resData.success && resData.data) {
             localStorage.setItem('sit_bina_insan_settings', JSON.stringify(resData.data));
-            if (resData.data.whatsappHelpdesk) {
-              window.SchoolData.profile.whatsappHelpdesk = resData.data.whatsappHelpdesk;
-              window.SchoolData.profile.whatsapp = '+' + resData.data.whatsappHelpdesk;
-            }
+            applySchoolSettings(resData.data);
           }
         })
         .catch(e => console.log('Public Settings sync: offline fallback'));
+    }
+  }
+
+  function applySchoolSettings(settings) {
+    if (!settings) {
+      try {
+        const raw = localStorage.getItem('sit_bina_insan_settings');
+        if (raw) settings = JSON.parse(raw);
+      } catch (e) {}
+    }
+    if (!settings) return;
+
+    // 1. WhatsApp Helpdesk
+    if (settings.whatsappHelpdesk) {
+      if (window.SchoolData && window.SchoolData.profile) {
+        window.SchoolData.profile.whatsappHelpdesk = settings.whatsappHelpdesk;
+        window.SchoolData.profile.whatsapp = '+' + settings.whatsappHelpdesk;
+      }
+      const waTexts = document.querySelectorAll('.topbar-socials strong');
+      waTexts.forEach(el => {
+        el.textContent = '+' + settings.whatsappHelpdesk;
+      });
+    }
+
+    // 2. Active Wave Notice in Topbar
+    const topbarWave = document.getElementById('home-topbar-wave');
+    if (topbarWave) {
+      if (settings.waveNotice) {
+        topbarWave.textContent = settings.waveNotice;
+      } else if (settings.activeWave) {
+        topbarWave.textContent = `Pendaftaran ${settings.activeWave} Sedang Berlangsung!`;
+      }
+    }
+
+    // 3. Hero Card Title in Beranda
+    const heroWaveTitle = document.getElementById('home-hero-wave-title');
+    if (heroWaveTitle && (settings.waveName || settings.activeWave)) {
+      const activeName = settings.waveName || settings.activeWave;
+      heroWaveTitle.textContent = `Penerimaan Santri Baru ${activeName}`;
+    }
+
+    // 4. SPMB Timeline Waves Highlighting & Dates
+    const timelineWrap = document.getElementById('home-waves-timeline');
+    if (timelineWrap) {
+      const activeName = (settings.waveName || settings.activeWave || '').toLowerCase();
+      const wavePills = timelineWrap.querySelectorAll('.wave-pill');
+      
+      wavePills.forEach((pill, idx) => {
+        let isCurrent = false;
+        if (settings.waveStatus === 'closed') {
+          isCurrent = false;
+        } else if (activeName.includes('gelombang 1') && idx === 0) {
+          isCurrent = true;
+        } else if (activeName.includes('gelombang 2') && idx === 1) {
+          isCurrent = true;
+        } else if (activeName.includes('gelombang 3') && idx === 2) {
+          isCurrent = true;
+        }
+
+        pill.classList.toggle('active', isCurrent);
+        const dot = pill.querySelector('.wave-dot');
+        if (dot) {
+          if (isCurrent) {
+            dot.style.backgroundColor = '';
+            dot.style.boxShadow = '';
+          } else {
+            dot.style.backgroundColor = 'var(--neutral-400)';
+            dot.style.boxShadow = 'none';
+          }
+        }
+
+        // Update date text if current and waveDates is specified
+        if (isCurrent && settings.waveDates) {
+          const span = pill.querySelector('span');
+          if (span) {
+            const waveLabel = idx === 0 ? 'Gelombang 1' : (idx === 1 ? 'Gelombang 2' : 'Gelombang 3');
+            span.innerHTML = `<strong>${waveLabel}:</strong> ${settings.waveDates} (Sedang Buka)`;
+          }
+        }
+      });
     }
   }
 
@@ -410,6 +487,7 @@
   // =========================================================================
   function init() {
     syncPublicData();
+    applySchoolSettings();
     initNav();
     initModal();
     renderHomeNews();

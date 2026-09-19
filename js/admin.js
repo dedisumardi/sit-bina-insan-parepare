@@ -184,9 +184,40 @@
       .catch(e => console.log('Settings MySQL sync: offline / fallback aktif'));
   }
 
+  const WAVE_PRESETS = {
+    "Gelombang 1 (Early Bird)": {
+      name: "Gelombang 1 (Early Bird)",
+      dates: "1 Nov 2024 s/d 31 Jan 2025",
+      status: "open",
+      notice: "Pendaftaran Gelombang 1 (Early Bird) Sedang Berlangsung!"
+    },
+    "Gelombang 2 (Reguler)": {
+      name: "Gelombang 2 (Reguler)",
+      dates: "1 Feb 2025 s/d 30 Apr 2025",
+      status: "open",
+      notice: "Pendaftaran Gelombang 2 (Reguler) Sedang Berlangsung!"
+    },
+    "Gelombang 3": {
+      name: "Gelombang 3",
+      dates: "1 Mei 2025 s/d Kuota Terpenuhi",
+      status: "open",
+      notice: "Pendaftaran Gelombang 3 Resmi Dibuka! Segera daftarkan ananda."
+    },
+    "Pendaftaran Ditutup": {
+      name: "Pendaftaran Ditutup Sementara",
+      dates: "Sampai pembukaan gelombang berikutnya",
+      status: "closed",
+      notice: "Pendaftaran SPMB Ditutup Sementara. Pantau pengumuman gelombang berikutnya."
+    }
+  };
+
   function getDefaultSettings() {
     return {
       activeWave: "Gelombang 1 (Early Bird)",
+      waveName: "Gelombang 1 (Early Bird)",
+      waveDates: "1 Nov 2024 s/d 31 Jan 2025",
+      waveStatus: "open",
+      waveNotice: "Pendaftaran Gelombang 1 (Early Bird) Sedang Berlangsung!",
       tkitFee: "Rp 200.000",
       sditFee: "Rp 250.000",
       smpitFee: "Rp 300.000",
@@ -823,8 +854,80 @@
   // =========================================================================
   // View 4: Settings Management (Pengaturan SPMB & Kontak)
   // =========================================================================
+  function updateWavePreview(name, status) {
+    const previewBadge = document.getElementById('badge-wave-preview');
+    const previewLabel = document.getElementById('preview-wave-label');
+    if (!previewBadge || !previewLabel) return;
+
+    if (status === 'closed') {
+      previewBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-300 shadow-sm';
+      previewLabel.textContent = `${name || 'Pendaftaran'} • Ditutup`;
+    } else if (status === 'upcoming') {
+      previewBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 shadow-sm';
+      previewLabel.textContent = `${name || 'SPMB'} • Segera Dibuka`;
+    } else {
+      previewBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm';
+      previewLabel.textContent = `${name || 'Gelombang 1'} • Buka`;
+    }
+  }
+
+  function updateNavbarWaveBadge(name, status) {
+    const navbarText = document.getElementById('admin-navbar-wave-text');
+    const navbarDot = document.getElementById('admin-navbar-wave-dot');
+    const navbarBadge = document.getElementById('admin-navbar-wave-badge');
+    if (!navbarText) return;
+
+    if (status === 'closed') {
+      navbarText.textContent = `Pendaftaran Ditutup`;
+      if (navbarDot) navbarDot.className = 'w-1.5 h-1.5 rounded-full bg-red-500';
+      if (navbarBadge) navbarBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200';
+    } else if (status === 'upcoming') {
+      navbarText.textContent = `${name || 'SPMB'} Segera`;
+      if (navbarDot) navbarDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-500';
+      if (navbarBadge) navbarBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200';
+    } else {
+      navbarText.textContent = `${name || 'Gelombang 1'} Aktif`;
+      if (navbarDot) navbarDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-500';
+      if (navbarBadge) navbarBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200';
+    }
+  }
+
   function renderSettingsForm() {
-    document.getElementById('set-wave').value = settings.activeWave || 'Gelombang 1 (Early Bird)';
+    const waveName = settings.waveName || settings.activeWave || 'Gelombang 1 (Early Bird)';
+    const waveDates = settings.waveDates || (WAVE_PRESETS[waveName] ? WAVE_PRESETS[waveName].dates : '1 Nov 2024 s/d 31 Jan 2025');
+    const waveStatus = settings.waveStatus || (WAVE_PRESETS[waveName] ? WAVE_PRESETS[waveName].status : (waveName.toLowerCase().includes('tutup') ? 'closed' : 'open'));
+    const waveNotice = settings.waveNotice || (WAVE_PRESETS[waveName] ? WAVE_PRESETS[waveName].notice : `Pendaftaran ${waveName} Sedang Berlangsung!`);
+
+    const waveSelect = document.getElementById('set-wave');
+    if (waveSelect) {
+      let matched = false;
+      for (let i = 0; i < waveSelect.options.length; i++) {
+        if (waveSelect.options[i].value === waveName) {
+          waveSelect.selectedIndex = i;
+          matched = true;
+          break;
+        }
+      }
+      if (!matched && waveSelect.querySelector('option[value="custom"]')) {
+        waveSelect.value = 'custom';
+      }
+    }
+
+    const nameInput = document.getElementById('set-wave-name');
+    if (nameInput) nameInput.value = waveName;
+
+    const datesInput = document.getElementById('set-wave-dates');
+    if (datesInput) datesInput.value = waveDates;
+
+    const statusSelect = document.getElementById('set-wave-status');
+    if (statusSelect) statusSelect.value = waveStatus;
+
+    const noticeInput = document.getElementById('set-wave-notice');
+    if (noticeInput) noticeInput.value = waveNotice;
+
+    updateWavePreview(waveName, waveStatus);
+    updateNavbarWaveBadge(waveName, waveStatus);
+
     document.getElementById('set-tkit-fee').value = settings.tkitFee || 'Rp 200.000';
     document.getElementById('set-sdit-fee').value = settings.sditFee || 'Rp 250.000';
     document.getElementById('set-smpit-fee').value = settings.smpitFee || 'Rp 300.000';
@@ -835,11 +938,60 @@
   function initSettingsForm() {
     const form = document.getElementById('form-school-settings');
     const resetBtn = document.getElementById('btn-reset-sample-data');
+    const waveSelect = document.getElementById('set-wave');
+    const nameInput = document.getElementById('set-wave-name');
+    const datesInput = document.getElementById('set-wave-dates');
+    const statusSelect = document.getElementById('set-wave-status');
+    const noticeInput = document.getElementById('set-wave-notice');
+
+    // Preset dropdown listener
+    waveSelect?.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val === 'custom') {
+        nameInput?.focus();
+        return;
+      }
+      if (WAVE_PRESETS[val]) {
+        const p = WAVE_PRESETS[val];
+        if (nameInput) nameInput.value = p.name;
+        if (datesInput) datesInput.value = p.dates;
+        if (statusSelect) statusSelect.value = p.status;
+        if (noticeInput) noticeInput.value = p.notice;
+        updateWavePreview(p.name, p.status);
+      }
+    });
+
+    // Live preview when typing or changing status
+    [nameInput, statusSelect].forEach(el => {
+      el?.addEventListener('input', () => {
+        const nameVal = nameInput ? nameInput.value.trim() : '';
+        const statusVal = statusSelect ? statusSelect.value : 'open';
+        updateWavePreview(nameVal, statusVal);
+
+        // Switch to custom preset if text doesn't match standard
+        if (waveSelect) {
+          if (WAVE_PRESETS[nameVal]) {
+            waveSelect.value = nameVal;
+          } else if (waveSelect.querySelector('option[value="custom"]')) {
+            waveSelect.value = 'custom';
+          }
+        }
+      });
+    });
 
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
+      const waveName = nameInput ? nameInput.value.trim() : (document.getElementById('set-wave')?.value || 'Gelombang 1 (Early Bird)');
+      const waveDates = datesInput ? datesInput.value.trim() : '';
+      const waveStatus = statusSelect ? statusSelect.value : 'open';
+      const waveNotice = noticeInput ? noticeInput.value.trim() : `Pendaftaran ${waveName} Sedang Berlangsung!`;
+
       settings = {
-        activeWave: document.getElementById('set-wave').value,
+        activeWave: waveName,
+        waveName: waveName,
+        waveDates: waveDates,
+        waveStatus: waveStatus,
+        waveNotice: waveNotice,
         tkitFee: document.getElementById('set-tkit-fee').value.trim(),
         sditFee: document.getElementById('set-sdit-fee').value.trim(),
         smpitFee: document.getElementById('set-smpit-fee').value.trim(),
@@ -849,7 +1001,7 @@
 
       localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
 
-      // Simpan ke MySQL cPanel
+      // Simpan ke MySQL cPanel jika online
       if (window.fetch) {
         fetch('api/settings.php', {
           method: 'POST',
@@ -865,7 +1017,9 @@
         .catch(e => console.log('Save settings MySQL fallback'));
       }
 
-      showToast('Pengaturan sekolah & SPMB berhasil disimpan!');
+      updateNavbarWaveBadge(waveName, waveStatus);
+      updateWavePreview(waveName, waveStatus);
+      showToast('Pengaturan Status Gelombang SPMB & Sekolah berhasil disimpan!');
     });
 
     resetBtn?.addEventListener('click', () => {
