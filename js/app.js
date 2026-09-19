@@ -1,0 +1,421 @@
+/**
+ * SIT BINA INSAN PAREPARE - MASTER APPLICATION SCRIPT
+ * Router Single Page App (Beranda, TKIT, SDIT, SMPIT, Berita, SPMB),
+ * Mobile Drawer, Dynamic Content Rendering & Modal Article Reader
+ */
+
+(function () {
+  'use strict';
+
+  // Navigation Views mapping
+  const validViews = ['beranda', 'tkit', 'sdit', 'smpit', 'berita', 'spmb'];
+  let currentActiveView = 'beranda';
+
+  // DOM Elements
+  const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+  const viewPanels = document.querySelectorAll('.view-panel');
+  const mobileToggleBtn = document.getElementById('mobile-toggle-btn');
+  const mobileDrawer = document.getElementById('mobile-drawer');
+  const drawerCloseBtn = document.getElementById('drawer-close-btn');
+
+  // Modal Article Elements
+  const modalOverlay = document.getElementById('article-modal-overlay');
+  const modalCloseBtn = document.getElementById('modal-close-btn');
+  const modalImg = document.getElementById('modal-article-img');
+  const modalCategory = document.getElementById('modal-article-category');
+  const modalMeta = document.getElementById('modal-article-meta');
+  const modalTitle = document.getElementById('modal-article-title');
+  const modalProse = document.getElementById('modal-article-prose');
+
+  // =========================================================================
+  // Routing & View Management
+  // =========================================================================
+  function switchView(viewName) {
+    if (!validViews.includes(viewName)) {
+      viewName = 'beranda';
+    }
+
+    currentActiveView = viewName;
+
+    // Update view panels
+    viewPanels.forEach(panel => {
+      const isTarget = panel.id === `view-${viewName}`;
+      panel.classList.toggle('active', isTarget);
+    });
+
+    // Update active nav links
+    navLinks.forEach(link => {
+      const linkTarget = link.getAttribute('data-view');
+      const isActive = linkTarget === viewName;
+      link.classList.toggle('active', isActive);
+      if (isActive) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+
+    // Close mobile drawer if open
+    closeMobileDrawer();
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Update document title
+    updateDocumentTitle(viewName);
+  }
+
+  function updateDocumentTitle(viewName) {
+    const base = "SIT Bina Insan Parepare";
+    const titles = {
+      beranda: "Beranda | Sekolah Islam Terpadu Bina Insan Parepare",
+      tkit: "TKIT Bina Insan Parepare | PAUD Islam Terpadu Ramah Anak",
+      sdit: "SDIT Bina Insan Parepare | Sekolah Dasar Islam Terpadu Unggulan",
+      smpit: "SMPIT Bina Insan Parepare | Menengah Pertama & Pesantren Tahfizh",
+      berita: "Berita & Artikel Edukasi | SIT Bina Insan Parepare",
+      spmb: "Pendaftaran SPMB Online TP 2025/2026 | SIT Bina Insan Parepare"
+    };
+    document.title = titles[viewName] || base;
+  }
+
+  function handleHashChange() {
+    const hash = window.location.hash.replace('#', '').toLowerCase();
+    switchView(hash || 'beranda');
+  }
+
+  // =========================================================================
+  // Mobile Navigation Drawer
+  // =========================================================================
+  function openMobileDrawer() {
+    mobileDrawer.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMobileDrawer() {
+    if (mobileDrawer) {
+      mobileDrawer.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  function initNav() {
+    // Hash change listener
+    window.addEventListener('hashchange', handleHashChange);
+
+    // Click handler for data-view elements
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest('[data-view]');
+      if (target) {
+        e.preventDefault();
+        const view = target.getAttribute('data-view');
+        window.location.hash = `#${view}`;
+      }
+    });
+
+    // Mobile drawer toggles
+    mobileToggleBtn?.addEventListener('click', openMobileDrawer);
+    drawerCloseBtn?.addEventListener('click', closeMobileDrawer);
+    mobileDrawer?.addEventListener('click', (e) => {
+      if (e.target === mobileDrawer) {
+        closeMobileDrawer();
+      }
+    });
+  }
+
+  // =========================================================================
+  // Dynamic Content Renderers
+  // =========================================================================
+
+  // 1. Render Home Highlights (Berita Terkini)
+  function renderHomeNews() {
+    const container = document.getElementById('home-news-grid');
+    if (!container || !window.SchoolData) return;
+
+    // Take top 3 articles
+    const topArticles = window.SchoolData.articles.slice(0, 3);
+    container.innerHTML = topArticles.map(article => `
+      <article class="news-card" onclick="window.openArticleModal(${article.id})">
+        <div class="news-card-thumb">
+          <img src="${article.image}" alt="${escapeHtml(article.title)}" loading="lazy">
+          <span class="news-badge-cat ${article.categoryClass}">${article.category}</span>
+        </div>
+        <div class="news-card-body">
+          <div class="news-meta">
+            <span>📅 ${article.date}</span>
+            <span>⏱️ ${article.readTime}</span>
+          </div>
+          <h3 class="news-card-title">${escapeHtml(article.title)}</h3>
+          <p class="news-card-excerpt">${escapeHtml(article.excerpt)}</p>
+          <span class="news-card-link">
+            Baca Selengkapnya
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+        </div>
+      </article>
+    `).join('');
+  }
+
+  // 2. Render Full News Portal with Filters & Search
+  let activeCategory = 'Semua';
+  let searchQuery = '';
+
+  function renderNewsPortal() {
+    const container = document.getElementById('news-portal-grid');
+    if (!container || !window.SchoolData) return;
+
+    let filtered = window.SchoolData.articles;
+
+    // Filter by Category
+    if (activeCategory !== 'Semua') {
+      filtered = filtered.filter(a => a.category.toLowerCase() === activeCategory.toLowerCase());
+    }
+
+    // Filter by Search
+    if (searchQuery.trim() !== '') {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(a =>
+        a.title.toLowerCase().includes(q) ||
+        a.excerpt.toLowerCase().includes(q) ||
+        a.author.toLowerCase().includes(q)
+      );
+    }
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; background: #ffffff; border-radius: var(--radius-xl); border: 1px solid var(--neutral-200);">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--neutral-400); margin-bottom: 0.75rem;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <h4 style="font-size: 1.25rem; font-weight: 700; color: var(--neutral-800); margin-bottom: 0.35rem;">Artikel Tidak Ditemukan</h4>
+          <p style="color: var(--neutral-500); font-size: 0.95rem;">Tidak ada artikel yang cocok dengan kata kunci "${escapeHtml(searchQuery)}". Silakan coba kata kunci lain.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = filtered.map(article => `
+      <article class="news-card" onclick="window.openArticleModal(${article.id})">
+        <div class="news-card-thumb">
+          <img src="${article.image}" alt="${escapeHtml(article.title)}" loading="lazy">
+          <span class="news-badge-cat ${article.categoryClass}">${article.category}</span>
+        </div>
+        <div class="news-card-body">
+          <div class="news-meta">
+            <span>📅 ${article.date}</span>
+            <span>👤 ${article.author}</span>
+          </div>
+          <h3 class="news-card-title">${escapeHtml(article.title)}</h3>
+          <p class="news-card-excerpt">${escapeHtml(article.excerpt)}</p>
+          <span class="news-card-link">
+            Baca Selengkapnya
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+        </div>
+      </article>
+    `).join('');
+  }
+
+  function initNewsPortalControls() {
+    const categoryBtns = document.querySelectorAll('.news-cat-btn');
+    const searchInput = document.getElementById('news-search-input');
+
+    categoryBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        categoryBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.dataset.category || 'Semua';
+        renderNewsPortal();
+      });
+    });
+
+    searchInput?.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderNewsPortal();
+    });
+  }
+
+  // 3. Render Testimonials on Home
+  function renderTestimonials() {
+    const container = document.getElementById('testimonials-grid');
+    if (!container || !window.SchoolData) return;
+
+    container.innerHTML = window.SchoolData.testimonials.map(item => `
+      <div class="testi-card">
+        <div class="testi-stars">
+          ★★★★★
+        </div>
+        <p class="testi-quote">"${escapeHtml(item.quote)}"</p>
+        <div class="testi-author">
+          <img src="${item.photo}" alt="${escapeHtml(item.name)}" class="testi-avatar" loading="lazy">
+          <div>
+            <div class="testi-name">${escapeHtml(item.name)}</div>
+            <div class="testi-role">${escapeHtml(item.role)}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // 4. Render FAQ Accordions
+  function renderFaqs() {
+    const container = document.getElementById('faq-container');
+    if (!container || !window.SchoolData) return;
+
+    container.innerHTML = window.SchoolData.spmbFaqs.map((faq, index) => `
+      <div class="faq-item ${index === 0 ? 'open' : ''}">
+        <button type="button" class="faq-question" aria-expanded="${index === 0 ? 'true' : 'false'}">
+          <span>${escapeHtml(faq.q)}</span>
+          <div class="faq-icon-toggle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>${escapeHtml(faq.a)}</p>
+        </div>
+      </div>
+    `).join('');
+
+    // Toggle click
+    container.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+
+        // Optional accordion single open behavior:
+        container.querySelectorAll('.faq-item').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+        });
+
+        if (!isOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  }
+
+  // =========================================================================
+  // Article Modal Reader
+  // =========================================================================
+  window.openArticleModal = function (articleId) {
+    if (!window.SchoolData) return;
+    const article = window.SchoolData.articles.find(a => a.id === articleId);
+    if (!article) return;
+
+    modalImg.src = article.image;
+    modalImg.alt = article.title;
+    modalCategory.className = `badge-tag ${article.categoryClass}`;
+    modalCategory.textContent = article.category;
+    modalMeta.textContent = `Ditulis oleh ${article.author} • ${article.date} • ${article.readTime}`;
+    modalTitle.textContent = article.title;
+    modalProse.innerHTML = article.content;
+
+    modalOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  function closeArticleModal() {
+    if (modalOverlay) {
+      modalOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  function initModal() {
+    modalCloseBtn?.addEventListener('click', closeArticleModal);
+    modalOverlay?.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        closeArticleModal();
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalOverlay.classList.contains('open')) {
+        closeArticleModal();
+      }
+    });
+  }
+
+  // Escape HTML helper
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // =========================================================================
+  // Sync Public Data (Articles & Settings from MySQL API / LocalStorage)
+  // =========================================================================
+  function syncPublicData() {
+    // 1. Sinkronisasi dari LocalStorage jika ada data artikel terbaru
+    try {
+      const storedArticles = localStorage.getItem('sit_bina_insan_articles_data');
+      if (storedArticles && window.SchoolData) {
+        const parsed = JSON.parse(storedArticles);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          window.SchoolData.articles = parsed;
+        }
+      }
+    } catch (e) {}
+
+    // 2. Coba sinkronisasi online dari database MySQL di cPanel
+    if (window.fetch && window.SchoolData) {
+      fetch('api/articles.php')
+        .then(res => res.json())
+        .then(resData => {
+          if (resData && resData.success && Array.isArray(resData.data) && resData.data.length > 0) {
+            window.SchoolData.articles = resData.data;
+            localStorage.setItem('sit_bina_insan_articles_data', JSON.stringify(resData.data));
+            renderHomeNews();
+            renderNewsPortal();
+          }
+        })
+        .catch(e => console.log('Public Articles sync: offline fallback'));
+
+      // Sinkronisasi Pengaturan Sekolah (WA helpdesk, Gelombang, Infaq)
+      fetch('api/settings.php')
+        .then(res => res.json())
+        .then(resData => {
+          if (resData && resData.success && resData.data) {
+            localStorage.setItem('sit_bina_insan_settings', JSON.stringify(resData.data));
+            if (resData.data.whatsappHelpdesk) {
+              window.SchoolData.profile.whatsappHelpdesk = resData.data.whatsappHelpdesk;
+              window.SchoolData.profile.whatsapp = '+' + resData.data.whatsappHelpdesk;
+            }
+          }
+        })
+        .catch(e => console.log('Public Settings sync: offline fallback'));
+    }
+  }
+
+  // =========================================================================
+  // App Initialization
+  // =========================================================================
+  function init() {
+    syncPublicData();
+    initNav();
+    initModal();
+    renderHomeNews();
+    renderNewsPortal();
+    initNewsPortalControls();
+    renderTestimonials();
+    renderFaqs();
+
+    // Trigger initial route
+    handleHashChange();
+  }
+
+  // Expose renderers to window for Dynamic Section Engine
+  window.renderHomeNews = renderHomeNews;
+  window.renderTestimonials = renderTestimonials;
+  window.renderFaqs = renderFaqs;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();

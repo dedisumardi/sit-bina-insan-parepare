@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Website Resmi SIT Bina Insan Parepare (TKIT, SDIT, SMPIT). Sekolah Islam Terpadu unggulan di Kota Parepare, Sulawesi Selatan. Pendaftaran SPMB Online TP 2025/2026 dibuka!">
+  <meta name="keywords" content="SIT Bina Insan Parepare, Sekolah Islam Terpadu Parepare, TKIT Parepare, SDIT Parepare, SMPIT Parepare, SPMB Parepare, Tahfizh Parepare, JSIT Sulawesi Selatan">
+  <meta name="author" content="SIT Bina Insan Parepare">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="SIT Bina Insan Parepare - Sekolah Islam Terpadu Unggulan">
+  <meta property="og:description" content="Membentuk Generasi Qur'ani, Cerdas, Mandiri, dan Berakhlak Mulia. Pendaftaran Murid Baru (SPMB) Online Telah Dibuka.">
+  <meta property="og:image" content="assets/images/hero_school.jpg">
+  <meta property="og:type" content="website">
+
+  <title>SIT Bina Insan Parepare | Sekolah Islam Terpadu Unggulan</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/spmb.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. TOP NOTIFICATION BAR
+       ========================================================================= -->
+  <header class="topbar">
+    <div class="container topbar-content">
+      <div class="topbar-info">
+        <div class="topbar-item">
+          <span class="topbar-badge">SPMB 2025/2026</span>
+          <span>Pendaftaran Gelombang 1 (Early Bird) Sedang Berlangsung!</span>
+        </div>
+        <div class="topbar-item">
+          <span>📍 Kota Parepare, Sulawesi Selatan</span>
+        </div>
+      </div>
+      <div class="topbar-socials">
+        <span class="topbar-item">
+          📞 Info & Konsultasi: <strong>+62 812-3456-7890</strong>
+        </span>
+        <span style="opacity: 0.4;">|</span>
+        <a href="https://instagram.com" target="_blank" rel="noopener" class="topbar-social-link" title="Instagram SIT Bina Insan">IG</a>
+        <a href="https://facebook.com" target="_blank" rel="noopener" class="topbar-social-link" title="Facebook SIT Bina Insan">FB</a>
+        <a href="https://youtube.com" target="_blank" rel="noopener" class="topbar-social-link" title="YouTube SIT Bina Insan">YT</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       2. STICKY MAIN NAVBAR
+       ========================================================================= -->
+  <nav class="header-main" aria-label="Navigasi Utama">
+    <div class="container header-container">
+      <a href="#beranda" class="logo-brand" data-view="beranda">
+        <img src="assets/icons/logo.svg" alt="Logo SIT Bina Insan Parepare" class="logo-img">
+      </a>
+
+      <!-- Desktop Nav Items -->
+      <ul class="nav-menu" role="menubar">
+        <li role="none"><a href="#beranda" class="nav-link active" data-view="beranda" role="menuitem">Beranda</a></li>
+        <li role="none"><a href="#tkit" class="nav-link" data-view="tkit" role="menuitem">TKIT</a></li>
+        <li role="none"><a href="#sdit" class="nav-link" data-view="sdit" role="menuitem">SDIT</a></li>
+        <li role="none"><a href="#smpit" class="nav-link" data-view="smpit" role="menuitem">SMPIT</a></li>
+        <li role="none"><a href="#berita" class="nav-link" data-view="berita" role="menuitem">Berita/Artikel</a></li>
+        <li role="none">
+          <a href="#spmb" class="btn btn-accent btn-sm nav-btn-spmb" data-view="spmb" role="menuitem">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            Daftar SPMB
+          </a>
+        </li>
+      </ul>
+
+      <!-- Mobile Hamburger Button -->
+      <button type="button" class="mobile-toggle-btn" id="mobile-toggle-btn" aria-label="Buka Menu Navigasi" aria-expanded="false">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Offcanvas Drawer -->
+  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="mobile-drawer-content">
+      <div class="mobile-drawer-header">
+        <img src="assets/icons/logo.svg" alt="SIT Bina Insan" style="height: 38px;">
+        <button type="button" class="drawer-close-btn" id="drawer-close-btn" aria-label="Tutup Menu">✕</button>
+      </div>
+      <ul class="mobile-nav-list">
+        <li><a href="#beranda" class="mobile-nav-link active" data-view="beranda">Beranda</a></li>
+        <li><a href="#tkit" class="mobile-nav-link" data-view="tkit">TKIT (Anak Usia Dini)</a></li>
+        <li><a href="#sdit" class="mobile-nav-link" data-view="sdit">SDIT (Pendidikan Dasar)</a></li>
+        <li><a href="#smpit" class="mobile-nav-link" data-view="smpit">SMPIT (Menengah Pertama)</a></li>
+        <li><a href="#berita" class="mobile-nav-link" data-view="berita">Berita & Artikel</a></li>
+      </ul>
+      <div style="margin-top: auto;">
+        <a href="#spmb" class="btn btn-primary" style="width: 100%; margin-bottom: 0.75rem;" data-view="spmb">
+          📝 Daftar SPMB Online
+        </a>
+        <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="btn btn-accent" style="width: 100%;">
+          💬 WhatsApp Panitia
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       3. MAIN VIEWS CONTAINER (Single-Page Application Views)
+       ========================================================================= -->
+  <main id="main-content">
+
+    <!-- =======================================================================
+         VIEW 1: BERANDA (HOME)
+         ======================================================================= -->
+    <!-- =======================================================================
+         VIEW 1: BERANDA (HOME)
+         ======================================================================= -->
+    <section class="view-panel active" id="view-beranda" aria-labelledby="hero-title">
+      
+      <!-- 1.1 Hero Banner & Statistik -->
+      <div class="hero-school">
+        <div class="hero-bg-overlay"></div>
+        <div class="hero-gradient"></div>
+        <div class="hero-pattern"></div>
+        <div class="container hero-inner">
+          <div class="hero-left">
+            <div class="hero-pill-badge">
+              <span>✨ SPMB TP 2025/2026 TELAH DIBUKA</span>
+            </div>
+            <h1 class="hero-heading" id="hero-title">
+              Membentuk Generasi <span class="hero-heading-highlight">Qur'ani, Cerdas</span> & Berakhlak Mulia
+            </h1>
+            <p class="hero-desc">
+              SIT Bina Insan Parepare memadukan Kurikulum Nasional, kekhasan JSIT, pembinaan aqidah shohihah, sains modern, dan tahfizh Al-Qur'an bersanad untuk putra-putri tercinta di Kota Parepare.
+            </p>
+            <div class="hero-cta-group">
+              <a href="#spmb" class="btn btn-accent btn-lg" data-view="spmb">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                Daftar SPMB Sekarang
+              </a>
+              <a href="#sdit" class="btn btn-outline-white btn-lg" data-view="sdit">
+                Jelajahi Program Kami
+              </a>
+            </div>
+            <div class="hero-stats-grid">
+              <div class="hero-stat-item">
+                <span class="hero-stat-number">1.250+</span>
+                <span class="hero-stat-label">Santri Aktif</span>
+              </div>
+              <div class="hero-stat-item">
+                <span class="hero-stat-number">420+</span>
+                <span class="hero-stat-label">Hafizh Qur'an</span>
+              </div>
+              <div class="hero-stat-item">
+                <span class="hero-stat-number">85+</span>
+                <span class="hero-stat-label">Guru Berdedikasi</span>
+              </div>
+              <div class="hero-stat-item">
+                <span class="hero-stat-number">64+</span>
+                <span class="hero-stat-label">Juara & Prestasi</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-right">
+            <div class="hero-card-featured">
+              <div class="hero-card-img-wrap">
+                <img src="assets/images/hero_school.jpg" alt="Kampus SIT Bina Insan Parepare">
+                <span class="hero-card-tag">Kampus Terpadu Parepare</span>
+              </div>
+              <h3 class="hero-card-title">Penerimaan Santri Baru Gelombang 1 (Early Bird)</h3>
+              <div class="hero-card-list">
+                <div class="hero-card-list-item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Potongan Infaq Pembangunan hingga <strong>20%</strong></span>
+                </div>
+                <div class="hero-card-list-item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Prioritas Kuota Kelas & Seleksi Observasi Dini</span>
+                </div>
+                <div class="hero-card-list-item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim</span>
+                </div>
+              </div>
+              <a href="#spmb" class="btn btn-primary" style="width: 100%;" data-view="spmb">
+                Isi Formulir Pendaftaran Online
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.2 Sambutan Pimpinan Sekolah -->
+      <section class="section greeting-section">
+        <div class="container">
+          <div class="greeting-grid">
+            <div class="greeting-photo-wrap">
+              <img src="assets/images/principal.jpg" alt="Direktur Pendidikan SIT Bina Insan Parepare">
+              <div class="greeting-photo-badge">
+                <div class="greeting-name">Dr. Ahmad Fauzi, S.Ag., M.Ed.</div>
+                <div class="greeting-role">Direktur Pendidikan SIT Bina Insan</div>
+              </div>
+            </div>
+            <div class="greeting-content">
+              <div class="badge-tag">SAMBUTAN PIMPINAN SEKOLAH</div>
+              <div class="greeting-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+              <h2 class="section-title" style="text-align: left;">Mempersiapkan Pemimpin Masa Depan Berhati Qur'ani</h2>
+              <p class="greeting-text">
+                <em>Assalamu'alaikum Warahmatullahi Wabarakatuh.</em> Selamat datang di website resmi Sekolah Islam Terpadu (SIT) Bina Insan Parepare.
+              </p>
+              <p class="greeting-text">
+                Pendidikan terbaik bukan sekadar mentransfer pengetahuan umum, melainkan menanamkan nilai-nilai tauhid dan adab yang mengakar kuat di dalam sanubari anak. Di SIT Bina Insan Parepare, kami mengintegrasikan ilmu pengetahuan dengan Al-Qur'an dan As-Sunnah, mendidik santri agar cerdas akademiknya, mutqin hafalannya, serta santun budi pekertinya.
+              </p>
+              <div class="greeting-points">
+                <div class="greeting-point-item">
+                  <div class="greeting-point-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+                  </div>
+                  <div>
+                    <div class="greeting-point-title">Tahfizh Terstandar</div>
+                    <div class="greeting-point-desc">Bimbingan intensif talaqqi dengan sanad & penguji bersertifikasi nasional.</div>
+                  </div>
+                </div>
+                <div class="greeting-point-item">
+                  <div class="greeting-point-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                  </div>
+                  <div>
+                    <div class="greeting-point-title">Akreditasi A Unggul</div>
+                    <div class="greeting-point-desc">Kualitas tata kelola dan pengajaran teruji secara institusional.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.3 6 Pilar Keunggulan Pendidikan SIT -->
+      <section class="section" style="background-color: #ffffff;">
+        <div class="container">
+          <div class="section-title-wrap">
+            <span class="badge-tag">KEUNGGULAN UTAMA</span>
+            <h2 class="section-title">6 Pilar Pendidikan SIT Bina Insan</h2>
+            <p class="section-subtitle">Pondasi kokoh dalam menyelenggarakan pendidikan komprehensif bagi seluruh jenjang TKIT, SDIT, dan SMPIT di Kota Parepare.</p>
+          </div>
+          <div class="pillars-grid">
+            <div class="pillar-card">
+              <div class="pillar-icon-box"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg></div>
+              <h3 class="pillar-title">1. Al-Qur'an & As-Sunnah</h3>
+              <p class="pillar-desc">Kurikulum Al-Qur'an terpadu (Tahsin, Tahfizh, dan Tadabbur) untuk membentuk generasi yang senantiasa menjadikan wahyu sebagai pedoman.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon-box"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+              <h3 class="pillar-title">2. Aqidah & Akhlak Karimah</h3>
+              <p class="pillar-desc">Penanaman adab sebelum ilmu, pembiasaan shalat berjamaah, kejujuran, serta kepedulian sosial yang tinggi.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon-box"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
+              <h3 class="pillar-title">3. Sains & Logika Koding</h3>
+              <p class="pillar-desc">Penguasaan sains modern, matematika kritis, dan pengenalan literasi komputasional sejak dini.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon-box"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+              <h3 class="pillar-title">4. Bilingual (Arab & Inggris)</h3>
+              <p class="pillar-desc">Penciptaan lingkungan dwibahasa harian untuk melatih kemandirian berkomunikasi di kancah global.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon-box"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+              <h3 class="pillar-title">5. Kepemimpinan & Pramuka SIT</h3>
+              <p class="pillar-desc">Pelatihan ketangkasan fisik, mental mandiri, kepanduan Islam Terpadu, dan pembinaan pribadi islami (BPI).</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon-box"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+              <h3 class="pillar-title">6. Lingkungan Ramah & Asri</h3>
+              <p class="pillar-desc">Fasilitas belajar yang bersih, sejuk, aman bagi anak, sarana olahraga representatif, serta laboratorium lengkap.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.4 Pilihan Jenjang TKIT, SDIT, SMPIT -->
+      <section class="section" style="background-color: var(--neutral-100);">
+        <div class="container">
+          <div class="section-title-wrap">
+            <span class="badge-tag">JENJANG PENDIDIKAN</span>
+            <h2 class="section-title">Pilihan Jenjang di SIT Bina Insan Parepare</h2>
+            <p class="section-subtitle">Mendampingi setiap fase emas pertumbuhan anak dari usia dini hingga jenjang menengah pertama dengan kurikulum terpadu yang seimbang.</p>
+          </div>
+          <div class="levels-grid">
+            <!-- TKIT -->
+            <div class="level-card">
+              <div class="level-card-img-wrap">
+                <img src="assets/images/tkit_activity.jpg" alt="TKIT Bina Insan Parepare" loading="lazy">
+                <span class="level-badge-age">PAUD (Usia 4 - 6 Tahun)</span>
+              </div>
+              <div class="level-card-body">
+                <h3 class="level-card-name">TKIT Bina Insan</h3>
+                <div class="level-card-tagline">Tumbuh Ceria, Berakhlak Mulia, Cinta Al-Qur'an Sejak Dini</div>
+                <p class="level-card-desc">
+                  Pembelajaran sentra ramah anak (BCCT) yang merangsang sensorik-motorik, penanaman fitrah tauhid, hafalan doa harian, dan surat-surat pendek Juz 30.
+                </p>
+                <div class="level-card-footer">
+                  <a href="#tkit" class="btn btn-outline-primary btn-sm" data-view="tkit">Lihat Profil TKIT</a>
+                  <button type="button" class="btn btn-primary btn-sm" onclick="window.selectJenjangSpmb('tkit')">Daftar TKIT</button>
+                </div>
+              </div>
+            </div>
+            <!-- SDIT -->
+            <div class="level-card">
+              <div class="level-card-img-wrap">
+                <img src="assets/images/sdit_recitation.jpg" alt="SDIT Bina Insan Parepare" loading="lazy">
+                <span class="level-badge-age">Dasar (Kelas 1 - 6)</span>
+              </div>
+              <div class="level-card-body">
+                <h3 class="level-card-name">SDIT Bina Insan</h3>
+                <div class="level-card-tagline">Melejitkan Potensi Akademik dan Karakter Qur'ani Generasi Robbani</div>
+                <p class="level-card-desc">
+                  Kurikulum Merdeka + JSIT, target hafalan Al-Qur'an 3 hingga 5 Juz, sholat berjamaah, Bina Pribadi Islami (BPI), sains eksperimental, dan koding cilik.
+                </p>
+                <div class="level-card-footer">
+                  <a href="#sdit" class="btn btn-outline-primary btn-sm" data-view="sdit">Lihat Profil SDIT</a>
+                  <button type="button" class="btn btn-primary btn-sm" onclick="window.selectJenjangSpmb('sdit')">Daftar SDIT</button>
+                </div>
+              </div>
+            </div>
+            <!-- SMPIT -->
+            <div class="level-card">
+              <div class="level-card-img-wrap">
+                <img src="assets/images/smpit_students.jpg" alt="SMPIT Bina Insan Parepare" loading="lazy">
+                <span class="level-badge-age">Menengah (Kelas 7 - 9)</span>
+              </div>
+              <div class="level-card-body">
+                <h3 class="level-card-name">SMPIT Bina Insan</h3>
+                <div class="level-card-tagline">Mencetak Calon Pemimpin Peradaban Berwawasan Global</div>
+                <p class="level-card-desc">
+                  Sistem Full Day & Program Boarding (Asrama Pesantren Tahfizh), intensif hafalan 5-10 Juz, dwibahasa (Arab & Inggris), riset sains, dan kepemimpinan.
+                </p>
+                <div class="level-card-footer">
+                  <a href="#smpit" class="btn btn-outline-primary btn-sm" data-view="smpit">Lihat Profil SMPIT</a>
+                  <button type="button" class="btn btn-primary btn-sm" onclick="window.selectJenjangSpmb('smpit')">Daftar SMPIT</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.5 Berita & Agenda Terkini -->
+      <section class="section" style="background-color: #ffffff;">
+        <div class="container">
+          <div class="section-title-wrap">
+            <span class="badge-tag">KABAR TERKINI</span>
+            <h2 class="section-title">Berita, Prestasi & Artikel Sekolah</h2>
+            <p class="section-subtitle">Aktivitas pembelajaran, torehan prestasi membanggakan, dan wawasan parenting islami terkini.</p>
+          </div>
+          <div class="news-grid" id="home-news-grid"></div>
+          <div style="text-align: center; margin-top: 2.5rem;">
+            <a href="#berita" class="btn btn-outline-primary" data-view="berita">
+              Lihat Seluruh Berita & Artikel
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1.6 Testimoni Wali Murid -->
+      <section class="section" style="background-color: var(--neutral-50);">
+        <div class="container">
+          <div class="section-title-wrap">
+            <span class="badge-tag">TESTIMONI</span>
+            <h2 class="section-title">Apa Kata Orang Tua Santri?</h2>
+            <p class="section-subtitle">Pengalaman nyata para wali murid mempercayakan pendidikan ananda di SIT Bina Insan Parepare.</p>
+          </div>
+          <div class="testimonials-grid" id="testimonials-grid"></div>
+        </div>
+      </section>
+
+      <!-- 1.7 Tanya Jawab (FAQ) -->
+      <section class="section" style="background-color: #ffffff;">
+        <div class="container">
+          <div class="section-title-wrap">
+            <span class="badge-tag">TANYA JAWAB</span>
+            <h2 class="section-title">Pertanyaan Sering Diajukan (FAQ)</h2>
+            <p class="section-subtitle">Jawaban cepat seputar pendaftaran SPMB, kurikulum, dan kegiatan sekolah di SIT Bina Insan.</p>
+          </div>
+          <div class="faq-list" id="faq-container"></div>
+        </div>
+      </section>
+
+      <!-- 1.8 Banner Ajakan Daftar SPMB -->
+      <section class="section-sm" style="background: linear-gradient(135deg, var(--primary-800), var(--primary-900)); color: #fff; text-align: center;">
+        <div class="container">
+          <div style="max-width: 750px; margin: 0 auto;">
+            <span class="badge-gold">KUOTA TERBATAS</span>
+            <h2 style="font-size: 2.25rem; font-weight: 800; margin: 0.85rem 0 1rem; color: #fff;">
+              Bergabunglah Bersama Keluarga Besar SIT Bina Insan Parepare
+            </h2>
+            <p style="font-size: 1.05rem; color: rgba(255,255,255,0.9); margin-bottom: 2rem; line-height: 1.7;">
+              Daftarkan ananda sekarang juga untuk mendapatkan bimbingan terbaik dalam menghafal Al-Qur'an dan menguasai sains teknologi sejak usia dini.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+              <a href="#spmb" class="btn btn-accent btn-lg" data-view="spmb">Daftar SPMB Online</a>
+              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="btn btn-outline-white btn-lg">Konsultasi WhatsApp</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </section>
+
+    <!-- =======================================================================
+         VIEW 2: TKIT (TAMAN KANAK-KANAK ISLAM TERPADU)
+         ======================================================================= -->
+    <section class="view-panel" id="view-tkit" aria-labelledby="tkit-title">
+      <div class="level-hero">
+        <div class="container level-hero-grid">
+          <div>
+            <div class="breadcrumb">
+              <a href="#beranda" data-view="beranda">Beranda</a> <span>/</span> <span>Jenjang TKIT</span>
+            </div>
+            <div class="hero-pill-badge">PAUD ISLAM TERPADU (USIA 4 - 6 TAHUN)</div>
+            <h1 class="level-hero-title" id="tkit-title">TKIT Bina Insan Parepare</h1>
+            <div class="level-hero-tagline">Tumbuh Ceria, Berakhlak Mulia, Cinta Al-Qur'an Sejak Dini</div>
+            <p class="level-hero-desc">
+              TKIT Bina Insan menyelenggarakan pendidikan anak usia dini berbasis fitrah dengan pendekatan Beyond Centers and Circle Time (BCCT) / Pembelajaran Sentra yang menyenangkan, mengasah motorik, menanamkan nilai-nilai tauhid, serta kecintaan membaca dan menghafal Al-Qur'an sejak usia emas.
+            </p>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-accent btn-lg" onclick="window.selectJenjangSpmb('tkit')">
+                Daftar TKIT Sekarang
+              </button>
+              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="btn btn-outline-white btn-lg">
+                Tanya Panitia TKIT
+              </a>
+            </div>
+          </div>
+          <div class="level-hero-img-wrap">
+            <img src="assets/images/tkit_activity.jpg" alt="Aktivitas Belajar TKIT Bina Insan Parepare">
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail TKIT Programs & Facilities -->
+      <div class="section" style="background-color: #ffffff;">
+        <div class="container">
+          <div class="section-title-wrap">
+            <span class="badge-tag">PROGRAM UNGGULAN</span>
+            <h2 class="section-title">Kurikulum Sentra & Keunggulan TKIT</h2>
+            <p class="section-subtitle">Setiap anak unik dan memiliki fitrah kecerdasan yang distimulasi secara holistik.</p>
+          </div>
+
+          <div class="programs-grid">
+            <div class="program-card">
+              <div class="program-icon">🎨</div>
+              <div>
+                <h3 class="program-title">Sentra Bermain Sambil Belajar (BCCT)</h3>
+                <p class="program-desc">Sentra Balok, Sentra Imtaq, Sentra Seni & Kreativitas, Sentra Bahan Alam, dan Sentra Main Peran yang merangsang kecerdasan majemuk (multiple intelligences).</p>
+              </div>
+            </div>
+
+            <div class="program-card">
+              <div class="program-icon">📖</div>
+              <div>
+                <h3 class="program-title">Tahfizh & Tahsin Cilik Talaqqi</h3>
+                <p class="program-desc">Metode Talaqqi ramah anak untuk hafalan surat-surat pendek (Juz 30), hadits-hadits adab harian, serta doa sehari-hari tanpa paksaan.</p>
+              </div>
+            </div>
+
+            <div class="program-card">
+              <div class="program-icon">🤲</div>
+              <div>
+                <h3 class="program-title">Pembiasaan Adab & Ibadah Praktis</h3>
+                <p class="program-desc">Pengenalan wudhu dan shalat dhuha/fardhu berjamaah, adab makan-minum, birrul walidain, serta kosakata dasar Bahasa Arab & Inggris sederhana.</p>
+              </div>
+            </div>
+
+            <div class="program-card">
+              <div class="program-icon">🏃‍♂️</div>
+              <div>
+                <h3 class="program-title">Stimulasi Motorik Kasar & Halus</h3>
+                <p class="program-desc">Aktivitas luar ruang, playground terstandar, field trip tematik, dan fun cooking sehat untuk menstimulasi sensorik-motorik anak.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fasilitas TKIT -->
+          <div class="section-title-wrap" style="margin-top: 4rem;">
+            <span class="badge-tag">SARANA & PRASARANA</span>
+            <h2 class="section-title">Fasilitas Khusus TKIT</h2>
+          </div>
+
+          <div class="facilities-grid">
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Ruang Kelas Ber-AC & Ramah Anak</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Taman Bermain Outdoor Edukatif</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Sentra Imtaq & Mini Musholla Cilik</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Pojok Baca & Audio Visual Ceria</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Kolam Sensorik & Area Berkebun Cilik</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Ruang UKS & Konsultasi Tumbuh Kembang</span>
+            </div>
+          </div>
+
+          <!-- Pendaftaran TKIT Box -->
+          <div style="background: var(--neutral-50); border: 2px dashed var(--primary-400); border-radius: var(--radius-xl); padding: 2.5rem; margin-top: 3.5rem; text-align: center;">
+            <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900); margin-bottom: 0.5rem;">Informasi Pendaftaran TKIT TP 2025/2026</h3>
+            <p style="color: var(--neutral-600); margin-bottom: 1.5rem;">Usia minimal 4 tahun (TK-A) dan 5 tahun (TK-B) per 1 Juli 2025. Infaq Pendaftaran: <strong>Rp 200.000</strong></p>
+            <button type="button" class="btn btn-primary btn-lg" onclick="window.selectJenjangSpmb('tkit')">
+              Isi Formulir Pendaftaran TKIT Online
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 3: SDIT (SEKOLAH DASAR ISLAM TERPADU)
+         ======================================================================= -->
+    <section class="view-panel" id="view-sdit" aria-labelledby="sdit-title">
+      <div class="level-hero">
+        <div class="container level-hero-grid">
+          <div>
+            <div class="breadcrumb">
+              <a href="#beranda" data-view="beranda">Beranda</a> <span>/</span> <span>Jenjang SDIT</span>
+            </div>
+            <div class="hero-pill-badge">PENDIDIKAN DASAR (KELAS 1 - 6)</div>
+            <h1 class="level-hero-title" id="sdit-title">SDIT Bina Insan Parepare</h1>
+            <div class="level-hero-tagline">Melejitkan Potensi Akademik dan Karakter Qur'ani Generasi Robbani</div>
+            <p class="level-hero-desc">
+              SDIT Bina Insan Parepare mengintegrasikan Kurikulum Nasional Merdeka dengan Kurikulum JSIT Indonesia. Membimbing peserta didik menguasai ilmu pengetahuan, teknologi, sains, literasi, hafalan Al-Qur'an 3 hingga 5 Juz, serta kepribadian islami yang tangguh.
+            </p>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-accent btn-lg" onclick="window.selectJenjangSpmb('sdit')">
+                Daftar SDIT Sekarang
+              </button>
+              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="btn btn-outline-white btn-lg">
+                Konsultasi WhatsApp SDIT
+              </a>
+            </div>
+          </div>
+          <div class="level-hero-img-wrap">
+            <img src="assets/images/sdit_recitation.jpg" alt="Aktivitas Belajar Tahfizh SDIT Bina Insan Parepare">
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail SDIT Programs & Facilities -->
+      <div class="section" style="background-color: #ffffff;">
+        <div class="container">
+          <div class="section-title-wrap">
+            <span class="badge-tag">PROGRAM UNGGULAN</span>
+            <h2 class="section-title">Program Akademik & Karakter SDIT</h2>
+            <p class="section-subtitle">Keseimbangan antara kecerdasan intelektual, emosional, dan spiritual.</p>
+          </div>
+
+          <div class="programs-grid">
+            <div class="program-card">
+              <div class="program-icon">📖</div>
+              <div>
+                <h3 class="program-title">Target Tahfizh 3 - 5 Juz Mutqin</h3>
+                <p class="program-desc">Bimbingan tahsin metode Utsmani/Wafa dan target hafalan Juz 30, 29, 28, hingga 1-2 dengan ujian tasmi' terbuka serta wisuda tahfizh tahunan.</p>
+              </div>
+            </div>
+
+            <div class="program-card">
+              <div class="program-icon">👥</div>
+              <div>
+                <h3 class="program-title">Bina Pribadi Islami (BPI) & Mentoring</h3>
+                <p class="program-desc">Pembinaan karakter mingguan dalam kelompok kecil didampingi guru pembina untuk memupuk ibadah mandiri, empati, dan kepemimpinan.</p>
+              </div>
+            </div>
+
+            <div class="program-card">
+              <div class="program-icon">🔬</div>
+              <div>
+                <h3 class="program-title">Sains, Literasi & Koding Cilik</h3>
+                <p class="program-desc">Pembelajaran saintifik berbasis eksperimen, literasi buku perpustakaan berjenjang, dan pengenalan logika algoritma & komputer dasar.</p>
+              </div>
+            </div>
+
+            <div class="program-card">
+              <div class="program-icon">🏫</div>
+              <div>
+                <h3 class="program-title">Full Day School Edukatif</h3>
+                <p class="program-desc">Jadwal harian seimbang: sholat dzuhur dan ashar berjamaah, makan siang gizi seimbang, istirahat teratur, dan tidak membebani PR berlebih di rumah.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fasilitas SDIT -->
+          <div class="section-title-wrap" style="margin-top: 4rem;">
+            <span class="badge-tag">SARANA & PRASARANA</span>
+            <h2 class="section-title">Fasilitas Kampus SDIT</h2>
+          </div>
+
+          <div class="facilities-grid">
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Ruang Kelas Multimedia Proyektor</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Masjid Sekolah Representatif 2 Lantai</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Laboratorium Sains & Komputer</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Perpustakaan Ramah Anak & E-Library</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Lapangan Futsal, Basket & Area Panahan</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Kantin Sehat & Bersih Terstandar</span>
+            </div>
+          </div>
+
+          <!-- Pendaftaran SDIT Box -->
+          <div style="background: var(--neutral-50); border: 2px dashed var(--primary-400); border-radius: var(--radius-xl); padding: 2.5rem; margin-top: 3.5rem; text-align: center;">
+            <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900); margin-bottom: 0.5rem;">Informasi Pendaftaran SDIT TP 2025/2026</h3>
+            <p style="color: var(--neutral-600); margin-bottom: 1.5rem;">Usia minimal 6 tahun per 1 Juli 2025. Infaq Pendaftaran: <strong>Rp 250.000</strong></p>
+            <button type="button" class="btn btn-primary btn-lg" onclick="window.selectJenjangSpmb('sdit')">
+              Isi Formulir Pendaftaran SDIT Online
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 4: SMPIT (SEKOLAH MENENGAH PERTAMA ISLAM TERPADU)
+         ======================================================================= -->
+    <section class="view-panel" id="view-smpit" aria-labelledby="smpit-title">
+      <div class="level-hero">
+        <div class="container level-hero-grid">
+          <div>
+            <div class="breadcrumb">
+              <a href="#beranda" data-view="beranda">Beranda</a> <span>/</span> <span>Jenjang SMPIT</span>
+            </div>
+            <div class="hero-pill-badge">MENENGAH PERTAMA (KELAS 7 - 9)</div>
+            <h1 class="level-hero-title" id="smpit-title">SMPIT Bina Insan Parepare</h1>
+            <div class="level-hero-tagline">Mencetak Calon Pemimpin Peradaban Berwawasan Global dan Berjiwa Da'i</div>
+            <p class="level-hero-desc">
+              SMPIT Bina Insan Parepare menyediakan sistem Full Day School dan Program Boarding (Pesantren Tahfizh Asrama). Mempersiapkan remaja muslim menghadapi era global melalui penguasaan sains mutakhir, robotik, dwibahasa (Arab & Inggris), tahfizh Al-Qur'an mutqin, serta pembentukan karakter mandiri dan berdaya saing tinggi.
+            </p>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-accent btn-lg" onclick="window.selectJenjangSpmb('smpit')">
+                Daftar SMPIT Sekarang
+              </button>
+              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="btn btn-outline-white btn-lg">
+                Konsultasi Program Boarding
+              </a>
+            </div>
+          </div>
+          <div class="level-hero-img-wrap">
+            <img src="assets/images/smpit_students.jpg" alt="Santri SMPIT Bina Insan Laboratorium Robotik">
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail SMPIT Programs & Facilities -->
+      <div class="section" style="background-color: #ffffff;">
+        <div class="container">
+          <div class="section-title-wrap">
+            <span class="badge-tag">PROGRAM UNGGULAN</span>
+            <h2 class="section-title">Keunggulan Akademik, Bahasa & Boarding SMPIT</h2>
+            <p class="section-subtitle">Menempa kepemimpinan dan kemandirian santri usia remaja menuju jenjang pendidikan tinggi.</p>
+          </div>
+
+          <div class="programs-grid">
+            <div class="program-card">
+              <div class="program-icon">📖</div>
+              <div>
+                <h3 class="program-title">Tahfizh Intensif & Mutqin (Target 5 - 10 Juz)</h3>
+                <p class="program-desc">Kelas tahfizh intensif dengan pembimbing bersanad, halaqah harian, murojaah berkesinambungan, dan sertifikasi tahfizh resmi.</p>
+              </div>
+            </div>
+
+            <div class="program-card">
+              <div class="program-icon">🌐</div>
+              <div>
+                <h3 class="program-title">Bilingual Environment (Arabic & English)</h3>
+                <p class="program-desc">Pembiasaan percakapan harian, English Club, Muhadhoroh (Public Speaking 3 Bahasa: Arab, Inggris, Indonesia), dan Arabic Camp.</p>
+              </div>
+            </div>
+
+            <div class="program-card">
+              <div class="program-icon">🤖</div>
+              <div>
+                <h3 class="program-title">Klub Robotik, Riset Sains & OSN</h3>
+                <p class="program-desc">Pelatihan khusus olimpiade OSN Matematika, IPA, IPS, serta pembuatan karya ilmiah remaja dan robotik otomasi.</p>
+              </div>
+            </div>
+
+            <div class="program-card">
+              <div class="program-icon">⛺</div>
+              <div>
+                <h3 class="program-title">Pramuka SIT & Leadership Camp</h3>
+                <p class="program-desc">Kegiatan kepanduan khas SIT berskala wilayah/nasional untuk menempa kemandirian fisik, survival skill, dan keteladanan sosial.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fasilitas SMPIT -->
+          <div class="section-title-wrap" style="margin-top: 4rem;">
+            <span class="badge-tag">SARANA & PRASARANA</span>
+            <h2 class="section-title">Fasilitas Kampus & Asrama SMPIT</h2>
+          </div>
+
+          <div class="facilities-grid">
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Laboratorium IPA Terpadu (Fisika, Biologi, Kimia)</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Laboratorium Komputer & Bahasa Digital</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Asrama Santri Putra & Putri Terbina (Boarding)</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Masjid Raya Bina Insan Parepare</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Aula Serbaguna & Sarana Olahraga</span>
+            </div>
+            <div class="facility-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Studio Podcast & Media Siswa</span>
+            </div>
+          </div>
+
+          <!-- Pendaftaran SMPIT Box -->
+          <div style="background: var(--neutral-50); border: 2px dashed var(--primary-400); border-radius: var(--radius-xl); padding: 2.5rem; margin-top: 3.5rem; text-align: center;">
+            <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900); margin-bottom: 0.5rem;">Informasi Pendaftaran SMPIT TP 2025/2026</h3>
+            <p style="color: var(--neutral-600); margin-bottom: 1.5rem;">Lulusan SD/MI sederajat. Tersedia Jalur Prestasi Tahfizh bebas biaya pendaftaran. Infaq Pendaftaran: <strong>Rp 300.000</strong></p>
+            <button type="button" class="btn btn-primary btn-lg" onclick="window.selectJenjangSpmb('smpit')">
+              Isi Formulir Pendaftaran SMPIT Online
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 5: BERITA & ARTIKEL
+         ======================================================================= -->
+    <section class="view-panel" id="view-berita" aria-labelledby="berita-title">
+      <div class="section-sm" style="background: linear-gradient(135deg, var(--primary-900), var(--primary-800)); color: #fff; text-align: center; padding-block: 3.5rem;">
+        <div class="container">
+          <span class="badge-gold">PORTAL INFORMASI</span>
+          <h1 style="font-size: 2.5rem; font-weight: 800; margin: 0.75rem 0 0.5rem;" id="berita-title">Berita & Artikel Edukasi</h1>
+          <p style="color: rgba(255,255,255,0.85); font-size: 1.05rem;">Dokumentasi kegiatan sekolah, pengumuman SPMB, serta artikel parenting islami SIT Bina Insan Parepare.</p>
+        </div>
+      </div>
+
+      <div class="section" style="background-color: var(--neutral-50);">
+        <div class="container">
+          <!-- Filter & Search Bar -->
+          <div class="news-filter-bar">
+            <div class="news-categories">
+              <button type="button" class="news-cat-btn active" data-category="Semua">Semua</button>
+              <button type="button" class="news-cat-btn" data-category="Info SPMB">Info SPMB</button>
+              <button type="button" class="news-cat-btn" data-category="Prestasi">Prestasi</button>
+              <button type="button" class="news-cat-btn" data-category="Kegiatan Sekolah">Kegiatan Sekolah</button>
+              <button type="button" class="news-cat-btn" data-category="Opini Islami">Opini & Parenting</button>
+            </div>
+            <div class="news-search-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="search" id="news-search-input" placeholder="Cari judul berita atau artikel..." aria-label="Cari artikel">
+            </div>
+          </div>
+
+          <!-- News Grid -->
+          <div class="news-grid" id="news-portal-grid">
+            <!-- Dynamically populated via js/app.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 6: DAFTAR SPMB (SISTEM PENERIMAAN MURID BARU)
+         ======================================================================= -->
+    <section class="view-panel" id="view-spmb" aria-labelledby="spmb-title">
+      
+      <!-- SPMB Hero Banner -->
+      <div class="spmb-hero">
+        <div class="container" style="text-align: center;">
+          <div class="spmb-hero-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            PENERIMAAN SANTRI BARU (SPMB) TP 2025/2026
+          </div>
+          <h1 class="spmb-hero-title" id="spmb-title">Portal Pendaftaran SPMB Online</h1>
+          <p class="spmb-hero-desc">
+            Selamat datang di Sistem Penerimaan Murid Baru SIT Bina Insan Parepare. Daftarkan putra-putri tercinta secara online, unduh bukti registrasi digital, dan pantau status pendaftaran dengan mudah.
+          </p>
+
+          <!-- Timeline Gelombang -->
+          <div class="waves-timeline-wrap">
+            <div class="wave-pill active">
+              <div class="wave-dot"></div>
+              <span><strong>Gelombang 1:</strong> 1 Nov 2024 - 31 Jan 2025 (Sedang Buka)</span>
+            </div>
+            <div class="wave-pill">
+              <div class="wave-dot" style="background-color: var(--neutral-400); box-shadow: none;"></div>
+              <span><strong>Gelombang 2:</strong> 1 Feb 2025 - 30 Apr 2025</span>
+            </div>
+            <div class="wave-pill">
+              <div class="wave-dot" style="background-color: var(--neutral-400); box-shadow: none;"></div>
+              <span><strong>Gelombang 3:</strong> 1 Mei 2025 s/d Kuota Terpenuhi</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" style="background-color: var(--neutral-100); padding-top: 1rem;">
+        <div class="container">
+          
+          <!-- SPMB Nav Tabs -->
+          <div class="spmb-tabs-nav" role="tablist">
+            <button type="button" class="spmb-tab-btn active" data-tab="form" role="tab" aria-selected="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Formulir Pendaftaran Baru
+            </button>
+            <button type="button" class="spmb-tab-btn" data-tab="status" role="tab" aria-selected="false">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Cek Status Pendaftaran
+            </button>
+            <button type="button" class="spmb-tab-btn" data-tab="info" role="tab" aria-selected="false">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Informasi Alur & Biaya
+            </button>
+          </div>
+
+          <!-- TAB PANEL 1: FORMULIR MULTI-STEP -->
+          <div class="spmb-tab-panel active" id="spmb-panel-form">
+
+            <!-- Step Progress Tracker (Compliant with Modern Web Guidance) -->
+            <ol class="spmb-step-tracker" id="spmb-step-tracker" aria-label="Tahapan Pendaftaran SPMB">
+              <li class="step-item active" data-step="1" aria-current="step">
+                <div class="step-indicator">1</div>
+                <div class="step-label">Pilih Jenjang</div>
+              </li>
+              <li class="step-item" data-step="2">
+                <div class="step-indicator">2</div>
+                <div class="step-label">Data Siswa</div>
+              </li>
+              <li class="step-item" data-step="3">
+                <div class="step-indicator">3</div>
+                <div class="step-label">Data Orang Tua</div>
+              </li>
+              <li class="step-item" data-step="4">
+                <div class="step-indicator">4</div>
+                <div class="step-label">Tahfizh & Bakat</div>
+              </li>
+              <li class="step-item" data-step="5">
+                <div class="step-indicator">5</div>
+                <div class="step-label">Konfirmasi</div>
+              </li>
+            </ol>
+
+            <!-- Form Card -->
+            <div class="spmb-form-card" id="spmb-form-card">
+              <form id="spmb-registration-form" novalidate>
+                
+                <!-- STEP 1: PILIHAN JENJANG & JALUR -->
+                <div class="form-step-content active" id="step-1">
+                  <div class="step-header">
+                    <h2 class="step-title">Langkah 1: Pilih Jenjang & Jalur Pendaftaran</h2>
+                    <p class="step-subtitle">Silakan tentukan jenjang pendidikan yang dituju untuk calon peserta didik baru.</p>
+                  </div>
+
+                  <div class="options-grid-3">
+                    <!-- TKIT Option -->
+                    <label class="option-card-label">
+                      <input type="radio" name="jenjang" value="tkit" checked required>
+                      <div class="option-card-box">
+                        <div class="option-card-icon">
+                          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 4.9V17L12 22 3 17V6.9L12 2z"/></svg>
+                        </div>
+                        <div class="option-card-title">TKIT Bina Insan</div>
+                        <div class="option-card-sub">Usia 4 - 6 Tahun (Sentra)</div>
+                        <div class="option-card-price">Infaq: Rp 200.000</div>
+                      </div>
+                    </label>
+
+                    <!-- SDIT Option -->
+                    <label class="option-card-label">
+                      <input type="radio" name="jenjang" value="sdit">
+                      <div class="option-card-box">
+                        <div class="option-card-icon">
+                          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+                        </div>
+                        <div class="option-card-title">SDIT Bina Insan</div>
+                        <div class="option-card-sub">Kelas 1 - 6 (Full Day)</div>
+                        <div class="option-card-price">Infaq: Rp 250.000</div>
+                      </div>
+                    </label>
+
+                    <!-- SMPIT Option -->
+                    <label class="option-card-label">
+                      <input type="radio" name="jenjang" value="smpit">
+                      <div class="option-card-box">
+                        <div class="option-card-icon">
+                          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+                        </div>
+                        <div class="option-card-title">SMPIT Bina Insan</div>
+                        <div class="option-card-sub">Kelas 7 - 9 (Full Day / Boarding)</div>
+                        <div class="option-card-price">Infaq: Rp 300.000</div>
+                      </div>
+                    </label>
+                  </div>
+
+                  <div style="margin-top: 2rem;">
+                    <label class="form-label" style="font-size: 1.05rem; margin-bottom: 0.75rem;">Pilih Jalur Pendaftaran:</label>
+                    <div class="jalur-grid">
+                      <label class="option-card-label">
+                        <input type="radio" name="jalur" value="reguler" checked>
+                        <div class="jalur-box">
+                          <div class="jalur-title">Jalur Reguler</div>
+                          <div class="jalur-desc">Pendaftaran umum mengikuti prosedur tes observasi standar.</div>
+                        </div>
+                      </label>
+                      <label class="option-card-label">
+                        <input type="radio" name="jalur" value="prestasi_tahfizh">
+                        <div class="jalur-box">
+                          <div class="jalur-title">Jalur Prestasi Tahfizh</div>
+                          <div class="jalur-desc">Hafal min. 2 Juz (SD) atau 3 Juz (SMP). Bebas biaya pendaftaran.</div>
+                        </div>
+                      </label>
+                      <label class="option-card-label">
+                        <input type="radio" name="jalur" value="afirmasi">
+                        <div class="jalur-box">
+                          <div class="jalur-title">Jalur Beasiswa / Afirmasi</div>
+                          <div class="jalur-desc">Khusus calon santri yatim atau dhuafa berprestasi.</div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- STEP 2: DATA PRIBADI SISWA -->
+                <div class="form-step-content" id="step-2">
+                  <div class="step-header">
+                    <h2 class="step-title">Langkah 2: Data Calon Peserta Didik</h2>
+                    <p class="step-subtitle">Isikan identitas calon murid sesuai dengan Akta Kelahiran dan Kartu Keluarga.</p>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="siswa_nama" class="form-label">Nama Lengkap Siswa <span class="required">*</span></label>
+                    <input type="text" id="siswa_nama" name="siswa_nama" class="form-control" placeholder="Contoh: Muhammad Rayhan Al-Fatih" required autocomplete="name">
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label for="siswa_nik" class="form-label">NIK / No. Kartu Keluarga <span class="required">*</span></label>
+                      <input type="text" id="siswa_nik" name="siswa_nik" class="form-control" placeholder="16 digit angka NIK" maxlength="16" pattern="[0-9]{16}" required>
+                      <span class="form-hint">Dapat dilihat pada kolom NIK Kartu Keluarga (KK).</span>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Jenis Kelamin <span class="required">*</span></label>
+                      <div style="display: flex; gap: 1.5rem; min-height: 48px; align-items: center;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                          <input type="radio" name="siswa_jk" value="Laki-laki" checked style="accent-color: var(--primary-600); width: 18px; height: 18px;">
+                          <span>Laki-laki</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                          <input type="radio" name="siswa_jk" value="Perempuan" style="accent-color: var(--primary-600); width: 18px; height: 18px;">
+                          <span>Perempuan</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label for="siswa_tempat_lahir" class="form-label">Tempat Lahir <span class="required">*</span></label>
+                      <input type="text" id="siswa_tempat_lahir" name="siswa_tempat_lahir" class="form-control" placeholder="Contoh: Parepare" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="siswa_tgl_lahir" class="form-label">Tanggal Lahir <span class="required">*</span></label>
+                      <input type="date" id="siswa_tgl_lahir" name="siswa_tgl_lahir" class="form-control" required>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label for="siswa_asal_sekolah" class="form-label">Asal Sekolah Sebelumnya <span class="required">*</span></label>
+                      <input type="text" id="siswa_asal_sekolah" name="siswa_asal_sekolah" class="form-control" placeholder="Contoh: TKIT Bina Insan / RA Al-Ikhlas" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="siswa_anak_ke" class="form-label">Anak Ke- (dari Berapa Bersaudara)</label>
+                      <input type="text" id="siswa_anak_ke" name="siswa_anak_ke" class="form-control" placeholder="Contoh: 1 dari 3 bersaudara">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="siswa_alamat" class="form-label">Alamat Lengkap Tempat Tinggal <span class="required">*</span></label>
+                    <textarea id="siswa_alamat" name="siswa_alamat" class="form-control" rows="3" placeholder="Contoh: Jl. Bau Massepe No. 45, Kel. Cappa Galung, Kec. Bacukiki Barat, Kota Parepare" required autocomplete="street-address"></textarea>
+                  </div>
+                </div>
+
+                <!-- STEP 3: DATA ORANG TUA / WALI -->
+                <div class="form-step-content" id="step-3">
+                  <div class="step-header">
+                    <h2 class="step-title">Langkah 3: Data Orang Tua / Wali</h2>
+                    <p class="step-subtitle">Informasi kontak ayah dan bunda untuk komunikasi seleksi dan verifikasi berkas.</p>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label for="ortu_nama_ayah" class="form-label">Nama Lengkap Ayah / Wali <span class="required">*</span></label>
+                      <input type="text" id="ortu_nama_ayah" name="ortu_nama_ayah" class="form-control" placeholder="Nama ayah kandung / wali" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="ortu_pek_ayah" class="form-label">Pekerjaan Ayah <span class="required">*</span></label>
+                      <input type="text" id="ortu_pek_ayah" name="ortu_pek_ayah" class="form-control" placeholder="Contoh: PNS / Wiraswasta / BUMN" required>
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label for="ortu_wa" class="form-label">No. WhatsApp Aktif Ayah / Wali <span class="required">*</span></label>
+                      <input type="tel" id="ortu_wa" name="ortu_wa" class="form-control" placeholder="Contoh: 081234567890" required autocomplete="tel">
+                      <span class="form-hint">Nomor ini akan menerima pesan konfirmasi dan jadwal observasi.</span>
+                    </div>
+                    <div class="form-group">
+                      <label for="ortu_email" class="form-label">Alamat Email Aktif <span class="required">*</span></label>
+                      <input type="email" id="ortu_email" name="ortu_email" class="form-control" placeholder="Contoh: namaorangtua@gmail.com" required autocomplete="email">
+                    </div>
+                  </div>
+
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label for="ortu_nama_ibu" class="form-label">Nama Lengkap Ibu Kandung <span class="required">*</span></label>
+                      <input type="text" id="ortu_nama_ibu" name="ortu_nama_ibu" class="form-control" placeholder="Nama ibu kandung" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="ortu_pek_ibu" class="form-label">Pekerjaan Ibu <span class="required">*</span></label>
+                      <input type="text" id="ortu_pek_ibu" name="ortu_pek_ibu" class="form-control" placeholder="Contoh: Ibu Rumah Tangga / Guru / Karyawan" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- STEP 4: TAHFIZH & MINAT BAKAT -->
+                <div class="form-step-content" id="step-4">
+                  <div class="step-header">
+                    <h2 class="step-title">Langkah 4: Riwayat Hafalan Qur'an & Prestasi</h2>
+                    <p class="step-subtitle">Bantu kami mengenal potensi dan bekal awal ananda sebelum mengikuti pemetaan/observasi.</p>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="siswa_hafalan" class="form-label">Riwayat / Jumlah Hafalan Al-Qur'an</label>
+                    <textarea id="siswa_hafalan" name="siswa_hafalan" class="form-control" rows="3" placeholder="Contoh: Sudah hafal Juz 30 (Surat An-Naba sampai An-Nas) atau Baru mengenal huruf hijaiyah Iqro jilid 2"></textarea>
+                    <span class="form-hint">Tuliskan sejujurnya, untuk keperluan penempatan halaqah yang tepat.</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="siswa_prestasi" class="form-label">Prestasi Akademik / Non-Akademik (Jika Ada)</label>
+                    <textarea id="siswa_prestasi" name="siswa_prestasi" class="form-control" rows="2" placeholder="Contoh: Juara 2 Lomba Menggambar Tingkat Kota Parepare, Juara Harapan 1 MHQ Anak"></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="siswa_catatan_kesehatan" class="form-label">Riwayat Alergi / Kebutuhan Khusus Kesehatan</label>
+                    <input type="text" id="siswa_catatan_kesehatan" name="siswa_catatan_kesehatan" class="form-control" placeholder="Contoh: Tidak ada riwayat penyakit berat, alergi seafood (bila ada)">
+                  </div>
+                </div>
+
+                <!-- STEP 5: REVIEW & KONFIRMASI -->
+                <div class="form-step-content" id="step-5">
+                  <div class="step-header">
+                    <h2 class="step-title">Langkah 5: Konfirmasi Data Pendaftaran</h2>
+                    <p class="step-subtitle">Mohon periksa kembali kebenaran seluruh data sebelum mengirimkan pendaftaran.</p>
+                  </div>
+
+                  <div id="review-summary-container">
+                    <!-- Populated dynamically via js/spmb.js -->
+                  </div>
+
+                  <div style="background: var(--accent-50); border: 1.5px solid var(--accent-400); border-radius: var(--radius-md); padding: 1.25rem; margin-top: 1.5rem;">
+                    <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
+                      <input type="checkbox" id="persetujuan_checkbox" required style="accent-color: var(--primary-600); width: 20px; height: 20px; margin-top: 2px;">
+                      <span style="font-size: 0.9rem; color: var(--neutral-800); line-height: 1.6;">
+                        Saya menyatakan dengan sebenarnya bahwa data yang saya isikan adalah benar, dan saya bersedia mematuhi segala tata tertib serta ketentuan Sistem Penerimaan Murid Baru SIT Bina Insan Parepare.
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Wizard Navigation Footer -->
+                <div class="wizard-footer">
+                  <button type="button" class="btn btn-outline-primary" id="spmb-prev-btn" style="display: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                    Kembali
+                  </button>
+                  <button type="button" class="btn btn-primary" id="spmb-next-btn" style="margin-left: auto;">
+                    Lanjut
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                  </button>
+                  <button type="button" class="btn btn-accent btn-lg" id="spmb-submit-btn" style="display: none; margin-left: auto;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Kirim & Cetak Bukti Pendaftaran
+                  </button>
+                </div>
+
+              </form>
+            </div>
+
+            <!-- DIGITAL TICKET RESULT VIEW (KARTU TANDA PESERTA) -->
+            <div class="spmb-success-view" id="spmb-success-view">
+              <div id="spmb-ticket-content">
+                <!-- Populated dynamically via js/spmb.js generateTicket() -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- TAB PANEL 2: CEK STATUS PENDAFTARAN -->
+          <div class="spmb-tab-panel" id="spmb-panel-status">
+            <div class="check-status-card">
+              <div class="pillar-icon-box" style="margin-inline: auto;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </div>
+              <h2 style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900); margin-bottom: 0.5rem;">Cek Status Pendaftaran SPMB</h2>
+              <p style="color: var(--neutral-600); font-size: 0.95rem; max-width: 500px; margin-inline: auto;">
+                Masukkan Nomor Registrasi (contoh: <strong>SPMB-2025-SD001</strong>) atau 16 digit NIK calon siswa yang telah didaftarkan.
+              </p>
+
+              <form id="form-check-status" class="check-status-form">
+                <input type="text" id="check-status-input" class="form-control" placeholder="Ketik No. Registrasi atau NIK Siswa..." required autocomplete="off" style="font-weight: 700; text-transform: uppercase;">
+                <button type="submit" class="btn btn-primary">
+                  Cari Data
+                </button>
+              </form>
+
+              <div style="font-size: 0.8rem; color: var(--neutral-500);">
+                💡 Tip Simulasi: Coba cari nomor uji coba: <strong style="color: var(--primary-700); cursor: pointer;" onclick="document.getElementById('check-status-input').value='SPMB-2025-SD001'">SPMB-2025-SD001</strong> atau <strong style="color: var(--primary-700); cursor: pointer;" onclick="document.getElementById('check-status-input').value='SPMB-2025-TK002'">SPMB-2025-TK002</strong>
+              </div>
+
+              <!-- Search Result Wrap -->
+              <div class="check-result-wrap" id="check-result-container"></div>
+            </div>
+          </div>
+
+          <!-- TAB PANEL 3: INFORMASI ALUR & BIAYA -->
+          <div class="spmb-tab-panel" id="spmb-panel-info">
+            <div style="max-width: 900px; margin-inline: auto; background: #fff; border-radius: var(--radius-xl); padding: 2.75rem; box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200);">
+              
+              <div class="section-title-wrap" style="margin-bottom: 2rem;">
+                <span class="badge-tag">PANDUAN LENGKAP</span>
+                <h2 class="section-title">Alur Pendaftaran SPMB</h2>
+                <p class="section-subtitle">5 langkah mudah mendaftarkan ananda di SIT Bina Insan Parepare.</p>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3rem;">
+                <div style="display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem; background: var(--neutral-50); border-radius: var(--radius-lg); border-left: 4px solid var(--primary-600);">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-600); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+                  <div>
+                    <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">Pengisian Formulir Online</h4>
+                    <p style="font-size: 0.9rem; color: var(--neutral-600); line-height: 1.6;">Orang tua mengisi data diri calon santri pada menu <strong>Formulir Pendaftaran Baru</strong> di website ini sampai selesai (5 langkah).</p>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem; background: var(--neutral-50); border-radius: var(--radius-lg); border-left: 4px solid var(--primary-600);">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-600); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+                  <div>
+                    <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">Pembayaran Biaya Infaq Pendaftaran</h4>
+                    <p style="font-size: 0.9rem; color: var(--neutral-600); line-height: 1.6;">
+                      Mentransfer infaq formulir sesuai jenjang ke rekening resmi Yayasan:<br>
+                      <strong>Bank Syariah Indonesia (BSI)</strong> No. Rek: <strong>711-234-5678</strong> a.n <strong>Yayasan Bina Insan Parepare</strong>.
+                    </p>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem; background: var(--neutral-50); border-radius: var(--radius-lg); border-left: 4px solid var(--primary-600);">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-600); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+                  <div>
+                    <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">Konfirmasi & Cetak Bukti Registrasi</h4>
+                    <p style="font-size: 0.9rem; color: var(--neutral-600); line-height: 1.6;">Kirim bukti transfer ke WhatsApp Panitia di <strong>0812-3456-7890</strong> dan cetak Kartu Tanda Peserta SPMB yang telah diterbitkan.</p>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem; background: var(--neutral-50); border-radius: var(--radius-lg); border-left: 4px solid var(--primary-600);">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-600); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
+                  <div>
+                    <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">Observasi & Wawancara Pemetaan</h4>
+                    <p style="font-size: 0.9rem; color: var(--neutral-600); line-height: 1.6;">Hadir bersama ananda di Kampus SIT Bina Insan Parepare sesuai jadwal yang tertera pada Kartu Tanda Peserta.</p>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem; background: var(--neutral-50); border-radius: var(--radius-lg); border-left: 4px solid var(--primary-600);">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-600); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">5</div>
+                  <div>
+                    <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">Pengumuman & Daftar Ulang</h4>
+                    <p style="font-size: 0.9rem; color: var(--neutral-600); line-height: 1.6;">Hasil kelulusan dapat dicek online via menu <em>Cek Status Pendaftaran</em>, dilanjutkan penyelesaian administrasi daftar ulang dan seragam.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div style="text-align: center;">
+                <button type="button" class="btn btn-primary btn-lg" onclick="document.querySelector('.spmb-tab-btn[data-tab=\'form\']').click()">
+                  Mulai Pendaftaran Sekarang
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       4. ARTICLE DETAIL MODAL READER
+       ========================================================================= -->
+  <div class="modal-overlay" id="article-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-article-title">
+    <div class="modal-content-card">
+      <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Tutup Artikel">✕</button>
+      <img src="" alt="" id="modal-article-img" class="modal-article-img">
+      <div class="modal-body">
+        <span id="modal-article-category" class="badge-tag"></span>
+        <div id="modal-article-meta" style="font-size: 0.85rem; color: var(--neutral-500); margin: 0.5rem 0 1rem;"></div>
+        <h2 id="modal-article-title" class="modal-article-title"></h2>
+        <div id="modal-article-prose" class="modal-article-prose"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       5. FOOTER
+       ========================================================================= -->
+  <footer class="footer-main">
+    <div class="container footer-grid">
+      
+      <!-- Col 1: Brand Info -->
+      <div class="footer-brand">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+          <img src="assets/icons/logo.svg" alt="SIT Bina Insan" style="height: 48px; background: #ffffff; border-radius: 8px; padding: 4px;">
+        </div>
+        <p>
+          Sekolah Islam Terpadu (SIT) Bina Insan Parepare berkomitmen mewujudkan generasi cerdas berakhlak mulia melalui perpaduan keunggulan sains teknologi dan kemuliaan Al-Qur'an.
+        </p>
+        <div class="footer-social-links">
+          <a href="https://facebook.com" target="_blank" rel="noopener" class="footer-social-btn" aria-label="Facebook">FB</a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" class="footer-social-btn" aria-label="Instagram">IG</a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" class="footer-social-btn" aria-label="YouTube">YT</a>
+          <a href="https://tiktok.com" target="_blank" rel="noopener" class="footer-social-btn" aria-label="TikTok">TT</a>
+        </div>
+      </div>
+
+      <!-- Col 2: Jenjang Pendidikan -->
+      <div>
+        <h3 class="footer-col-title">Jenjang Sekolah</h3>
+        <ul class="footer-links-list">
+          <li><a href="#tkit" data-view="tkit">› TKIT Bina Insan (PAUD)</a></li>
+          <li><a href="#sdit" data-view="sdit">› SDIT Bina Insan (Dasar)</a></li>
+          <li><a href="#smpit" data-view="smpit">› SMPIT Bina Insan (Menengah)</a></li>
+          <li><a href="#smpit" data-view="smpit">› Program Pesantren / Boarding</a></li>
+          <li><a href="#spmb" data-view="spmb">› Jalur Prestasi Tahfizh</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Tautan Cepat -->
+      <div>
+        <h3 class="footer-col-title">Menu Utama</h3>
+        <ul class="footer-links-list">
+          <li><a href="#beranda" data-view="beranda">› Beranda Sekolah</a></li>
+          <li><a href="#berita" data-view="berita">› Berita & Pengumuman</a></li>
+          <li><a href="#berita" data-view="berita">› Artikel Parenting Islami</a></li>
+          <li><a href="#spmb" data-view="spmb">› Pendaftaran SPMB Online</a></li>
+          <li><a href="#spmb" data-view="spmb" onclick="setTimeout(()=>{document.querySelector('.spmb-tab-btn[data-tab=\'status\']')?.click()}, 200)">› Cek Status Registrasi</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Alamat & Kontak Parepare -->
+      <div>
+        <h3 class="footer-col-title">Sekretariat & Kampus</h3>
+        <div class="footer-contact-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Jl. Jenderal Sudirman No. 88, Kel. Bumi Harapan, Kec. Bacukiki Barat, Kota Parepare, Sulawesi Selatan 91122</span>
+        </div>
+        <div class="footer-contact-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span>Telp: +62 421 21456 / WA: +62 812-3456-7890</span>
+        </div>
+        <div class="footer-contact-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span>Email: spmb@sitbinainsanparepare.sch.id</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Copyright -->
+    <div class="container footer-bottom">
+      <div>
+        © 2025 SIT Bina Insan Parepare. Seluruh Hak Cipta Dilindungi Undang-Undang.
+      </div>
+      <div>
+        Sekolah Islam Terpadu (JSIT Indonesia) • Kota Parepare &bull; <a href="admin.html" target="_blank" style="color:var(--accent-400); text-decoration:underline; font-weight:700;">🔐 Portal Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       6. FLOATING WHATSAPP BUTTON (Quick Helpdesk Parepare)
+       ========================================================================= -->
+  <a href="https://wa.me/6281234567890?text=Assalamu%27alaikum%20Panitia%20SPMB%20SIT%20Bina%20Insan%20Parepare%2C%20saya%20ingin%20bertanya%20seputar%20pendaftaran%20sekolah." target="_blank" rel="noopener noreferrer" class="floating-whatsapp" aria-label="Hubungi Panitia SPMB via WhatsApp">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+    <span>Tanya Panitia SPMB</span>
+  </a>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/spmb.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

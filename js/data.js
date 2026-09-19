@@ -1,0 +1,332 @@
+/**
+ * SIT BINA INSAN PAREPARE
+ * Data Repository: Informasi Sekolah, Profil Jenjang, Berita, Testimoni, FAQ & SPMB
+ */
+
+const SchoolData = {
+  profile: {
+    name: "SIT Bina Insan Parepare",
+    tagline: "Membentuk Generasi Qur'ani, Cerdas, Mandiri, dan Berakhlak Mulia",
+    subTagline: "Sekolah Islam Terpadu Unggulan di Kota Parepare, Sulawesi Selatan",
+    foundation: "Yayasan Bina Insan Parepare",
+    accreditation: "Terakreditasi A (Unggul)",
+    address: "Jl. Jenderal Sudirman No. 88, Kel. Bumi Harapan, Kec. Bacukiki Barat, Kota Parepare, Sulawesi Selatan 91122",
+    googleMapsUrl: "https://maps.google.com/?q=Kota+Parepare",
+    phone: "+62 421 21456",
+    whatsapp: "+6281234567890",
+    whatsappHelpdesk: "6281234567890",
+    email: "info@sitbinainsanparepare.sch.id",
+    spmbEmail: "spmb@sitbinainsanparepare.sch.id",
+    stats: {
+      totalStudents: "1.250+",
+      tahfizhAlumni: "420+",
+      certifiedTeachers: "85+",
+      nationalAwards: "64+"
+    },
+    socials: {
+      facebook: "https://facebook.com/sitbinainsanparepare",
+      instagram: "https://instagram.com/sitbinainsanparepare",
+      youtube: "https://youtube.com/@sitbinainsanparepare",
+      tiktok: "https://tiktok.com/@sitbinainsanparepare"
+    }
+  },
+
+  levels: {
+    tkit: {
+      id: "tkit",
+      badge: "PAUD & Usia Dini (4 - 6 Tahun)",
+      name: "TKIT Bina Insan Parepare",
+      fullName: "Taman Kanak-kanak Islam Terpadu Bina Insan",
+      heroImage: "assets/images/tkit_activity.jpg",
+      accentColor: "#10b981",
+      tagline: "Tumbuh Ceria, Berakhlak Mulia, Cinta Al-Qur'an Sejak Dini",
+      description: "TKIT Bina Insan Parepare menyelenggarakan pendidikan anak usia dini berbasis fitrah dengan pendekatan Beyond Centers and Circle Time (BCCT) / Pembelajaran Sentra yang menyenangkan, mengasah motorik, menanamkan nilai-nilai tauhid, serta kecintaan membaca dan menghafal Al-Qur'an sejak usia emas.",
+      vision: "Menjadi PAUD Islam Terpadu terdepan dalam menumbuhkan generasi usia dini yang bertauhid lurus, berkarakter adab, cerdas, kreatif, dan mandiri.",
+      keyPrograms: [
+        {
+          title: "Sentra Bermain Sambil Belajar (BCCT)",
+          desc: "Sentra Balok, Sentra Imtaq, Sentra Seni & Kreativitas, Sentra Bahan Alam, dan Sentra Main Peran yang merangsang kecerdasan majemuk (multiple intelligences)."
+        },
+        {
+          title: "Tahfizh & Tahsin Cilik",
+          desc: "Metode Talaqqi ramah anak untuk hafalan surat-surat pendek (Juz 30), hadits-hadits adab harian, serta doa sehari-hari."
+        },
+        {
+          title: "Pembiasaan Adab & Ibadah Praktis",
+          desc: "Pengenalan wudhu dan shalat dhuha/fardhu berjamaah, adab makan-minum, birrul walidain, serta kosakata dasar Bahasa Arab & Inggris sederhana."
+        },
+        {
+          title: "Stimulasi Motorik & Sensori",
+          desc: "Aktivitas luar ruang, playground terstandar, field trip tematik, dan fun cooking sehat untuk menstimulasi sensorik-motorik anak."
+        }
+      ],
+      facilities: [
+        "Ruang Kelas Ber-AC & Aman Anak",
+        "Taman Bermain Outdoor Edukatif",
+        "Sentra Imtaq & Mini Musholla",
+        "Pojok Baca & Audio Visual Ceria",
+        "Kolam Sensorik & Area Berkebun Cilik",
+        "Ruang UKS & Konsultasi Tumbuh Kembang"
+      ],
+      spmbFee: "Rp 200.000",
+      ageRequirement: "Usia minimal 4 tahun (TK-A) dan 5 tahun (TK-B) per Juli 2025"
+    },
+
+    sdit: {
+      id: "sdit",
+      badge: "Pendidikan Dasar (Kelas 1 - 6)",
+      name: "SDIT Bina Insan Parepare",
+      fullName: "Sekolah Dasar Islam Terpadu Bina Insan",
+      heroImage: "assets/images/sdit_recitation.jpg",
+      accentColor: "#059669",
+      tagline: "Melejitkan Potensi Akademik dan Karakter Qur'ani Generasi Robbani",
+      description: "SDIT Bina Insan Parepare mengintegrasikan Kurikulum Nasional (Kurikulum Merdeka) dengan Kurikulum Kekhasan Jaringan Sekolah Islam Terpadu (JSIT). Fokus kami membimbing peserta didik menguasai ilmu pengetahuan, teknologi, sains, literasi, hafalan Al-Qur'an 3 hingga 5 Juz, serta kepribadian islami yang tangguh.",
+      vision: "Mewujudkan lulusan sekolah dasar yang beraqidah shohihah, beribadah shohihah, berakhlak mulia, berprestasi akademik unggul, dan berjiwa kepemimpinan.",
+      keyPrograms: [
+        {
+          title: "Program Unggulan Tahfizh 3 - 5 Juz",
+          desc: "Bimbingan tahsin metode Utsmani/Wafa dan target hafalan Juz 30, 29, 28, hingga 1-2 dengan ujian tasmi' terbuka serta wisuda tahfizh tahunan."
+        },
+        {
+          title: "Bina Pribadi Islami (BPI) & Mentoring",
+          desc: "Pembinaan karakter mingguan dalam kelompok kecil didampingi guru pembina untuk memupuk ibadah mandiri, empati, dan kepemimpinan."
+        },
+        {
+          title: "Sains, Literasi Digital & Koding Cilik",
+          desc: "Pembelajaran saintifik berbasis eksperimen, literasi buku perpustakaan berjenjang, dan pengenalan logika algoritma & komputer dasar."
+        },
+        {
+          title: "Full Day School Edukatif & Bermakna",
+          desc: "Jadwal harian seimbang: sholat dzuhur dan ashar berjamaah, makan siang gizi seimbang, istirahat teratur, dan tidak membebani PR berlebih di rumah."
+        }
+      ],
+      facilities: [
+        "Ruang Kelas Multimedia Proyektor",
+        "Masjid Sekolah Representatif",
+        "Laboratorium Sains & Komputer",
+        "Perpustakaan Ramah Anak & E-Library",
+        "Lapangan Futsal, Basket & Area Panahan",
+        "Kantin Bersih & Sehat Terstandar BPOM"
+      ],
+      spmbFee: "Rp 250.000",
+      ageRequirement: "Usia minimal 6 tahun (atau rekomendasi psikolog jika 5 tahun 8 bulan) per 1 Juli 2025"
+    },
+
+    smpit: {
+      id: "smpit",
+      badge: "Menengah Pertama (Kelas 7 - 9)",
+      name: "SMPIT Bina Insan Parepare",
+      fullName: "Sekolah Menengah Pertama Islam Terpadu Bina Insan",
+      heroImage: "assets/images/smpit_students.jpg",
+      accentColor: "#047857",
+      tagline: "Mencetak Calon Pemimpin Peradaban Berwawasan Global dan Berjiwa Da'i",
+      description: "SMPIT Bina Insan Parepare menyediakan sistem Full Day School dan opsi Boarding (Pesantren Tahfizh). Mempersiapkan remaja muslim menghadapi era global melalui penguasaan sains mutakhir, robotik, dwibahasa (Arab & Inggris), tahfizh Al-Qur'an mutqin, serta pembentukan karakter mandiri dan berdaya saing tinggi.",
+      vision: "Menjadi institusi pendidikan menengah muslim percontohan yang melahirkan intelektual muslim berintegritas, mandiri, unggul secara akademik dan spiritual.",
+      keyPrograms: [
+        {
+          title: "Tahfizh Intensif & Mutqin (Target 5 - 10 Juz)",
+          desc: "Kelas tahfizh intensif dengan pembimbing bersanad, halaqah harian, murojaah berkesinambungan, dan sertifikasi tahfizh resmi."
+        },
+        {
+          title: "Bilingual Environment (Arabic & English)",
+          desc: "Pembiasaan percakapan harian, English Club, Muhadhoroh (Public Speaking 3 Bahasa: Arab, Inggris, Indonesia), dan Arabic Camp."
+        },
+        {
+          title: "Klub Sains, Riset Remaja & Robotik",
+          desc: "Pelatihan khusus olimpiade OSN Matematika, IPA, IPS, serta pembuatan karya ilmiah remaja dan robotik otomasi."
+        },
+        {
+          title: "Pramuka SIT & Leadership Camp",
+          desc: "Kegiatan kepanduan khas SIT berskala wilayah/nasional untuk menempa kemandirian fisik, survival skill, dan keteladanan sosial."
+        }
+      ],
+      facilities: [
+        "Laboratorium IPA Terpadu (Fisika, Biologi, Kimia)",
+        "Laboratorium Komputer & Bahasa Digital",
+        "Asrama Santri yang Nyaman & Terbina (Program Boarding)",
+        "Masjid Raya Bina Insan 2 Lantai",
+        "Aula Serbaguna & Sarana Olahraga Lengkap",
+        "Studio Podcast & Multimedia Siswa"
+      ],
+      spmbFee: "Rp 300.000",
+      ageRequirement: "Lulusan SD/MI sederajat dengan ijazah / Surat Keterangan Lulus resmi"
+    }
+  },
+
+  articles: [
+    {
+      id: 1,
+      category: "Info SPMB",
+      categoryClass: "badge-spmb",
+      title: "Penerimaan Murid Baru (SPMB) SIT Bina Insan Parepare TP 2025/2026 Resmi Dibuka!",
+      date: "10 Januari 2025",
+      author: "Humas & Panitia SPMB",
+      readTime: "3 menit baca",
+      image: "assets/images/hero_school.jpg",
+      excerpt: "Pendaftaran peserta didik baru jenjang TKIT, SDIT, dan SMPIT Bina Insan Parepare telah dibuka. Dapatkan penawaran Infaq Pembangunan Gelombang 1 serta beasiswa tahfizh.",
+      content: `
+        <p>Alhamdulillah, seiring komitmen kami mencetak generasi Qur'ani berakhlak mulia di Kota Parepare dan sekitarnya, Panitia Sistem Penerimaan Murid Baru (SPMB) SIT Bina Insan Parepare secara resmi mengumumkan pembukaan pendaftaran santri/peserta didik baru untuk Tahun Pelajaran 2025/2026.</p>
+        
+        <h3>Pilihan Jenjang & Kuota Pendaftaran</h3>
+        <p>Tahun ini, SIT Bina Insan membuka kuota terbatas untuk menjamin rasio ideal antara pendidik dan peserta didik:</p>
+        <ul>
+          <li><strong>TKIT Bina Insan</strong>: Membuka kelas TK-A dan TK-B dengan pendekatan Sentra Ramah Anak.</li>
+          <li><strong>SDIT Bina Insan</strong>: 4 Rombongan Belajar (Rombel) dengan fasilitas Kurikulum Merdeka Terpadu.</li>
+          <li><strong>SMPIT Bina Insan</strong>: Opsi Full Day School dan Opsi Boarding / Asrama Pesantren Tahfizh.</li>
+        </ul>
+
+        <h3>Keuntungan Mendaftar di Gelombang 1 (Early Bird)</h3>
+        <p>Pendaftar yang menyelesaikan administrasi pada Gelombang 1 (November - Januari) berhak memperoleh diskon khusus Infaq Gedung sebesar 20%, prioritas seleksi tes observasi, serta seragam batik khas Bina Insan.</p>
+        
+        <p>Pendaftaran dapat dilakukan secara online melalui website resmi ini atau hadir langsung di Sekretariat SPMB SIT Bina Insan Parepare setiap hari kerja pukul 08.00 - 15.00 WITA.</p>
+      `
+    },
+    {
+      id: 2,
+      category: "Prestasi",
+      categoryClass: "badge-prestasi",
+      title: "Siswa SMPIT Bina Insan Raih Juara 1 Robotik & Juara 2 Tahfizh Tingkat Provinsi Sulsel",
+      date: "18 Desember 2024",
+      author: "Tim Kesiswaan",
+      readTime: "4 menit baca",
+      image: "assets/images/smpit_students.jpg",
+      excerpt: "Prestasi membanggakan kembali dipersembahkan oleh ananda santri SMPIT Bina Insan Parepare dalam ajang Olimpiade Sains dan Teknologi JSIT Sulsel 2024.",
+      content: `
+        <p>Prestasi gemilang ditorehkan oleh kontingen santri SMPIT Bina Insan Parepare pada perhelatan akbar Festival & Olimpiade Pelajar Islam se-Sulawesi Selatan yang diselenggarakan di Makassar pekan lalu.</p>
+        
+        <p>Tim Robotik SMPIT Bina Insan yang digawangi oleh Muhammad Al-Fatih dan rekannya berhasil menyabet <strong>Juara 1 Kategori Line Follower Micro-Robot</strong> setelah mengungguli puluhan perwakilan sekolah favorit lainnya di Sulawesi Selatan.</p>
+
+        <h3>Harmonisasi Sains dan Al-Qur'an</h3>
+        <p>Tidak hanya cemerlang di bidang teknologi robotik, pada cabang Musabaqah Hifzhil Qur'an (MHQ) 5 Juz, ananda Aisyah Humaira (Kelas 8) sukses menyabet Juara 2 dengan nilai tajwid dan kelancaran hafalan yang memukau dewan juri.</p>
+        
+        <blockquote>"Keberhasilan ini membuktikan bahwa anak-anak yang tekun menghafal Al-Qur'an memiliki kecerdasan logika dan daya konsentrasi yang sangat tinggi untuk menguasai ilmu sains modern," tutur Kepala SMPIT Bina Insan.</blockquote>
+      `
+    },
+    {
+      id: 3,
+      category: "Kegiatan Sekolah",
+      categoryClass: "badge-kegiatan",
+      title: "Keseruan Wisuda Tahfizh Akbar: 85 Santri SDIT & SMPIT Diwisuda dengan Predikat Mutqin",
+      date: "05 Desember 2024",
+      author: "Koordinator Al-Qur'an",
+      readTime: "3 menit baca",
+      image: "assets/images/sdit_recitation.jpg",
+      excerpt: "Suasana haru dan penuh keberkahan mewarnai Gedung Islamic Centre Parepare saat 85 santri SIT Bina Insan memasangkan mahkota kemuliaan kepada kedua orang tuanya.",
+      content: `
+        <p>Gedung pertemuan di Kota Parepare dipenuhi isak tangis haru bahagia para orang tua saat prosesi penyerahan mahkota simbolis dari santri wisudawan tahfizh kepada ayah dan bunda tercinta pada acara <em>Wisuda Tahfizh Akbar SIT Bina Insan 2024</em>.</p>
+        
+        <p>Sebanyak 85 santri jenjang SDIT dan SMPIT dinyatakan lulus uji tasmi' hafalan Al-Qur'an satu kali duduk di hadapan para penguji bersanad nasional, mulai dari kategori 3 Juz, 5 Juz, hingga santri mutqin 10 Juz.</p>
+
+        <p>Kegiatan ini merupakan agenda rutin tahunan Yayasan Bina Insan Parepare guna mengapresiasi ketekunan para santri dan menjadi pemicu semangat bagi adik-adik kelas untuk senantiasa dekat dan mencintai Al-Qur'an.</p>
+      `
+    },
+    {
+      id: 4,
+      category: "Opini Islami",
+      categoryClass: "badge-opini",
+      title: "Mendidik Karakter Anak di Era Digital: Peran Sinergi Sekolah dan Keluarga",
+      date: "22 November 2024",
+      author: "Dr. Ahmad Fauzi, S.Ag., M.Ed.",
+      readTime: "5 menit baca",
+      image: "assets/images/principal.jpg",
+      excerpt: "Tantangan mendidik anak saat ini bukan lagi sekadar memberi ilmu, melainkan membentengi hati anak dengan iman dan adab agar bijak menyikapi teknologi.",
+      content: `
+        <p>Perkembangan teknologi kecerdasan buatan, media sosial, dan gawai pintar menghadirkan pedang bermata dua bagi tumbuh kembang anak-anak kita. Jika tidak dilandasi pondasi adab yang kokoh, keterbukaan informasi ini dapat mengikis nilai-nilai luhur dan empati generasi muda.</p>
+        
+        <h3>Konsep Pendidikan Islam Terpadu</h3>
+        <p>Di SIT Bina Insan Parepare, kami memandang bahwa ilmu umum dan ilmu agama bukanlah dua hal yang terpisah (dikotomis). Seluruh mata pelajaran sains, matematika, bahasa, dan sosial diintegrasikan dengan nilai-nilai tauhid dan kebesaran Allah SWT.</p>
+
+        <p>Namun, pendidikan di sekolah hanyalah sepertiga dari total waktu anak. Dua pertiganya ada di rumah dan lingkungan. Oleh karena itu, program Bina Pribadi Islami (BPI) melibatkan peran aktif orang tua melalui buku penghubung mutaba'ah yaumiyah (ibadah harian) dan forum parenting berkala.</p>
+      `
+    },
+    {
+      id: 5,
+      category: "Kegiatan Sekolah",
+      categoryClass: "badge-kegiatan",
+      title: "TKIT Bina Insan Gelar Market Day Ceria: Latih Jiwa Wirausaha dan Kejujuran Sejak Dini",
+      date: "14 November 2024",
+      author: "Humas TKIT",
+      readTime: "3 menit baca",
+      image: "assets/images/tkit_activity.jpg",
+      excerpt: "Penuh keceriaan, murid-murid cilik TKIT belajar bertransaksi jual beli makanan sehat dan prakarya buatan sendiri dengan uang kupon edukatif.",
+      content: `
+        <p>Halaman TKIT Bina Insan Parepare disulap menjadi pasar cilik tematik dalam kegiatan tahunan <em>Market Day Kids 2024</em>. Para ananda yang terbagi dalam stan-stan kecil menjajakan aneka kue sehat buatan bersama bunda serta hasil karya kreasi seni tangan.</p>
+        
+        <p>Melalui kegiatan ini, ananda usia dini belajar secara nyata konsep menghitung nilai mata uang, adab kejujuran berdagang ala Rasulullah SAW, rasa percaya diri menawarkan barang, serta sikap sabar mengantre saat berbelanja.</p>
+      `
+    }
+  ],
+
+  testimonials: [
+    {
+      name: "dr. H. Hendra Saputra, Sp.A",
+      role: "Orang Tua Siswa SDIT & SMPIT Bina Insan",
+      photo: "assets/images/principal.jpg",
+      quote: "Mempercayakan pendidikan anak-anak kami di SIT Bina Insan Parepare adalah keputusan terbaik keluarga kami. Pembiasaan shalat berjamaah dan hafalan Qur'annya luar biasa, anak-anak pulang ke rumah dengan adab yang sangat santun dan mandiri."
+    },
+    {
+      name: "Hj. Nurhaedah, S.Pd., M.Si",
+      role: "Orang Tua Siswa TKIT Bina Insan",
+      photo: "assets/images/tkit_activity.jpg",
+      quote: "Anak saya di TKIT dulu pemalu sekali. Setelah 6 bulan di SIT Bina Insan dengan metode sentra bermainnya, sekarang sangat ceria, hafal puluhan doa harian, dan lancar membaca Iqro. Gurunya sabar dan penuh kasih sayang."
+    },
+    {
+      name: "Ir. M. Ridwan Hakim, M.T",
+      role: "Alumni Wali Murid & Dosen",
+      photo: "assets/images/smpit_students.jpg",
+      quote: "Lulusan SMPIT Bina Insan memiliki bekal akademik sains yang kuat sekaligus kepribadian islami yang tangguh. Anak sulung saya kini lulus seleksi di SMA Unggulan Nasional tanpa kesulitan."
+    }
+  ],
+
+  spmbFaqs: [
+    {
+      q: "Kapan periode pendaftaran SPMB SIT Bina Insan dibuka?",
+      a: "Pendaftaran Gelombang 1 (Early Bird) dibuka mulai 1 November 2024 s/d 31 Januari 2025. Gelombang 2 berlangsung 1 Februari s/d 30 April 2025. Pendaftaran dapat ditutup lebih awal apabila kuota rombel kelas telah terpenuhi."
+    },
+    {
+      q: "Bagaimana tahapan seleksi masuk di TKIT, SDIT, dan SMPIT?",
+      a: "Untuk TKIT, dilakukan observasi kesiapan tumbuh kembang anak dan wawancara orang tua. Untuk SDIT, observasi kematangan usia, motorik, pengenalan huruf/angka dasar, dan wawancara komitmen orang tua. Untuk SMPIT, tes potensi akademik, tes membaca & hafalan Al-Qur'an, tes psikotes dasar, serta wawancara calon siswa & orang tua."
+    },
+    {
+      q: "Apakah ada jalur beasiswa bagi siswa berprestasi atau tahfizh?",
+      a: "Ya! SIT Bina Insan menyediakan Jalur Prestasi Tahfizh (bebas biaya registrasi dan potongan SPP) bagi calon siswa yang memiliki hafalan minimal 2 Juz untuk SDIT dan minimal 3-5 Juz untuk SMPIT, serta Jalur Prestasi Olimpiade Sains dan Jalur Afirmasi Yatim/Dhuafa."
+    },
+    {
+      q: "Bagaimana cara mencetak bukti pendaftaran online?",
+      a: "Setelah mengisi formulir pendaftaran 4 langkah pada menu 'Daftar SPMB', sistem akan secara otomatis menerbitkan Kartu Tanda Peserta SPMB berisikan Nomor Registrasi resmi. Anda dapat langsung mengunduhnya dalam format PDF atau mencetaknya via tombol 'Cetak Bukti Pendaftaran'."
+    },
+    {
+      q: "Apakah SMPIT Bina Insan Parepare memiliki program asrama (boarding)?",
+      a: "Betul. SMPIT Bina Insan menyediakan dua pilihan program: Program Full Day School (pulang sore pukul 16.00 WITA) dan Program Pesantren / Boarding School dengan asrama putra dan putri terpisah yang didampingi musyrif/musyrifah 24 jam."
+    }
+  ]
+};
+
+// Dynamic synchronization with localStorage (CMS integration)
+(function() {
+  try {
+    const savedArticles = localStorage.getItem('sit_bina_insan_articles_data');
+    if (savedArticles) {
+      const parsed = JSON.parse(savedArticles);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        SchoolData.articles = parsed;
+      }
+    } else {
+      localStorage.setItem('sit_bina_insan_articles_data', JSON.stringify(SchoolData.articles));
+    }
+
+    const savedSettings = localStorage.getItem('sit_bina_insan_settings');
+    if (savedSettings) {
+      const parsedSet = JSON.parse(savedSettings);
+      if (parsedSet.whatsappHelpdesk) {
+        SchoolData.profile.whatsappHelpdesk = parsedSet.whatsappHelpdesk;
+        SchoolData.profile.whatsapp = '+' + parsedSet.whatsappHelpdesk;
+      }
+    }
+  } catch (e) {
+    console.warn('LocalStorage sync warning:', e);
+  }
+})();
+
+// Export to global scope
+window.SchoolData = SchoolData;
