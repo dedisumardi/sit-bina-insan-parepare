@@ -126,6 +126,35 @@
       opacity: 1;
       pointer-events: auto;
     }
+
+    /* Responsive Sidebar & Drawer Animations */
+    #admin-sidebar {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Desktop Sidebar Collapsed State */
+    @media (min-width: 1024px) {
+      body.sidebar-collapsed #admin-sidebar {
+        width: 0 !important;
+        min-width: 0 !important;
+        opacity: 0 !important;
+        overflow: hidden !important;
+        border-right-width: 0 !important;
+        pointer-events: none !important;
+      }
+    }
+
+    /* Prevent body scroll when mobile sidebar is open */
+    @media (max-width: 1023px) {
+      body.mobile-sidebar-open {
+        overflow: hidden !important;
+      }
+    }
+
+    /* Mobile drawer overlay animation */
+    #sidebar-backdrop {
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
   </style>
 </head>
 <body class="h-full font-sans antialiased text-slate-800 bg-[#f8fafc] flex overflow-hidden">
@@ -167,24 +196,35 @@
     </div>
   </div>
 
-  <!-- BEGIN: MainSidebar -->
-  <aside class="w-72 bg-[#0d172e] flex-shrink-0 flex flex-col justify-between border-r border-slate-800/80 shadow-2xl z-30 transition-all duration-300" data-purpose="sidebar-navigation">
+  <!-- Backdrop Overlay for Mobile Sidebar Drawer -->
+  <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden" aria-hidden="true"></div>
+
+  <!-- BEGIN: MainSidebar (Responsive Drawer on Mobile/Tablet & Collapsible on Desktop) -->
+  <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-50 lg:static lg:z-30 w-72 max-w-[85vw] bg-[#0d172e] flex-shrink-0 flex flex-col justify-between border-r border-slate-800/80 shadow-2xl transition-all duration-300 -translate-x-full lg:translate-x-0" data-purpose="sidebar-navigation">
     <!-- Top Part: School Brand & Navigation -->
     <div class="flex flex-col h-full overflow-hidden">
       <!-- School Brand Header -->
-      <div class="px-6 py-6 border-b border-slate-800/80 flex items-center space-x-3.5">
-        <div class="w-12 h-12 rounded-xl bg-white p-1.5 shadow-md flex items-center justify-center flex-shrink-0 ring-2 ring-emerald-500/20">
-          <img alt="Logo SIT Bina Insan Parepare" class="w-full h-full object-contain" src="/assets/icons/logo.svg?v=2">
-        </div>
-        <div class="flex flex-col min-w-0">
-          <span class="text-sm font-bold tracking-tight text-white truncate">SIT Bina Insan</span>
-          <span class="text-[11px] text-slate-400 font-medium tracking-wide truncate">Parepare, Sulawesi Selatan</span>
-          <div class="mt-1 flex items-center gap-1.5">
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/30">
-              Administrator
-            </span>
+      <div class="px-5 sm:px-6 py-5 sm:py-6 border-b border-slate-800/80 flex items-center justify-between">
+        <div class="flex items-center space-x-3.5 min-w-0">
+          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white p-1.5 shadow-md flex items-center justify-center flex-shrink-0 ring-2 ring-emerald-500/20">
+            <img alt="Logo SIT Bina Insan Parepare" class="w-full h-full object-contain" src="/assets/icons/logo.svg?v=2">
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="text-sm font-bold tracking-tight text-white truncate">SIT Bina Insan</span>
+            <span class="text-[11px] text-slate-400 font-medium tracking-wide truncate">Parepare, Sulawesi Selatan</span>
+            <div class="mt-1 flex items-center gap-1.5">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                Administrator
+              </span>
+            </div>
           </div>
         </div>
+        <!-- Mobile/Tablet Close Button -->
+        <button type="button" id="btn-close-sidebar" class="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors focus:outline-none" aria-label="Tutup Menu Sidebar" title="Tutup Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       <!-- Main Navigation Menu -->
@@ -258,34 +298,45 @@
   <!-- BEGIN: ContentAreaWrapper -->
   <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
     <!-- BEGIN: TopNavbar -->
-    <header class="h-20 bg-white border-b border-slate-200/80 px-8 flex items-center justify-between flex-shrink-0 z-20" data-purpose="top-navigation-bar">
-      <!-- Page Title & Subtitle -->
-      <div>
-        <div class="flex items-center gap-2.5">
-          <h1 class="text-xl font-extrabold tracking-tight text-slate-900" id="admin-page-title">Dashboard &amp; Ringkasan</h1>
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200" id="admin-navbar-wave-badge">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" id="admin-navbar-wave-dot"></span>
-            <span id="admin-navbar-wave-text">Gelombang 1 (Early Bird) Aktif</span>
-          </span>
+    <header class="h-16 sm:h-20 bg-white border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 flex items-center justify-between flex-shrink-0 z-20 gap-2 sm:gap-4" data-purpose="top-navigation-bar">
+      <!-- Left: Hamburger Button & Page Title -->
+      <div class="flex items-center gap-2.5 sm:gap-4 min-w-0">
+        <!-- Hamburger Menu Button (Drawer on Mobile/Tablet & Collapse on Desktop) -->
+        <button type="button" id="btn-toggle-sidebar" class="inline-flex items-center justify-center w-10 h-10 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/90 transition duration-150 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-emerald-500" aria-label="Toggle Menu Sidebar" title="Buka / Sembunyikan Menu Sidebar">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+        </button>
+
+        <!-- Page Title & Subtitle -->
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+            <h1 class="text-base sm:text-lg md:text-xl font-extrabold tracking-tight text-slate-900 truncate" id="admin-page-title">Dashboard &amp; Ringkasan</h1>
+            <span class="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200" id="admin-navbar-wave-badge">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" id="admin-navbar-wave-dot"></span>
+              <span id="admin-navbar-wave-text">Gelombang 1 (Early Bird) Aktif</span>
+            </span>
+          </div>
+          <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5 truncate hidden sm:block" id="admin-page-desc">Ringkasan statistik SPMB, pendaftar terbaru, dan status sekolah.</p>
         </div>
-        <p class="text-xs text-slate-500 mt-0.5" id="admin-page-desc">Ringkasan statistik SPMB, pendaftar terbaru, dan status sekolah.</p>
       </div>
+
       <!-- Top Right Actions & User Profile -->
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
         <!-- Quick View Site Button -->
-        <a class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 rounded-lg transition duration-150" href="/" target="_blank">
+        <a class="hidden sm:inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 rounded-lg transition duration-150" href="/" target="_blank">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
-          <span>Lihat Website</span>
+          <span class="hidden md:inline">Lihat Website</span>
         </a>
-        <div class="h-8 w-px bg-slate-200"></div>
+        <div class="hidden sm:block h-6 sm:h-8 w-px bg-slate-200"></div>
         <!-- Admin Profile Pill -->
-        <div class="flex items-center gap-3 p-1.5 pl-2 pr-3 bg-slate-50 border border-slate-200 rounded-full hover:bg-slate-100 transition duration-150 cursor-default">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-bold text-xs flex items-center justify-center shadow-sm">
+        <div class="flex items-center gap-2 sm:gap-3 p-1 sm:p-1.5 sm:pl-2 sm:pr-3 bg-slate-50 border border-slate-200 rounded-full hover:bg-slate-100 transition duration-150 cursor-default">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-bold text-xs flex items-center justify-center shadow-sm flex-shrink-0">
             AD
           </div>
-          <div class="flex flex-col text-left">
+          <div class="flex flex-col text-left hidden sm:flex">
             <span class="text-xs font-bold text-slate-800 leading-tight">Panitia SPMB</span>
             <span class="text-[10px] text-slate-500 font-medium">superadmin@binaisn</span>
           </div>
@@ -295,7 +346,7 @@
     <!-- END: TopNavbar -->
 
     <!-- BEGIN: MainContentScrollable -->
-    <main class="flex-1 overflow-y-auto p-8" data-purpose="dashboard-main-content">
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8" data-purpose="dashboard-main-content">
       
       <!-- =====================================================================
            PANEL 1: DASHBOARD & RINGKASAN (Sesuai Desain User)
@@ -304,7 +355,7 @@
         <!-- BEGIN: MetricSummaryCards -->
         <div class="space-y-5" data-purpose="metrics-container">
           <!-- Top Primary Metrics: Overview & Revenue -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             <!-- Card 1: Total Pendaftar -->
             <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all duration-200 flex items-start justify-between relative overflow-hidden group">
               <div class="space-y-3">
@@ -370,7 +421,7 @@
           </div>
 
           <!-- Distinct Jenjang Breakdown Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
             <!-- TKIT Card -->
             <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all duration-200 relative overflow-hidden group">
               <div class="flex items-start justify-between">
@@ -473,7 +524,7 @@
           </div>
           <!-- Table Container -->
           <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse min-w-[640px]">
               <thead>
                 <tr class="border-b border-slate-100 bg-slate-50/75 text-[11px] uppercase tracking-wider font-bold text-slate-500">
                   <th class="py-3.5 px-6" scope="col">NO. REG</th>
@@ -503,14 +554,14 @@
            ===================================================================== -->
       <section class="admin-panel space-y-6" id="panel-spmb">
         <div class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden">
-          <div class="px-6 py-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
               <h2 class="text-base font-bold text-slate-900 tracking-tight">Daftar Seluruh Pendaftar SPMB Online</h2>
               <div id="spmb-filter-count" class="text-xs text-slate-500 mt-0.5">Memuat data santri...</div>
             </div>
-            <div class="flex flex-wrap items-center gap-3">
+            <div class="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
               <!-- Filter Jenjang -->
-              <select id="spmb-filter-jenjang" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50">
+              <select id="spmb-filter-jenjang" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50 flex-1 sm:flex-none min-w-[130px]">
                 <option value="all">Semua Jenjang</option>
                 <option value="tkit">TKIT Saja</option>
                 <option value="sdit">SDIT Saja</option>
@@ -518,7 +569,7 @@
               </select>
 
               <!-- Filter Status -->
-              <select id="spmb-filter-status" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50">
+              <select id="spmb-filter-status" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50 flex-1 sm:flex-none min-w-[130px]">
                 <option value="all">Semua Status</option>
                 <option value="menunggu">Menunggu Pembayaran</option>
                 <option value="terverifikasi">Terverifikasi</option>
@@ -526,10 +577,10 @@
               </select>
 
               <!-- Search -->
-              <input type="search" id="spmb-search-input" class="text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 w-48 lg:w-64" placeholder="Cari nama, No. Reg, NIK...">
+              <input type="search" id="spmb-search-input" class="text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 w-full sm:w-48 lg:w-64" placeholder="Cari nama, No. Reg, NIK...">
 
               <!-- Export CSV Button -->
-              <button type="button" id="spmb-export-btn" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition duration-150">
+              <button type="button" id="spmb-export-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition duration-150">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
                 <span>Export CSV/Excel</span>
               </button>
@@ -537,7 +588,7 @@
           </div>
 
           <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse min-w-[760px]">
               <thead>
                 <tr class="border-b border-slate-100 bg-slate-50/75 text-[11px] uppercase tracking-wider font-bold text-slate-500">
                   <th class="py-3.5 px-6">No. Registrasi</th>
@@ -562,19 +613,19 @@
            ===================================================================== -->
       <section class="admin-panel space-y-6" id="panel-berita">
         <div class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden">
-          <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
             <div>
               <h2 class="text-base font-bold text-slate-900 tracking-tight">Manajemen Berita &amp; Artikel Sekolah</h2>
               <p class="text-xs text-slate-500 mt-0.5">Artikel yang disimpan di sini langsung tampil di halaman berita website utama.</p>
             </div>
-            <button type="button" id="btn-add-article" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition duration-150">
+            <button type="button" id="btn-add-article" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition duration-150">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
               <span>Tulis Berita Baru</span>
             </button>
           </div>
 
           <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse min-w-[680px]">
               <thead>
                 <tr class="border-b border-slate-100 bg-slate-50/75 text-[11px] uppercase tracking-wider font-bold text-slate-500">
                   <th class="py-3.5 px-6">Foto</th>
@@ -598,14 +649,14 @@
            ===================================================================== -->
       <section class="admin-panel space-y-6" id="panel-settings">
         <div class="bg-white rounded-2xl border border-slate-200/90 shadow-card max-w-4xl mx-auto overflow-hidden">
-          <div class="px-6 py-5 border-b border-slate-100">
+          <div class="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-100">
             <h2 class="text-base font-bold text-slate-900 tracking-tight">Konfigurasi Sistem SPMB &amp; Informasi Sekolah</h2>
             <p class="text-xs text-slate-500 mt-0.5">Atur status pendaftaran, infaq formulir, kontak panitia, dan rekening pembayaran.</p>
           </div>
 
-          <form id="form-school-settings" class="p-6 space-y-6">
+          <form id="form-school-settings" class="p-4 sm:p-6 space-y-6">
             <!-- Kelola Gelombang SPMB Aktif (Editable & Real-Time) -->
-            <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/90 space-y-4">
+            <div class="p-4 sm:p-5 bg-slate-50/80 rounded-2xl border border-slate-200/90 space-y-4">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/70">
                 <div>
                   <div class="flex items-center gap-2">
@@ -614,7 +665,7 @@
                   </div>
                   <p class="text-[11px] text-slate-500 mt-0.5">Ubah nama gelombang, rentang tanggal, status, dan teks notifikasi. Perubahan langsung terupdate otomatis di website utama tanpa refresh.</p>
                 </div>
-                <div id="badge-wave-preview" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm">
+                <div id="badge-wave-preview" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm self-start sm:self-auto">
                   <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
                   <span id="preview-wave-label">Gelombang 1 (Early Bird) • Buka</span>
                 </div>
@@ -648,7 +699,7 @@
               </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label for="set-tkit-fee" class="block text-xs font-bold text-slate-700 mb-1.5">Infaq Formulir TKIT</label>
                 <input type="text" id="set-tkit-fee" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5" required>
@@ -694,10 +745,10 @@
   <!-- =========================================================================
        MODAL 1: DETAIL & VERIFIKASI SISWA SPMB
        ========================================================================= -->
-  <div class="adm-modal-overlay" id="modal-applicant-detail">
-    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+  <div class="adm-modal-overlay p-3 sm:p-4" id="modal-applicant-detail">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       <!-- Modal Header -->
-      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+      <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 flex items-center justify-between">
         <div>
           <h3 class="text-base font-bold text-slate-900">Verifikasi Berkas Calon Santri</h3>
           <p class="text-xs text-slate-500">No. Registrasi: <strong class="text-emerald-700 font-mono" id="modal-app-reg"></strong></p>
@@ -708,7 +759,7 @@
       </div>
 
       <!-- Modal Body (Scrollable) -->
-      <div class="p-6 overflow-y-auto space-y-4 text-xs">
+      <div class="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
             <span class="text-slate-400 block text-[10px] font-bold uppercase">Nama Lengkap</span>
@@ -792,14 +843,14 @@
       </div>
 
       <!-- Modal Footer -->
-      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
-        <a id="modal-app-wa-btn" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition">
+      <div class="px-4 sm:px-6 py-3 sm:py-3.5 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3">
+        <a id="modal-app-wa-btn" href="#" target="_blank" rel="noopener" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.573 1.761.854 2.806.854 3.18 0 5.767-2.587 5.768-5.766.001-3.182-2.585-5.769-5.768-5.769zm10.024 5.828c0 5.549-4.512 10.063-10.063 10.063-1.745 0-3.385-.45-4.821-1.242l-5.171 1.357 1.381-5.042c-.878-1.488-1.389-3.23-1.389-5.136 0-5.551 4.514-10.063 10.063-10.063 5.551 0 10.063 4.512 10.063 10.063z"/></svg>
           <span>Chat WhatsApp Wali</span>
         </a>
-        <div class="flex items-center gap-2">
-          <button type="button" class="adm-modal-close px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition">Tutup</button>
-          <button type="button" id="modal-app-save-btn" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition">Simpan Perubahan</button>
+        <div class="w-full sm:w-auto flex items-center justify-end gap-2">
+          <button type="button" class="adm-modal-close flex-1 sm:flex-none px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition text-center">Tutup</button>
+          <button type="button" id="modal-app-save-btn" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition text-center">Simpan Perubahan</button>
         </div>
       </div>
     </div>
@@ -808,10 +859,10 @@
   <!-- =========================================================================
        MODAL 2: TULIS & EDIT BERITA SEKOLAH
        ========================================================================= -->
-  <div class="adm-modal-overlay" id="modal-article-editor">
-    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+  <div class="adm-modal-overlay p-3 sm:p-4" id="modal-article-editor">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
       <!-- Header -->
-      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+      <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 flex items-center justify-between">
         <h3 class="text-base font-bold text-slate-900" id="editor-modal-title">Tulis Berita / Artikel Baru</h3>
         <button type="button" class="adm-modal-close text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -820,7 +871,7 @@
 
       <!-- Form Body -->
       <form id="form-article-editor" class="flex-1 flex flex-col overflow-hidden">
-        <div class="p-6 overflow-y-auto space-y-4 text-xs">
+        <div class="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs">
           <div>
             <label for="article-title" class="block font-bold text-slate-700 mb-1">Judul Berita</label>
             <input type="text" id="article-title" class="w-full text-xs rounded-xl border-slate-200 py-2.5 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Ketik judul artikel..." required>
@@ -875,9 +926,9 @@
           </div>
         </div>
 
-        <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2">
-          <button type="button" class="adm-modal-close px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition">Batal</button>
-          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition">Publikasikan ke Website</button>
+        <div class="px-4 sm:px-6 py-3 sm:py-3.5 bg-slate-50 border-t border-slate-100 flex flex-col-reverse sm:flex-row sm:items-center justify-end gap-2">
+          <button type="button" class="adm-modal-close w-full sm:w-auto px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition text-center">Batal</button>
+          <button type="submit" class="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition text-center">Publikasikan ke Website</button>
         </div>
       </form>
     </div>
