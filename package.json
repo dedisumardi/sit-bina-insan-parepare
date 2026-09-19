@@ -1,0 +1,10 @@
+{
+  "name": "sit-bina-insan-parepare",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Website Resmi dan Portal SPMB SIT Bina Insan Parepare",
+  "scripts": {
+    "dev": "node dev-server.js",
+    "build": "echo 'Static assets ready'"
+  }
+}
