@@ -352,17 +352,17 @@
                 <!-- QR Code Pattern Mockup -->
                 <rect width="120" height="120" rx="8" fill="#ffffff"/>
                 <!-- Corner 1 -->
-                <rect x="8" y="8" width="34" height="34" rx="4" fill="#047857"/>
+                <rect x="8" y="8" width="34" height="34" rx="4" fill="#002f9b"/>
                 <rect x="14" y="14" width="22" height="22" rx="2" fill="#ffffff"/>
-                <rect x="19" y="19" width="12" height="12" fill="#047857"/>
+                <rect x="19" y="19" width="12" height="12" fill="#002f9b"/>
                 <!-- Corner 2 -->
-                <rect x="78" y="8" width="34" height="34" rx="4" fill="#047857"/>
+                <rect x="78" y="8" width="34" height="34" rx="4" fill="#002f9b"/>
                 <rect x="84" y="14" width="22" height="22" rx="2" fill="#ffffff"/>
-                <rect x="89" y="19" width="12" height="12" fill="#047857"/>
+                <rect x="89" y="19" width="12" height="12" fill="#002f9b"/>
                 <!-- Corner 3 -->
-                <rect x="8" y="78" width="34" height="34" rx="4" fill="#047857"/>
+                <rect x="8" y="78" width="34" height="34" rx="4" fill="#002f9b"/>
                 <rect x="14" y="84" width="22" height="22" rx="2" fill="#ffffff"/>
-                <rect x="19" y="89" width="12" height="12" fill="#047857"/>
+                <rect x="19" y="89" width="12" height="12" fill="#002f9b"/>
                 <!-- Data Blocks -->
                 <rect x="48" y="14" width="8" height="8" fill="#0f172a"/>
                 <rect x="60" y="24" width="10" height="8" fill="#0f172a"/>

@@ -508,8 +508,8 @@
     if (!toast) {
       toast = document.createElement('div');
       toast.id = 'realtime-sync-toast';
-      toast.style.cssText = 'position:fixed; bottom:24px; right:24px; z-index:99999; background:#047857; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; box-shadow:0 10px 25px -5px rgba(0,0,0,0.3); display:flex; align-items:center; gap:8px; transition:opacity 0.3s ease, transform 0.3s ease; opacity:0; transform:translateY(20px); pointer-events:none; font-family:"Plus Jakarta Sans", sans-serif;';
-      toast.innerHTML = `<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#34d399;"></span><span id="realtime-sync-toast-text"></span>`;
+      toast.style.cssText = 'position:fixed; bottom:24px; right:24px; z-index:99999; background:#002f9b; color:#fff; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; box-shadow:0 10px 25px -5px rgba(0,0,0,0.3); display:flex; align-items:center; gap:8px; transition:opacity 0.3s ease, transform 0.3s ease; opacity:0; transform:translateY(20px); pointer-events:none; font-family:"Plus Jakarta Sans", sans-serif;';
+      toast.innerHTML = `<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#60a5fa;"></span><span id="realtime-sync-toast-text"></span>`;
       document.body.appendChild(toast);
     }
     const textEl = document.getElementById('realtime-sync-toast-text');

@@ -6,9 +6,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --adm-primary: #065f46;
-  --adm-primary-dark: #022c22;
-  --adm-primary-light: #10b981;
+  --adm-primary: #002f9b;
+  --adm-primary-dark: #001854;
+  --adm-primary-light: #2563eb;
   --adm-accent: #f59e0b;
   --adm-bg: #f8fafc;
   --adm-sidebar-bg: #0f172a;
@@ -41,7 +41,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: linear-gradient(135deg, rgba(6, 95, 70, 0.95), rgba(2, 44, 34, 0.98));
+  background: linear-gradient(135deg, rgba(0, 47, 155, 0.95), rgba(0, 18, 66, 0.98));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,7 +107,7 @@ body {
 
 .login-input:focus {
   border-color: var(--adm-primary);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 0 3px rgba(0, 47, 155, 0.2);
 }
 
 .login-btn {
@@ -125,7 +125,7 @@ body {
 }
 
 .login-btn:hover {
-  background: #047857;
+  background: #002685;
   transform: translateY(-1px);
 }
 
@@ -314,16 +314,16 @@ body {
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--adm-primary);
-  background: #ecfdf5;
+  background: #eff6ff;
   padding: 0.55rem 1rem;
   border-radius: 8px;
-  border: 1px solid #a7f3d0;
+  border: 1px solid #bfdbfe;
   text-decoration: none;
   transition: background 150ms;
 }
 
 .btn-view-site:hover {
-  background: #d1fae5;
+  background: #dbeafe;
 }
 
 .admin-user-pill {
@@ -602,9 +602,9 @@ body {
 }
 
 .btn-icon-edit:hover {
-  background: #ecfdf5;
-  color: #059669;
-  border-color: #a7f3d0;
+  background: #eff6ff;
+  color: #002f9b;
+  border-color: #bfdbfe;
 }
 
 .btn-icon-print:hover {
@@ -647,7 +647,7 @@ body {
 }
 
 .adm-btn-primary:hover {
-  background: #047857;
+  background: #002685;
 }
 
 .adm-btn-secondary {
@@ -794,7 +794,7 @@ body {
 }
 
 .adm-toast.success {
-  border-left: 4px solid #10b981;
+  border-left: 4px solid #002f9b;
 }
 
 .adm-toast.error {

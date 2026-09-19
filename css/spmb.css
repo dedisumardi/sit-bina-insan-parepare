@@ -376,7 +376,7 @@
 .option-card-label input[type="radio"]:checked + .option-card-box {
   background: #ffffff;
   border-color: var(--primary-600);
-  box-shadow: 0 8px 20px -3px rgba(5, 150, 105, 0.2);
+  box-shadow: 0 8px 20px -3px rgba(0, 47, 155, 0.2);
   transform: translateY(-4px);
 }
 
@@ -737,7 +737,7 @@
   }
 
   .ticket-header {
-    background: #064e3b !important;
+    background: #002f9b !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
