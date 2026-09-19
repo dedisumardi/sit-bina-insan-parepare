@@ -432,6 +432,14 @@
       }
     }
 
+    // 3b. Hero Card 3 Benefit Points in Beranda (Editable by Admin)
+    const p1 = document.getElementById('home-hero-point-1');
+    const p2 = document.getElementById('home-hero-point-2');
+    const p3 = document.getElementById('home-hero-point-3');
+    if (p1 && settings.wavePoint1) p1.innerHTML = settings.wavePoint1;
+    if (p2 && settings.wavePoint2) p2.innerHTML = settings.wavePoint2;
+    if (p3 && settings.wavePoint3) p3.innerHTML = settings.wavePoint3;
+
     // 4. SPMB Timeline Waves Highlighting & Dates
     const timelineWrap = document.getElementById('home-waves-timeline');
     if (timelineWrap) {

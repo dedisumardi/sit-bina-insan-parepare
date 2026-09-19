@@ -243,6 +243,9 @@
       waveDates: "1 Nov 2024 s/d 31 Jan 2025",
       waveStatus: "open",
       waveNotice: "Pendaftaran Gelombang 1 (Early Bird) Sedang Berlangsung!",
+      wavePoint1: "Potongan Infaq Pembangunan hingga 20%",
+      wavePoint2: "Prioritas Kuota Kelas & Seleksi Observasi Dini",
+      wavePoint3: "Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim",
       tkitFee: "Rp 200.000",
       sditFee: "Rp 250.000",
       smpitFee: "Rp 300.000",
@@ -1037,6 +1040,15 @@
     const noticeInput = document.getElementById('set-wave-notice');
     if (noticeInput) noticeInput.value = waveNotice;
 
+    const pt1Input = document.getElementById('set-wave-point-1');
+    if (pt1Input) pt1Input.value = settings.wavePoint1 || 'Potongan Infaq Pembangunan hingga 20%';
+
+    const pt2Input = document.getElementById('set-wave-point-2');
+    if (pt2Input) pt2Input.value = settings.wavePoint2 || 'Prioritas Kuota Kelas & Seleksi Observasi Dini';
+
+    const pt3Input = document.getElementById('set-wave-point-3');
+    if (pt3Input) pt3Input.value = settings.wavePoint3 || 'Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim';
+
     updateWavePreview(waveName, waveStatus);
     updateNavbarWaveBadge(waveName, waveStatus);
 
@@ -1054,6 +1066,9 @@
     const datesInput = document.getElementById('set-wave-dates');
     const statusSelect = document.getElementById('set-wave-status');
     const noticeInput = document.getElementById('set-wave-notice');
+    const pt1Input = document.getElementById('set-wave-point-1');
+    const pt2Input = document.getElementById('set-wave-point-2');
+    const pt3Input = document.getElementById('set-wave-point-3');
 
     // Live preview when typing or changing status
     [nameInput, statusSelect].forEach(el => {
@@ -1075,6 +1090,9 @@
       const waveDates = datesInput ? datesInput.value.trim() : '';
       const waveStatus = statusSelect ? statusSelect.value : 'open';
       const waveNotice = noticeInput ? noticeInput.value.trim() : `Pendaftaran ${waveName} Sedang Berlangsung!`;
+      const wavePoint1 = pt1Input ? pt1Input.value.trim() : 'Potongan Infaq Pembangunan hingga 20%';
+      const wavePoint2 = pt2Input ? pt2Input.value.trim() : 'Prioritas Kuota Kelas & Seleksi Observasi Dini';
+      const wavePoint3 = pt3Input ? pt3Input.value.trim() : 'Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim';
 
       settings = {
         activeWave: waveName,
@@ -1082,6 +1100,9 @@
         waveDates: waveDates,
         waveStatus: waveStatus,
         waveNotice: waveNotice,
+        wavePoint1: wavePoint1,
+        wavePoint2: wavePoint2,
+        wavePoint3: wavePoint3,
         tkitFee: document.getElementById('set-tkit-fee').value.trim(),
         sditFee: document.getElementById('set-sdit-fee').value.trim(),
         smpitFee: document.getElementById('set-smpit-fee').value.trim(),
