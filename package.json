@@ -5,6 +5,6 @@
   "description": "Website Resmi dan Portal SPMB SIT Bina Insan Parepare",
   "scripts": {
     "dev": "node dev-server.js",
-    "build": "echo 'Static assets ready'"
+    "build": "node build.js"
   }
 }
