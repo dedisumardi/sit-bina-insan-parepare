@@ -1049,6 +1049,15 @@
     const pt3Input = document.getElementById('set-wave-point-3');
     if (pt3Input) pt3Input.value = settings.wavePoint3 || 'Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim';
 
+    const statTkInput = document.getElementById('set-stat-tk');
+    if (statTkInput) statTkInput.value = settings.statTk || '180+';
+    const statSdInput = document.getElementById('set-stat-sd');
+    if (statSdInput) statSdInput.value = settings.statSd || '650+';
+    const statSmpInput = document.getElementById('set-stat-smp');
+    if (statSmpInput) statSmpInput.value = settings.statSmp || '420+';
+    const statGuruInput = document.getElementById('set-stat-guru');
+    if (statGuruInput) statGuruInput.value = settings.statGuru || '85+';
+
     updateWavePreview(waveName, waveStatus);
     updateNavbarWaveBadge(waveName, waveStatus);
 
@@ -1103,6 +1112,10 @@
         wavePoint1: wavePoint1,
         wavePoint2: wavePoint2,
         wavePoint3: wavePoint3,
+        statTk: document.getElementById('set-stat-tk') ? document.getElementById('set-stat-tk').value.trim() : '180+',
+        statSd: document.getElementById('set-stat-sd') ? document.getElementById('set-stat-sd').value.trim() : '650+',
+        statSmp: document.getElementById('set-stat-smp') ? document.getElementById('set-stat-smp').value.trim() : '420+',
+        statGuru: document.getElementById('set-stat-guru') ? document.getElementById('set-stat-guru').value.trim() : '85+',
         tkitFee: document.getElementById('set-tkit-fee').value.trim(),
         sditFee: document.getElementById('set-sdit-fee').value.trim(),
         smpitFee: document.getElementById('set-smpit-fee').value.trim(),

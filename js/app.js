@@ -440,6 +440,16 @@
     if (p2 && settings.wavePoint2) p2.innerHTML = settings.wavePoint2;
     if (p3 && settings.wavePoint3) p3.innerHTML = settings.wavePoint3;
 
+    // 3c. Homepage Hero Stats (Editable by Admin)
+    const sTk = document.getElementById('home-stat-tk');
+    const sSd = document.getElementById('home-stat-sd');
+    const sSmp = document.getElementById('home-stat-smp');
+    const sGuru = document.getElementById('home-stat-guru');
+    if (sTk && settings.statTk) sTk.textContent = settings.statTk;
+    if (sSd && settings.statSd) sSd.textContent = settings.statSd;
+    if (sSmp && settings.statSmp) sSmp.textContent = settings.statSmp;
+    if (sGuru && settings.statGuru) sGuru.textContent = settings.statGuru;
+
     // 4. SPMB Timeline Waves Highlighting & Dates
     const timelineWrap = document.getElementById('home-waves-timeline');
     if (timelineWrap) {
