@@ -9,7 +9,7 @@
   --adm-primary: #002f9b;
   --adm-primary-dark: #001854;
   --adm-primary-light: #2563eb;
-  --adm-accent: #f59e0b;
+  --adm-accent: #ffcc00;
   --adm-bg: #f8fafc;
   --adm-sidebar-bg: #0f172a;
   --adm-surface: #ffffff;
@@ -510,8 +510,8 @@ body {
 }
 
 .status-pending {
-  background: #fef3c7;
-  color: #b45309;
+  background: #fff7cc;
+  color: #b38f00;
 }
 
 .status-verified {
@@ -666,7 +666,7 @@ body {
 }
 
 .adm-btn-accent:hover {
-  background: #d97706;
+  background: #e6b800;
 }
 
 .adm-btn-danger {

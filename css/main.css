@@ -19,13 +19,16 @@
   --primary-100: #dbeafe;
   --primary-50:  #eff6ff;
 
-  /* Warm Gold / Amber Accent Palette */
-  --accent-700:  #b45309;
-  --accent-600:  #d97706;
-  --accent-500:  #f59e0b;
-  --accent-400:  #fbbf24;
-  --accent-100:  #fef3c7;
-  --accent-50:   #fffbeb;
+  /* Golden Yellow Accent Palette (#ffcc00) */
+  --accent-800:  #8a6e00;
+  --accent-700:  #b38f00;
+  --accent-600:  #d4a600;
+  --accent-500:  #ffcc00;
+  --accent-400:  #ffdb33;
+  --accent-300:  #ffe666;
+  --accent-200:  #fff099;
+  --accent-100:  #fff7cc;
+  --accent-50:   #fffde6;
 
   /* Neutral Slate & Dark Mode Friendly Tones */
   --neutral-900: #0f172a;
@@ -57,7 +60,7 @@
   --shadow-lg: 0 10px 25px -3px rgba(15, 23, 42, 0.1), 0 4px 10px -4px rgba(15, 23, 42, 0.05);
   --shadow-xl: 0 20px 35px -5px rgba(15, 23, 42, 0.15), 0 8px 16px -6px rgba(15, 23, 42, 0.08);
   --shadow-emerald: 0 10px 25px -4px rgba(0, 47, 155, 0.25);
-  --shadow-gold: 0 10px 25px -4px rgba(245, 158, 11, 0.25);
+  --shadow-gold: 0 10px 25px -4px rgba(255, 204, 0, 0.35);
 
   /* Radius */
   --radius-sm: 6px;
@@ -243,7 +246,7 @@ ul, ol {
 .btn-accent:hover {
   background-color: var(--accent-400);
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px -4px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 12px 28px -4px rgba(255, 204, 0, 0.45);
 }
 
 .btn-outline-white {
@@ -553,8 +556,8 @@ ul, ol {
 .hero-pattern {
   position: absolute;
   inset: 0;
-  opacity: 0.06;
-  background-image: radial-gradient(#fbbf24 1.5px, transparent 1.5px), radial-gradient(#60a5fa 1.5px, transparent 1.5px);
+  opacity: 0.08;
+  background-image: radial-gradient(#ffcc00 1.5px, transparent 1.5px), radial-gradient(#60a5fa 1.5px, transparent 1.5px);
   background-size: 32px 32px;
   background-position: 0 0, 16px 16px;
 }
@@ -574,7 +577,7 @@ ul, ol {
   gap: 0.5rem;
   padding: 0.4rem 1.1rem;
   background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(251, 191, 36, 0.4);
+  border: 1px solid rgba(255, 204, 0, 0.45);
   backdrop-filter: blur(10px);
   border-radius: var(--radius-full);
   color: var(--accent-400);
