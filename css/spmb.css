@@ -17,10 +17,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.4rem 1.1rem;
-  background: rgba(255, 204, 0, 0.2);
-  border: 1px solid var(--accent-400);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: var(--radius-full);
-  color: var(--accent-400);
+  color: #ffffff;
   font-size: 0.85rem;
   font-weight: 700;
   margin-block-end: 1rem;
