@@ -450,6 +450,103 @@
 }
 
 /* ==========================================================================
+   Ekstrakurikuler (Eskul) Grid & Cards
+   ========================================================================== */
+.ekskul-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-block-end: 2rem;
+}
+
+.ekskul-card {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--neutral-200);
+  padding: 1.5rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--trans-normal), box-shadow var(--trans-normal), border-color var(--trans-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.ekskul-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-300);
+}
+
+.ekskul-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-600), var(--accent-500));
+  opacity: 0;
+  transition: opacity var(--trans-fast);
+}
+
+.ekskul-card:hover::before {
+  opacity: 1;
+}
+
+.ekskul-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: 1.1rem;
+}
+
+.ekskul-icon-wrap {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
+  color: var(--primary-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-xs);
+}
+
+.ekskul-icon-wrap svg {
+  color: var(--primary-700);
+  flex-shrink: 0;
+}
+
+.ekskul-category-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--primary-700);
+  background: var(--primary-50);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--primary-200);
+}
+
+.ekskul-card-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--neutral-900);
+  margin-block-end: 0.45rem;
+  line-height: 1.35;
+}
+
+.ekskul-card-desc {
+  font-size: 0.865rem;
+  color: var(--neutral-600);
+  line-height: 1.6;
+  margin-top: auto;
+}
+
+/* ==========================================================================
    Berita & Artikel Portal
    ========================================================================== */
 .news-filter-bar {
@@ -1004,7 +1101,7 @@
    Responsive Adaptations
    ========================================================================== */
 @media (max-width: 1024px) {
-  .pillars-grid, .levels-grid, .news-grid, .testimonials-grid {
+  .pillars-grid, .levels-grid, .news-grid, .testimonials-grid, .ekskul-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   .greeting-grid, .level-hero-grid {
@@ -1017,7 +1114,7 @@
 }
 
 @media (max-width: 768px) {
-  .pillars-grid, .levels-grid, .news-grid, .testimonials-grid, .programs-grid, .facilities-grid {
+  .pillars-grid, .levels-grid, .news-grid, .testimonials-grid, .programs-grid, .facilities-grid, .ekskul-grid {
     grid-template-columns: 1fr;
   }
   .greeting-points {
