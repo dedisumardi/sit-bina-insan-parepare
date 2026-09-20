@@ -463,18 +463,17 @@
   background: #ffffff;
   border-radius: var(--radius-xl);
   border: 1px solid var(--neutral-200);
-  padding: 1.5rem 1.35rem;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-xs);
   transition: transform var(--trans-normal), box-shadow var(--trans-normal), border-color var(--trans-normal);
   position: relative;
-  overflow: hidden;
 }
 
 .ekskul-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
   border-color: var(--primary-300);
 }
 
@@ -486,6 +485,7 @@
   right: 0;
   height: 4px;
   background: linear-gradient(90deg, var(--primary-600), var(--accent-500));
+  z-index: 3;
   opacity: 0;
   transition: opacity var(--trans-fast);
 }
@@ -494,56 +494,89 @@
   opacity: 1;
 }
 
-.ekskul-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-block-end: 1.1rem;
+.ekskul-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 165px;
+  overflow: hidden;
+  background: var(--neutral-100);
 }
 
-.ekskul-icon-wrap {
-  width: 46px;
-  height: 46px;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
+.ekskul-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--trans-smooth);
+}
+
+.ekskul-card:hover .ekskul-img-wrap img {
+  transform: scale(1.08);
+}
+
+.ekskul-img-wrap .ekskul-category-tag {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  font-size: 0.685rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: rgba(0, 47, 155, 0.88);
+  backdrop-filter: blur(8px);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.ekskul-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.ekskul-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-block-end: 0.5rem;
+}
+
+.ekskul-icon-small {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: var(--primary-50);
   color: var(--primary-700);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: var(--shadow-xs);
 }
 
-.ekskul-icon-wrap svg {
+.ekskul-icon-small svg {
+  width: 17px;
+  height: 17px;
   color: var(--primary-700);
   flex-shrink: 0;
-}
-
-.ekskul-category-tag {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--primary-700);
-  background: var(--primary-50);
-  padding: 0.25rem 0.65rem;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--primary-200);
 }
 
 .ekskul-card-title {
   font-size: 1.05rem;
   font-weight: 800;
   color: var(--neutral-900);
-  margin-block-end: 0.45rem;
-  line-height: 1.35;
+  line-height: 1.3;
+  margin: 0;
 }
 
 .ekskul-card-desc {
-  font-size: 0.865rem;
+  font-size: 0.85rem;
   color: var(--neutral-600);
-  line-height: 1.6;
-  margin-top: auto;
+  line-height: 1.55;
+  margin-top: 0.4rem;
 }
 
 /* ==========================================================================
