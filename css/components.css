@@ -409,6 +409,18 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: all var(--trans-fast);
+}
+
+.program-icon svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.program-card:hover .program-icon {
+  background: var(--primary-600);
+  color: #ffffff;
 }
 
 .program-title {
