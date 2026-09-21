@@ -238,6 +238,7 @@
 
   function getDefaultSettings() {
     return {
+      academicYear: "2025/2026",
       activeWave: "Gelombang 1 (Early Bird)",
       waveName: "Gelombang 1 (Early Bird)",
       waveDates: "1 Nov 2024 s/d 31 Jan 2025",
@@ -984,49 +985,55 @@
   // =========================================================================
   // View 4: Settings Management (Pengaturan SPMB & Kontak)
   // =========================================================================
-  function updateWavePreview(name, status) {
+  function updateWavePreview(name, status, academicYear) {
     const previewBadge = document.getElementById('badge-wave-preview');
     const previewLabel = document.getElementById('preview-wave-label');
     if (!previewBadge || !previewLabel) return;
+    const yearSuffix = academicYear ? ` (TP ${academicYear})` : '';
 
     if (status === 'closed') {
       previewBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-300 shadow-sm';
-      previewLabel.textContent = `${name || 'Pendaftaran'} • Ditutup`;
+      previewLabel.textContent = `${name || 'Pendaftaran'} • Ditutup${yearSuffix}`;
     } else if (status === 'upcoming') {
       previewBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 shadow-sm';
-      previewLabel.textContent = `${name || 'SPMB'} • Segera Dibuka`;
+      previewLabel.textContent = `${name || 'SPMB'} • Segera Dibuka${yearSuffix}`;
     } else {
       previewBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm';
-      previewLabel.textContent = `${name || 'Gelombang 1'} • Buka`;
+      previewLabel.textContent = `${name || 'Gelombang 1'} • Buka${yearSuffix}`;
     }
   }
 
-  function updateNavbarWaveBadge(name, status) {
+  function updateNavbarWaveBadge(name, status, academicYear) {
     const navbarText = document.getElementById('admin-navbar-wave-text');
     const navbarDot = document.getElementById('admin-navbar-wave-dot');
     const navbarBadge = document.getElementById('admin-navbar-wave-badge');
     if (!navbarText) return;
+    const yearSuffix = academicYear ? ` • TP ${academicYear}` : '';
 
     if (status === 'closed') {
-      navbarText.textContent = `Pendaftaran Ditutup`;
+      navbarText.textContent = `Pendaftaran Ditutup${yearSuffix}`;
       if (navbarDot) navbarDot.className = 'w-1.5 h-1.5 rounded-full bg-red-500';
       if (navbarBadge) navbarBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200';
     } else if (status === 'upcoming') {
-      navbarText.textContent = `${name || 'SPMB'} Segera`;
+      navbarText.textContent = `${name || 'SPMB'} Segera${yearSuffix}`;
       if (navbarDot) navbarDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-500';
       if (navbarBadge) navbarBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200';
     } else {
-      navbarText.textContent = `${name || 'Gelombang 1'} Aktif`;
+      navbarText.textContent = `${name || 'Gelombang 1'} Aktif${yearSuffix}`;
       if (navbarDot) navbarDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-500';
       if (navbarBadge) navbarBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200';
     }
   }
 
   function renderSettingsForm() {
+    const academicYear = settings.academicYear || '2025/2026';
     const waveName = settings.waveName || settings.activeWave || 'Gelombang 1 (Early Bird)';
     const waveDates = settings.waveDates || '1 Nov 2024 s/d 31 Jan 2025';
     const waveStatus = settings.waveStatus || (waveName.toLowerCase().includes('tutup') ? 'closed' : 'open');
     const waveNotice = settings.waveNotice || `Pendaftaran ${waveName} Sedang Berlangsung!`;
+
+    const acYearInput = document.getElementById('set-academic-year');
+    if (acYearInput) acYearInput.value = academicYear;
 
     const nameInput = document.getElementById('set-wave-name');
     if (nameInput) nameInput.value = waveName;
@@ -1058,8 +1065,11 @@
     const statGuruInput = document.getElementById('set-stat-guru');
     if (statGuruInput) statGuruInput.value = settings.statGuru || '85+';
 
-    updateWavePreview(waveName, waveStatus);
-    updateNavbarWaveBadge(waveName, waveStatus);
+    updateWavePreview(waveName, waveStatus, academicYear);
+    updateNavbarWaveBadge(waveName, waveStatus, academicYear);
+
+    const dbTpText = document.getElementById('admin-dashboard-tp-text');
+    if (dbTpText) dbTpText.textContent = `Tahun Pelajaran ${academicYear}`;
 
     document.getElementById('set-tkit-fee').value = settings.tkitFee || 'Rp 200.000';
     document.getElementById('set-sdit-fee').value = settings.sditFee || 'Rp 250.000';
@@ -1071,6 +1081,7 @@
   function initSettingsForm() {
     const form = document.getElementById('form-school-settings');
     const resetBtn = document.getElementById('btn-reset-sample-data');
+    const acYearInput = document.getElementById('set-academic-year');
     const nameInput = document.getElementById('set-wave-name');
     const datesInput = document.getElementById('set-wave-dates');
     const statusSelect = document.getElementById('set-wave-status');
@@ -1080,21 +1091,24 @@
     const pt3Input = document.getElementById('set-wave-point-3');
 
     // Live preview when typing or changing status
-    [nameInput, statusSelect].forEach(el => {
+    [acYearInput, nameInput, statusSelect].forEach(el => {
       el?.addEventListener('input', () => {
+        const yearVal = acYearInput ? acYearInput.value.trim() : '2025/2026';
         const nameVal = nameInput ? nameInput.value.trim() : '';
         const statusVal = statusSelect ? statusSelect.value : 'open';
-        updateWavePreview(nameVal, statusVal);
+        updateWavePreview(nameVal, statusVal, yearVal);
       });
       el?.addEventListener('change', () => {
+        const yearVal = acYearInput ? acYearInput.value.trim() : '2025/2026';
         const nameVal = nameInput ? nameInput.value.trim() : '';
         const statusVal = statusSelect ? statusSelect.value : 'open';
-        updateWavePreview(nameVal, statusVal);
+        updateWavePreview(nameVal, statusVal, yearVal);
       });
     });
 
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
+      const academicYear = acYearInput ? acYearInput.value.trim() : '2025/2026';
       const waveName = nameInput ? nameInput.value.trim() : 'Gelombang 1 (Early Bird)';
       const waveDates = datesInput ? datesInput.value.trim() : '';
       const waveStatus = statusSelect ? statusSelect.value : 'open';
@@ -1104,6 +1118,7 @@
       const wavePoint3 = pt3Input ? pt3Input.value.trim() : 'Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim';
 
       settings = {
+        academicYear: academicYear,
         activeWave: waveName,
         waveName: waveName,
         waveDates: waveDates,
@@ -1145,9 +1160,11 @@
         .catch(e => console.log('Save settings MySQL fallback'));
       }
 
-      updateNavbarWaveBadge(waveName, waveStatus);
-      updateWavePreview(waveName, waveStatus);
-      showToast('Pengaturan Status Gelombang SPMB & Sekolah berhasil disimpan secara Real-Time!');
+      updateNavbarWaveBadge(waveName, waveStatus, academicYear);
+      updateWavePreview(waveName, waveStatus, academicYear);
+      const dbTpText = document.getElementById('admin-dashboard-tp-text');
+      if (dbTpText) dbTpText.textContent = `Tahun Pelajaran ${academicYear}`;
+      showToast('Pengaturan Tahun Ajaran & Gelombang SPMB berhasil disimpan secara Real-Time!');
     });
 
     resetBtn?.addEventListener('click', () => {

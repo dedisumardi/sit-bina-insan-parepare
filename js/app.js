@@ -396,6 +396,41 @@
     }
     if (!settings) return;
 
+    // 0. Academic Year & Wave Variables
+    const academicYear = settings.academicYear || '2025/2026';
+    const startYear = academicYear.split('/')[0].trim() || '2025';
+    const activeName = settings.waveName || settings.activeWave || 'Gelombang 1 (Early Bird)';
+    const waveStatus = settings.waveStatus || 'open';
+
+    // Global synchronizations across all views in the page
+    document.querySelectorAll('.spmb-sync-tp').forEach(el => {
+      el.textContent = 'TP ' + academicYear;
+    });
+    document.querySelectorAll('.spmb-sync-year').forEach(el => {
+      el.textContent = academicYear;
+    });
+    document.querySelectorAll('.spmb-sync-start-year').forEach(el => {
+      el.textContent = startYear;
+    });
+    document.querySelectorAll('.spmb-sync-wave-name').forEach(el => {
+      el.textContent = activeName;
+    });
+    document.querySelectorAll('.spmb-sync-wave-badge').forEach(el => {
+      el.textContent = activeName;
+    });
+
+    // Update SchoolData profile in memory
+    if (window.SchoolData && window.SchoolData.profile) {
+      window.SchoolData.profile.academicYear = academicYear;
+      window.SchoolData.profile.activeWave = activeName;
+      window.SchoolData.profile.waveStatus = waveStatus;
+    }
+
+    // Dynamic Title update if SPMB view is currently visible
+    if (window.location.hash === '#spmb') {
+      document.title = `Pendaftaran SPMB Online TP ${academicYear} | SIT Bina Insan Parepare`;
+    }
+
     // 1. WhatsApp Helpdesk
     if (settings.whatsappHelpdesk) {
       if (window.SchoolData && window.SchoolData.profile) {
@@ -411,21 +446,19 @@
     // 2. Active Wave Notice in Topbar
     const topbarWave = document.getElementById('home-topbar-wave');
     if (topbarWave) {
-      if (settings.waveStatus === 'closed') {
-        topbarWave.textContent = settings.waveNotice || 'Pendaftaran SPMB Ditutup Sementara';
+      if (waveStatus === 'closed') {
+        topbarWave.textContent = settings.waveNotice || `Pendaftaran SPMB (${activeName}) Ditutup Sementara`;
       } else if (settings.waveNotice) {
         topbarWave.textContent = settings.waveNotice;
-      } else if (settings.waveName || settings.activeWave) {
-        const name = settings.waveName || settings.activeWave;
-        topbarWave.textContent = `Pendaftaran ${name} Sedang Berlangsung!`;
+      } else {
+        topbarWave.textContent = `Pendaftaran ${activeName} Sedang Berlangsung!`;
       }
     }
 
     // 3. Hero Card Title in Beranda
     const heroWaveTitle = document.getElementById('home-hero-wave-title');
     if (heroWaveTitle) {
-      const activeName = settings.waveName || settings.activeWave || 'Gelombang 1 (Early Bird)';
-      if (settings.waveStatus === 'closed') {
+      if (waveStatus === 'closed') {
         heroWaveTitle.textContent = `Pendaftaran SPMB (${activeName}) Ditutup Sementara`;
       } else {
         heroWaveTitle.textContent = `Penerimaan Santri Baru ${activeName}`;
@@ -453,21 +486,21 @@
     // 4. SPMB Timeline Waves Highlighting & Dates
     const timelineWrap = document.getElementById('home-waves-timeline');
     if (timelineWrap) {
-      const activeName = (settings.waveName || settings.activeWave || '').toLowerCase();
+      const activeLower = activeName.toLowerCase();
       const wavePills = timelineWrap.querySelectorAll('.wave-pill');
       
       wavePills.forEach((pill, idx) => {
         let isCurrent = false;
-        if (settings.waveStatus === 'closed') {
+        if (waveStatus === 'closed') {
           isCurrent = false;
-        } else if (activeName.includes('gelombang 1') && idx === 0) {
+        } else if (activeLower.includes('gelombang 1') && idx === 0) {
           isCurrent = true;
-        } else if (activeName.includes('gelombang 2') && idx === 1) {
+        } else if (activeLower.includes('gelombang 2') && idx === 1) {
           isCurrent = true;
-        } else if (activeName.includes('gelombang 3') && idx === 2) {
+        } else if (activeLower.includes('gelombang 3') && idx === 2) {
           isCurrent = true;
-        } else if (idx === 0 && !activeName.includes('gelombang 2') && !activeName.includes('gelombang 3')) {
-          isCurrent = settings.waveStatus !== 'closed';
+        } else if (idx === 0 && !activeLower.includes('gelombang 2') && !activeLower.includes('gelombang 3')) {
+          isCurrent = waveStatus !== 'closed';
         }
 
         pill.classList.toggle('active', isCurrent);
@@ -503,10 +536,14 @@
     if (settings.sditFee) {
       const sditPrice = document.getElementById('spmb-price-sdit');
       if (sditPrice) sditPrice.textContent = 'Infaq: ' + settings.sditFee;
+      const sditInfoFee = document.getElementById('sdit-info-fee');
+      if (sditInfoFee) sditInfoFee.textContent = settings.sditFee;
     }
     if (settings.smpitFee) {
       const smpitPrice = document.getElementById('spmb-price-smpit');
       if (smpitPrice) smpitPrice.textContent = 'Infaq: ' + settings.smpitFee;
+      const smpitInfoFee = document.getElementById('smpit-info-fee');
+      if (smpitInfoFee) smpitInfoFee.textContent = settings.smpitFee;
     }
   }
 

@@ -106,6 +106,7 @@ ON DUPLICATE KEY UPDATE `title`=VALUES(`title`);
 
 -- Data Konfigurasi Sekolah Awal
 INSERT INTO `school_settings` (`setting_key`, `setting_value`) VALUES
+('academicYear', '2025/2026'),
 ('activeWave', 'Gelombang 1 (Early Bird)'),
 ('tkitFee', 'Rp 200.000'),
 ('sditFee', 'Rp 250.000'),

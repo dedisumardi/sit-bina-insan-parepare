@@ -26,7 +26,12 @@ switch ($method) {
 
         // Default fallback jika tabel masih kosong
         $defaults = [
+            'academicYear'     => '2025/2026',
             'activeWave'       => 'Gelombang 1 (Early Bird)',
+            'waveName'         => 'Gelombang 1 (Early Bird)',
+            'waveDates'        => '1 Nov 2024 s/d 31 Jan 2025',
+            'waveStatus'       => 'open',
+            'waveNotice'       => 'Pendaftaran Gelombang 1 (Early Bird) Sedang Berlangsung!',
             'tkitFee'          => 'Rp 200.000',
             'sditFee'          => 'Rp 250.000',
             'smpitFee'         => 'Rp 300.000',

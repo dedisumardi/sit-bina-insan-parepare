@@ -276,6 +276,13 @@
     const ticketContainer = document.getElementById('spmb-ticket-content');
     if (!ticketContainer) return;
 
+    let currentSettings = {};
+    try {
+      const raw = localStorage.getItem('sit_bina_insan_settings');
+      if (raw) currentSettings = JSON.parse(raw);
+    } catch (e) {}
+    const acYear = currentSettings.academicYear || '2025/2026';
+
     ticketContainer.innerHTML = `
       <div class="spmb-ticket-card">
         <!-- Ticket Header -->
@@ -284,7 +291,7 @@
             <img src="/assets/icons/logo.svg?v=2" alt="Logo SIT Bina Insan" class="ticket-logo" style="background:#fff; border-radius:8px; padding:4px;">
             <div>
               <div class="ticket-header-title">KARTU TANDA PESERTA SPMB</div>
-              <div class="ticket-header-sub">SEKOLAH ISLAM TERPADU BINA INSAN PAREPARE • TP 2025/2026</div>
+              <div class="ticket-header-sub">SEKOLAH ISLAM TERPADU BINA INSAN PAREPARE • TP ${acYear}</div>
             </div>
           </div>
           <div class="ticket-reg-badge">
@@ -445,7 +452,17 @@
     const count = existing.length + 1;
     const padCount = String(count).padStart(3, '0');
     const prefix = jenjangVal.toUpperCase().substring(0, 2);
-    const regNumber = `SPMB-2025-${prefix}${padCount}`;
+
+    let yearPrefix = '2025';
+    try {
+      const raw = localStorage.getItem('sit_bina_insan_settings');
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s.academicYear) yearPrefix = s.academicYear.split('/')[0].trim();
+      }
+    } catch (e) {}
+
+    const regNumber = `SPMB-${yearPrefix}-${prefix}${padCount}`;
 
     // Assign observation schedule based on jenjang
     let jadwalObservasi = 'Sabtu, 15 Maret 2025 | Pukul 08.30 WITA | Kampus SIT Bina Insan';
