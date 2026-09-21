@@ -120,34 +120,52 @@ const SchoolData = {
       fullName: "Sekolah Menengah Pertama Islam Terpadu Bina Insan",
       heroImage: "/assets/images/smpit_students.jpg?v=2",
       accentColor: "#001f6b",
-      tagline: "Mencetak Calon Pemimpin Peradaban Berwawasan Global dan Berjiwa Da'i",
-      description: "SMPIT Bina Insan Parepare menyediakan sistem Full Day School dan opsi Boarding (Pesantren Tahfizh). Mempersiapkan remaja muslim menghadapi era global melalui penguasaan sains mutakhir, robotik, dwibahasa (Arab & Inggris), tahfizh Al-Qur'an mutqin, serta pembentukan karakter mandiri dan berdaya saing tinggi.",
-      vision: "Menjadi institusi pendidikan menengah muslim percontohan yang melahirkan intelektual muslim berintegritas, mandiri, unggul secara akademik dan spiritual.",
+      tagline: "Membentuk Generasi Beriman, Berakhlak Mulia, dan Berpengetahuan Luas.",
+      description: "SMP Islam Terpadu Bina Insan Parepare menyelenggarakan pendidikan berbasis Full Day School yang memadukan ilmu pengetahuan, nilai-nilai keislaman, dan pembentukan karakter. Melalui pembelajaran akademik, tahsin dan tahfiz Al-Qur’an, pembiasaan ibadah, penguatan Bahasa Arab dan Bahasa Inggris, serta pengembangan minat dan bakat, sekolah berkomitmen membentuk generasi yang cerdas, mandiri, berakhlak mulia, dan mampu memberikan manfaat bagi masyarakat.",
+      vision: "Membentuk generasi yang cerdas, mandiri, berakhlak mulia, dan mampu memberikan manfaat bagi masyarakat.",
       keyPrograms: [
         {
-          title: "Tahfizh Intensif & Mutqin (Target 5 - 10 Juz)",
-          desc: "Kelas tahfizh intensif dengan pembimbing bersanad, halaqah harian, murojaah berkesinambungan, dan sertifikasi tahfizh resmi."
+          title: "Tahsin & Tahfiz Al-Qur’an",
+          desc: "Pembinaan bacaan dan hafalan Al-Qur’an melalui tahsin, tahfiz, tilawah, dan munaqasyah untuk menumbuhkan kecintaan peserta didik terhadap Al-Qur’an."
         },
         {
-          title: "Bilingual Environment (Arabic & English)",
-          desc: "Pembiasaan percakapan harian, English Club, Muhadhoroh (Public Speaking 3 Bahasa: Arab, Inggris, Indonesia), dan Arabic Camp."
+          title: "Pembelajaran Akademik Berkualitas",
+          desc: "Mengembangkan kemampuan berpikir kritis, kreativitas, literasi, dan numerasi melalui pembelajaran aktif, kontekstual, serta pemanfaatan teknologi pendidikan."
         },
         {
-          title: "Klub Sains, Riset Remaja & Robotik",
-          desc: "Pelatihan khusus olimpiade OSN Matematika, IPA, IPS, serta pembuatan karya ilmiah remaja dan robotik otomasi."
+          title: "Penguatan Bahasa Arab & Inggris",
+          desc: "Pembelajaran Bahasa Arab dan Bahasa Inggris untuk memperluas wawasan, meningkatkan kemampuan berkomunikasi, serta membekali peserta didik menghadapi perkembangan zaman."
         },
         {
-          title: "Pramuka SIT & Leadership Camp",
-          desc: "Kegiatan kepanduan khas SIT berskala wilayah/nasional untuk menempa kemandirian fisik, survival skill, dan keteladanan sosial."
+          title: "Pramuka & Pembinaan Kepemimpinan",
+          desc: "Melatih kemandirian, kedisiplinan, tanggung jawab, dan kerja sama melalui Pramuka, perkemahan, Super Camp, serta Latihan Dasar Kepemimpinan Siswa."
         }
       ],
       facilities: [
-        "Laboratorium IPA Terpadu (Fisika, Biologi, Kimia)",
-        "Laboratorium Komputer & Bahasa Digital",
-        "Asrama Santri yang Nyaman & Terbina (Program Boarding)",
-        "Masjid Raya Bina Insan 2 Lantai",
-        "Aula Serbaguna & Sarana Olahraga Lengkap",
-        "Studio Podcast & Multimedia Siswa"
+        "Ruang kelas VII, VIII, dan IX (7 ruang kelas)",
+        "Perpustakaan sekolah",
+        "Ruang Usaha Kesehatan Sekolah (UKS)",
+        "Lapangan dan sarana aktivitas olahraga",
+        "Ruang rapat dan koordinasi sekolah",
+        "Fasilitas sanitasi dan toilet"
+      ],
+      extracurriculars: [
+        {
+          title: "Coding Club",
+          desc: "Mengembangkan kemampuan berpikir logis, pemecahan masalah, dan keterampilan teknologi melalui kegiatan pemrograman yang sesuai dengan jenjang SMP."
+        },
+        {
+          title: "Desain & Kreativitas Digital",
+          desc: "Mengasah kreativitas dan keterampilan visual peserta didik melalui kegiatan desain dengan memanfaatkan teknologi digital."
+        },
+        {
+          title: "Pramuka SIT",
+          desc: "Membentuk pribadi yang mandiri, disiplin, bertanggung jawab, dan mampu bekerja sama melalui kegiatan kepramukaan dan pembinaan kepemimpinan."
+        },
+        {
+          title: "Olahraga & Seni",
+          desc: "Mengembangkan bakat, sportivitas, rasa percaya diri, dan kreativitas melalui futsal, bulu tangkis, basket, renang, serta tari."
+        }
       ],
       spmbFee: "Rp 300.000",
       ageRequirement: "Lulusan SD/MI sederajat dengan ijazah / Surat Keterangan Lulus resmi"
@@ -173,7 +191,7 @@ const SchoolData = {
         <ul>
           <li><strong>TKIT Bina Insan</strong>: Membuka kelas TK-A dan TK-B dengan pendekatan Sentra Ramah Anak.</li>
           <li><strong>SDIT Bina Insan</strong>: 4 Rombongan Belajar (Rombel) dengan fasilitas Kurikulum Merdeka Terpadu.</li>
-          <li><strong>SMPIT Bina Insan</strong>: Opsi Full Day School dan Opsi Boarding / Asrama Pesantren Tahfizh.</li>
+          <li><strong>SMPIT Bina Insan</strong>: Pendidikan Berbasis Full Day School yang memadukan akademik, keislaman, dan karakter.</li>
         </ul>
 
         <h3>Keuntungan Mendaftar di Gelombang 1 (Early Bird)</h3>

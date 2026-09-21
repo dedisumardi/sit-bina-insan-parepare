@@ -71,7 +71,7 @@
       beranda: "Beranda | Sekolah Islam Terpadu Bina Insan Parepare",
       tkit: "TKIT Bina Insan Parepare | PAUD Islam Terpadu Ramah Anak",
       sdit: "SDIT Bina Insan Parepare | Sekolah Dasar Islam Terpadu Unggulan",
-      smpit: "SMPIT Bina Insan Parepare | Menengah Pertama & Pesantren Tahfizh",
+      smpit: "SMPIT Bina Insan Parepare | Sekolah Menengah Pertama Full Day School",
       berita: "Berita & Artikel Edukasi | SIT Bina Insan Parepare",
       spmb: "Pendaftaran SPMB Online TP 2025/2026 | SIT Bina Insan Parepare"
     };
