@@ -396,6 +396,9 @@ ul, ol {
   max-width: 220px;
   object-fit: contain;
   display: block;
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 @media (max-width: 768px) {
