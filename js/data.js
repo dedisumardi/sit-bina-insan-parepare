@@ -34,42 +34,56 @@ const SchoolData = {
   levels: {
     tkit: {
       id: "tkit",
-      badge: "PAUD & Usia Dini (4 - 6 Tahun)",
+      badge: "Pendidikan Usia Dini Islam Terpadu (Usia 4–6 Tahun)",
       name: "TKIT Bina Insan Parepare",
       fullName: "Taman Kanak-kanak Islam Terpadu Bina Insan",
       heroImage: "/assets/images/tkit_activity.jpg?v=2",
       accentColor: "#2563eb",
-      tagline: "Tumbuh Ceria, Berakhlak Mulia, Cinta Al-Qur'an Sejak Dini",
-      description: "TKIT Bina Insan Parepare menyelenggarakan pendidikan anak usia dini berbasis fitrah dengan pendekatan Beyond Centers and Circle Time (BCCT) / Pembelajaran Sentra yang menyenangkan, mengasah motorik, menanamkan nilai-nilai tauhid, serta kecintaan membaca dan menghafal Al-Qur'an sejak usia emas.",
-      vision: "Menjadi PAUD Islam Terpadu terdepan dalam menumbuhkan generasi usia dini yang bertauhid lurus, berkarakter adab, cerdas, kreatif, dan mandiri.",
+      tagline: "Tumbuh dalam Iman, Ilmu, Karakter, dan Kemandirian",
+      description: "TKIT Bina Insan Parepare mendampingi anak bertumbuh secara utuh melalui pendidikan yang mengembangkan keimanan, akhlak, pengetahuan, karakter, dan kemandirian. Anak dipersiapkan sejak dini menjadi pribadi yang sholeh, muslih, berilmu, percaya diri, serta mampu memberi kebaikan bagi lingkungan di sekitarnya dengan berlandaskan Al-Qur’an dan Sunah Rasul. Proses belajar dirancang dekat dengan dunia anak: aman, menyenangkan, bermakna, dan memberi ruang bagi setiap anak untuk bereksplorasi, mencoba, berkomunikasi, dan belajar bertanggung jawab sesuai tahap perkembangannya.",
+      vision: "Mendampingi anak bertumbuh secara utuh berlandaskan Al-Qur'an dan Sunnah Rasul menjadi pribadi yang sholeh, muslih, berilmu, percaya diri, mandiri, dan berakhlak mulia.",
+      curriculumTitle: "Kurikulum & Keunggulan TKIT",
+      curriculumSubtitle: "Pembelajaran yang bermakna, menggembirakan, dan sesuai dunia anak.",
       keyPrograms: [
         {
-          title: "Sentra Bermain Sambil Belajar (BCCT)",
-          desc: "Sentra Balok, Sentra Imtaq, Sentra Seni & Kreativitas, Sentra Bahan Alam, dan Sentra Main Peran yang merangsang kecerdasan majemuk (multiple intelligences)."
+          title: "01. Bermain Bermakna & Pembelajaran Mendalam",
+          desc: "Anak belajar dengan cara yang alami melalui pengamatan, eksplorasi, pengalaman langsung, praktik, dan refleksi sederhana. Pembelajaran dirancang berkesadaran, bermakna, dan menggembirakan."
         },
         {
-          title: "Tahfizh & Tahsin Cilik",
-          desc: "Metode Talaqqi ramah anak untuk hafalan surat-surat pendek (Juz 30), hadits-hadits adab harian, serta doa sehari-hari."
+          title: "02. Al-Qur’an, Ibadah & Akhlak",
+          desc: "Anak dibiasakan mencintai Allah melalui shalat dhuha, mengaji, doa harian, hafalan surat dan hadits pendek, serta pembentukan akhlak mulia melalui keteladanan dalam kegiatan sehari-hari."
         },
         {
-          title: "Pembiasaan Adab & Ibadah Praktis",
-          desc: "Pengenalan wudhu dan shalat dhuha/fardhu berjamaah, adab makan-minum, birrul walidain, serta kosakata dasar Bahasa Arab & Inggris sederhana."
+          title: "03. Pengembangan Holistik & Kemandirian",
+          desc: "Nilai agama dan moral, fisik-motorik, kognitif, bahasa, sosial-emosional, dan seni dikembangkan secara terintegrasi. Anak juga dilatih makan sendiri, merapikan barang, bertanggung jawab, dan berani mencoba."
         },
         {
-          title: "Stimulasi Motorik & Sensori",
-          desc: "Aktivitas luar ruang, playground terstandar, field trip tematik, dan fun cooking sehat untuk menstimulasi sensorik-motorik anak."
+          title: "04. Projek Kontekstual & Kolaboratif",
+          desc: "Anak belajar melalui projek yang dekat dengan kehidupan nyata, memanfaatkan kelas, lingkungan sekolah, keluarga, dan masyarakat sebagai sumber belajar serta melatih kerja sama dan kepedulian."
+        },
+        {
+          title: "05. Bahasa & Budaya Bugis",
+          desc: "Pembelajaran mengenalkan kosakata Bahasa Bugis, nilai Sipakalebbi, dan permainan tradisional secara sederhana dan menyenangkan untuk menumbuhkan kecintaan terhadap budaya lokal."
+        },
+        {
+          title: "06. 7 Kebiasaan Anak Indonesia Hebat",
+          desc: "Sekolah membiasakan bangun pagi, beribadah, berolahraga, makan sehat dan bergizi, gemar belajar, bermasyarakat, dan tidur cepat melalui kerja sama sekolah dan orang tua."
         }
       ],
+      facilitiesTitle: "Fasilitas Pendukung TKIT",
+      facilitiesSubtitle: "Lingkungan belajar yang aman, nyaman, dan mendukung tumbuh kembang anak.",
+      facilitiesDesc: "Fasilitas sekolah dirancang untuk mendukung kegiatan belajar, bermain, ibadah, literasi, eksplorasi sensorik, serta kebutuhan tumbuh kembang anak.",
       facilities: [
-        "Ruang Kelas Ber-AC & Aman Anak",
+        "Ruang Kelas Ber-AC & Ramah Anak",
         "Taman Bermain Outdoor Edukatif",
-        "Sentra Imtaq & Mini Musholla",
-        "Pojok Baca & Audio Visual Ceria",
-        "Kolam Sensorik & Area Berkebun Cilik",
-        "Ruang UKS & Konsultasi Tumbuh Kembang"
+        "Perpustakaan Sekolah",
+        "Ruang Usaha Kesehatan Sekolah (UKS)",
+        "Lapangan dan Sarana Aktivitas Olahraga",
+        "Ruang Rapat dan Koordinasi Sekolah",
+        "Fasilitas Sanitasi dan Toilet"
       ],
       spmbFee: "Rp 200.000",
-      ageRequirement: "Usia minimal 4 tahun (TK-A) dan 5 tahun (TK-B) per Juli 2025"
+      ageRequirement: "Pendidikan usia dini Islam terpadu untuk anak usia 4–6 tahun (TK-A & TK-B)"
     },
 
     sdit: {
