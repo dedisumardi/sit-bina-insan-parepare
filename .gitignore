@@ -19,3 +19,6 @@ dist/
 
 # Zip Archives
 *.zip
+
+# Scratch files
+scratch/
