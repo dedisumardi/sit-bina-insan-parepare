@@ -250,7 +250,7 @@
       tkitFee: "Rp 200.000",
       sditFee: "Rp 250.000",
       smpitFee: "Rp 300.000",
-      whatsappHelpdesk: "6281234567890",
+      whatsappHelpdesk: "6285190610569",
       bankAccount: "Bank Syariah Indonesia (BSI) No. Rek: 711-234-5678 a.n Yayasan Bina Insan Parepare"
     };
   }
@@ -1074,7 +1074,7 @@
     document.getElementById('set-tkit-fee').value = settings.tkitFee || 'Rp 200.000';
     document.getElementById('set-sdit-fee').value = settings.sditFee || 'Rp 250.000';
     document.getElementById('set-smpit-fee').value = settings.smpitFee || 'Rp 300.000';
-    document.getElementById('set-wa').value = settings.whatsappHelpdesk || '6281234567890';
+    document.getElementById('set-wa').value = settings.whatsappHelpdesk || '6285190610569';
     document.getElementById('set-bank').value = settings.bankAccount || '';
   }
 

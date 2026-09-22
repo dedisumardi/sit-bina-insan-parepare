@@ -111,7 +111,7 @@ INSERT INTO `school_settings` (`setting_key`, `setting_value`) VALUES
 ('tkitFee', 'Rp 200.000'),
 ('sditFee', 'Rp 250.000'),
 ('smpitFee', 'Rp 300.000'),
-('whatsappHelpdesk', '6281234567890'),
+('whatsappHelpdesk', '6285190610569'),
 ('bankAccount', 'Bank Syariah Indonesia (BSI) No. Rek: 711-234-5678 a.n Yayasan Bina Insan Parepare')
 ON DUPLICATE KEY UPDATE `setting_value`=VALUES(`setting_value`);
 
