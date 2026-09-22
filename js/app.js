@@ -461,7 +461,7 @@
       if (waveStatus === 'closed') {
         heroWaveTitle.textContent = `Pendaftaran SPMB (${activeName}) Ditutup Sementara`;
       } else {
-        heroWaveTitle.textContent = `Penerimaan Santri Baru ${activeName}`;
+        heroWaveTitle.textContent = `Penerimaan Siswa Baru ${activeName}`;
       }
     }
 

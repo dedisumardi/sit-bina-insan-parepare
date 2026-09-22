@@ -508,7 +508,7 @@
 
     const recent = spmbList.slice(0, 5);
     if (recent.length === 0) {
-      recentWrap.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748b; padding:2rem;">Belum ada calon santri yang mendaftar.</td></tr>`;
+      recentWrap.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748b; padding:2rem;">Belum ada calon siswa yang mendaftar.</td></tr>`;
       return;
     }
 

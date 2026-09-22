@@ -396,7 +396,7 @@
             <ol class="ticket-inst-list">
               <li>Silakan simpan atau cetak kartu ini sebagai bukti pendaftaran resmi saat hadir observasi/wawancara.</li>
               <li>Konfirmasi pembayaran biaya pendaftaran via WhatsApp Panitia SPMB di <strong>${SchoolData.profile.whatsapp}</strong> dengan mengirimkan foto bukti transfer dan nomor registrasi <strong>${record.regNumber}</strong>.</li>
-              <li>Hadir di kampus SIT Bina Insan Parepare tepat waktu sesuai jadwal observasi yang tertera di atas.</li>
+              <li>Hadir di sekolah SIT Bina Insan Parepare tepat waktu sesuai jadwal observasi yang tertera di atas.</li>
               <li>Membawa fotokopi Akta Kelahiran, Kartu Keluarga (KK), dan pas foto 3x4 (2 lembar).</li>
             </ol>
           </div>
@@ -412,14 +412,14 @@
               Konfirmasi WhatsApp Panitia
             </a>
             <button type="button" class="btn btn-outline-primary" id="btn-register-again">
-              Daftarkan Santri Lainnya
+              Daftarkan Siswa Lainnya
             </button>
           </div>
         </div>
       </div>
     `;
 
-    // Hook 'Daftarkan Santri Lainnya'
+    // Hook 'Daftarkan Siswa Lainnya'
     document.getElementById('btn-register-again')?.addEventListener('click', () => {
       resetRegistrationForm();
     });
@@ -465,7 +465,7 @@
     const regNumber = `SPMB-${yearPrefix}-${prefix}${padCount}`;
 
     // Assign observation schedule based on jenjang
-    let jadwalObservasi = 'Sabtu, 15 Maret 2025 | Pukul 08.30 WITA | Kampus SIT Bina Insan';
+    let jadwalObservasi = 'Sabtu, 15 Maret 2025 | Pukul 08.30 WITA | Gedung Sekolah SIT Bina Insan';
     if (jenjangVal === 'tkit') {
       jadwalObservasi = 'Sabtu, 8 Maret 2025 | Pukul 09.00 WITA | Sentra PAUD TKIT Bina Insan';
     } else if (jenjangVal === 'smpit') {

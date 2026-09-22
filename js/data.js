@@ -198,7 +198,7 @@ const SchoolData = {
       image: "/assets/images/hero_school.jpg?v=2",
       excerpt: "Pendaftaran peserta didik baru jenjang TKIT, SDIT, dan SMPIT Bina Insan Parepare telah dibuka. Dapatkan penawaran Infaq Pembangunan Gelombang 1 serta beasiswa tahfizh.",
       content: `
-        <p>Alhamdulillah, seiring komitmen kami mencetak generasi Qur'ani berakhlak mulia di Kota Parepare dan sekitarnya, Panitia Sistem Penerimaan Murid Baru (SPMB) SIT Bina Insan Parepare secara resmi mengumumkan pembukaan pendaftaran santri/peserta didik baru untuk Tahun Pelajaran 2025/2026.</p>
+        <p>Alhamdulillah, seiring komitmen kami mencetak generasi Qur'ani berakhlak mulia di Kota Parepare dan sekitarnya, Panitia Sistem Penerimaan Murid Baru (SPMB) SIT Bina Insan Parepare secara resmi mengumumkan pembukaan pendaftaran siswa/peserta didik baru untuk Tahun Pelajaran 2025/2026.</p>
         
         <h3>Pilihan Jenjang & Kuota Pendaftaran</h3>
         <p>Tahun ini, SIT Bina Insan membuka kuota terbatas untuk menjamin rasio ideal antara pendidik dan peserta didik:</p>
@@ -223,9 +223,9 @@ const SchoolData = {
       author: "Tim Kesiswaan",
       readTime: "4 menit baca",
       image: "/assets/images/smpit_students.jpg?v=2",
-      excerpt: "Prestasi membanggakan kembali dipersembahkan oleh ananda santri SMPIT Bina Insan Parepare dalam ajang Olimpiade Sains dan Teknologi JSIT Sulsel 2024.",
+      excerpt: "Prestasi membanggakan kembali dipersembahkan oleh ananda siswa SMPIT Bina Insan Parepare dalam ajang Olimpiade Sains dan Teknologi JSIT Sulsel 2024.",
       content: `
-        <p>Prestasi gemilang ditorehkan oleh kontingen santri SMPIT Bina Insan Parepare pada perhelatan akbar Festival & Olimpiade Pelajar Islam se-Sulawesi Selatan yang diselenggarakan di Makassar pekan lalu.</p>
+        <p>Prestasi gemilang ditorehkan oleh kontingen siswa SMPIT Bina Insan Parepare pada perhelatan akbar Festival & Olimpiade Pelajar Islam se-Sulawesi Selatan yang diselenggarakan di Makassar pekan lalu.</p>
         
         <p>Tim Robotik SMPIT Bina Insan yang digawangi oleh Muhammad Al-Fatih dan rekannya berhasil menyabet <strong>Juara 1 Kategori Line Follower Micro-Robot</strong> setelah mengungguli puluhan perwakilan sekolah favorit lainnya di Sulawesi Selatan.</p>
 
@@ -239,18 +239,18 @@ const SchoolData = {
       id: 3,
       category: "Kegiatan Sekolah",
       categoryClass: "badge-kegiatan",
-      title: "Keseruan Wisuda Tahfizh Akbar: 85 Santri SDIT & SMPIT Diwisuda dengan Predikat Mutqin",
+      title: "Keseruan Wisuda Tahfizh Akbar: 85 Siswa SDIT & SMPIT Diwisuda dengan Predikat Mutqin",
       date: "05 Desember 2024",
       author: "Koordinator Al-Qur'an",
       readTime: "3 menit baca",
       image: "/assets/images/sdit_recitation.jpg?v=2",
-      excerpt: "Suasana haru dan penuh keberkahan mewarnai Gedung Islamic Centre Parepare saat 85 santri SIT Bina Insan memasangkan mahkota kemuliaan kepada kedua orang tuanya.",
+      excerpt: "Suasana haru dan penuh keberkahan mewarnai Gedung Islamic Centre Parepare saat 85 siswa SIT Bina Insan memasangkan mahkota kemuliaan kepada kedua orang tuanya.",
       content: `
-        <p>Gedung pertemuan di Kota Parepare dipenuhi isak tangis haru bahagia para orang tua saat prosesi penyerahan mahkota simbolis dari santri wisudawan tahfizh kepada ayah dan bunda tercinta pada acara <em>Wisuda Tahfizh Akbar SIT Bina Insan 2024</em>.</p>
+        <p>Gedung pertemuan di Kota Parepare dipenuhi isak tangis haru bahagia para orang tua saat prosesi penyerahan mahkota simbolis dari siswa wisudawan tahfizh kepada ayah dan bunda tercinta pada acara <em>Wisuda Tahfizh Akbar SIT Bina Insan 2024</em>.</p>
         
-        <p>Sebanyak 85 santri jenjang SDIT dan SMPIT dinyatakan lulus uji tasmi' hafalan Al-Qur'an satu kali duduk di hadapan para penguji bersanad nasional, mulai dari kategori 3 Juz, 5 Juz, hingga santri mutqin 10 Juz.</p>
+        <p>Sebanyak 85 siswa jenjang SDIT dan SMPIT dinyatakan lulus uji tasmi' hafalan Al-Qur'an satu kali duduk di hadapan para penguji bersanad nasional, mulai dari kategori 3 Juz, 5 Juz, hingga siswa mutqin 10 Juz.</p>
 
-        <p>Kegiatan ini merupakan agenda rutin tahunan Yayasan Bina Insan Parepare guna mengapresiasi ketekunan para santri dan menjadi pemicu semangat bagi adik-adik kelas untuk senantiasa dekat dan mencintai Al-Qur'an.</p>
+        <p>Kegiatan ini merupakan agenda rutin tahunan Yayasan Bina Insan Parepare guna mengapresiasi ketekunan para siswa dan menjadi pemicu semangat bagi adik-adik kelas untuk senantiasa dekat dan mencintai Al-Qur'an.</p>
       `
     },
     {

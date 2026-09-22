@@ -37,7 +37,7 @@ switch ($method) {
             }
         }
 
-        // Ambil data satu santri berdasarkan No. Registrasi
+        // Ambil data satu siswa berdasarkan No. Registrasi
         if (isset($_GET['reg_number'])) {
             $reg = trim($_GET['reg_number']);
             $stmt = $pdo->prepare("SELECT * FROM `spmb_applicants` WHERE `reg_number` = ? LIMIT 1");
