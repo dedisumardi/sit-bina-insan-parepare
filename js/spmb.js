@@ -1324,13 +1324,21 @@
   };
 
   // Copy Bank Number
-  window.copyBankNumber = function (num = '7112345678') {
+  window.copyBankNumber = function (num) {
+    if (!num || num === '7112345678') {
+      const settings = window.SchoolData?.settings || {};
+      const bankStr = settings.bankAccount || '';
+      const match = bankStr.match(/\d[\d\-]{5,}\d/);
+      if (match) num = match[0].replace(/\D/g, '');
+      else num = '7112345678';
+    }
+    const cleanNum = String(num).replace(/\D/g, '') || '7112345678';
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(num).then(() => {
-        alert('Nomor Rekening BSI (' + num + ') atas nama Yayasan Bina Insan Parepare berhasil disalin!');
+      navigator.clipboard.writeText(cleanNum).then(() => {
+        alert('Nomor Rekening (' + cleanNum + ') atas nama Yayasan Bina Insan Parepare berhasil disalin!');
       });
     } else {
-      prompt('Salin nomor rekening BSI:', num);
+      prompt('Salin nomor rekening:', cleanNum);
     }
   };
 

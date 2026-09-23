@@ -517,6 +517,7 @@
 
     // 1. WhatsApp Helpdesk
     if (settings.whatsappHelpdesk) {
+      const cleanWa = String(settings.whatsappHelpdesk).replace(/\D/g, '');
       if (window.SchoolData && window.SchoolData.profile) {
         window.SchoolData.profile.whatsappHelpdesk = settings.whatsappHelpdesk;
         window.SchoolData.profile.whatsapp = '+' + settings.whatsappHelpdesk;
@@ -525,6 +526,17 @@
       waTexts.forEach(el => {
         el.textContent = '+' + settings.whatsappHelpdesk;
       });
+      if (cleanWa) {
+        document.querySelectorAll('a[href*="wa.me"]').forEach(a => {
+          try {
+            const currentHref = a.getAttribute('href');
+            if (currentHref && currentHref.includes('wa.me/')) {
+              const [base, query] = currentHref.split('?');
+              a.href = `https://wa.me/${cleanWa}${query ? '?' + query : ''}`;
+            }
+          } catch (e) {}
+        });
+      }
     }
 
     // 2. Active Wave Notice in Topbar
@@ -618,6 +630,20 @@
       if (smpitPrice) smpitPrice.textContent = 'Infaq: ' + settings.smpitFee;
       const smpitInfoFee = document.getElementById('smpit-info-fee');
       if (smpitInfoFee) smpitInfoFee.textContent = settings.smpitFee;
+    }
+
+    // 6. Bank Account Transfer Instructions
+    if (settings.bankAccount) {
+      const bankDisplayEl = document.getElementById('spmb-bank-display');
+      if (bankDisplayEl) {
+        bankDisplayEl.textContent = settings.bankAccount;
+      }
+      const copyBankBtn = document.getElementById('spmb-btn-copy-bank');
+      if (copyBankBtn) {
+        const match = settings.bankAccount.match(/\d[\d\-]{5,}\d/);
+        const accNum = match ? match[0].replace(/\D/g, '') : '7112345678';
+        copyBankBtn.setAttribute('onclick', `window.copyBankNumber('${accNum}')`);
+      }
     }
   }
 

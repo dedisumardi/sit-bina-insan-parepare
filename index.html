@@ -1854,13 +1854,13 @@
                 <div class="spmb-bank-logo-icon">💳</div>
                 <div>
                   <div style="font-size: 0.8rem; font-weight: 700; color: #15803d; text-transform: uppercase;">Bank Tujuan Transfer</div>
-                  <div style="font-size: 1.35rem; font-weight: 800; color: #14532d; font-family: monospace;">Bank Syariah Indonesia (BSI) : 711-234-5678</div>
+                  <div id="spmb-bank-display" style="font-size: 1.35rem; font-weight: 800; color: #14532d; font-family: monospace;">Bank Syariah Indonesia (BSI) : 711-234-5678</div>
                   <div style="font-size: 0.9rem; color: #166534; margin-top: 2px;">
                     Atas Nama: <strong>Yayasan Bina Insan Parepare</strong> &bull; Jumlah: <strong style="font-size:1.1rem; color:#14532d;">Rp 150.000</strong>
                   </div>
                 </div>
               </div>
-              <button type="button" class="spmb-copy-pill" onclick="window.copyBankNumber('7112345678')">
+              <button type="button" id="spmb-btn-copy-bank" class="spmb-copy-pill" onclick="window.copyBankNumber('7112345678')">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Salin No. Rekening
               </button>
@@ -2079,7 +2079,7 @@
     <div class="spmb-modal-dialog">
       <div class="spmb-modal-header">
         <div>
-          <span class="badge-tag" style="background: var(--accent-100); color: var(--accent-800); font-weight: 800; font-size: 0.75rem;">SPMB TP 2026/2027</span>
+          <span class="badge-tag" style="background: var(--accent-100); color: var(--accent-800); font-weight: 800; font-size: 0.75rem;">SPMB <span class="spmb-sync-tp">TP 2026/2027</span></span>
           <h2 id="spmb-modal-title" style="font-size: 1.35rem; font-weight: 800; color: var(--neutral-900); margin: 0.35rem 0 0.15rem;">
             Pendaftaran SPMB Online
           </h2>
@@ -2228,8 +2228,8 @@
   </a>
 
   <!-- Scripts -->
-  <script src="js/data.js?v=20260923_dbsync"></script>
-  <script src="js/spmb.js?v=20260923_dbsync"></script>
-  <script src="js/app.js?v=20260923_dbsync"></script>
+  <script src="js/data.js?v=20260923_dbsync2"></script>
+  <script src="js/spmb.js?v=20260923_dbsync2"></script>
+  <script src="js/app.js?v=20260923_dbsync2"></script>
 </body>
 </html>
