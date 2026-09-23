@@ -27,11 +27,11 @@ switch ($method) {
         // Default fallback jika tabel masih kosong
         $defaults = [
             'academicYear'     => '2026/2027',
-            'activeWave'       => 'wave3',
-            'waveName'         => 'Gelombang 3',
-            'waveDates'        => '1 Juni 2027 s/d Kuota Terpenuhi',
+            'activeWave'       => 'wave1',
+            'waveName'         => 'Gelombang 1',
+            'waveDates'        => '1 Januari 2027 s/d 31 Maret 2027',
             'waveStatus'       => 'open',
-            'waveNotice'       => 'Pendaftaran Gelombang 3 (Kuota Terbatas) Sedang Berlangsung!',
+            'waveNotice'       => 'Pendaftaran Gelombang 1 Sedang Berlangsung! Dapatkan Diskon Infaq Rp 500.000',
             'wave1Name'        => 'Gelombang 1',
             'wave1Promo'       => 'Diskon Rp500.000',
             'wave1Dates'       => '1 Januari 2027 s/d 31 Maret 2027',

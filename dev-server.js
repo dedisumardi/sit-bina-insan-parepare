@@ -65,7 +65,7 @@ const server = http.createServer((req, res) => {
         success: true,
         data: {
           academicYear: "2026/2027",
-          activeWave: "wave3",
+          activeWave: "wave1",
           waveStatus: "open",
           wave1Name: "Gelombang 1",
           wave1Promo: "Diskon Rp500.000",
@@ -76,9 +76,9 @@ const server = http.createServer((req, res) => {
           wave3Name: "Gelombang 3",
           wave3Promo: "S/d Kuota Terpenuhi",
           wave3Dates: "1 Juni 2027 s/d Kuota Terpenuhi",
-          waveName: "Gelombang 3",
-          waveDates: "1 Juni 2027 s/d Kuota Terpenuhi",
-          waveNotice: "Pendaftaran Gelombang 3 (Kuota Terbatas) Sedang Berlangsung!"
+          waveName: "Gelombang 1",
+          waveDates: "1 Januari 2027 s/d 31 Maret 2027",
+          waveNotice: "Pendaftaran Gelombang 1 Sedang Berlangsung! Dapatkan Diskon Infaq Rp 500.000"
         }
       }));
       return;

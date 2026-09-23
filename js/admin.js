@@ -273,10 +273,11 @@
   function getDefaultSettings() {
     return {
       academicYear: "2026/2027",
-      activeWave: "wave3",
-      waveName: "Gelombang 3",
+      activeWave: "wave1",
+      waveName: "Gelombang 1",
+      waveDates: "1 Januari 2027 s/d 31 Maret 2027",
       waveStatus: "open",
-      waveNotice: "Pendaftaran Gelombang 3 (Kuota Terbatas) Sedang Berlangsung!",
+      waveNotice: "Pendaftaran Gelombang 1 Sedang Berlangsung! Dapatkan Diskon Infaq Rp 500.000",
       wave1Name: "Gelombang 1",
       wave1Promo: "Diskon Rp500.000",
       wave1Dates: "1 Januari 2027 s/d 31 Maret 2027",
@@ -286,7 +287,7 @@
       wave3Name: "Gelombang 3",
       wave3Promo: "S/d Kuota Terpenuhi",
       wave3Dates: "1 Juni 2027 s/d Kuota Terpenuhi",
-      waveDates: "1 Juni 2027 s/d Kuota Terpenuhi",
+      waveDates: "1 Januari 2027 s/d 31 Maret 2027",
       wavePoint1: "Potongan Infaq Pembangunan hingga Rp 500.000",
       wavePoint2: "Prioritas Kuota Kelas & Seleksi Observasi Dini",
       wavePoint3: "Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim",
@@ -1660,11 +1661,16 @@
     const dbTpText = document.getElementById('admin-dashboard-tp-text');
     if (dbTpText) dbTpText.textContent = `Tahun Pelajaran ${academicYear}`;
 
-    document.getElementById('set-tkit-fee').value = settings.tkitFee || 'Rp 200.000';
-    document.getElementById('set-sdit-fee').value = settings.sditFee || 'Rp 250.000';
-    document.getElementById('set-smpit-fee').value = settings.smpitFee || 'Rp 300.000';
-    document.getElementById('set-wa').value = settings.whatsappHelpdesk || '6285190610569';
-    document.getElementById('set-bank').value = settings.bankAccount || '';
+    const tkitEl = document.getElementById('set-tkit-fee');
+    if (tkitEl) tkitEl.value = settings.tkitFee || 'Rp 200.000';
+    const sditEl = document.getElementById('set-sdit-fee');
+    if (sditEl) sditEl.value = settings.sditFee || 'Rp 250.000';
+    const smpitEl = document.getElementById('set-smpit-fee');
+    if (smpitEl) smpitEl.value = settings.smpitFee || 'Rp 300.000';
+    const waEl = document.getElementById('set-wa');
+    if (waEl) waEl.value = settings.whatsappHelpdesk || '6285190610569';
+    const bankEl = document.getElementById('set-bank');
+    if (bankEl) bankEl.value = settings.bankAccount || 'Bank Syariah Indonesia (BSI) No. Rek: 711-234-5678 a.n Yayasan Bina Insan Parepare';
   }
 
   function initSettingsForm() {
@@ -1855,9 +1861,9 @@
       if (dbTpText) dbTpText.textContent = `Tahun Pelajaran ${academicYear}`;
 
       if (isQuick) {
-        showToast(`✅ ${activeDisplayName} berhasil diaktifkan & disimpan! Website utama langsung terupdate.`);
+        showToast(`✅ ${activeDisplayName} berhasil diaktifkan & tersimpan di Database!`);
       } else {
-        showToast('Pengaturan Tahun Ajaran & 3 Gelombang SPMB berhasil disimpan secara Real-Time!');
+        showToast('✅ Seluruh data pengaturan SPMB & sekolah berhasil disimpan ke Database!');
       }
     }
 
