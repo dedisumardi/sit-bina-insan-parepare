@@ -24,7 +24,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/spmb.css?v=20260923_biodata1">
+  <link rel="stylesheet" href="css/spmb.css?v=20260924_biodata2">
 </head>
 <body>
 
@@ -1965,6 +1965,25 @@
               </div>
             </div>
 
+            <div class="portal-approved-actions">
+              <button type="button" class="btn btn-primary portal-next-bio-btn" onclick="window.openStudentBiodata()">
+                Lanjut Pengisian Data
+                <span aria-hidden="true">→</span>
+              </button>
+              <button type="button" class="btn btn-outline-primary" onclick="window.printApprovedCard()">
+                🖨️ Cetak / Simpan Bukti Pembayaran
+              </button>
+              <a href="https://wa.me/6285190610569" target="_blank" rel="noopener" class="btn btn-accent">
+                💬 Hubungi Panitia via WhatsApp
+              </a>
+            </div>
+          </div>
+
+          <!-- STATE 4: FORM BIODATA LANGKAH 3 (TERPISAH DARI KONFIRMASI PEMBAYARAN) -->
+          <div id="portal-state-biodata" class="portal-biodata-page" style="display: none;">
+            <button type="button" class="portal-bio-back" onclick="window.backToPaymentApproval()">
+              <span aria-hidden="true">←</span> Kembali ke Konfirmasi Pembayaran
+            </button>
             <form id="portal-student-bio-form" class="portal-bio-form" onsubmit="window.submitStudentBiodata(event)">
               <div class="portal-bio-heading">
                 <span class="badge-tag">LANGKAH 3</span>
@@ -2049,14 +2068,6 @@
               </div>
             </form>
 
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-              <button type="button" class="btn btn-primary" onclick="window.printApprovedCard()" style="font-weight: 800; padding: 0.75rem 2rem;">
-                🖨️ Cetak / Simpan Bukti Pembayaran
-              </button>
-              <a href="https://wa.me/6285190610569" target="_blank" rel="noopener" class="btn btn-accent">
-                💬 Hubungi Panitia via WhatsApp
-              </a>
-            </div>
           </div>
 
         </div>
@@ -2293,7 +2304,7 @@
 
   <!-- Scripts -->
   <script src="js/data.js?v=20260923_dbsync2"></script>
-  <script src="js/spmb.js?v=20260923_biodata1"></script>
+  <script src="js/spmb.js?v=20260924_biodata2"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>

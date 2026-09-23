@@ -686,6 +686,7 @@
   // PARENT PORTAL & POPUP MODAL ENGINE (NEW SPMB WORKFLOW)
   // =========================================================================
   const PARENT_SESSION_KEY = 'sit_active_parent_session';
+  const PARENT_BIODATA_VIEW_KEY = 'sit_parent_biodata_view';
   let tempProofBase64 = null;
   let spmbModalMode = 'register';
   let realtimeChannel = null;
@@ -1119,6 +1120,24 @@
     }
   };
 
+  window.openStudentBiodata = function () {
+    const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim();
+    if (!regNumber) return;
+    try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber); } catch (_) {}
+    renderParentPortal();
+    requestAnimationFrame(() => {
+      document.getElementById('portal-state-biodata')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  window.backToPaymentApproval = function () {
+    try { sessionStorage.removeItem(PARENT_BIODATA_VIEW_KEY); } catch (_) {}
+    renderParentPortal();
+    requestAnimationFrame(() => {
+      document.getElementById('portal-state-approved')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
   // Render Parent Portal based on session and record status
   function renderParentPortal() {
     const landingView = document.getElementById('spmb-landing-view');
@@ -1177,11 +1196,13 @@
     const stateUnpaid = document.getElementById('portal-state-unpaid');
     const statePending = document.getElementById('portal-state-pending');
     const stateApproved = document.getElementById('portal-state-approved');
+    const stateBiodata = document.getElementById('portal-state-biodata');
     const badgeStatus = document.getElementById('portal-badge-status');
 
     const step1 = document.getElementById('flow-step-1');
     const step2 = document.getElementById('flow-step-2');
     const step3 = document.getElementById('flow-step-3');
+    const flowLine2 = document.getElementById('flow-line-2');
 
     // Check approval status
     const isApproved = record.status && (
@@ -1195,10 +1216,13 @@
     const hasProof = !!record.buktiPembayaran;
 
     if (isApproved) {
-      // STATE 3: APPROVED!
+      // STATE 2 APPROVED / STATE 3 BIODATA
+      let biodataViewOpen = false;
+      try { biodataViewOpen = sessionStorage.getItem(PARENT_BIODATA_VIEW_KEY) === record.regNumber; } catch (_) {}
       stateUnpaid.style.display = 'none';
       statePending.style.display = 'none';
-      stateApproved.style.display = 'block';
+      stateApproved.style.display = biodataViewOpen ? 'none' : 'block';
+      if (stateBiodata) stateBiodata.style.display = biodataViewOpen ? 'block' : 'none';
 
       document.getElementById('portal-approved-code').textContent = record.regNumber || 'SPMB-2026-001';
       populateStudentBioForm(record);
@@ -1211,13 +1235,16 @@
       step2?.classList.add('done');
       step2?.classList.remove('active');
       const biodataComplete = /^\d{16}$/.test(record.nik || '') && Boolean(record.namaSiswa && record.tanggalLahir);
-      step3?.classList.toggle('active', !biodataComplete);
-      step3?.classList.toggle('done', biodataComplete);
+      step3?.classList.remove('active', 'done', 'current-success');
+      if (biodataComplete) step3?.classList.add('done');
+      else if (biodataViewOpen) step3?.classList.add('current-success');
+      if (flowLine2) flowLine2.style.background = (biodataViewOpen || biodataComplete) ? '#22c55e' : 'var(--neutral-200)';
     } else if (hasProof) {
       // STATE 2: PENDING APPROVAL
       stateUnpaid.style.display = 'none';
       statePending.style.display = 'block';
       stateApproved.style.display = 'none';
+      if (stateBiodata) stateBiodata.style.display = 'none';
 
       const proofImg = document.getElementById('portal-pending-proof-img');
       if (proofImg) proofImg.src = record.buktiPembayaran;
@@ -1234,12 +1261,14 @@
       step1?.classList.add('done');
       step1?.classList.remove('active');
       step2?.classList.add('active');
-      step3?.classList.remove('active', 'done');
+      step3?.classList.remove('active', 'done', 'current-success');
+      if (flowLine2) flowLine2.style.background = 'var(--neutral-200)';
     } else {
       // STATE 1: UNPAID
       stateUnpaid.style.display = 'block';
       statePending.style.display = 'none';
       stateApproved.style.display = 'none';
+      if (stateBiodata) stateBiodata.style.display = 'none';
 
       badgeStatus.textContent = 'Menunggu Pembayaran (Rp 150.000)';
       badgeStatus.style.background = '#fee2e2';
@@ -1248,7 +1277,8 @@
       step1?.classList.add('active');
       step1?.classList.remove('done');
       step2?.classList.remove('active', 'done');
-      step3?.classList.remove('active', 'done');
+      step3?.classList.remove('active', 'done', 'current-success');
+      if (flowLine2) flowLine2.style.background = 'var(--neutral-200)';
     }
   }
 
@@ -1380,6 +1410,7 @@
   window.logoutParentPortal = function () {
     if (confirm('Apakah Anda ingin keluar dari Portal SPMB Anda?')) {
       localStorage.removeItem(PARENT_SESSION_KEY);
+      try { sessionStorage.removeItem(PARENT_BIODATA_VIEW_KEY); } catch (_) {}
       renderParentPortal();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
