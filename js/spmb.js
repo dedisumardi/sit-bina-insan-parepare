@@ -673,20 +673,15 @@
     // Open SPMB view
     window.location.hash = '#spmb';
     
-    // Switch to registration form tab
-    const pendaftaranTabBtn = document.querySelector('.spmb-tab-btn[data-tab="form"]');
-    if (pendaftaranTabBtn) pendaftaranTabBtn.click();
+    // Simpan pilihan jenjang
+    window.spmbSelectedJenjang = jenjangId || 'sdit';
 
-    // Reset to step 1
-    currentStep = 1;
-    updateStepUI();
-
-    // Check radio
-    const radio = document.querySelector(`input[name="jenjang"][value="${jenjangId}"]`);
-    if (radio) {
-      radio.checked = true;
-      radio.dispatchEvent(new Event('change'));
-    }
+    // Langsung buka modal popup pendaftaran
+    setTimeout(() => {
+      if (typeof window.openSpmbModal === 'function') {
+        window.openSpmbModal('register');
+      }
+    }, 60);
   };
 
   // Helper escape
@@ -990,7 +985,7 @@
       const tempReg = 'PENDING-' + cleanWa.slice(-4) + '-' + Math.floor(100 + Math.random() * 900);
       existing = {
         regNumber: tempReg,
-        jenjang: 'sdit',
+        jenjang: window.spmbSelectedJenjang || 'sdit',
         jalur: 'reguler',
         namaSiswa: 'Calon Siswa (' + nama + ')',
         nik: 'WA-' + cleanWa,
