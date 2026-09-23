@@ -379,16 +379,45 @@
         })
         .catch(e => console.log('Public Articles sync: offline fallback'));
 
-      // Sinkronisasi Pengaturan Sekolah (WA helpdesk, Gelombang, Infaq)
-      fetch('api/settings.php')
-        .then(res => res.json())
-        .then(resData => {
-          if (resData && resData.success && resData.data) {
-            localStorage.setItem('sit_bina_insan_settings', JSON.stringify(resData.data));
-            applySchoolSettings(resData.data);
+      // 2. Sinkronisasi Pengaturan Sekolah (Cloud Storage Multi-Device Vercel Sync)
+      const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
+      const backupCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.backupUrl) || 'https://extendsclass.com/api/json-storage/bin/beceecd';
+
+      const handleCloudSettings = (cloudData) => {
+        if (cloudData && typeof cloudData === 'object' && cloudData.academicYear) {
+          const currentRaw = localStorage.getItem('sit_bina_insan_settings');
+          const newRaw = JSON.stringify(cloudData);
+          if (currentRaw !== newRaw) {
+            localStorage.setItem('sit_bina_insan_settings', newRaw);
+            applySchoolSettings(cloudData);
+            console.log('✅ Public settings updated from Cloud');
           }
+        }
+      };
+
+      fetch(primaryCloudUrl, { cache: 'no-store' })
+        .then(res => {
+          if (!res.ok) throw new Error('Cloud HTTP ' + res.status);
+          return res.json();
         })
-        .catch(e => console.log('Public Settings sync: offline fallback'));
+        .then(handleCloudSettings)
+        .catch(() => {
+          fetch(backupCloudUrl, { cache: 'no-store' })
+            .then(res => res.json())
+            .then(handleCloudSettings)
+            .catch(() => {
+              // Fallback ke MySQL cPanel jika di hosting cPanel
+              fetch('api/settings.php')
+                .then(res => res.json())
+                .then(resData => {
+                  if (resData && resData.success && resData.data) {
+                    localStorage.setItem('sit_bina_insan_settings', JSON.stringify(resData.data));
+                    applySchoolSettings(resData.data);
+                  }
+                })
+                .catch(e => console.log('Public Settings sync: offline fallback'));
+            });
+        });
     }
   }
 
@@ -671,6 +700,36 @@
     } catch (e) {}
   }
   setInterval(checkLiveSettings, 1000);
+
+  // 4. Background Cloud Polling (Cross-device real-time sync for Vercel)
+  let isSyncingCloud = false;
+  function pollCloudSync() {
+    if (document.hidden || !navigator.onLine || isSyncingCloud) return;
+    isSyncingCloud = true;
+    const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
+    fetch(primaryCloudUrl, { cache: 'no-store' })
+      .then(res => {
+        if (!res.ok) throw new Error('Cloud HTTP ' + res.status);
+        return res.json();
+      })
+      .then(cloudData => {
+        isSyncingCloud = false;
+        if (cloudData && typeof cloudData === 'object' && cloudData.academicYear) {
+          const currentRaw = localStorage.getItem('sit_bina_insan_settings');
+          const newRaw = JSON.stringify(cloudData);
+          if (currentRaw !== newRaw) {
+            localStorage.setItem('sit_bina_insan_settings', newRaw);
+            applySchoolSettings(cloudData);
+            showRealtimeToast('Informasi SPMB & Gelombang diperbarui secara live');
+          }
+        }
+      })
+      .catch(() => {
+        isSyncingCloud = false;
+      });
+  }
+  setInterval(pollCloudSync, 4000);
+
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
       checkLiveSettings();

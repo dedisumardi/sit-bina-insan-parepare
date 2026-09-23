@@ -205,12 +205,42 @@
       .then(res => res.json())
       .then(resData => {
         if (resData && resData.success && resData.data) {
-          settings = resData.data;
+          settings = Object.assign({}, settings, resData.data);
           localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
           renderSettingsForm();
         }
       })
       .catch(e => console.log('Settings MySQL sync: offline / fallback aktif'));
+
+    // Load Settings from Cloud Storage (Multi-Device Vercel Support)
+    const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
+    const backupCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.backupUrl) || 'https://extendsclass.com/api/json-storage/bin/beceecd';
+
+    const applyCloudSettings = (cloudData) => {
+      if (cloudData && typeof cloudData === 'object' && cloudData.academicYear) {
+        settings = Object.assign({}, settings, cloudData);
+        localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
+        renderSettingsForm();
+        updateNavbarWaveBadge(settings.waveName, settings.waveStatus, settings.academicYear);
+        updateWavePreview(settings.waveName, settings.waveStatus, settings.academicYear);
+        updateWaveCardsUI(settings.activeWave);
+        const dbTpText = document.getElementById('admin-dashboard-tp-text');
+        if (dbTpText && settings.academicYear) dbTpText.textContent = `Tahun Pelajaran ${settings.academicYear}`;
+      }
+    };
+
+    fetch(primaryCloudUrl, { cache: 'no-store' })
+      .then(res => {
+        if (!res.ok) throw new Error('Primary cloud HTTP ' + res.status);
+        return res.json();
+      })
+      .then(applyCloudSettings)
+      .catch(() => {
+        fetch(backupCloudUrl, { cache: 'no-store' })
+          .then(res => res.json())
+          .then(applyCloudSettings)
+          .catch(e => console.log('Admin Cloud Settings sync: offline / fallback aktif'));
+      });
   }
 
   const WAVE_PRESETS = {
@@ -1784,6 +1814,38 @@
           }
         })
         .catch(e => console.log('Save settings MySQL fallback'));
+
+        // 4. Simpan ke Cloud Storage (Multi-Device Vercel Real-Time Sync)
+        const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
+        const backupCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.backupUrl) || 'https://extendsclass.com/api/json-storage/bin/beceecd';
+        const payloadStr = JSON.stringify(settings);
+
+        fetch(primaryCloudUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: payloadStr
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('Cloud HTTP ' + res.status);
+          console.log('✅ Cloud settings synced to primary endpoint');
+        })
+        .catch(err => {
+          console.log('Syncing to backup cloud endpoint...');
+          fetch(backupCloudUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: payloadStr
+          }).catch(e => console.log('Backup cloud sync error:', e));
+        });
+
+        // Selalu update backup juga di latar belakang
+        try {
+          fetch(backupCloudUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: payloadStr
+          }).catch(() => {});
+        } catch (e) {}
       }
 
       updateNavbarWaveBadge(activeDisplayName, waveStatus, academicYear);
@@ -1851,6 +1913,15 @@
         refreshAllViews();
         broadcastRealtime('settings_updated', settings);
         broadcastRealtime('articles_updated', articleList);
+
+        if (window.fetch) {
+          const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
+          const backupCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.backupUrl) || 'https://extendsclass.com/api/json-storage/bin/beceecd';
+          const defaultPayload = JSON.stringify(settings);
+          fetch(primaryCloudUrl, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: defaultPayload }).catch(()=>{});
+          fetch(backupCloudUrl, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: defaultPayload }).catch(()=>{});
+        }
+
         showToast('Data berhasil di-reset ke nilai default.');
       }
     });
