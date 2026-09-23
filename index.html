@@ -1435,411 +1435,494 @@
               <span><strong>Gelombang 1 <span class="wave-promo-badge">Diskon Rp500.000</span>:</strong> 1 Januari 2027 s/d 31 Maret 2027 <span class="wave-open-label">(Sedang Buka)</span></span>
             </div>
             <div class="wave-pill">
-              <div class="wave-dot" style="background-color: var(--neutral-400); box-shadow: none;"></div>
-              <span><strong>Gelombang 2:</strong> 1 April 2027 s/d 31 Mei 2027</span>
+      <!-- ===================================================================
+           SPMB CONTAINER A: INFORMATIVE PUBLIC LANDING VIEW
+           (Tampil saat orang tua belum login / membuka info SPMB)
+           =================================================================== -->
+      <div id="spmb-landing-view">
+        <!-- SPMB Hero Banner -->
+        <div class="spmb-hero">
+          <div class="container" style="text-align: center;">
+            <div class="spmb-hero-badge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              PENERIMAAN SISWA BARU (SPMB) <span class="spmb-sync-tp">TP 2026/2027</span>
             </div>
-            <div class="wave-pill">
-              <div class="wave-dot" style="background-color: var(--neutral-400); box-shadow: none;"></div>
-              <span><strong>Gelombang 3:</strong> 1 Juni 2027 s/d Kuota Terpenuhi</span>
+            <h1 class="spmb-hero-title" id="spmb-title">Informasi Pendaftaran SPMB Online</h1>
+            <p class="spmb-hero-desc">
+              Selamat datang di Sistem Penerimaan Siswa Baru SIT Bina Insan Parepare (TKIT, SDIT, SMPIT). Membentuk generasi Qur'ani yang berakhlak mulia, cerdas, dan mandiri. Pendaftaran gelombang baru kini dibuka secara daring.
+            </p>
+
+            <!-- Hero Action Buttons (Direct Popup Trigger) -->
+            <div class="spmb-hero-cta">
+              <button type="button" class="btn btn-accent btn-lg" id="btn-hero-daftar-spmb" onclick="window.openSpmbModal('register')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                Daftar SPMB Sekarang
+              </button>
+              <button type="button" class="btn btn-outline-white btn-lg" id="btn-hero-portal-spmb" onclick="window.openSpmbModal('login')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Sudah Mendaftar? Masuk Portal
+              </button>
             </div>
+
+            <!-- Timeline Gelombang -->
+            <div class="waves-timeline-wrap" id="home-waves-timeline">
+              <div class="wave-pill active">
+                <div class="wave-dot"></div>
+                <span><strong>Gelombang 1 <span class="wave-promo-badge">Diskon Rp500.000</span>:</strong> 1 Januari 2027 s/d 31 Maret 2027 <span class="wave-open-label">(Sedang Buka)</span></span>
+              </div>
+              <div class="wave-pill">
+                <div class="wave-dot" style="background-color: var(--neutral-400); box-shadow: none;"></div>
+                <span><strong>Gelombang 2:</strong> 1 April 2027 s/d 31 Mei 2027</span>
+              </div>
+              <div class="wave-pill">
+                <div class="wave-dot" style="background-color: var(--neutral-400); box-shadow: none;"></div>
+                <span><strong>Gelombang 3:</strong> 1 Juni 2027 s/d Kuota Terpenuhi</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informative Content Section -->
+        <div class="section" style="background-color: var(--neutral-100); padding-top: 2.5rem; padding-bottom: 4rem;">
+          <div class="container spmb-info-section">
+
+            <!-- Card 1: Alur Pendaftaran Baru 4 Langkah -->
+            <div class="spmb-card-highlight">
+              <div class="section-title-wrap" style="text-align: left; margin-bottom: 1.5rem;">
+                <span class="badge-tag">PANDUAN ALUR PENDAFTARAN</span>
+                <h2 style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900); margin: 0.5rem 0 0.25rem;">
+                  Alur Pendaftaran SPMB SIT Bina Insan Parepare
+                </h2>
+                <p style="color: var(--neutral-600); font-size: 0.95rem;">
+                  Ikuti 4 langkah mudah berikut untuk mendaftarkan putra-putri tercinta di sekolah kami:
+                </p>
+              </div>
+
+              <div class="spmb-step-card-grid">
+                <!-- Step 1 -->
+                <div class="spmb-step-card">
+                  <div class="spmb-step-num">1</div>
+                  <h3>Pendaftaran Akun Wali</h3>
+                  <p>Tekan tombol <strong>Daftar SPMB</strong>, lalu masukkan Nama Lengkap Orang Tua/Wali dan Nomor WhatsApp aktif untuk mengakses portal SPMB.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="spmb-step-card">
+                  <div class="spmb-step-num">2</div>
+                  <h3>Biaya Pendaftaran Rp 150.000</h3>
+                  <p>Masuk ke portal khusus SPMB, lakukan pembayaran uang pendaftaran <strong>Rp 150.000</strong> ke rekening resmi BSI, dan upload foto bukti transfer.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="spmb-step-card">
+                  <div class="spmb-step-num">3</div>
+                  <h3>Verifikasi & Terbit Kode</h3>
+                  <p>Admin panitia SPMB memverifikasi bukti pembayaran. Setelah di-approve, sistem secara otomatis menerbitkan <strong>Kode Pendaftaran Siswa</strong> resmi.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="spmb-step-card">
+                  <div class="spmb-step-num">4</div>
+                  <h3>Pengisian Biodata Siswa</h3>
+                  <p>Setelah kode pendaftaran diterbitkan, orang tua dapat melanjutkan pengisian biodata lengkap siswa, pilihan jenjang, dan persiapan observasi.</p>
+                </div>
+              </div>
+
+              <!-- Bank Account Info Banner -->
+              <div class="spmb-bank-card">
+                <div class="spmb-bank-detail-box">
+                  <div class="spmb-bank-logo-icon">🏦</div>
+                  <div>
+                    <div style="font-size: 0.8rem; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px;">Rekening Resmi Pembayaran SPMB</div>
+                    <div style="font-size: 1.25rem; font-weight: 800; color: #14532d; font-family: monospace;">Bank Syariah Indonesia (BSI) • 711-234-5678</div>
+                    <div style="font-size: 0.85rem; color: #166534;">a.n <strong>Yayasan Bina Insan Parepare</strong> &bull; Biaya Pendaftaran: <strong>Rp 150.000</strong></div>
+                  </div>
+                </div>
+                <button type="button" class="spmb-copy-pill" onclick="window.copyBankNumber('7112345678')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Salin No. Rekening
+                </button>
+              </div>
+
+              <div style="margin-top: 2rem; text-align: center;">
+                <button type="button" class="btn btn-primary btn-lg" onclick="window.openSpmbModal('register')" style="padding: 0.85rem 2.25rem; font-weight: 800; border-radius: var(--radius-full);">
+                  🚀 Mulai Pendaftaran Sekarang
+                </button>
+              </div>
+            </div>
+
+            <!-- Card 2: Pilihan Jenjang Sekolah -->
+            <div class="spmb-card-highlight">
+              <div class="section-title-wrap" style="text-align: left; margin-bottom: 1.5rem;">
+                <span class="badge-tag">JENJANG PENDIDIKAN</span>
+                <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--neutral-900); margin: 0.5rem 0 0.25rem;">
+                  Pilihan Jenjang Pendidikan di SIT Bina Insan
+                </h2>
+                <p style="color: var(--neutral-600); font-size: 0.95rem;">
+                  Tersedia 3 jenjang pendidikan terpadu berlandaskan Al-Qur'an dan Sunnah di Kota Parepare:
+                </p>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                <!-- TKIT -->
+                <div style="border: 1px solid var(--neutral-200); border-radius: var(--radius-xl); padding: 1.5rem; background: var(--neutral-50);">
+                  <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <span style="background: var(--accent-100); color: var(--accent-800); font-weight: 800; font-size: 0.8rem; padding: 0.25rem 0.65rem; border-radius: var(--radius-md);">PAUD / TK</span>
+                    <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--neutral-900);">TKIT Bina Insan</h3>
+                  </div>
+                  <p style="font-size: 0.875rem; color: var(--neutral-600); line-height: 1.6; margin-bottom: 1rem;">
+                    Pendidikan usia dini Islam terpadu untuk anak usia 4–6 tahun. Tumbuh dalam iman, adab, tahfizh surat pendek, dan kemandirian melalui metode bermain bermakna.
+                  </p>
+                  <a href="#tkit" class="btn btn-outline-primary btn-sm" style="width: 100%;">Lihat Profil TKIT</a>
+                </div>
+
+                <!-- SDIT -->
+                <div style="border: 1px solid var(--neutral-200); border-radius: var(--radius-xl); padding: 1.5rem; background: var(--neutral-50);">
+                  <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <span style="background: var(--primary-100); color: var(--primary-800); font-weight: 800; font-size: 0.8rem; padding: 0.25rem 0.65rem; border-radius: var(--radius-md);">SEKOLAH DASAR</span>
+                    <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--neutral-900);">SDIT Bina Insan</h3>
+                  </div>
+                  <p style="font-size: 0.875rem; color: var(--neutral-600); line-height: 1.6; margin-bottom: 1rem;">
+                    Pendidikan dasar 6 tahun dengan kurikulum terpadu JSIT. Target tahfizh minimal 2-3 Juz mutqin, pembelajaran sains bilingual, dan pembiasaan ibadah harian.
+                  </p>
+                  <a href="#sdit" class="btn btn-outline-primary btn-sm" style="width: 100%;">Lihat Profil SDIT</a>
+                </div>
+
+                <!-- SMPIT -->
+                <div style="border: 1px solid var(--neutral-200); border-radius: var(--radius-xl); padding: 1.5rem; background: var(--neutral-50);">
+                  <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.8rem; padding: 0.25rem 0.65rem; border-radius: var(--radius-md);">MENENGAH PERTAMA</span>
+                    <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--neutral-900);">SMPIT Bina Insan</h3>
+                  </div>
+                  <p style="font-size: 0.875rem; color: var(--neutral-600); line-height: 1.6; margin-bottom: 1rem;">
+                    Program Full Day School terpadu, tahfizh intensif 5 Juz, penguasaan sains & teknologi, serta penempaan kepemimpinan dan karakter islami berdaya saing global.
+                  </p>
+                  <a href="#smpit" class="btn btn-outline-primary btn-sm" style="width: 100%;">Lihat Profil SMPIT</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Persyaratan & Ketentuan Pendaftaran -->
+            <div class="spmb-card-highlight">
+              <div class="section-title-wrap" style="text-align: left; margin-bottom: 1.25rem;">
+                <span class="badge-tag">PERSYARATAN ADMINISTRASI</span>
+                <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--neutral-900); margin: 0.5rem 0 0.25rem;">
+                  Persyaratan Pendaftaran Calon Siswa
+                </h2>
+              </div>
+              <ul style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; padding: 0; list-style: none; font-size: 0.9rem; color: var(--neutral-700);">
+                <li style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: var(--neutral-50); border-radius: var(--radius-md);">
+                  <span style="color: var(--success); font-weight: 800;">✓</span>
+                  <span>Mengisi formulir registrasi awal (Nama Orang Tua &amp; No WhatsApp aktif).</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: var(--neutral-50); border-radius: var(--radius-md);">
+                  <span style="color: var(--success); font-weight: 800;">✓</span>
+                  <span>Membayar biaya infaq pendaftaran sebesar <strong>Rp 150.000</strong> dan mengunggah bukti transfer.</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: var(--neutral-50); border-radius: var(--radius-md);">
+                  <span style="color: var(--success); font-weight: 800;">✓</span>
+                  <span>Fotokopi / scan Akta Kelahiran dan Kartu Keluarga (KK).</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: var(--neutral-50); border-radius: var(--radius-md);">
+                  <span style="color: var(--success); font-weight: 800;">✓</span>
+                  <span>Fotokopi / scan KTP kedua orang tua / wali murid.</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: var(--neutral-50); border-radius: var(--radius-md);">
+                  <span style="color: var(--success); font-weight: 800;">✓</span>
+                  <span>Pasfoto berwarna calon siswa (latar belakang merah/biru).</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: var(--neutral-50); border-radius: var(--radius-md);">
+                  <span style="color: var(--success); font-weight: 800;">✓</span>
+                  <span>Mengikuti proses pemetaan / observasi sesuai jadwal yang ditetapkan.</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Card 4: Quick Status Check Form -->
+            <div class="spmb-card-highlight" style="background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);">
+              <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--neutral-900); margin-bottom: 0.5rem;">
+                  🔍 Sudah Memiliki Kode Pendaftaran?
+                </h3>
+                <p style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 1.25rem;">
+                  Masukkan Nomor Registrasi resmi atau Nomor WhatsApp Anda untuk melihat status verifikasi terkini:
+                </p>
+                <form id="form-quick-status-check" onsubmit="window.handleQuickStatusCheck(event)" style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
+                  <input type="text" id="quick-check-input" class="form-control" placeholder="Ketik Kode SPMB (contoh: SPMB-2026-001) atau No WA..." required style="max-width: 360px; font-weight: 700; text-transform: uppercase;">
+                  <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">Cari Status</button>
+                </form>
+                <div id="quick-check-result" style="margin-top: 1rem;"></div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
 
-      <div class="section" style="background-color: var(--neutral-100); padding-top: 1rem;">
+      <!-- ===================================================================
+           SPMB CONTAINER B: DEDICATED PARENT PORTAL
+           (Halaman Khusus SPMB untuk Orang Tua yang telah memasukkan Nama & WA)
+           =================================================================== -->
+      <div id="spmb-parent-portal" class="spmb-parent-portal" style="display: none; padding-top: 2rem; padding-bottom: 4rem;">
         <div class="container">
           
-          <!-- SPMB Nav Tabs -->
-          <div class="spmb-tabs-nav" role="tablist">
-            <button type="button" class="spmb-tab-btn active" data-tab="form" role="tab" aria-selected="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-              Formulir Pendaftaran Baru
-            </button>
-            <button type="button" class="spmb-tab-btn" data-tab="status" role="tab" aria-selected="false">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              Cek Status Pendaftaran
-            </button>
-            <button type="button" class="spmb-tab-btn" data-tab="info" role="tab" aria-selected="false">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-              Informasi Alur & Biaya
+          <!-- Portal Header Bar -->
+          <div class="portal-header-bar">
+            <div class="portal-user-meta">
+              <div class="portal-avatar-icon">👤</div>
+              <div class="portal-user-info">
+                <h2 id="portal-parent-name">Bapak/Ibu Orang Tua Siswa</h2>
+                <p>No. WhatsApp: <strong id="portal-parent-wa" class="font-mono">-</strong> &bull; Status: <span id="portal-badge-status" class="badge-tag" style="background:#ffffff; color:var(--primary-800); font-weight:700;">Memuat...</span></p>
+              </div>
+            </div>
+            <button type="button" class="portal-logout-btn" onclick="window.logoutParentPortal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline; vertical-align:middle; margin-right:4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Keluar / Ganti Akun
             </button>
           </div>
 
-          <!-- TAB PANEL 1: FORMULIR MULTI-STEP -->
-          <div class="spmb-tab-panel active" id="spmb-panel-form">
-
-            <!-- Step Progress Tracker (Compliant with Modern Web Guidance) -->
-            <ol class="spmb-step-tracker" id="spmb-step-tracker" aria-label="Tahapan Pendaftaran SPMB">
-              <li class="step-item active" data-step="1" aria-current="step">
-                <div class="step-indicator">1</div>
-                <div class="step-label">Pilih Jenjang</div>
-              </li>
-              <li class="step-item" data-step="2">
-                <div class="step-indicator">2</div>
-                <div class="step-label">Data Siswa</div>
-              </li>
-              <li class="step-item" data-step="3">
-                <div class="step-indicator">3</div>
-                <div class="step-label">Data Orang Tua</div>
-              </li>
-              <li class="step-item" data-step="4">
-                <div class="step-indicator">4</div>
-                <div class="step-label">Tahfizh & Bakat</div>
-              </li>
-              <li class="step-item" data-step="5">
-                <div class="step-indicator">5</div>
-                <div class="step-label">Konfirmasi</div>
-              </li>
-            </ol>
-
-            <!-- Form Card -->
-            <div class="spmb-form-card" id="spmb-form-card">
-              <form id="spmb-registration-form" novalidate>
-                
-                <!-- STEP 1: PILIHAN JENJANG & JALUR -->
-                <div class="form-step-content active" id="step-1">
-                  <div class="step-header">
-                    <h2 class="step-title">Langkah 1: Pilih Jenjang & Jalur Pendaftaran</h2>
-                    <p class="step-subtitle">Silakan tentukan jenjang pendidikan yang dituju untuk calon peserta didik baru.</p>
-                  </div>
-
-                  <div class="options-grid-3">
-                    <!-- TKIT Option -->
-                    <label class="option-card-label">
-                      <input type="radio" name="jenjang" value="tkit" checked required>
-                      <div class="option-card-box">
-                        <div class="option-card-icon">
-                          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 4.9V17L12 22 3 17V6.9L12 2z"/></svg>
-                        </div>
-                        <div class="option-card-title">TKIT Bina Insan</div>
-                        <div class="option-card-sub">Usia 4 - 6 Tahun (Sentra)</div>
-                        <div class="option-card-price" id="spmb-price-tkit">Infaq: Rp 200.000</div>
-                      </div>
-                    </label>
-
-                    <!-- SDIT Option -->
-                    <label class="option-card-label">
-                      <input type="radio" name="jenjang" value="sdit">
-                      <div class="option-card-box">
-                        <div class="option-card-icon">
-                          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
-                        </div>
-                        <div class="option-card-title">SDIT Bina Insan</div>
-                        <div class="option-card-sub">Kelas 1 - 6 (Full Day)</div>
-                        <div class="option-card-price" id="spmb-price-sdit">Infaq: Rp 250.000</div>
-                      </div>
-                    </label>
-
-                    <!-- SMPIT Option -->
-                    <label class="option-card-label">
-                      <input type="radio" name="jenjang" value="smpit">
-                      <div class="option-card-box">
-                        <div class="option-card-icon">
-                          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
-                        </div>
-                        <div class="option-card-title">SMPIT Bina Insan</div>
-                        <div class="option-card-sub">Kelas 7 - 9 (Full Day / Boarding)</div>
-                        <div class="option-card-price" id="spmb-price-smpit">Infaq: Rp 300.000</div>
-                      </div>
-                    </label>
-                  </div>
-
-                  <div style="margin-top: 2rem;">
-                    <label class="form-label" style="font-size: 1.05rem; margin-bottom: 0.75rem;">Pilih Jalur Pendaftaran:</label>
-                    <div class="jalur-grid">
-                      <label class="option-card-label">
-                        <input type="radio" name="jalur" value="reguler" checked>
-                        <div class="jalur-box">
-                          <div class="jalur-title">Jalur Reguler</div>
-                          <div class="jalur-desc">Pendaftaran umum mengikuti prosedur tes observasi standar.</div>
-                        </div>
-                      </label>
-                      <label class="option-card-label">
-                        <input type="radio" name="jalur" value="prestasi_tahfizh">
-                        <div class="jalur-box">
-                          <div class="jalur-title">Jalur Prestasi Tahfizh</div>
-                          <div class="jalur-desc">Hafal min. 2 Juz (SD) atau 3 Juz (SMP). Bebas biaya pendaftaran.</div>
-                        </div>
-                      </label>
-                      <label class="option-card-label">
-                        <input type="radio" name="jalur" value="afirmasi">
-                        <div class="jalur-box">
-                          <div class="jalur-title">Jalur Beasiswa / Afirmasi</div>
-                          <div class="jalur-desc">Khusus calon siswa yatim atau dhuafa berprestasi.</div>
-                        </div>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- STEP 2: DATA PRIBADI SISWA -->
-                <div class="form-step-content" id="step-2">
-                  <div class="step-header">
-                    <h2 class="step-title">Langkah 2: Data Calon Peserta Didik</h2>
-                    <p class="step-subtitle">Isikan identitas calon murid sesuai dengan Akta Kelahiran dan Kartu Keluarga.</p>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="siswa_nama" class="form-label">Nama Lengkap Siswa <span class="required">*</span></label>
-                    <input type="text" id="siswa_nama" name="siswa_nama" class="form-control" placeholder="Contoh: Muhammad Rayhan Al-Fatih" required autocomplete="name">
-                  </div>
-
-                  <div class="form-grid-2">
-                    <div class="form-group">
-                      <label for="siswa_nik" class="form-label">NIK / No. Kartu Keluarga <span class="required">*</span></label>
-                      <input type="text" id="siswa_nik" name="siswa_nik" class="form-control" placeholder="16 digit angka NIK" maxlength="16" pattern="[0-9]{16}" required>
-                      <span class="form-hint">Dapat dilihat pada kolom NIK Kartu Keluarga (KK).</span>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label">Jenis Kelamin <span class="required">*</span></label>
-                      <div style="display: flex; gap: 1.5rem; min-height: 48px; align-items: center;">
-                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                          <input type="radio" name="siswa_jk" value="Laki-laki" checked style="accent-color: var(--primary-600); width: 18px; height: 18px;">
-                          <span>Laki-laki</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                          <input type="radio" name="siswa_jk" value="Perempuan" style="accent-color: var(--primary-600); width: 18px; height: 18px;">
-                          <span>Perempuan</span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-grid-2">
-                    <div class="form-group">
-                      <label for="siswa_tempat_lahir" class="form-label">Tempat Lahir <span class="required">*</span></label>
-                      <input type="text" id="siswa_tempat_lahir" name="siswa_tempat_lahir" class="form-control" placeholder="Contoh: Parepare" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="siswa_tgl_lahir" class="form-label">Tanggal Lahir <span class="required">*</span></label>
-                      <input type="date" id="siswa_tgl_lahir" name="siswa_tgl_lahir" class="form-control" required>
-                    </div>
-                  </div>
-
-                  <div class="form-grid-2">
-                    <div class="form-group">
-                      <label for="siswa_asal_sekolah" class="form-label">Asal Sekolah Sebelumnya <span class="required">*</span></label>
-                      <input type="text" id="siswa_asal_sekolah" name="siswa_asal_sekolah" class="form-control" placeholder="Contoh: TKIT Bina Insan / RA Al-Ikhlas" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="siswa_anak_ke" class="form-label">Anak Ke- (dari Berapa Bersaudara)</label>
-                      <input type="text" id="siswa_anak_ke" name="siswa_anak_ke" class="form-control" placeholder="Contoh: 1 dari 3 bersaudara">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="siswa_alamat" class="form-label">Alamat Lengkap Tempat Tinggal <span class="required">*</span></label>
-                    <textarea id="siswa_alamat" name="siswa_alamat" class="form-control" rows="3" placeholder="Contoh: Jl. Bau Massepe No. 45, Kel. Cappa Galung, Kec. Bacukiki Barat, Kota Parepare" required autocomplete="street-address"></textarea>
-                  </div>
-                </div>
-
-                <!-- STEP 3: DATA ORANG TUA / WALI -->
-                <div class="form-step-content" id="step-3">
-                  <div class="step-header">
-                    <h2 class="step-title">Langkah 3: Data Orang Tua / Wali</h2>
-                    <p class="step-subtitle">Informasi kontak ayah dan bunda untuk komunikasi seleksi dan verifikasi berkas.</p>
-                  </div>
-
-                  <div class="form-grid-2">
-                    <div class="form-group">
-                      <label for="ortu_nama_ayah" class="form-label">Nama Lengkap Ayah / Wali <span class="required">*</span></label>
-                      <input type="text" id="ortu_nama_ayah" name="ortu_nama_ayah" class="form-control" placeholder="Nama ayah kandung / wali" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="ortu_pek_ayah" class="form-label">Pekerjaan Ayah <span class="required">*</span></label>
-                      <input type="text" id="ortu_pek_ayah" name="ortu_pek_ayah" class="form-control" placeholder="Contoh: PNS / Wiraswasta / BUMN" required>
-                    </div>
-                  </div>
-
-                  <div class="form-grid-2">
-                    <div class="form-group">
-                      <label for="ortu_wa" class="form-label">No. WhatsApp Aktif Ayah / Wali <span class="required">*</span></label>
-                      <input type="tel" id="ortu_wa" name="ortu_wa" class="form-control" placeholder="Contoh: 081234567890" required autocomplete="tel">
-                      <span class="form-hint">Nomor ini akan menerima pesan konfirmasi dan jadwal observasi.</span>
-                    </div>
-                    <div class="form-group">
-                      <label for="ortu_email" class="form-label">Alamat Email Aktif <span class="required">*</span></label>
-                      <input type="email" id="ortu_email" name="ortu_email" class="form-control" placeholder="Contoh: namaorangtua@gmail.com" required autocomplete="email">
-                    </div>
-                  </div>
-
-                  <div class="form-grid-2">
-                    <div class="form-group">
-                      <label for="ortu_nama_ibu" class="form-label">Nama Lengkap Ibu Kandung <span class="required">*</span></label>
-                      <input type="text" id="ortu_nama_ibu" name="ortu_nama_ibu" class="form-control" placeholder="Nama ibu kandung" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="ortu_pek_ibu" class="form-label">Pekerjaan Ibu <span class="required">*</span></label>
-                      <input type="text" id="ortu_pek_ibu" name="ortu_pek_ibu" class="form-control" placeholder="Contoh: Ibu Rumah Tangga / Guru / Karyawan" required>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- STEP 4: TAHFIZH & MINAT BAKAT -->
-                <div class="form-step-content" id="step-4">
-                  <div class="step-header">
-                    <h2 class="step-title">Langkah 4: Riwayat Hafalan Qur'an & Prestasi</h2>
-                    <p class="step-subtitle">Bantu kami mengenal potensi dan bekal awal ananda sebelum mengikuti pemetaan/observasi.</p>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="siswa_hafalan" class="form-label">Riwayat / Jumlah Hafalan Al-Qur'an</label>
-                    <textarea id="siswa_hafalan" name="siswa_hafalan" class="form-control" rows="3" placeholder="Contoh: Sudah hafal Juz 30 (Surat An-Naba sampai An-Nas) atau Baru mengenal huruf hijaiyah Iqro jilid 2"></textarea>
-                    <span class="form-hint">Tuliskan sejujurnya, untuk keperluan penempatan halaqah yang tepat.</span>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="siswa_prestasi" class="form-label">Prestasi Akademik / Non-Akademik (Jika Ada)</label>
-                    <textarea id="siswa_prestasi" name="siswa_prestasi" class="form-control" rows="2" placeholder="Contoh: Juara 2 Lomba Menggambar Tingkat Kota Parepare, Juara Harapan 1 MHQ Anak"></textarea>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="siswa_catatan_kesehatan" class="form-label">Riwayat Alergi / Kebutuhan Khusus Kesehatan</label>
-                    <input type="text" id="siswa_catatan_kesehatan" name="siswa_catatan_kesehatan" class="form-control" placeholder="Contoh: Tidak ada riwayat penyakit berat, alergi seafood (bila ada)">
-                  </div>
-                </div>
-
-                <!-- STEP 5: REVIEW & KONFIRMASI -->
-                <div class="form-step-content" id="step-5">
-                  <div class="step-header">
-                    <h2 class="step-title">Langkah 5: Konfirmasi Data Pendaftaran</h2>
-                    <p class="step-subtitle">Mohon periksa kembali kebenaran seluruh data sebelum mengirimkan pendaftaran.</p>
-                  </div>
-
-                  <div id="review-summary-container">
-                    <!-- Populated dynamically via js/spmb.js -->
-                  </div>
-
-                  <div style="background: var(--accent-50); border: 1.5px solid var(--accent-400); border-radius: var(--radius-md); padding: 1.25rem; margin-top: 1.5rem;">
-                    <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
-                      <input type="checkbox" id="persetujuan_checkbox" required style="accent-color: var(--primary-600); width: 20px; height: 20px; margin-top: 2px;">
-                      <span style="font-size: 0.9rem; color: var(--neutral-800); line-height: 1.6;">
-                        Saya menyatakan dengan sebenarnya bahwa data yang saya isikan adalah benar, dan saya bersedia mematuhi segala tata tertib serta ketentuan Sistem Penerimaan Murid Baru SIT Bina Insan Parepare.
-                      </span>
-                    </label>
-                  </div>
-                </div>
-
-                <!-- Wizard Navigation Footer -->
-                <div class="wizard-footer">
-                  <button type="button" class="btn btn-outline-primary" id="spmb-prev-btn" style="display: none;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-                    Kembali
-                  </button>
-                  <button type="button" class="btn btn-primary" id="spmb-next-btn" style="margin-left: auto;">
-                    Lanjut
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                  </button>
-                  <button type="button" class="btn btn-accent btn-lg" id="spmb-submit-btn" style="display: none; margin-left: auto;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                    Kirim & Cetak Bukti Pendaftaran
-                  </button>
-                </div>
-
-              </form>
-            </div>
-
-            <!-- DIGITAL TICKET RESULT VIEW (KARTU TANDA PESERTA) -->
-            <div class="spmb-success-view" id="spmb-success-view">
-              <div id="spmb-ticket-content">
-                <!-- Populated dynamically via js/spmb.js generateTicket() -->
+          <!-- Portal 3-Step Flow Indicator -->
+          <div class="portal-flow-steps">
+            <div class="portal-flow-step active" id="flow-step-1">
+              <div class="num-circle">1</div>
+              <div>
+                <span style="display:block; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; opacity:0.8;">Langkah 1</span>
+                Bayar Rp 150.000 &amp; Upload Bukti
               </div>
             </div>
-
+            <div style="flex: 1; height: 2px; background: var(--neutral-200); margin: 0 1rem;" id="flow-line-1"></div>
+            <div class="portal-flow-step" id="flow-step-2">
+              <div class="num-circle">2</div>
+              <div>
+                <span style="display:block; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; opacity:0.8;">Langkah 2</span>
+                Approval Admin &amp; Terbit Kode
+              </div>
+            </div>
+            <div style="flex: 1; height: 2px; background: var(--neutral-200); margin: 0 1rem;" id="flow-line-2"></div>
+            <div class="portal-flow-step" id="flow-step-3">
+              <div class="num-circle">3</div>
+              <div>
+                <span style="display:block; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; opacity:0.8;">Langkah 3</span>
+                Pengisian Biodata Lengkap
+              </div>
+            </div>
           </div>
 
-          <!-- TAB PANEL 2: CEK STATUS PENDAFTARAN -->
-          <div class="spmb-tab-panel" id="spmb-panel-status">
-            <div class="check-status-card">
-              <div class="pillar-icon-box" style="margin-inline: auto;">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <!-- STATE 1: BELUM BAYAR / BELUM UPLOAD BUKTI -->
+          <div id="portal-state-unpaid" class="spmb-card-highlight">
+            <div style="text-align: center; max-width: 680px; margin: 0 auto 2rem;">
+              <span class="badge-tag" style="background:#fee2e2; color:#991b1b; font-weight:800;">LANGKAH AWAL WAJIB</span>
+              <h2 style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900); margin: 0.5rem 0 0.5rem;">
+                Pembayaran Biaya Pendaftaran SPMB
+              </h2>
+              <p style="color: var(--neutral-600); font-size: 0.95rem; line-height: 1.6;">
+                Untuk melanjutkan pendaftaran, silakan melakukan transfer biaya pendaftaran formulir sebesar <strong>Rp 150.000</strong> ke rekening resmi sekolah, kemudian unggah foto bukti transfer di bawah ini:
+              </p>
+            </div>
+
+            <!-- Transfer Instruction Box -->
+            <div class="spmb-bank-card" style="margin-bottom: 2rem;">
+              <div class="spmb-bank-detail-box">
+                <div class="spmb-bank-logo-icon">💳</div>
+                <div>
+                  <div style="font-size: 0.8rem; font-weight: 700; color: #15803d; text-transform: uppercase;">Bank Tujuan Transfer</div>
+                  <div style="font-size: 1.35rem; font-weight: 800; color: #14532d; font-family: monospace;">Bank Syariah Indonesia (BSI) : 711-234-5678</div>
+                  <div style="font-size: 0.9rem; color: #166534; margin-top: 2px;">
+                    Atas Nama: <strong>Yayasan Bina Insan Parepare</strong> &bull; Jumlah: <strong style="font-size:1.1rem; color:#14532d;">Rp 150.000</strong>
+                  </div>
+                </div>
               </div>
-              <h2 style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900); margin-bottom: 0.5rem;">Cek Status Pendaftaran SPMB</h2>
-              <p style="color: var(--neutral-600); font-size: 0.95rem; max-width: 500px; margin-inline: auto;">
-                Masukkan Nomor Registrasi (contoh: <strong>SPMB-<span class="spmb-sync-start-year">2025</span>-SD001</strong>) atau 16 digit NIK calon siswa yang telah didaftarkan.
+              <button type="button" class="spmb-copy-pill" onclick="window.copyBankNumber('7112345678')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Salin No. Rekening
+              </button>
+            </div>
+
+            <!-- File Upload Dropzone Form -->
+            <div style="max-width: 640px; margin: 0 auto;">
+              <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.5rem;">
+                Unggah Foto / Screenshot Bukti Pembayaran
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--neutral-500); margin-bottom: 1rem;">
+                Format yang didukung: JPG, PNG, WEBP, atau PDF (Maksimal 5MB).
               </p>
 
-              <form id="form-check-status" class="check-status-form">
-                <input type="text" id="check-status-input" class="form-control" placeholder="Ketik No. Registrasi atau NIK Siswa..." required autocomplete="off" style="font-weight: 700; text-transform: uppercase;">
-                <button type="submit" class="btn btn-primary">
-                  Cari Data
-                </button>
-              </form>
-
-              <div style="font-size: 0.8rem; color: var(--neutral-500);">
-                💡 Tip Simulasi: Coba cari nomor uji coba: <strong style="color: var(--primary-700); cursor: pointer;" onclick="document.getElementById('check-status-input').value='SPMB-2025-SD001'">SPMB-<span class="spmb-sync-start-year">2025</span>-SD001</strong> atau <strong style="color: var(--primary-700); cursor: pointer;" onclick="document.getElementById('check-status-input').value='SPMB-2025-TK002'">SPMB-<span class="spmb-sync-start-year">2025</span>-TK002</strong>
+              <div class="portal-dropzone" id="portal-upload-dropzone">
+                <input type="file" id="portal-file-input" accept="image/png, image/jpeg, image/jpg, image/webp" onchange="window.handleProofFileSelect(event)">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📤</div>
+                <div style="font-size: 1rem; font-weight: 700; color: var(--primary-800); margin-bottom: 0.25rem;">
+                  Klik untuk memilih file atau seret foto bukti transfer ke sini
+                </div>
+                <div style="font-size: 0.8rem; color: var(--neutral-500);">
+                  Pastikan bukti transfer memperlihatkan tanggal, jam, nominal Rp 150.000, dan nomor referensi dengan jelas.
+                </div>
               </div>
 
-              <!-- Search Result Wrap -->
-              <div class="check-result-wrap" id="check-result-container"></div>
+              <!-- Image Preview Box -->
+              <div class="portal-preview-container" id="portal-preview-box">
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--neutral-700); margin-bottom: 0.5rem;">
+                  Pratinjau Bukti Pembayaran yang Dipilih:
+                </div>
+                <img id="portal-preview-image" src="" alt="Pratinjau Bukti Transfer" class="portal-preview-img">
+                <div style="display: flex; gap: 0.75rem; justify-content: center;">
+                  <button type="button" class="btn btn-outline-primary btn-sm" onclick="document.getElementById('portal-file-input').click()">
+                    Ganti Foto Lain
+                  </button>
+                  <button type="button" class="btn btn-primary" id="btn-submit-payment-proof" onclick="window.submitPaymentProof()" style="font-weight: 800; padding: 0.65rem 1.75rem;">
+                    ✓ Kirim Bukti Pembayaran ke Admin
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- TAB PANEL 3: INFORMASI ALUR & BIAYA -->
-          <div class="spmb-tab-panel" id="spmb-panel-info">
-            <div style="max-width: 900px; margin-inline: auto; background: #fff; border-radius: var(--radius-xl); padding: 2.75rem; box-shadow: var(--shadow-sm); border: 1px solid var(--neutral-200);">
-              
-              <div class="section-title-wrap" style="margin-bottom: 2rem;">
-                <span class="badge-tag">PANDUAN LENGKAP</span>
-                <h2 class="section-title">Alur Pendaftaran SPMB</h2>
-                <p class="section-subtitle">5 langkah mudah mendaftarkan ananda di SIT Bina Insan Parepare.</p>
+          <!-- STATE 2: SUDAH UPLOAD BUKTI (MENUNGGU APPROVAL ADMIN) -->
+          <div id="portal-state-pending" class="spmb-card-highlight" style="display: none;">
+            <div style="text-align: center; max-width: 640px; margin: 0 auto;">
+              <div class="portal-waiting-badge" style="width: 72px; height: 72px; border-radius: 50%; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 1.25rem; box-shadow: 0 0 0 8px #fef9c3;">
+                ⏳
               </div>
+              <span class="badge-tag" style="background:#fef3c7; color:#92400e; font-weight:800; font-size:0.85rem;">STATUS: MENUNGGU VERIFIKASI ADMIN</span>
+              <h2 style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900); margin: 0.75rem 0 0.5rem;">
+                Bukti Pembayaran Sedang Diverifikasi
+              </h2>
+              <p style="color: var(--neutral-600); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                Alhamdulillah! Bukti pembayaran pendaftaran sebesar <strong>Rp 150.000</strong> telah berhasil diunggah ke database. Saat ini panitia/admin sedang memeriksa dan memverifikasi pembayaran Anda.
+              </p>
 
-              <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3rem;">
-                <div style="display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem; background: var(--neutral-50); border-radius: var(--radius-lg); border-left: 4px solid var(--primary-600);">
-                  <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-600); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
-                  <div>
-                    <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">Pengisian Formulir Online</h4>
-                    <p style="font-size: 0.9rem; color: var(--neutral-600); line-height: 1.6;">Orang tua mengisi data diri calon siswa pada menu <strong>Formulir Pendaftaran Baru</strong> di website ini sampai selesai (5 langkah).</p>
-                  </div>
+              <div style="background: var(--neutral-50); border: 1.5px solid var(--neutral-200); border-radius: var(--radius-xl); padding: 1.5rem; margin-bottom: 1.75rem; text-align: left;">
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--neutral-700); margin-bottom: 0.75rem;">
+                  Bukti Pembayaran yang Terkirim:
                 </div>
-
-                <div style="display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem; background: var(--neutral-50); border-radius: var(--radius-lg); border-left: 4px solid var(--primary-600);">
-                  <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-600); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
-                  <div>
-                    <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">Pembayaran Biaya Infaq Pendaftaran</h4>
-                    <p style="font-size: 0.9rem; color: var(--neutral-600); line-height: 1.6;">
-                      Mentransfer infaq formulir sesuai jenjang ke rekening resmi Yayasan:<br>
-                      <strong>Bank Syariah Indonesia (BSI)</strong> No. Rek: <strong>711-234-5678</strong> a.n <strong>Yayasan Bina Insan Parepare</strong>.
-                    </p>
-                  </div>
+                <div style="text-align: center;">
+                  <img id="portal-pending-proof-img" src="" alt="Bukti Transfer Tersimpan" style="max-height: 220px; border-radius: 12px; border: 1px solid var(--neutral-200); box-shadow: var(--shadow-sm); margin-bottom: 0.75rem;">
                 </div>
-
-                <div style="display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem; background: var(--neutral-50); border-radius: var(--radius-lg); border-left: 4px solid var(--primary-600);">
-                  <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-600); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
-                  <div>
-                    <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">Konfirmasi & Cetak Bukti Registrasi</h4>
-                    <p style="font-size: 0.9rem; color: var(--neutral-600); line-height: 1.6;">Kirim bukti transfer ke WhatsApp Panitia di <strong>+62851-9061-0569</strong> dan cetak Kartu Tanda Peserta SPMB yang telah diterbitkan.</p>
-                  </div>
-                </div>
-
-                <div style="display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem; background: var(--neutral-50); border-radius: var(--radius-lg); border-left: 4px solid var(--primary-600);">
-                  <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-600); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
-                  <div>
-                    <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">Observasi & Wawancara Pemetaan</h4>
-                    <p style="font-size: 0.9rem; color: var(--neutral-600); line-height: 1.6;">Hadir bersama ananda di Sekolah SIT Bina Insan Parepare sesuai jadwal yang tertera pada Kartu Tanda Peserta.</p>
-                  </div>
-                </div>
-
-                <div style="display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem; background: var(--neutral-50); border-radius: var(--radius-lg); border-left: 4px solid var(--primary-600);">
-                  <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-600); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">5</div>
-                  <div>
-                    <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 0.25rem;">Pengumuman & Daftar Ulang</h4>
-                    <p style="font-size: 0.9rem; color: var(--neutral-600); line-height: 1.6;">Hasil kelulusan dapat dicek online via menu <em>Cek Status Pendaftaran</em>, dilanjutkan penyelesaian administrasi daftar ulang dan seragam.</p>
-                  </div>
+                <div style="font-size: 0.8rem; color: var(--neutral-500); text-align: center;">
+                  Nominal: <strong>Rp 150.000</strong> &bull; Bank Tujuan: <strong>BSI (Yayasan Bina Insan)</strong>
                 </div>
               </div>
 
-              <div style="text-align: center;">
-                <button type="button" class="btn btn-primary btn-lg" onclick="document.querySelector('.spmb-tab-btn[data-tab=\'form\']').click()">
-                  Mulai Pendaftaran Sekarang
+              <!-- Realtime info alert -->
+              <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius-lg); padding: 1rem; margin-bottom: 1.5rem; text-align: left; display: flex; gap: 0.75rem; align-items: flex-start;">
+                <span style="font-size: 1.25rem;">🔔</span>
+                <div style="font-size: 0.85rem; color: #1e40af; line-height: 1.5;">
+                  <strong>Pembaruan Otomatis:</strong> Halaman ini akan otomatis diperbarui dan memunculkan <em>Kode Pendaftaran Siswa Resmi</em> segera setelah admin menekan tombol Approve. Anda tidak perlu memuat ulang halaman secara manual.
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.reuploadProof()">
+                  Unggah Ulang Bukti Lain
+                </button>
+                <a id="portal-wa-confirm-btn" href="https://wa.me/6285190610569" target="_blank" rel="noopener" class="btn btn-accent btn-sm">
+                  💬 Konfirmasi Cepat ke WhatsApp Panitia
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- STATE 3: PEMBAYARAN TELAH DI-APPROVE ADMIN! (KODE SISWA TERBIT) -->
+          <div id="portal-state-approved" class="portal-approved-box" style="display: none;">
+            <div style="width: 72px; height: 72px; border-radius: 50%; background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 1.25rem; box-shadow: 0 0 0 8px #f0fdf4;">
+              ✓
+            </div>
+            <span class="badge-tag" style="background:#dcfce7; color:#166534; font-weight:800; font-size:0.85rem;">STATUS: PEMBAYARAN TERVERIFIKASI &amp; DISETUJUI ADMIN</span>
+            
+            <h2 style="font-size: 2rem; font-weight: 800; color: #14532d; margin: 0.75rem 0 0.5rem;">
+              Alhamdulillah, Pembayaran Telah Diterima!
+            </h2>
+            <p style="color: #166534; font-size: 1rem; max-width: 600px; margin: 0 auto 1.5rem; line-height: 1.6;">
+              Pembayaran uang pendaftaran sebesar <strong>Rp 150.000</strong> telah diverifikasi oleh Panitia SPMB SIT Bina Insan Parepare. Kode Pendaftaran Siswa Anda resmi diterbitkan:
+            </p>
+
+            <!-- Official Registration Code Card -->
+            <div>
+              <div style="font-size: 0.85rem; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 1px;">KODE PENDAFTARAN SISWA RESMI</div>
+              <div class="portal-official-reg-badge" id="portal-approved-code">SPMB-2026-001</div>
+              <div style="margin-bottom: 1.5rem;">
+                <button type="button" class="spmb-copy-pill" onclick="window.copyRegCode()">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Salin Kode Pendaftaran
                 </button>
               </div>
+            </div>
 
+            <!-- Next Step Information Notice -->
+            <div style="background: #ffffff; border: 1.5px solid #86efac; border-radius: var(--radius-xl); padding: 1.5rem; max-width: 640px; margin: 0 auto 2rem; text-align: left;">
+              <h4 style="font-size: 1.05rem; font-weight: 800; color: #14532d; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>📋</span> Langkah Pendaftaran Selanjutnya
+              </h4>
+              <p style="font-size: 0.875rem; color: #166534; line-height: 1.6; margin: 0;">
+                Kode pendaftaran ini adalah identitas resmi siswa di SIT Bina Insan Parepare. Pengisian formulir biodata lengkap (data diri siswa, pemilihan jenjang TKIT/SDIT/SMPIT, riwayat tahfizh, dan dokumen persyaratan) akan dipandu oleh panitia pada tahapan berikutnya.
+              </p>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+              <button type="button" class="btn btn-primary" onclick="window.printApprovedCard()" style="font-weight: 800; padding: 0.75rem 2rem;">
+                🖨️ Cetak / Simpan Bukti Pembayaran
+              </button>
+              <a href="https://wa.me/6285190610569" target="_blank" rel="noopener" class="btn btn-accent">
+                💬 Hubungi Panitia via WhatsApp
+              </a>
             </div>
           </div>
 
         </div>
+      </div>
+
+      <!-- ===================================================================
+           HIDDEN TEMPLATE CONTAINER: PREVIOUS 5-STEP FORM & TICKET
+           (Disimpan aman untuk dihubungkan pada langkah berikutnya sesuai instruksi user)
+           =================================================================== -->
+      <div id="spmb-student-bio-template" style="display: none;" aria-hidden="true">
+        <!-- Legacy 5-Step Form Container preserved for next phase -->
+        <ol class="spmb-step-tracker" id="spmb-step-tracker">
+          <li class="step-item active" data-step="1"><div class="step-indicator">1</div><div class="step-label">Pilih Jenjang</div></li>
+          <li class="step-item" data-step="2"><div class="step-indicator">2</div><div class="step-label">Data Siswa</div></li>
+          <li class="step-item" data-step="3"><div class="step-indicator">3</div><div class="step-label">Data Orang Tua</div></li>
+          <li class="step-item" data-step="4"><div class="step-indicator">4</div><div class="step-label">Tahfizh & Bakat</div></li>
+          <li class="step-item" data-step="5"><div class="step-indicator">5</div><div class="step-label">Konfirmasi</div></li>
+        </ol>
+
+        <form id="spmb-registration-form" novalidate>
+          <div class="form-step-content active" id="step-1">
+            <input type="radio" name="jenjang" value="tkit" checked>
+            <input type="radio" name="jenjang" value="sdit">
+            <input type="radio" name="jenjang" value="smpit">
+            <input type="radio" name="jalur" value="reguler" checked>
+          </div>
+          <div class="form-step-content" id="step-2">
+            <input type="text" id="siswa_nama" name="siswa_nama">
+            <input type="text" id="siswa_nik" name="siswa_nik">
+            <input type="text" id="siswa_tempat_lahir" name="siswa_tempat_lahir">
+            <input type="date" id="siswa_tgl_lahir" name="siswa_tgl_lahir">
+            <input type="radio" name="siswa_jk" value="Laki-laki" checked>
+            <input type="radio" name="siswa_jk" value="Perempuan">
+            <input type="text" id="siswa_asal_sekolah" name="siswa_asal_sekolah">
+            <textarea id="siswa_alamat" name="siswa_alamat"></textarea>
+          </div>
+          <div class="form-step-content" id="step-3">
+            <input type="text" id="ortu_nama_ayah" name="ortu_nama_ayah">
+            <input type="text" id="ortu_pek_ayah" name="ortu_pek_ayah">
+            <input type="tel" id="ortu_wa" name="ortu_wa">
+            <input type="text" id="ortu_nama_ibu" name="ortu_nama_ibu">
+            <input type="text" id="ortu_pek_ibu" name="ortu_pek_ibu">
+            <input type="email" id="ortu_email" name="ortu_email">
+          </div>
+          <div class="form-step-content" id="step-4">
+            <textarea id="siswa_hafalan" name="siswa_hafalan"></textarea>
+            <textarea id="siswa_prestasi" name="siswa_prestasi"></textarea>
+            <input type="text" id="siswa_catatan_kesehatan" name="siswa_catatan_kesehatan">
+          </div>
+          <div class="form-step-content" id="step-5">
+            <div id="review-summary-container"></div>
+            <input type="checkbox" id="persetujuan_checkbox">
+          </div>
+          <button type="button" id="spmb-prev-btn">Kembali</button>
+          <button type="button" id="spmb-next-btn">Lanjut</button>
+          <button type="button" id="spmb-submit-btn">Kirim</button>
+        </form>
+        <div id="spmb-success-view"><div id="spmb-ticket-content"></div></div>
       </div>
     </section>
 
@@ -1857,6 +1940,74 @@
         <div id="modal-article-meta" style="font-size: 0.85rem; color: var(--neutral-500); margin: 0.5rem 0 1rem;"></div>
         <h2 id="modal-article-title" class="modal-article-title"></h2>
         <div id="modal-article-prose" class="modal-article-prose"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       4B. POPUP MODAL DAFTAR & MASUK SPMB (NAMA & NO WHATSAPP)
+       ========================================================================= -->
+  <div class="spmb-modal-overlay" id="modal-spmb-register" role="dialog" aria-modal="true" aria-labelledby="spmb-modal-title">
+    <div class="spmb-modal-dialog">
+      <div class="spmb-modal-header">
+        <div>
+          <span class="badge-tag" style="background: var(--accent-100); color: var(--accent-800); font-weight: 800; font-size: 0.75rem;">SPMB TP 2026/2027</span>
+          <h2 id="spmb-modal-title" style="font-size: 1.35rem; font-weight: 800; color: var(--neutral-900); margin: 0.35rem 0 0.15rem;">
+            Pendaftaran SPMB Online
+          </h2>
+          <p id="spmb-modal-subtitle" style="font-size: 0.825rem; color: var(--neutral-500); margin: 0;">
+            SIT Bina Insan Parepare (TKIT, SDIT, SMPIT)
+          </p>
+        </div>
+        <button type="button" class="spmb-modal-close-btn" onclick="window.closeSpmbModal()" aria-label="Tutup Popup">✕</button>
+      </div>
+
+      <div class="spmb-modal-body">
+        <!-- Tab Selector: Daftar Baru vs Masuk Portal -->
+        <div class="spmb-modal-tabs">
+          <button type="button" class="spmb-modal-tab-btn active" id="tab-modal-register" onclick="window.setSpmbModalMode('register')">
+            📝 Daftar Baru
+          </button>
+          <button type="button" class="spmb-modal-tab-btn" id="tab-modal-login" onclick="window.setSpmbModalMode('login')">
+            🔑 Masuk ke Portal
+          </button>
+        </div>
+
+        <form id="form-spmb-parent-auth" onsubmit="window.handleParentAuthSubmit(event)">
+          <!-- Field 1: Nama Orang Tua (Wajib untuk daftar baru) -->
+          <div class="form-group" id="group-modal-nama" style="margin-bottom: 1.25rem;">
+            <label for="spmb-input-nama" class="form-label" style="font-weight: 700; font-size: 0.875rem; color: var(--neutral-800);">
+              Nama Lengkap Orang Tua / Wali Siswa <span style="color: red;">*</span>
+            </label>
+            <input type="text" id="spmb-input-nama" class="form-control" placeholder="Contoh: Hendra Saputra, S.T." required autocomplete="name">
+            <span class="form-hint" style="font-size: 0.775rem; color: var(--neutral-500); margin-top: 0.35rem; display: block;">
+              Tuliskan nama lengkap ayah/ibu kandung atau wali murid.
+            </span>
+          </div>
+
+          <!-- Field 2: Nomor WhatsApp Aktif -->
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="spmb-input-wa" class="form-label" style="font-weight: 700; font-size: 0.875rem; color: var(--neutral-800);">
+              Nomor WhatsApp Aktif <span style="color: red;">*</span>
+            </label>
+            <input type="tel" id="spmb-input-wa" class="form-control" placeholder="Contoh: 081234567890" required pattern="[0-9]{9,15}" inputmode="numeric" autocomplete="tel">
+            <span class="form-hint" style="font-size: 0.775rem; color: var(--neutral-500); margin-top: 0.35rem; display: block;">
+              Nomor WhatsApp ini digunakan sebagai nomor login ke Portal SPMB.
+            </span>
+          </div>
+
+          <!-- Error Alert inside modal -->
+          <div id="spmb-modal-error" style="display: none; background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.825rem; margin-bottom: 1.25rem;"></div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-primary" id="btn-submit-parent-auth" style="width: 100%; padding: 0.85rem; font-size: 0.95rem; font-weight: 800; border-radius: var(--radius-lg);">
+            <span id="btn-auth-text">Lanjutkan ke Portal SPMB ›</span>
+          </button>
+        </form>
+
+        <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px dashed var(--neutral-200); text-align: center; font-size: 0.8rem; color: var(--neutral-500);">
+          Butuh bantuan pendaftaran? <a href="https://wa.me/6285190610569" target="_blank" rel="noopener" style="color: var(--primary-600); font-weight: 700; text-decoration: underline;">Hubungi Panitia SPMB</a>
+        </div>
       </div>
     </div>
   </div>

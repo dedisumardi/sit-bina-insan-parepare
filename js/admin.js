@@ -33,6 +33,10 @@
         initData();
         refreshAllViews();
         showToast('Pendaftar SPMB baru masuk secara real-time!');
+      } else if (msg.type === 'spmb_proof_uploaded') {
+        initData();
+        refreshAllViews();
+        showToast('💳 Bukti pembayaran baru diunggah oleh calon wali siswa!');
       }
     };
   } catch (e) {
@@ -596,9 +600,22 @@
       return;
     }
 
-    tableBody.innerHTML = filtered.map(item => `
+    tableBody.innerHTML = filtered.map(item => {
+      const isApproved = (item.status || '').toLowerCase().includes('terverifikasi');
+      const hasProof = !!item.buktiPembayaran;
+
+      let statusBadgeHtml = '';
+      if (isApproved) {
+        statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">✓ Lunas (Rp 150k)</span>`;
+      } else if (hasProof) {
+        statusBadgeHtml = `<button type="button" onclick="window.viewPaymentProof('${item.regNumber}')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 hover:bg-amber-200 border border-amber-300 transition cursor-pointer" title="Klik untuk verifikasi bukti transfer">💳 Bukti Diupload</button>`;
+      } else {
+        statusBadgeHtml = renderStatusBadge(item.status);
+      }
+
+      return `
       <tr class="hover:bg-slate-50/80 transition duration-150">
-        <td class="py-4 px-6 whitespace-nowrap font-mono text-xs font-bold text-emerald-700">
+        <td class="py-4 px-6 whitespace-nowrap font-mono text-xs font-bold ${isApproved ? 'text-emerald-700' : 'text-slate-700'}">
           ${item.regNumber}
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
@@ -620,10 +637,21 @@
           <span class="font-medium text-slate-800">${item.tanggalDaftar}</span>
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
-          ${renderStatusBadge(item.status)}
+          ${statusBadgeHtml}
         </td>
         <td class="py-4 px-6 whitespace-nowrap text-center">
           <div class="flex items-center justify-center gap-1.5">
+            ${hasProof ? `
+              <button type="button" class="p-1.5 rounded-lg text-amber-700 hover:text-amber-900 hover:bg-amber-50 border border-amber-200 transition-colors" onclick="window.viewPaymentProof('${item.regNumber}')" title="Lihat Bukti Transfer Rp 150.000">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
+              </button>
+            ` : ''}
+            ${!isApproved && hasProof ? `
+              <button type="button" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-sm flex items-center gap-1" onclick="window.approvePayment('${item.regNumber}')" title="Setujui Pembayaran & Terbitkan Kode Siswa">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Approve</span>
+              </button>
+            ` : ''}
             <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 border border-transparent hover:border-emerald-200 transition-colors" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail & Verifikasi Berkas">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
             </button>
@@ -636,7 +664,8 @@
           </div>
         </td>
       </tr>
-    `).join('');
+      `;
+    }).join('');
   }
 
   function initSpmbControls() {
@@ -711,23 +740,80 @@
 
   // Modal Detail & Verifikasi Siswa
   window.viewApplicantDetail = function (regNumber) {
-    const item = spmbList.find(s => s.regNumber === regNumber);
+    const item = spmbList.find(s => s.regNumber === regNumber || s.waAyah === regNumber);
     if (!item) return;
 
     document.getElementById('modal-app-reg').textContent = item.regNumber;
-    document.getElementById('modal-app-name').textContent = item.namaSiswa;
-    document.getElementById('modal-app-jenjang').textContent = `${item.jenjang.toUpperCase()} (${item.jalur.toUpperCase()})`;
-    document.getElementById('modal-app-nik').textContent = item.nik;
-    document.getElementById('modal-app-ttl').textContent = item.ttl;
-    document.getElementById('modal-app-jk').textContent = item.jk;
-    document.getElementById('modal-app-sekolah').textContent = item.asalSekolah;
-    document.getElementById('modal-app-alamat').textContent = item.alamat;
-    document.getElementById('modal-app-ayah').textContent = `${item.namaAyah} (${item.pekerjaanAyah || '-'})`;
-    document.getElementById('modal-app-ibu').textContent = `${item.namaIbu}`;
-    document.getElementById('modal-app-wa').textContent = item.waAyah;
+    document.getElementById('modal-app-name').textContent = item.namaSiswa || 'Calon Siswa';
+    document.getElementById('modal-app-jenjang').textContent = `${(item.jenjang || 'SDIT').toUpperCase()} (${(item.jalur || 'Reguler').toUpperCase()})`;
+    document.getElementById('modal-app-nik').textContent = item.nik || '-';
+    document.getElementById('modal-app-ttl').textContent = item.ttl || '-';
+    document.getElementById('modal-app-jk').textContent = item.jk || '-';
+    document.getElementById('modal-app-sekolah').textContent = item.asalSekolah || '-';
+    document.getElementById('modal-app-alamat').textContent = item.alamat || '-';
+    document.getElementById('modal-app-ayah').textContent = `${item.namaAyah || '-'} (${item.pekerjaanAyah || '-'})`;
+    document.getElementById('modal-app-ibu').textContent = `${item.namaIbu || '-'}`;
+    document.getElementById('modal-app-wa').textContent = item.waAyah || '-';
     document.getElementById('modal-app-email').textContent = item.email || '-';
     document.getElementById('modal-app-hafalan').textContent = item.hafalan || 'Belum ada';
     document.getElementById('modal-app-prestasi').textContent = item.prestasi || '-';
+
+    // Status Pembayaran & Preview Bukti Transfer (Rp 150.000)
+    const proofStatusEl = document.getElementById('modal-app-bayar-status');
+    const proofContainer = document.getElementById('modal-app-proof-container');
+    const approveDirectBox = document.getElementById('modal-app-approve-direct-box');
+    const approveDirectBtn = document.getElementById('modal-app-approve-btn');
+
+    const isApproved = (item.status || '').toLowerCase().includes('terverifikasi');
+    const hasProof = !!item.buktiPembayaran;
+
+    if (proofStatusEl) {
+      if (isApproved) {
+        proofStatusEl.textContent = '✓ Lunas (Rp 150.000)';
+        proofStatusEl.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+      } else if (hasProof) {
+        proofStatusEl.textContent = '💳 Bukti Diupload';
+        proofStatusEl.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800';
+      } else {
+        proofStatusEl.textContent = 'Menunggu Bukti Transfer';
+        proofStatusEl.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700';
+      }
+    }
+
+    if (proofContainer) {
+      if (hasProof) {
+        proofContainer.innerHTML = `
+          <div class="flex items-center justify-between p-2.5 bg-white rounded-xl border border-amber-200">
+            <div class="flex items-center gap-2.5">
+              <img src="${item.buktiPembayaran}" alt="Bukti Transfer" class="w-12 h-12 object-cover rounded-lg border border-slate-200 cursor-pointer shadow-sm" onclick="window.viewPaymentProof('${item.regNumber}')">
+              <div class="text-left">
+                <span class="text-xs font-bold text-slate-800 block">Bukti Pembayaran Diunggah</span>
+                <span class="text-[11px] text-slate-500">Biaya: <strong class="text-emerald-700">Rp 150.000</strong></span>
+              </div>
+            </div>
+            <button type="button" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 transition" onclick="window.viewPaymentProof('${item.regNumber}')">
+              Lihat Bukti
+            </button>
+          </div>
+        `;
+      } else {
+        proofContainer.innerHTML = `<span class="text-slate-400 italic text-xs">Belum ada bukti pembayaran yang diunggah.</span>`;
+      }
+    }
+
+    if (approveDirectBox) {
+      if (!isApproved && hasProof) {
+        approveDirectBox.style.display = 'flex';
+        if (approveDirectBtn) {
+          approveDirectBtn.onclick = function () {
+            window.approvePayment(item.regNumber);
+            applicantModal.classList.remove('open');
+          };
+        }
+      } else {
+        approveDirectBox.style.display = 'none';
+      }
+    }
 
     // Status Select & Jadwal input
     const statusSelect = document.getElementById('modal-app-status-select');
@@ -737,7 +823,7 @@
     // Direct WhatsApp Button in modal
     const waModalBtn = document.getElementById('modal-app-wa-btn');
     if (waModalBtn) {
-      waModalBtn.href = `https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent('Assalamu\'alaikum Bapak/Ibu wali dari ' + item.namaSiswa + ', kami dari Panitia SPMB SIT Bina Insan Parepare ingin mengonfirmasi status pendaftaran: ' + item.regNumber + '.')}`;
+      waModalBtn.href = `https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent('Assalamu\'alaikum Bapak/Ibu wali dari ' + (item.namaSiswa || item.namaAyah) + ', kami dari Panitia SPMB SIT Bina Insan Parepare ingin mengonfirmasi status pendaftaran: ' + item.regNumber + '.')}`;
     }
 
     // Save changes handler
@@ -777,6 +863,121 @@
     };
 
     applicantModal.classList.add('open');
+  };
+
+  // Modal Lihat Bukti Transfer
+  window.viewPaymentProof = function (regNumber) {
+    const item = spmbList.find(s => s.regNumber === regNumber || s.waAyah === regNumber);
+    if (!item) return;
+
+    const modal = document.getElementById('modal-payment-proof');
+    if (!modal) return;
+
+    const nameEl = document.getElementById('proof-parent-name');
+    const waEl = document.getElementById('proof-parent-wa');
+    const regEl = document.getElementById('proof-reg-number');
+    const statusEl = document.getElementById('proof-status-badge');
+    const imgEl = document.getElementById('proof-modal-img');
+    const approveBtn = document.getElementById('proof-modal-approve-btn');
+
+    if (nameEl) nameEl.textContent = item.namaAyah || item.namaSiswa || '-';
+    if (waEl) waEl.textContent = item.waAyah || '-';
+    if (regEl) regEl.textContent = item.regNumber;
+    if (statusEl) statusEl.textContent = item.status;
+    if (imgEl) {
+      imgEl.src = item.buktiPembayaran || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150"><rect width="200" height="150" fill="%23f1f5f9"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2394a3b8" font-size="12">Belum ada foto bukti</text></svg>';
+    }
+
+    const isApproved = (item.status || '').toLowerCase().includes('terverifikasi');
+    if (approveBtn) {
+      if (isApproved) {
+        approveBtn.style.display = 'none';
+      } else {
+        approveBtn.style.display = 'inline-flex';
+        approveBtn.onclick = function () {
+          window.approvePayment(item.regNumber);
+          modal.classList.remove('open');
+        };
+      }
+    }
+
+    modal.classList.add('open');
+  };
+
+  // Setujui (Approve) Pembayaran Rp 150.000 & Generate Kode Pendaftaran Siswa Resmi
+  window.approvePayment = function (regNumber) {
+    const item = spmbList.find(s => s.regNumber === regNumber || s.waAyah === regNumber);
+    if (!item) {
+      alert('Data pendaftar tidak ditemukan.');
+      return;
+    }
+
+    if (!confirm(`Konfirmasi setujui pembayaran Rp 150.000 untuk ${item.namaAyah || item.namaSiswa}?\n\nSistem akan otomatis menerbitkan Nomor Registrasi Resmi Siswa Baru.`)) {
+      return;
+    }
+
+    const currentYear = new Date().getFullYear();
+    const oldReg = item.regNumber;
+    let newReg = oldReg;
+
+    // Jika nomor registrasi masih sementara (PENDING-...) atau belum berformat resmi SPMB-YYYY-XXX
+    if (!newReg || newReg.startsWith('PENDING-') || !newReg.startsWith('SPMB-')) {
+      let maxSeq = 0;
+      spmbList.forEach(s => {
+        const m = (s.regNumber || '').match(/SPMB-\d{4}-(?:[A-Z]{2})?(\d+)/i) || (s.regNumber || '').match(/SPMB-(\d{4})-(\d+)/i);
+        if (m) {
+          const num = parseInt(m[m.length - 1], 10);
+          if (!isNaN(num) && num > maxSeq) maxSeq = num;
+        }
+      });
+      const nextSeq = String(maxSeq + 1).padStart(3, '0');
+      newReg = `SPMB-${currentYear}-${nextSeq}`;
+    }
+
+    item.regNumber = newReg;
+    item.status = 'Pembayaran Terverifikasi (Rp 150.000)';
+    item.nominalPembayaran = 150000;
+    if (!item.jadwalObservasi || item.jadwalObservasi.includes('Menunggu') || item.jadwalObservasi === '-') {
+      item.jadwalObservasi = 'Jadwal Observasi & Wawancara akan dihubungi oleh Panitia';
+    }
+
+    localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
+
+    // Kirim update ke MySQL di cPanel
+    if (window.fetch) {
+      fetch('api/spmb.php', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reg_number: oldReg,
+          new_reg_number: newReg,
+          wa_ayah: item.waAyah,
+          status: 'Pembayaran Terverifikasi (Rp 150.000)',
+          nominal_pembayaran: 150000,
+          jadwal_observasi: item.jadwalObservasi
+        })
+      })
+      .then(res => res.json())
+      .then(resData => {
+        console.log('Approve synced to MySQL:', resData);
+      })
+      .catch(e => console.log('MySQL offline fallback to localStorage'));
+    }
+
+    renderSpmbTable();
+    renderDashboard();
+
+    // Broadcast update agar tab portal orang tua langsung otomatis terupdate
+    broadcastRealtime('spmb_payment_approved', {
+      oldRegNumber: oldReg,
+      regNumber: newReg,
+      waAyah: item.waAyah,
+      namaAyah: item.namaAyah,
+      status: item.status
+    });
+    broadcastRealtime('spmb_updated', spmbList);
+
+    showToast(`✓ Pembayaran diterima! Nomor Registrasi Resmi diterbitkan: ${newReg}`);
   };
 
   window.printApplicantCard = function (regNumber) {

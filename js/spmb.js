@@ -749,7 +749,640 @@
 
     // Update Initial UI
     updateStepUI();
+
+    // Initialize Parent Portal & Real-time engine
+    initParentPortalEngine();
   }
+
+  // =========================================================================
+  // PARENT PORTAL & POPUP MODAL ENGINE (NEW SPMB WORKFLOW)
+  // =========================================================================
+  const PARENT_SESSION_KEY = 'sit_active_parent_session';
+  let tempProofBase64 = null;
+  let spmbModalMode = 'register';
+  let realtimeChannel = null;
+
+  try {
+    realtimeChannel = new BroadcastChannel('sit_spmb_realtime');
+    realtimeChannel.onmessage = function (event) {
+      const msg = event.data;
+      if (!msg) return;
+
+      // When admin approves payment or updates SPMB data
+      if (msg.type === 'spmb_payment_approved' || msg.type === 'spmb_updated') {
+        const rawSession = localStorage.getItem(PARENT_SESSION_KEY);
+        if (rawSession) {
+          try {
+            const session = JSON.parse(rawSession);
+            // Refresh parent portal
+            renderParentPortal();
+
+            // Check if this approval was for the current active parent
+            if (msg.data && (msg.data.waAyah === session.wa || msg.data.wa_ayah === session.wa || msg.data.targetWa === session.wa)) {
+              alert(`Alhamdulillah! Pembayaran pendaftaran Anda telah DISETUJUI oleh Admin.\n\nKode Pendaftaran Siswa Resmi Anda: ${msg.data.regNumber || msg.data.newRegNumber || 'Telah Terbit'}`);
+            }
+          } catch (e) {}
+        }
+      }
+    };
+  } catch (e) {
+    console.log('BroadcastChannel fallback for SPMB parent portal');
+  }
+
+  // Also listen to storage events for cross-tab sync
+  window.addEventListener('storage', function (e) {
+    if (e.key === STORAGE_KEY || e.key === PARENT_SESSION_KEY) {
+      renderParentPortal();
+    }
+  });
+
+  function initParentPortalEngine() {
+    renderParentPortal();
+
+    // Dropzone drag and drop setup
+    const dropzone = document.getElementById('portal-upload-dropzone');
+    if (dropzone) {
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.add('dragover');
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.remove('dragover');
+        }, false);
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files && files[0]) {
+          processProofFile(files[0]);
+        }
+      }, false);
+    }
+  }
+
+  // Open Modal Popup
+  window.openSpmbModal = function (mode = 'register') {
+    const modal = document.getElementById('modal-spmb-register');
+    if (!modal) return;
+
+    window.setSpmbModalMode(mode);
+
+    // If parent is already logged in, navigate straight to portal
+    const rawSession = localStorage.getItem(PARENT_SESSION_KEY);
+    if (rawSession) {
+      try {
+        const session = JSON.parse(rawSession);
+        if (session && session.wa) {
+          renderParentPortal();
+          window.location.hash = '#spmb';
+          return;
+        }
+      } catch (e) {}
+    }
+
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    // Focus input
+    setTimeout(() => {
+      if (mode === 'register') {
+        document.getElementById('spmb-input-nama')?.focus();
+      } else {
+        document.getElementById('spmb-input-wa')?.focus();
+      }
+    }, 150);
+  };
+
+  // Close Modal Popup
+  window.closeSpmbModal = function () {
+    const modal = document.getElementById('modal-spmb-register');
+    if (modal) {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    const errEl = document.getElementById('spmb-modal-error');
+    if (errEl) errEl.style.display = 'none';
+  };
+
+  // Set Modal Mode (Register vs Login)
+  window.setSpmbModalMode = function (mode) {
+    spmbModalMode = mode;
+    const tabReg = document.getElementById('tab-modal-register');
+    const tabLog = document.getElementById('tab-modal-login');
+    const groupNama = document.getElementById('group-modal-nama');
+    const inputNama = document.getElementById('spmb-input-nama');
+    const titleEl = document.getElementById('spmb-modal-title');
+    const subtitleEl = document.getElementById('spmb-modal-subtitle');
+    const btnText = document.getElementById('btn-auth-text');
+    const errEl = document.getElementById('spmb-modal-error');
+
+    if (errEl) errEl.style.display = 'none';
+
+    if (mode === 'register') {
+      tabReg?.classList.add('active');
+      tabLog?.classList.remove('active');
+      if (groupNama) groupNama.style.display = 'block';
+      if (inputNama) inputNama.required = true;
+      if (titleEl) titleEl.textContent = 'Pendaftaran SPMB Online';
+      if (subtitleEl) subtitleEl.textContent = 'Masukkan Nama dan WhatsApp untuk memulai pendaftaran';
+      if (btnText) btnText.textContent = 'Lanjutkan ke Portal SPMB ›';
+    } else {
+      tabReg?.classList.remove('active');
+      tabLog?.classList.add('active');
+      if (groupNama) groupNama.style.display = 'none';
+      if (inputNama) inputNama.required = false;
+      if (titleEl) titleEl.textContent = 'Masuk ke Portal SPMB';
+      if (subtitleEl) subtitleEl.textContent = 'Masukkan Nomor WhatsApp yang telah Anda daftarkan';
+      if (btnText) btnText.textContent = 'Masuk ke Portal Saya ›';
+    }
+  };
+
+  // Handle Form Submit for Parent Registration / Login
+  window.handleParentAuthSubmit = function (e) {
+    e.preventDefault();
+    const errEl = document.getElementById('spmb-modal-error');
+    const nama = document.getElementById('spmb-input-nama')?.value.trim() || '';
+    const rawWa = document.getElementById('spmb-input-wa')?.value.trim() || '';
+    const cleanWa = rawWa.replace(/[^0-9]/g, '');
+
+    if (cleanWa.length < 9) {
+      if (errEl) {
+        errEl.textContent = 'Nomor WhatsApp tidak valid. Masukkan minimal 10 digit angka.';
+        errEl.style.display = 'block';
+      }
+      return;
+    }
+
+    if (spmbModalMode === 'register' && nama.length < 2) {
+      if (errEl) {
+        errEl.textContent = 'Nama lengkap orang tua / wali wajib diisi.';
+        errEl.style.display = 'block';
+      }
+      return;
+    }
+
+    // Get existing records
+    let records = [];
+    try {
+      records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch (err) {
+      records = [];
+    }
+
+    // Look for matching record by WhatsApp
+    let existing = records.find(r => {
+      const rw = (r.waAyah || '').replace(/[^0-9]/g, '');
+      return rw === cleanWa || (cleanWa.length >= 9 && rw.endsWith(cleanWa.slice(-9)));
+    });
+
+    if (spmbModalMode === 'login') {
+      if (existing) {
+        // Successful login with existing record
+        const parentData = { nama: existing.namaAyah || 'Orang Tua Siswa', wa: existing.waAyah || rawWa };
+        localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
+        window.closeSpmbModal();
+        window.location.hash = '#spmb';
+        renderParentPortal();
+        return;
+      }
+
+      // Try checking database API
+      if (window.fetch) {
+        fetch(`api/spmb.php?wa=${encodeURIComponent(rawWa)}`)
+          .then(res => res.json())
+          .then(resData => {
+            if (resData && resData.success && resData.data) {
+              const row = resData.data;
+              records.unshift(row);
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+              const parentData = { nama: row.namaAyah || 'Orang Tua Siswa', wa: row.waAyah || rawWa };
+              localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
+              window.closeSpmbModal();
+              window.location.hash = '#spmb';
+              renderParentPortal();
+            } else {
+              if (errEl) {
+                errEl.innerHTML = `Nomor WhatsApp <strong>${rawWa}</strong> belum terdaftar. Silakan klik tab <strong>Daftar Baru</strong> untuk memulai pendaftaran.`;
+                errEl.style.display = 'block';
+              }
+            }
+          })
+          .catch(() => {
+            if (errEl) {
+              errEl.innerHTML = `Nomor WhatsApp <strong>${rawWa}</strong> belum terdaftar. Silakan pilih tab <strong>Daftar Baru</strong>.`;
+              errEl.style.display = 'block';
+            }
+          });
+        return;
+      }
+    }
+
+    // REGISTER MODE: Create or update parent record
+    if (!existing) {
+      const tempReg = 'PENDING-' + cleanWa.slice(-4) + '-' + Math.floor(100 + Math.random() * 900);
+      existing = {
+        regNumber: tempReg,
+        jenjang: 'sdit',
+        jalur: 'reguler',
+        namaSiswa: 'Calon Siswa (' + nama + ')',
+        nik: 'WA-' + cleanWa,
+        ttl: 'Parepare, ' + new Date().toLocaleDateString('id-ID'),
+        jk: 'Laki-laki',
+        asalSekolah: '-',
+        alamat: 'Parepare',
+        namaAyah: nama,
+        pekerjaanAyah: '-',
+        waAyah: rawWa,
+        namaIbu: '-',
+        pekerjaanIbu: '-',
+        email: '-',
+        hafalan: '-',
+        prestasi: '-',
+        tanggalDaftar: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + ', ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WITA',
+        status: 'Menunggu Pembayaran Uang Pendaftaran (Rp 150.000)',
+        nominalPembayaran: 150000,
+        buktiPembayaran: null,
+        jadwalObservasi: 'Menunggu verifikasi pembayaran'
+      };
+      records.unshift(existing);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } else {
+      // Update name if changed
+      if (nama) existing.namaAyah = nama;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    }
+
+    // Save session
+    const parentData = { nama: existing.namaAyah || nama, wa: rawWa };
+    localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
+
+    // Send to MySQL API
+    if (window.fetch) {
+      fetch('api/spmb.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(existing)
+      })
+      .then(res => res.json())
+      .then(resData => {
+        if (resData && resData.success) {
+          console.log('Registration saved to DB:', resData);
+        }
+      })
+      .catch(e => console.log('Offline / API error, saved locally'));
+    }
+
+    // Broadcast realtime event to admin dashboard
+    if (realtimeChannel) {
+      try {
+        realtimeChannel.postMessage({ type: 'spmb_new_registration', data: existing, timestamp: Date.now() });
+      } catch (e) {}
+    }
+
+    window.closeSpmbModal();
+    window.location.hash = '#spmb';
+    renderParentPortal();
+  };
+
+  // Render Parent Portal based on session and record status
+  function renderParentPortal() {
+    const landingView = document.getElementById('spmb-landing-view');
+    const portalView = document.getElementById('spmb-parent-portal');
+    if (!landingView || !portalView) return;
+
+    const rawSession = localStorage.getItem(PARENT_SESSION_KEY);
+    if (!rawSession) {
+      // No active parent session: show public landing
+      landingView.style.display = 'block';
+      portalView.style.display = 'none';
+      return;
+    }
+
+    let session = null;
+    try {
+      session = JSON.parse(rawSession);
+    } catch (e) {
+      landingView.style.display = 'block';
+      portalView.style.display = 'none';
+      return;
+    }
+
+    // Session exists: show dedicated portal
+    landingView.style.display = 'none';
+    portalView.style.display = 'block';
+
+    document.getElementById('portal-parent-name').textContent = session.nama || 'Orang Tua / Wali Siswa';
+    document.getElementById('portal-parent-wa').textContent = session.wa || '-';
+
+    // Find record in storage
+    let records = [];
+    try {
+      records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch (e) {
+      records = [];
+    }
+
+    const cleanWa = (session.wa || '').replace(/[^0-9]/g, '');
+    let record = records.find(r => {
+      const rw = (r.waAyah || '').replace(/[^0-9]/g, '');
+      return rw === cleanWa || (cleanWa.length >= 9 && rw.endsWith(cleanWa.slice(-9)));
+    });
+
+    if (!record) {
+      record = {
+        regNumber: 'PENDING-' + cleanWa.slice(-4),
+        namaAyah: session.nama,
+        waAyah: session.wa,
+        status: 'Menunggu Pembayaran Uang Pendaftaran (Rp 150.000)',
+        nominalPembayaran: 150000,
+        buktiPembayaran: null
+      };
+    }
+
+    const stateUnpaid = document.getElementById('portal-state-unpaid');
+    const statePending = document.getElementById('portal-state-pending');
+    const stateApproved = document.getElementById('portal-state-approved');
+    const badgeStatus = document.getElementById('portal-badge-status');
+
+    const step1 = document.getElementById('flow-step-1');
+    const step2 = document.getElementById('flow-step-2');
+    const step3 = document.getElementById('flow-step-3');
+
+    // Check approval status
+    const isApproved = record.status && (
+      record.status.toLowerCase().includes('terverifikasi') ||
+      record.status.toLowerCase().includes('disetujui') ||
+      record.status.toLowerCase().includes('lulus') ||
+      record.status.toLowerCase().includes('diterima') ||
+      (record.regNumber && !record.regNumber.startsWith('PENDING-'))
+    );
+
+    const hasProof = !!record.buktiPembayaran;
+
+    if (isApproved) {
+      // STATE 3: APPROVED!
+      stateUnpaid.style.display = 'none';
+      statePending.style.display = 'none';
+      stateApproved.style.display = 'block';
+
+      document.getElementById('portal-approved-code').textContent = record.regNumber || 'SPMB-2026-001';
+      badgeStatus.textContent = 'Pembayaran Terverifikasi & Diterima';
+      badgeStatus.style.background = '#dcfce7';
+      badgeStatus.style.color = '#15803d';
+
+      step1?.classList.add('done');
+      step1?.classList.remove('active');
+      step2?.classList.add('done');
+      step2?.classList.remove('active');
+      step3?.classList.add('active');
+    } else if (hasProof) {
+      // STATE 2: PENDING APPROVAL
+      stateUnpaid.style.display = 'none';
+      statePending.style.display = 'block';
+      stateApproved.style.display = 'none';
+
+      const proofImg = document.getElementById('portal-pending-proof-img');
+      if (proofImg) proofImg.src = record.buktiPembayaran;
+
+      badgeStatus.textContent = 'Menunggu Verifikasi Admin';
+      badgeStatus.style.background = '#fef3c7';
+      badgeStatus.style.color = '#b45309';
+
+      const waBtn = document.getElementById('portal-wa-confirm-btn');
+      if (waBtn) {
+        waBtn.href = `https://wa.me/6285190610569?text=${encodeURIComponent(`Assalamu'alaikum Admin SPMB SIT Bina Insan Parepare, saya ${session.nama} (${session.wa}), telah mengunggah bukti pembayaran pendaftaran Rp 150.000. Mohon diverifikasi.`)}`;
+      }
+
+      step1?.classList.add('done');
+      step1?.classList.remove('active');
+      step2?.classList.add('active');
+      step3?.classList.remove('active', 'done');
+    } else {
+      // STATE 1: UNPAID
+      stateUnpaid.style.display = 'block';
+      statePending.style.display = 'none';
+      stateApproved.style.display = 'none';
+
+      badgeStatus.textContent = 'Menunggu Pembayaran (Rp 150.000)';
+      badgeStatus.style.background = '#fee2e2';
+      badgeStatus.style.color = '#991b1b';
+
+      step1?.classList.add('active');
+      step1?.classList.remove('done');
+      step2?.classList.remove('active', 'done');
+      step3?.classList.remove('active', 'done');
+    }
+  }
+
+  // Handle Proof File Input Selection
+  window.handleProofFileSelect = function (e) {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      processProofFile(file);
+    }
+  };
+
+  function processProofFile(file) {
+    if (!file.type.match('image.*')) {
+      alert('Mohon pilih file gambar (JPG, PNG, atau WEBP).');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Ukuran file terlalu besar (maksimal 5MB).');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (evt) {
+      tempProofBase64 = evt.target.result;
+      const previewBox = document.getElementById('portal-preview-box');
+      const previewImg = document.getElementById('portal-preview-image');
+      if (previewBox && previewImg) {
+        previewImg.src = tempProofBase64;
+        previewBox.style.display = 'block';
+        previewBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Submit Payment Proof to Database
+  window.submitPaymentProof = function () {
+    if (!tempProofBase64) {
+      alert('Silakan pilih foto bukti pembayaran terlebih dahulu.');
+      return;
+    }
+
+    const rawSession = localStorage.getItem(PARENT_SESSION_KEY);
+    if (!rawSession) {
+      alert('Sesi pendaftaran tidak ditemukan. Silakan login kembali.');
+      return;
+    }
+
+    const session = JSON.parse(rawSession);
+    const cleanWa = (session.wa || '').replace(/[^0-9]/g, '');
+
+    let records = [];
+    try {
+      records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch (e) {
+      records = [];
+    }
+
+    let record = records.find(r => {
+      const rw = (r.waAyah || '').replace(/[^0-9]/g, '');
+      return rw === cleanWa || (cleanWa.length >= 9 && rw.endsWith(cleanWa.slice(-9)));
+    });
+
+    if (!record) {
+      record = {
+        regNumber: 'PENDING-' + cleanWa.slice(-4),
+        namaAyah: session.nama,
+        waAyah: session.wa,
+        nominalPembayaran: 150000
+      };
+      records.unshift(record);
+    }
+
+    record.buktiPembayaran = tempProofBase64;
+    record.nominalPembayaran = 150000;
+    record.status = 'Menunggu Verifikasi Pembayaran oleh Admin';
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+
+    // Send to MySQL API
+    if (window.fetch) {
+      fetch('api/spmb.php', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reg_number: record.regNumber,
+          wa_ayah: session.wa,
+          bukti_pembayaran: tempProofBase64,
+          nominal_pembayaran: 150000,
+          status: 'Menunggu Verifikasi Pembayaran oleh Admin'
+        })
+      })
+      .then(res => res.json())
+      .then(resData => {
+        console.log('Bukti pembayaran tersimpan di MySQL:', resData);
+      })
+      .catch(e => console.log('Offline / fallback to localStorage'));
+    }
+
+    // Broadcast to admin dashboard
+    if (realtimeChannel) {
+      try {
+        realtimeChannel.postMessage({
+          type: 'spmb_proof_uploaded',
+          data: record,
+          timestamp: Date.now()
+        });
+      } catch (e) {}
+    }
+
+    alert('Bukti pembayaran berhasil diunggah!\n\nSeluruh data Anda telah tersimpan di sistem dan dapat dikelola oleh admin. Mohon menunggu sampai admin memverifikasi pembayaran Anda.');
+    renderParentPortal();
+  };
+
+  // Re-upload another proof
+  window.reuploadProof = function () {
+    const stateUnpaid = document.getElementById('portal-state-unpaid');
+    const statePending = document.getElementById('portal-state-pending');
+    if (stateUnpaid && statePending) {
+      stateUnpaid.style.display = 'block';
+      statePending.style.display = 'none';
+      stateUnpaid.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Logout Parent Portal
+  window.logoutParentPortal = function () {
+    if (confirm('Apakah Anda ingin keluar dari Portal SPMB Anda?')) {
+      localStorage.removeItem(PARENT_SESSION_KEY);
+      renderParentPortal();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Copy Bank Number
+  window.copyBankNumber = function (num = '7112345678') {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(num).then(() => {
+        alert('Nomor Rekening BSI (' + num + ') atas nama Yayasan Bina Insan Parepare berhasil disalin!');
+      });
+    } else {
+      prompt('Salin nomor rekening BSI:', num);
+    }
+  };
+
+  // Copy Registration Code
+  window.copyRegCode = function () {
+    const code = document.getElementById('portal-approved-code')?.textContent || '';
+    if (code && navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(() => {
+        alert('Kode pendaftaran ' + code + ' berhasil disalin!');
+      });
+    }
+  };
+
+  // Print Approved Registration Card
+  window.printApprovedCard = function () {
+    window.print();
+  };
+
+  // Quick Status Check in Landing
+  window.handleQuickStatusCheck = function (e) {
+    e.preventDefault();
+    const query = document.getElementById('quick-check-input')?.value.trim();
+    const resBox = document.getElementById('quick-check-result');
+    if (!query || !resBox) return;
+
+    let records = [];
+    try {
+      records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch (err) {
+      records = [];
+    }
+
+    const cleanQ = query.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const found = records.find(r => {
+      const reg = (r.regNumber || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const wa = (r.waAyah || '').replace(/[^0-9]/g, '');
+      return reg.includes(cleanQ) || wa.includes(cleanQ);
+    });
+
+    if (found) {
+      resBox.innerHTML = `
+        <div style="background:#ffffff; border:1.5px solid var(--primary-300); border-radius:var(--radius-lg); padding:1.25rem; text-align:left; box-shadow:var(--shadow-sm); max-width:480px; margin:0 auto;">
+          <div style="font-size:0.75rem; color:var(--neutral-400); text-transform:uppercase; font-weight:700;">Data Ditemukan</div>
+          <div style="font-size:1.15rem; font-weight:800; color:var(--primary-800); margin:0.25rem 0;">${found.regNumber}</div>
+          <div style="font-size:0.875rem; color:var(--neutral-700);">Orang Tua: <strong>${escapeHtml(found.namaAyah || '-')}</strong></div>
+          <div style="font-size:0.875rem; color:var(--neutral-700); margin-top:0.25rem;">Status: <span class="badge-tag" style="background:#eff6ff; color:#1d4ed8; font-weight:700;">${escapeHtml(found.status || '-')}</span></div>
+          <button type="button" class="btn btn-primary btn-sm" style="width:100%; margin-top:0.75rem;" onclick="localStorage.setItem('${PARENT_SESSION_KEY}', JSON.stringify({nama: '${escapeHtml(found.namaAyah || '')}', wa: '${escapeHtml(found.waAyah || '')}'})); window.renderParentPortal();">
+            Buka Portal Pendaftar Ini ›
+          </button>
+        </div>
+      `;
+    } else {
+      resBox.innerHTML = `
+        <div style="background:#fef2f2; border:1px solid #fecaca; color:#b91c1c; border-radius:var(--radius-md); padding:0.75rem; font-size:0.85rem; max-width:480px; margin:0 auto;">
+          Data pendaftar dengan nomor <strong>${escapeHtml(query)}</strong> tidak ditemukan. Silakan cek kembali atau lakukan pendaftaran baru.
+        </div>
+      `;
+    }
+  };
+
+  // Expose renderParentPortal to window
+  window.renderParentPortal = renderParentPortal;
 
   // Run on DOM ready
   if (document.readyState === 'loading') {
