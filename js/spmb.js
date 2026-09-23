@@ -159,13 +159,10 @@
     const prestasi = document.getElementById('siswa_prestasi')?.value || 'Belum ada';
 
     let jenjangText = 'TKIT Bina Insan';
-    let biayaPendaftaran = 'Rp 200.000';
     if (jenjangVal === 'sdit') {
       jenjangText = 'SDIT Bina Insan';
-      biayaPendaftaran = 'Rp 250.000';
     } else if (jenjangVal === 'smpit') {
       jenjangText = 'SMPIT Bina Insan';
-      biayaPendaftaran = 'Rp 300.000';
     }
 
     const container = document.getElementById('review-summary-container');
@@ -179,7 +176,6 @@
       <table class="review-table">
         <tr><td>Jenjang Dipilih:</td><td><strong>${jenjangText}</strong></td></tr>
         <tr><td>Jalur Pendaftaran:</td><td><span class="badge-tag">${jalurVal.toUpperCase()}</span></td></tr>
-        <tr><td>Infaq Pendaftaran:</td><td><strong>${biayaPendaftaran}</strong></td></tr>
       </table>
 
       <div class="review-section-title">

@@ -352,7 +352,7 @@
     },
     settings: {
       title: "Pengaturan SPMB & Sekolah",
-      desc: "Konfigurasi gelombang pendaftaran, biaya infaq, kontak WA, dan rekening BSI."
+      desc: "Konfigurasi gelombang pendaftaran, kontak WA, dan rekening BSI."
     }
   };  function switchPanel(panelName) {
     let activeTarget = panelName;
@@ -426,17 +426,6 @@
     if (sideWali) sideWali.textContent = parentList.length;
     const sideNews = document.getElementById('sidebar-news-count');
     if (sideNews) sideNews.textContent = articleCount;
-
-    // Calculate Estimated Infaq
-    let totalInfaq = 0;
-    studentList.forEach(s => {
-      if (s.jenjang === 'tkit') totalInfaq += 200000;
-      else if (s.jenjang === 'sdit') totalInfaq += 250000;
-      else if (s.jenjang === 'smpit') totalInfaq += 300000;
-    });
-    const formattedInfaq = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalInfaq);
-    const infaqEl = document.getElementById('stat-infaq-est');
-    if (infaqEl) infaqEl.textContent = formattedInfaq;
 
     // Recent 5 Applicants Table
     const recentWrap = document.getElementById('dashboard-recent-table');
@@ -1477,12 +1466,7 @@
     const dbTpText = document.getElementById('admin-dashboard-tp-text');
     if (dbTpText) dbTpText.textContent = `Tahun Pelajaran ${academicYear}`;
 
-    const tkitEl = document.getElementById('set-tkit-fee');
-    if (tkitEl) tkitEl.value = settings.tkitFee || 'Rp 200.000';
-    const sditEl = document.getElementById('set-sdit-fee');
-    if (sditEl) sditEl.value = settings.sditFee || 'Rp 250.000';
-    const smpitEl = document.getElementById('set-smpit-fee');
-    if (smpitEl) smpitEl.value = settings.smpitFee || 'Rp 300.000';
+
     const waEl = document.getElementById('set-wa');
     if (waEl) waEl.value = settings.whatsappHelpdesk || '6285190610569';
     const bankEl = document.getElementById('set-bank');
@@ -1609,9 +1593,7 @@
         statSd: document.getElementById('set-stat-sd') ? document.getElementById('set-stat-sd').value.trim() : '650+',
         statSmp: document.getElementById('set-stat-smp') ? document.getElementById('set-stat-smp').value.trim() : '420+',
         statGuru: document.getElementById('set-stat-guru') ? document.getElementById('set-stat-guru').value.trim() : '85+',
-        tkitFee: document.getElementById('set-tkit-fee') ? document.getElementById('set-tkit-fee').value.trim() : 'Rp 200.000',
-        sditFee: document.getElementById('set-sdit-fee') ? document.getElementById('set-sdit-fee').value.trim() : 'Rp 250.000',
-        smpitFee: document.getElementById('set-smpit-fee') ? document.getElementById('set-smpit-fee').value.trim() : 'Rp 300.000',
+
         whatsappHelpdesk: document.getElementById('set-wa') ? document.getElementById('set-wa').value.trim() : '6285190610569',
         bankAccount: document.getElementById('set-bank') ? document.getElementById('set-bank').value.trim() : ''
       };

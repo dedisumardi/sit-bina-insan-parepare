@@ -1,7 +1,7 @@
 <?php
 /**
  * SIT BINA INSAN PAREPARE - SCHOOL SETTINGS API
- * Endpoint untuk memuat dan menyimpan pengaturan gelombang SPMB, infaq, WA, dan rekening
+ * Endpoint untuk memuat dan menyimpan pengaturan gelombang SPMB, WA, dan rekening
  */
 
 require_once __DIR__ . '/config.php';

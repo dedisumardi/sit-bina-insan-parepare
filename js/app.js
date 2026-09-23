@@ -595,25 +595,6 @@
       }
     }
 
-    // 5. Infaq Fee Dynamic Updates
-    if (settings.tkitFee) {
-      const tkitPrice = document.getElementById('spmb-price-tkit');
-      if (tkitPrice) tkitPrice.textContent = 'Infaq: ' + settings.tkitFee;
-      const tkitInfoFee = document.getElementById('tkit-info-fee');
-      if (tkitInfoFee) tkitInfoFee.textContent = settings.tkitFee;
-    }
-    if (settings.sditFee) {
-      const sditPrice = document.getElementById('spmb-price-sdit');
-      if (sditPrice) sditPrice.textContent = 'Infaq: ' + settings.sditFee;
-      const sditInfoFee = document.getElementById('sdit-info-fee');
-      if (sditInfoFee) sditInfoFee.textContent = settings.sditFee;
-    }
-    if (settings.smpitFee) {
-      const smpitPrice = document.getElementById('spmb-price-smpit');
-      if (smpitPrice) smpitPrice.textContent = 'Infaq: ' + settings.smpitFee;
-      const smpitInfoFee = document.getElementById('smpit-info-fee');
-      if (smpitInfoFee) smpitInfoFee.textContent = settings.smpitFee;
-    }
 
     // 6. Bank Account Transfer Instructions
     if (settings.bankAccount) {
