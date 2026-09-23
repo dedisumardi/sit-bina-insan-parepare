@@ -136,6 +136,19 @@ switch ($method) {
             $nik = 'WA-' . preg_replace('/[^0-9]/', '', $waAyah);
         }
 
+        $hasStudentData = !empty(trim($input['namaSiswa'] ?? $input['nama_siswa'] ?? ''));
+        $jalur         = trim($input['jalur'] ?? 'reguler');
+        $ttl           = trim($input['ttl'] ?? '-');
+        $jk            = trim($input['jk'] ?? 'Laki-laki');
+        $asalSekolah   = trim($input['asalSekolah'] ?? $input['asal_sekolah'] ?? '-');
+        $alamat        = trim($input['alamat'] ?? '-');
+        $pekerjaanAyah = trim($input['pekerjaanAyah'] ?? $input['pekerjaan_ayah'] ?? '-');
+        $namaIbu       = trim($input['namaIbu'] ?? $input['nama_ibu'] ?? '-');
+        $email         = trim($input['email'] ?? '-');
+        $hafalan       = trim($input['hafalan'] ?? '-');
+        $prestasi      = trim($input['prestasi'] ?? '-');
+        $jadwalObs     = trim($input['jadwalObservasi'] ?? $input['jadwal_observasi'] ?? 'Menunggu konfirmasi pembayaran');
+
         // Cek jika nomor WA ini sudah pernah terdaftar, lakukan update bukan duplicate error
         $stmtCheck = $pdo->prepare("SELECT `id`, `reg_number` FROM `spmb_applicants` WHERE `wa_ayah` = ? OR `nik` = ? ORDER BY `id` DESC LIMIT 1");
         $stmtCheck->execute([$waAyah, $nik]);
@@ -147,13 +160,29 @@ switch ($method) {
         $tanggalDaftar = trim($input['tanggalDaftar'] ?? $input['tanggal_daftar'] ?? date('d F Y, H:i') . ' WITA');
 
         if ($existing) {
-            // Update pendaftar yang sudah ada
-            $sqlUpdate = "UPDATE `spmb_applicants` SET `nama_ayah` = ?, `nama_siswa` = ?, `status` = ?, `tanggal_daftar` = ?";
-            $updateParams = [$namaAyah, $namaSiswa, $status, $tanggalDaftar];
+            if ($hasStudentData) {
+                $sqlUpdate = "UPDATE `spmb_applicants` SET
+                    `jenjang` = ?, `jalur` = ?, `nama_siswa` = ?, `nik` = ?, `ttl` = ?, `jk` = ?,
+                    `asal_sekolah` = ?, `alamat` = ?, `nama_ayah` = ?, `pekerjaan_ayah` = ?,
+                    `wa_ayah` = ?, `nama_ibu` = ?, `email` = ?, `hafalan` = ?, `prestasi` = ?";
+                $updateParams = [
+                    $jenjang, $jalur, $namaSiswa, $nik, $ttl, $jk, $asalSekolah, $alamat,
+                    $namaAyah, $pekerjaanAyah, $waAyah, $namaIbu, $email, $hafalan,
+                    $prestasi
+                ];
+            } else {
+                // Login/pendaftaran singkat tidak boleh menimpa biodata atau status yang sudah lengkap.
+                $sqlUpdate = "UPDATE `spmb_applicants` SET `nama_ayah` = ?, `wa_ayah` = ?";
+                $updateParams = [$namaAyah, $waAyah];
+            }
             if (!empty($buktiBayar)) {
                 $sqlUpdate .= ", `bukti_pembayaran` = ?, `nominal_pembayaran` = ?";
                 $updateParams[] = $buktiBayar;
                 $updateParams[] = $nominal;
+                if (!$hasStudentData) {
+                    $sqlUpdate .= ", `status` = ?";
+                    $updateParams[] = $status;
+                }
             }
             $sqlUpdate .= " WHERE `id` = ?";
             $updateParams[] = $existing['id'];
@@ -173,18 +202,6 @@ switch ($method) {
         if (empty($regNumber)) {
             $regNumber = 'PENDING-' . substr(preg_replace('/[^0-9]/', '', $waAyah), -4) . '-' . rand(100, 999);
         }
-
-        $jalur         = trim($input['jalur'] ?? 'reguler');
-        $ttl           = trim($input['ttl'] ?? '-');
-        $jk            = trim($input['jk'] ?? 'Laki-laki');
-        $asalSekolah   = trim($input['asalSekolah'] ?? $input['asal_sekolah'] ?? '-');
-        $alamat        = trim($input['alamat'] ?? '-');
-        $pekerjaanAyah = trim($input['pekerjaanAyah'] ?? $input['pekerjaan_ayah'] ?? '-');
-        $namaIbu       = trim($input['namaIbu'] ?? $input['nama_ibu'] ?? '-');
-        $email         = trim($input['email'] ?? '-');
-        $hafalan       = trim($input['hafalan'] ?? '-');
-        $prestasi      = trim($input['prestasi'] ?? '-');
-        $jadwalObs     = trim($input['jadwalObservasi'] ?? $input['jadwal_observasi'] ?? 'Menunggu konfirmasi pembayaran');
 
         $stmtInsert = $pdo->prepare("
             INSERT INTO `spmb_applicants` (
@@ -243,6 +260,15 @@ switch ($method) {
             $params[] = $input['buktiPembayaran'] ?? $input['bukti_pembayaran'];
         }
 
+        if (isset($input['nominalPembayaran']) || isset($input['nominal_pembayaran'])) {
+            $nominalPembayaran = (int)($input['nominalPembayaran'] ?? $input['nominal_pembayaran']);
+            if ($nominalPembayaran < 0) {
+                sendJsonResponse(false, null, 'Nominal pembayaran tidak valid.', 400);
+            }
+            $fields[] = "`nominal_pembayaran` = ?";
+            $params[] = $nominalPembayaran;
+        }
+
         if (isset($input['jadwalObservasi']) || isset($input['jadwal_observasi'])) {
             $fields[] = "`jadwal_observasi` = ?";
             $params[] = trim($input['jadwalObservasi'] ?? $input['jadwal_observasi']);
@@ -263,6 +289,17 @@ switch ($method) {
         $sql = "UPDATE `spmb_applicants` SET " . implode(', ', $fields) . " " . $whereClause;
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
+
+        if ($stmt->rowCount() === 0) {
+            $checkSql = !empty($regNumber)
+                ? "SELECT `id` FROM `spmb_applicants` WHERE `reg_number` = ? LIMIT 1"
+                : "SELECT `id` FROM `spmb_applicants` WHERE `wa_ayah` = ? LIMIT 1";
+            $stmtCheck = $pdo->prepare($checkSql);
+            $stmtCheck->execute([!empty($regNumber) ? $regNumber : $targetWa]);
+            if (!$stmtCheck->fetch()) {
+                sendJsonResponse(false, null, 'Data pendaftar tidak ditemukan.', 404);
+            }
+        }
 
         $lookupKey = !empty($newRegNumber) ? $newRegNumber : (!empty($regNumber) ? $regNumber : $targetWa);
         $stmtUpdated = $pdo->prepare("SELECT * FROM `spmb_applicants` WHERE `reg_number` = ? OR `wa_ayah` = ? ORDER BY `id` DESC LIMIT 1");

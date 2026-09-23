@@ -143,6 +143,10 @@ switch ($method) {
             $stmtUpdated->execute([$id]);
             $updatedRow = $stmtUpdated->fetch();
 
+            if (!$updatedRow) {
+                sendJsonResponse(false, null, 'Artikel tidak ditemukan.', 404);
+            }
+
             sendJsonResponse(true, formatArticleOutput($updatedRow), 'Artikel berhasil diperbarui.');
         } catch (PDOException $e) {
             sendJsonResponse(false, null, 'Gagal memperbarui artikel: ' . $e->getMessage(), 500);

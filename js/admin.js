@@ -12,10 +12,6 @@
   const STORAGE_SETTINGS = 'sit_bina_insan_settings';
   const STORAGE_SESSION = 'sit_admin_session';
 
-  // Default Credentials for Admin
-  const DEFAULT_USER = 'admin';
-  const DEFAULT_PASS = 'adminbina2025';
-
   // State
   let spmbList = [];
   let articleList = [];
@@ -83,164 +79,49 @@
   // =========================================================================
   // Initialization & Data Loading
   // =========================================================================
+  async function apiRequest(url, options = {}) {
+    const response = await fetch(url, { cache: 'no-store', ...options });
+    let result = null;
+    try {
+      result = await response.json();
+    } catch (error) {
+      throw new Error('Respons server tidak valid.');
+    }
+    if (!response.ok || !result || !result.success) {
+      throw new Error(result?.message || `Permintaan database gagal (${response.status}).`);
+    }
+    return result;
+  }
+
   function initData() {
-    // 1. Load SPMB Data
-    const rawSpmb = localStorage.getItem(STORAGE_SPMB);
-    if (rawSpmb) {
-      try {
-        spmbList = JSON.parse(rawSpmb);
-      } catch (e) {
-        spmbList = [];
-      }
-    } else {
-      // Seed fallback
-      spmbList = [
-        {
-          regNumber: 'SPMB-2025-SD001',
-          jenjang: 'sdit',
-          jalur: 'reguler',
-          namaSiswa: 'Ahmad Rayhan Al-Fatih',
-          nik: '7372011205180001',
-          ttl: 'Parepare, 12 Mei 2018',
-          jk: 'Laki-laki',
-          asalSekolah: 'TKIT Bina Insan Parepare',
-          alamat: 'Jl. Bau Massepe No. 45, Bacukiki Barat, Parepare',
-          namaAyah: 'dr. H. Hendra Saputra, Sp.A',
-          pekerjaanAyah: 'Dokter Spesialis Anak',
-          waAyah: '081234567891',
-          namaIbu: 'dr. Hj. Salmawati, Sp.Rad',
-          email: 'hendra.saputra@gmail.com',
-          hafalan: 'Juz 30 (Lancar/Mutqin) dan An-Naba s/d Al-Infitar',
-          prestasi: 'Juara 1 Lomba Tahfizh Cilik Tingkat Kecamatan 2024',
-          tanggalDaftar: '12 Januari 2025, 09:30 WITA',
-          status: 'Terverifikasi (Jadwal Observasi: 22 Feb 2025)',
-          jadwalObservasi: 'Sabtu, 22 Februari 2025 | Pukul 08.30 WITA | Gedung Utama SDIT'
-        },
-        {
-          regNumber: 'SPMB-2025-TK002',
-          jenjang: 'tkit',
-          jalur: 'reguler',
-          namaSiswa: 'Khansa Naura Az-Zahra',
-          nik: '7372016508200002',
-          ttl: 'Parepare, 15 Agustus 2020',
-          jk: 'Perempuan',
-          asalSekolah: 'PAUD Melati Parepare',
-          alamat: 'Jl. Jenderal Sudirman No. 12, Soreang, Parepare',
-          namaAyah: 'Fadli Rahman, S.T',
-          pekerjaanAyah: 'PNS',
-          waAyah: '081342112233',
-          namaIbu: 'St. Aisyah, S.Pd',
-          email: 'fadli.rahman@gmail.com',
-          hafalan: 'Surat Al-Fatihah, Al-Ikhlas, An-Nas, Al-Falaq',
-          prestasi: '-',
-          tanggalDaftar: '14 Januari 2025, 14:15 WITA',
-          status: 'Menunggu Konfirmasi Pembayaran',
-          jadwalObservasi: 'Sabtu, 15 Maret 2025 | Pukul 09.00 WITA | Gedung TKIT'
-        }
-      ];
-      localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
-    }
-
-    // 2. Load Articles
-    const rawArticles = localStorage.getItem(STORAGE_ARTICLES);
-    if (rawArticles) {
-      try {
-        articleList = JSON.parse(rawArticles);
-      } catch (e) {
-        articleList = (window.SchoolData && window.SchoolData.articles) || [];
-      }
-    } else if (window.SchoolData && window.SchoolData.articles) {
-      articleList = [...window.SchoolData.articles];
-      localStorage.setItem(STORAGE_ARTICLES, JSON.stringify(articleList));
-    }
-
-    // 3. Load Settings
-    const rawSettings = localStorage.getItem(STORAGE_SETTINGS);
-    if (rawSettings) {
-      try {
-        settings = JSON.parse(rawSettings);
-      } catch (e) {
-        settings = getDefaultSettings();
-      }
-    } else {
-      settings = getDefaultSettings();
-      localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
-    }
-
-    // 4. Sinkronisasi Data dari MySQL Database jika online di cPanel
+    // Nilai bawaan hanya dipakai selama proses memuat. Database adalah sumber data utama.
+    spmbList = [];
+    articleList = [];
+    settings = getDefaultSettings();
     syncFromDatabase();
   }
 
-  function syncFromDatabase() {
-    if (!window.fetch) return;
+  async function syncFromDatabase(showFailure = false) {
+    try {
+      const [spmbResult, articleResult, settingsResult] = await Promise.all([
+        apiRequest('api/spmb.php'),
+        apiRequest('api/articles.php'),
+        apiRequest('api/settings.php')
+      ]);
 
-    // Load SPMB Applicants from MySQL
-    fetch('api/spmb.php')
-      .then(res => res.json())
-      .then(resData => {
-        if (resData && resData.success && Array.isArray(resData.data) && resData.data.length > 0) {
-          spmbList = resData.data;
-          localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
-          renderDashboard();
-          renderSpmbTable();
-        }
-      })
-      .catch(e => console.log('SPMB MySQL sync: offline / fallback aktif'));
+      spmbList = Array.isArray(spmbResult.data) ? spmbResult.data : [];
+      articleList = Array.isArray(articleResult.data) ? articleResult.data : [];
+      settings = Object.assign({}, getDefaultSettings(), settingsResult.data || {});
 
-    // Load Articles from MySQL
-    fetch('api/articles.php')
-      .then(res => res.json())
-      .then(resData => {
-        if (resData && resData.success && Array.isArray(resData.data) && resData.data.length > 0) {
-          articleList = resData.data;
-          localStorage.setItem(STORAGE_ARTICLES, JSON.stringify(articleList));
-          renderDashboard();
-          renderArticlesTable();
-        }
-      })
-      .catch(e => console.log('Articles MySQL sync: offline / fallback aktif'));
-
-    // Load Settings from MySQL
-    fetch('api/settings.php')
-      .then(res => res.json())
-      .then(resData => {
-        if (resData && resData.success && resData.data) {
-          settings = Object.assign({}, settings, resData.data);
-          localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
-          renderSettingsForm();
-        }
-      })
-      .catch(e => console.log('Settings MySQL sync: offline / fallback aktif'));
-
-    // Load Settings from Cloud Storage (Multi-Device Vercel Support)
-    const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
-    const backupCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.backupUrl) || 'https://extendsclass.com/api/json-storage/bin/beceecd';
-
-    const applyCloudSettings = (cloudData) => {
-      if (cloudData && typeof cloudData === 'object' && cloudData.academicYear) {
-        settings = Object.assign({}, settings, cloudData);
-        localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
-        renderSettingsForm();
-        updateNavbarWaveBadge(settings.waveName, settings.waveStatus, settings.academicYear);
-        updateWavePreview(settings.waveName, settings.waveStatus, settings.academicYear);
-        updateWaveCardsUI(settings.activeWave);
-        const dbTpText = document.getElementById('admin-dashboard-tp-text');
-        if (dbTpText && settings.academicYear) dbTpText.textContent = `Tahun Pelajaran ${settings.academicYear}`;
-      }
-    };
-
-    fetch(primaryCloudUrl, { cache: 'no-store' })
-      .then(res => {
-        if (!res.ok) throw new Error('Primary cloud HTTP ' + res.status);
-        return res.json();
-      })
-      .then(applyCloudSettings)
-      .catch(() => {
-        fetch(backupCloudUrl, { cache: 'no-store' })
-          .then(res => res.json())
-          .then(applyCloudSettings)
-          .catch(e => console.log('Admin Cloud Settings sync: offline / fallback aktif'));
-      });
+      // Cache ini hanya untuk memperbarui halaman publik pada tab yang sama; bukan sumber utama admin.
+      localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
+      localStorage.setItem(STORAGE_ARTICLES, JSON.stringify(articleList));
+      localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
+      refreshAllViews();
+    } catch (error) {
+      console.error('Gagal memuat database:', error);
+      if (showFailure) showToast(`Gagal memuat database: ${error.message}`, true);
+    }
   }
 
   const WAVE_PRESETS = {
@@ -321,42 +202,20 @@
       const user = document.getElementById('login-username').value.trim();
       const pass = document.getElementById('login-password').value.trim();
 
-      // 1. Verifikasi kredensial default admin terlebih dahulu (kompatibel penuh di Vercel & offline)
-      if (user === DEFAULT_USER && pass === DEFAULT_PASS) {
-        localStorage.setItem(STORAGE_SESSION, 'authenticated');
-        loginOverlay.classList.add('hidden');
-        loginError.style.display = 'none';
-        showToast('Berhasil masuk ke Dashboard Admin SIT Bina Insan!');
-        syncFromDatabase();
-        refreshAllViews();
-        return;
-      }
-
-      // 2. Jika bukan kredensial default, cek ke MySQL API cPanel jika backend tersedia
-      fetch('api/auth.php', {
+      apiRequest('api/auth.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: user, password: pass })
       })
-      .then(res => {
-        if (!res.ok) throw new Error('API status ' + res.status);
-        return res.json();
-      })
       .then(resData => {
-        if (resData && resData.success) {
-          localStorage.setItem(STORAGE_SESSION, 'authenticated');
-          loginOverlay.classList.add('hidden');
-          loginError.style.display = 'none';
-          showToast(resData.message || 'Berhasil masuk ke Dashboard Admin SIT Bina Insan!');
-          syncFromDatabase();
-          refreshAllViews();
-        } else {
-          loginError.textContent = resData.message || 'Username atau Password salah!';
-          loginError.style.display = 'block';
-        }
+        localStorage.setItem(STORAGE_SESSION, 'authenticated');
+        loginOverlay.classList.add('hidden');
+        loginError.style.display = 'none';
+        showToast(resData.message || 'Berhasil masuk ke Dashboard Admin SIT Bina Insan!');
+        syncFromDatabase(true);
       })
-      .catch(() => {
-        loginError.textContent = 'Username atau Password salah! Gunakan admin / adminbina2025.';
+      .catch((error) => {
+        loginError.textContent = error.message || 'Username atau password salah.';
         loginError.style.display = 'block';
       });
     });
@@ -1092,16 +951,12 @@
 
     // Save changes handler
     const saveBtn = document.getElementById('modal-app-save-btn');
-    saveBtn.onclick = function () {
+    saveBtn.onclick = async function () {
       const newStatus = statusSelect.value;
       const newJadwal = document.getElementById('modal-app-jadwal').value.trim();
-      item.status = newStatus;
-      item.jadwalObservasi = newJadwal;
-      localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
-
-      // Kirim pembaruan status ke MySQL di cPanel
-      if (window.fetch) {
-        fetch('api/spmb.php', {
+      saveBtn.disabled = true;
+      try {
+        const result = await apiRequest('api/spmb.php', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1109,21 +964,19 @@
             status: newStatus,
             jadwal_observasi: newJadwal
           })
-        })
-        .then(res => res.json())
-        .then(resData => {
-          if (resData && resData.success) {
-            console.log('SPMB updated in MySQL:', resData.message);
-          }
-        })
-        .catch(e => console.log('Update MySQL fallback to localStorage'));
+        });
+        Object.assign(item, result.data);
+        localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
+        applicantModal.classList.remove('open');
+        renderSpmbTable();
+        renderDashboard();
+        broadcastRealtime('spmb_updated', spmbList);
+        showToast(`Status ${item.regNumber} berhasil disimpan ke database.`);
+      } catch (error) {
+        showToast(`Gagal menyimpan status: ${error.message}`, true);
+      } finally {
+        saveBtn.disabled = false;
       }
-
-      applicantModal.classList.remove('open');
-      renderSpmbTable();
-      renderDashboard();
-      broadcastRealtime('spmb_updated', spmbList);
-      showToast(`Status ${item.regNumber} berhasil diperbarui!`);
     };
 
     applicantModal.classList.add('open');
@@ -1169,7 +1022,7 @@
   };
 
   // Setujui (Approve) Pembayaran Rp 150.000 & Generate Kode Pendaftaran Siswa Resmi
-  window.approvePayment = function (regNumber) {
+  window.approvePayment = async function (regNumber) {
     const item = spmbList.find(s => s.regNumber === regNumber || s.waAyah === regNumber);
     if (!item) {
       alert('Data pendaftar tidak ditemukan.');
@@ -1198,18 +1051,12 @@
       newReg = `SPMB-${currentYear}-${nextSeq}`;
     }
 
-    item.regNumber = newReg;
-    item.status = 'Pembayaran Terverifikasi (Rp 150.000)';
-    item.nominalPembayaran = 150000;
-    if (!item.jadwalObservasi || item.jadwalObservasi.includes('Menunggu') || item.jadwalObservasi === '-') {
-      item.jadwalObservasi = 'Jadwal Observasi & Wawancara akan dihubungi oleh Panitia';
-    }
+    const jadwalObservasi = (!item.jadwalObservasi || item.jadwalObservasi.includes('Menunggu') || item.jadwalObservasi === '-')
+      ? 'Jadwal Observasi & Wawancara akan dihubungi oleh Panitia'
+      : item.jadwalObservasi;
 
-    localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
-
-    // Kirim update ke MySQL di cPanel
-    if (window.fetch) {
-      fetch('api/spmb.php', {
+    try {
+      const result = await apiRequest('api/spmb.php', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1218,30 +1065,29 @@
           wa_ayah: item.waAyah,
           status: 'Pembayaran Terverifikasi (Rp 150.000)',
           nominal_pembayaran: 150000,
-          jadwal_observasi: item.jadwalObservasi
+          jadwal_observasi: jadwalObservasi
         })
-      })
-      .then(res => res.json())
-      .then(resData => {
-        console.log('Approve synced to MySQL:', resData);
-      })
-      .catch(e => console.log('MySQL offline fallback to localStorage'));
-    }
+      });
+      Object.assign(item, result.data);
+      localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
 
-    renderSpmbTable();
-    renderDashboard();
+      renderSpmbTable();
+      renderDashboard();
 
     // Broadcast update agar tab portal orang tua langsung otomatis terupdate
     broadcastRealtime('spmb_payment_approved', {
       oldRegNumber: oldReg,
-      regNumber: newReg,
+      regNumber: item.regNumber,
       waAyah: item.waAyah,
       namaAyah: item.namaAyah,
       status: item.status
     });
-    broadcastRealtime('spmb_updated', spmbList);
+      broadcastRealtime('spmb_updated', spmbList);
 
     showToast(`✓ Pembayaran diterima! Nomor Registrasi Resmi diterbitkan: ${newReg}`);
+    } catch (error) {
+      showToast(`Gagal menyetujui pembayaran: ${error.message}`, true);
+    }
   };
 
   window.printApplicantCard = function (regNumber) {
@@ -1250,29 +1096,21 @@
     alert(`Untuk mencetak kartu ${regNumber}, silakan buka menu 'Cek Status Pendaftaran' di tab website yang terbuka dan masukkan nomor registrasi tersebut.`);
   };
 
-  window.deleteApplicant = function (regNumber) {
+  window.deleteApplicant = async function (regNumber) {
     if (confirm(`Apakah Anda yakin ingin menghapus data pendaftar ${regNumber}? Tindakan ini tidak dapat dibatalkan.`)) {
-      spmbList = spmbList.filter(s => s.regNumber !== regNumber);
-      localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
-
-      // Hapus dari MySQL database di cPanel
-      if (window.fetch) {
-        fetch(`api/spmb.php?reg_number=${encodeURIComponent(regNumber)}`, {
+      try {
+        await apiRequest(`api/spmb.php?reg_number=${encodeURIComponent(regNumber)}`, {
           method: 'DELETE'
-        })
-        .then(res => res.json())
-        .then(resData => {
-          if (resData && resData.success) {
-            console.log('SPMB deleted from MySQL:', resData.message);
-          }
-        })
-        .catch(e => console.log('Delete MySQL fallback to localStorage'));
+        });
+        spmbList = spmbList.filter(s => s.regNumber !== regNumber);
+        localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
+        renderSpmbTable();
+        renderDashboard();
+        broadcastRealtime('spmb_updated', spmbList);
+        showToast(`Data pendaftar ${regNumber} dihapus dari database.`);
+      } catch (error) {
+        showToast(`Gagal menghapus pendaftar: ${error.message}`, true);
       }
-
-      renderSpmbTable();
-      renderDashboard();
-      broadcastRealtime('spmb_updated', spmbList);
-      showToast(`Data pendaftar ${regNumber} telah dihapus.`);
     }
   };
 
@@ -1333,7 +1171,7 @@
       articleModal.classList.add('open');
     });
 
-    editorForm?.addEventListener('submit', (e) => {
+    editorForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const title = document.getElementById('article-title').value.trim();
       const category = document.getElementById('article-category').value;
@@ -1353,66 +1191,37 @@
         title, category, categoryClass, author, date, readTime, image, excerpt, content
       };
 
-      if (currentEditingArticleId) {
-        // Update Local
-        const idx = articleList.findIndex(a => a.id === currentEditingArticleId);
-        if (idx !== -1) {
-          articleList[idx] = {
-            ...articleList[idx],
-            ...payload
-          };
-          showToast('Artikel berhasil diperbarui!');
-        }
-
-        // Update MySQL cPanel
-        if (window.fetch) {
-          fetch('api/articles.php', {
+      const submitButton = editorForm.querySelector('[type="submit"]');
+      if (submitButton) submitButton.disabled = true;
+      try {
+        if (currentEditingArticleId) {
+          const result = await apiRequest('api/articles.php', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: currentEditingArticleId, ...payload })
-          })
-          .then(res => res.json())
-          .then(resData => {
-            if (resData && resData.success) {
-              console.log('Article updated in MySQL:', resData.message);
-            }
-          })
-          .catch(e => console.log('Update article MySQL fallback'));
-        }
-      } else {
-        // Create new
-        const newId = articleList.length > 0 ? Math.max(...articleList.map(a => a.id)) + 1 : 1;
-        const newArticle = {
-          id: newId,
-          ...payload
-        };
-        articleList.unshift(newArticle);
-        showToast('Berita baru berhasil diterbitkan ke website!');
-
-        // Create MySQL cPanel
-        if (window.fetch) {
-          fetch('api/articles.php', {
+          });
+          const idx = articleList.findIndex(a => a.id === currentEditingArticleId);
+          if (idx !== -1) articleList[idx] = result.data;
+          showToast('Artikel berhasil diperbarui di database.');
+        } else {
+          const result = await apiRequest('api/articles.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
-          })
-          .then(res => res.json())
-          .then(resData => {
-            if (resData && resData.success && resData.data) {
-              newArticle.id = resData.data.id;
-              localStorage.setItem(STORAGE_ARTICLES, JSON.stringify(articleList));
-              renderArticlesTable();
-            }
-          })
-          .catch(e => console.log('Create article MySQL fallback'));
+          });
+          articleList.unshift(result.data);
+          showToast('Berita baru berhasil diterbitkan dan disimpan ke database.');
         }
+        localStorage.setItem(STORAGE_ARTICLES, JSON.stringify(articleList));
+        articleModal.classList.remove('open');
+        renderArticlesTable();
+        renderDashboard();
+        broadcastRealtime('articles_updated', articleList);
+      } catch (error) {
+        showToast(`Gagal menyimpan artikel: ${error.message}`, true);
+      } finally {
+        if (submitButton) submitButton.disabled = false;
       }
-
-      localStorage.setItem(STORAGE_ARTICLES, JSON.stringify(articleList));
-      articleModal.classList.remove('open');
-      renderArticlesTable();
-      renderDashboard();
-      broadcastRealtime('articles_updated', articleList);
     });
   }
 
@@ -1434,29 +1243,21 @@
     articleModal.classList.add('open');
   };
 
-  window.deleteArticle = function (id) {
+  window.deleteArticle = async function (id) {
     if (confirm('Apakah Anda yakin ingin menghapus artikel ini dari website?')) {
-      articleList = articleList.filter(a => a.id !== id);
-      localStorage.setItem(STORAGE_ARTICLES, JSON.stringify(articleList));
-
-      // Hapus dari MySQL cPanel
-      if (window.fetch) {
-        fetch(`api/articles.php?id=${id}`, {
+      try {
+        await apiRequest(`api/articles.php?id=${id}`, {
           method: 'DELETE'
-        })
-        .then(res => res.json())
-        .then(resData => {
-          if (resData && resData.success) {
-            console.log('Article deleted from MySQL:', resData.message);
-          }
-        })
-        .catch(e => console.log('Delete article MySQL fallback'));
+        });
+        articleList = articleList.filter(a => a.id !== id);
+        localStorage.setItem(STORAGE_ARTICLES, JSON.stringify(articleList));
+        renderArticlesTable();
+        renderDashboard();
+        broadcastRealtime('articles_updated', articleList);
+        showToast('Artikel berhasil dihapus dari database.');
+      } catch (error) {
+        showToast(`Gagal menghapus artikel: ${error.message}`, true);
       }
-
-      renderArticlesTable();
-      renderDashboard();
-      broadcastRealtime('articles_updated', articleList);
-      showToast('Artikel berhasil dihapus.');
     }
   };
 
@@ -1736,7 +1537,7 @@
       updateNavbarWaveBadge(activeName, statusVal, yearVal);
     }
 
-    function saveCurrentSettings(isQuick = false) {
+    async function saveCurrentSettings(isQuick = false) {
       const academicYear = acYearInput ? acYearInput.value.trim() : '2026/2027';
       const activeWave = activeWaveSelect ? activeWaveSelect.value : 'wave1';
       const waveStatus = statusSelect ? statusSelect.value : (activeWave === 'closed' ? 'closed' : 'open');
@@ -1770,7 +1571,7 @@
       const wavePoint2 = pt2Input ? pt2Input.value.trim() : 'Prioritas Kuota Kelas & Seleksi Observasi Dini';
       const wavePoint3 = pt3Input ? pt3Input.value.trim() : 'Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim';
 
-      settings = {
+      const nextSettings = {
         academicYear,
         activeWave,
         waveStatus,
@@ -1800,28 +1601,17 @@
         bankAccount: document.getElementById('set-bank') ? document.getElementById('set-bank').value.trim() : ''
       };
 
-      // 1. Simpan ke LocalStorage
-      localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
-
-      // 2. Broadcast Real-Time lintas tab / window (index.html langsung terupdate seketika)
-      broadcastRealtime('settings_updated', settings);
-
-      // 3. Simpan ke MySQL cPanel jika online
-      if (window.fetch) {
-        fetch('api/settings.php', {
+      try {
+        const result = await apiRequest('api/settings.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(settings)
-        })
-        .then(res => res.json())
-        .then(resData => {
-          if (resData && resData.success) {
-            console.log('Settings saved to MySQL:', resData.message);
-          }
-        })
-        .catch(e => console.log('Save settings MySQL fallback'));
+          body: JSON.stringify(nextSettings)
+        });
+        settings = Object.assign({}, nextSettings, result.data || {});
+        localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
+        broadcastRealtime('settings_updated', settings);
 
-        // 4. Simpan ke Cloud Storage (Multi-Device Vercel Real-Time Sync)
+        // Pengaturan yang ditampilkan selalu berasal dari hasil simpan database.
         const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
         const backupCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.backupUrl) || 'https://extendsclass.com/api/json-storage/bin/beceecd';
         const payloadStr = JSON.stringify(settings);
@@ -1852,6 +1642,9 @@
             body: payloadStr
           }).catch(() => {});
         } catch (e) {}
+      } catch (error) {
+        showToast(`Gagal menyimpan pengaturan: ${error.message}`, true);
+        return;
       }
 
       updateNavbarWaveBadge(activeDisplayName, waveStatus, academicYear);
@@ -1910,25 +1703,23 @@
       saveCurrentSettings(false);
     });
 
-    resetBtn?.addEventListener('click', () => {
-      if (confirm('Apakah Anda yakin ingin mengatur ulang data contoh (reset)? Semua data pendaftaran uji coba akan dikembalikan ke data awal.')) {
-        localStorage.removeItem(STORAGE_SPMB);
-        localStorage.removeItem(STORAGE_ARTICLES);
-        localStorage.removeItem(STORAGE_SETTINGS);
-        initData();
-        refreshAllViews();
-        broadcastRealtime('settings_updated', settings);
-        broadcastRealtime('articles_updated', articleList);
-
-        if (window.fetch) {
-          const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
-          const backupCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.backupUrl) || 'https://extendsclass.com/api/json-storage/bin/beceecd';
-          const defaultPayload = JSON.stringify(settings);
-          fetch(primaryCloudUrl, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: defaultPayload }).catch(()=>{});
-          fetch(backupCloudUrl, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: defaultPayload }).catch(()=>{});
+    resetBtn?.addEventListener('click', async () => {
+      if (confirm('Atur ulang seluruh pengaturan SPMB dan sekolah ke nilai bawaan? Data pendaftar dan artikel tidak akan dihapus.')) {
+        try {
+          const defaults = getDefaultSettings();
+          const result = await apiRequest('api/settings.php', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(defaults)
+          });
+          settings = Object.assign({}, defaults, result.data || {});
+          localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
+          renderSettingsForm();
+          broadcastRealtime('settings_updated', settings);
+          showToast('Pengaturan bawaan berhasil disimpan ke database.');
+        } catch (error) {
+          showToast(`Gagal mereset pengaturan: ${error.message}`, true);
         }
-
-        showToast('Data berhasil di-reset ke nilai default.');
       }
     });
   }
@@ -1981,10 +1772,11 @@
       .replace(/'/g, '&#039;');
   }
 
-  function showToast(message) {
+  function showToast(message, isError = false) {
     if (!toastEl) return;
     toastEl.textContent = message;
-    toastEl.classList.add('show', 'success');
+    toastEl.classList.remove('success', 'error');
+    toastEl.classList.add('show', isError ? 'error' : 'success');
     setTimeout(() => {
       toastEl.classList.remove('show');
     }, 3500);

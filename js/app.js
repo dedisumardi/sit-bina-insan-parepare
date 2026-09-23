@@ -370,7 +370,7 @@
       fetch('api/articles.php')
         .then(res => res.json())
         .then(resData => {
-          if (resData && resData.success && Array.isArray(resData.data) && resData.data.length > 0) {
+          if (resData && resData.success && Array.isArray(resData.data)) {
             window.SchoolData.articles = resData.data;
             localStorage.setItem('sit_bina_insan_articles_data', JSON.stringify(resData.data));
             renderHomeNews();
@@ -379,7 +379,7 @@
         })
         .catch(e => console.log('Public Articles sync: offline fallback'));
 
-      // 2. Sinkronisasi Pengaturan Sekolah (Cloud Storage Multi-Device Vercel Sync)
+      // 2. Database adalah sumber utama pengaturan sekolah.
       const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
       const backupCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.backupUrl) || 'https://extendsclass.com/api/json-storage/bin/beceecd';
 
@@ -395,12 +395,12 @@
         }
       };
 
-      fetch(primaryCloudUrl, { cache: 'no-store' })
+      fetch('api/settings.php', { cache: 'no-store' })
         .then(res => {
           if (!res.ok) throw new Error('Cloud HTTP ' + res.status);
           return res.json();
         })
-        .then(handleCloudSettings)
+        .then(resData => handleCloudSettings(resData && resData.success ? resData.data : null))
         .catch(() => {
           fetch(backupCloudUrl, { cache: 'no-store' })
             .then(res => res.json())
@@ -727,19 +727,19 @@
   }
   setInterval(checkLiveSettings, 1000);
 
-  // 4. Background Cloud Polling (Cross-device real-time sync for Vercel)
+  // 4. Polling database agar perubahan admin tampil lintas perangkat.
   let isSyncingCloud = false;
   function pollCloudSync() {
     if (document.hidden || !navigator.onLine || isSyncingCloud) return;
     isSyncingCloud = true;
-    const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
-    fetch(primaryCloudUrl, { cache: 'no-store' })
+    fetch('api/settings.php', { cache: 'no-store' })
       .then(res => {
         if (!res.ok) throw new Error('Cloud HTTP ' + res.status);
         return res.json();
       })
-      .then(cloudData => {
+      .then(resData => {
         isSyncingCloud = false;
+        const cloudData = resData && resData.success ? resData.data : null;
         if (cloudData && typeof cloudData === 'object' && cloudData.academicYear) {
           const currentRaw = localStorage.getItem('sit_bina_insan_settings');
           const newRaw = JSON.stringify(cloudData);

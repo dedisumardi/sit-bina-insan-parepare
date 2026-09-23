@@ -66,16 +66,26 @@ switch ($method) {
             sendJsonResponse(false, null, 'Data pengaturan tidak boleh kosong.', 400);
         }
 
-        $stmt = $pdo->prepare("
-            INSERT INTO `school_settings` (`setting_key`, `setting_value`)
-            VALUES (?, ?)
-            ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`)
-        ");
+        try {
+            $pdo->beginTransaction();
+            $stmt = $pdo->prepare("
+                INSERT INTO `school_settings` (`setting_key`, `setting_value`)
+                VALUES (?, ?)
+                ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`)
+            ");
 
-        foreach ($input as $key => $val) {
-            if (is_scalar($val)) {
-                $stmt->execute([$key, (string)$val]);
+            foreach ($input as $key => $val) {
+                if (is_scalar($val)) {
+                    $stmt->execute([$key, (string)$val]);
+                }
             }
+            $pdo->commit();
+        } catch (Throwable $e) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            error_log('Settings save error: ' . $e->getMessage());
+            sendJsonResponse(false, null, 'Pengaturan gagal disimpan ke database.', 500);
         }
 
         sendJsonResponse(true, $input, 'Pengaturan sekolah & SPMB berhasil disimpan ke database.');

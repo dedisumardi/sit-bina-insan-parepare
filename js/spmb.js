@@ -426,7 +426,7 @@
   }
 
   // Handle Form Submission
-  function submitRegistration() {
+  async function submitRegistration() {
     const jenjangVal = document.querySelector('input[name="jenjang"]:checked').value;
     const jalurVal = document.querySelector('input[name="jalur"]:checked').value;
     
@@ -494,47 +494,35 @@
       jadwalObservasi
     };
 
-    existing.unshift(newRecord);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
-
-    // Broadcast real-time ke Dashboard Admin jika terbuka di tab/jendela lain
+    let savedRecord;
     try {
-      const ch = new BroadcastChannel('sit_spmb_realtime');
-      ch.postMessage({ type: 'spmb_new_registration', data: newRecord, timestamp: Date.now() });
-      ch.close();
-    } catch (e) {}
-
-    // Kirim data ke API MySQL di cPanel secara asinkron
-    if (window.fetch) {
-      fetch('api/spmb.php', {
+      const response = await fetch('api/spmb.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newRecord)
-      })
-      .then(res => res.json())
-      .then(resData => {
-        if (resData && resData.success && resData.data) {
-          // Sinkronisasi data pendaftar resmi dari database MySQL
-          const savedReg = resData.data.regNumber || newRecord.regNumber;
-          newRecord.regNumber = savedReg;
-          // Perbarui di LocalStorage lokal
-          const idx = existing.findIndex(r => r.nik === newRecord.nik);
-          if (idx !== -1) {
-            existing[idx] = resData.data;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
-          }
-          // Re-render tiket resmi
-          generateTicket(resData.data);
-        }
-      })
-      .catch(err => {
-        // Fallback: server statis tanpa PHP / offline
-        console.log('Mode offline / LocalStorage aktif:', err.message);
       });
+      const result = await response.json();
+      if (!response.ok || !result || !result.success || !result.data) {
+        throw new Error(result?.message || 'Pendaftaran gagal disimpan ke database.');
+      }
+      savedRecord = result.data;
+    } catch (error) {
+      alert(`Pendaftaran belum tersimpan. ${error.message}\n\nSilakan periksa koneksi lalu coba kembali.`);
+      return;
     }
 
-    // Render Ticket langsung agar calon murid tidak menunggu
-    generateTicket(newRecord);
+    const existingIndex = existing.findIndex(r => r.nik === savedRecord.nik || r.regNumber === savedRecord.regNumber);
+    if (existingIndex !== -1) existing[existingIndex] = savedRecord;
+    else existing.unshift(savedRecord);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+
+    try {
+      const ch = new BroadcastChannel('sit_spmb_realtime');
+      ch.postMessage({ type: 'spmb_new_registration', data: savedRecord, timestamp: Date.now() });
+      ch.close();
+    } catch (e) {}
+
+    generateTicket(savedRecord);
 
     // Switch view
     formCard.style.display = 'none';
@@ -908,7 +896,7 @@
   };
 
   // Handle Form Submit for Parent Registration / Login
-  window.handleParentAuthSubmit = function (e) {
+  window.handleParentAuthSubmit = async function (e) {
     e.preventDefault();
     const errEl = document.getElementById('spmb-modal-error');
     const nama = document.getElementById('spmb-input-nama')?.value.trim() || '';
@@ -1015,32 +1003,35 @@
         jadwalObservasi: 'Menunggu verifikasi pembayaran'
       };
       records.unshift(existing);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     } else {
       // Update name if changed
       if (nama) existing.namaAyah = nama;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     }
 
-    // Save session
-    const parentData = { nama: existing.namaAyah || nama, wa: rawWa };
-    localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
-
-    // Send to MySQL API
-    if (window.fetch) {
-      fetch('api/spmb.php', {
+    try {
+      const response = await fetch('api/spmb.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(existing)
-      })
-      .then(res => res.json())
-      .then(resData => {
-        if (resData && resData.success) {
-          console.log('Registration saved to DB:', resData);
-        }
-      })
-      .catch(e => console.log('Offline / API error, saved locally'));
+      });
+      const result = await response.json();
+      if (!response.ok || !result || !result.success || !result.data) {
+        throw new Error(result?.message || 'Pendaftaran gagal disimpan ke database.');
+      }
+      const recordIndex = records.indexOf(existing);
+      if (recordIndex !== -1) records[recordIndex] = result.data;
+      existing = result.data;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch (error) {
+      if (errEl) {
+        errEl.textContent = `Pendaftaran belum tersimpan: ${error.message}`;
+        errEl.style.display = 'block';
+      }
+      return;
     }
+
+    const parentData = { nama: existing.namaAyah || nama, wa: existing.waAyah || rawWa };
+    localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
 
     // Broadcast realtime event to admin dashboard
     if (realtimeChannel) {
@@ -1226,7 +1217,7 @@
   }
 
   // Submit Payment Proof to Database
-  window.submitPaymentProof = function () {
+  window.submitPaymentProof = async function () {
     if (!tempProofBase64) {
       alert('Silakan pilih foto bukti pembayaran terlebih dahulu.');
       return;
@@ -1266,26 +1257,28 @@
     record.buktiPembayaran = tempProofBase64;
     record.nominalPembayaran = 150000;
     record.status = 'Menunggu Verifikasi Pembayaran oleh Admin';
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 
-    // Send to MySQL API
-    if (window.fetch) {
-      fetch('api/spmb.php', {
+    try {
+      const response = await fetch('api/spmb.php', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          reg_number: record.regNumber,
+          reg_number: record.id ? record.regNumber : '',
           wa_ayah: session.wa,
           bukti_pembayaran: tempProofBase64,
           nominal_pembayaran: 150000,
           status: 'Menunggu Verifikasi Pembayaran oleh Admin'
         })
-      })
-      .then(res => res.json())
-      .then(resData => {
-        console.log('Bukti pembayaran tersimpan di MySQL:', resData);
-      })
-      .catch(e => console.log('Offline / fallback to localStorage'));
+      });
+      const result = await response.json();
+      if (!response.ok || !result || !result.success || !result.data) {
+        throw new Error(result?.message || 'Bukti pembayaran gagal disimpan ke database.');
+      }
+      Object.assign(record, result.data);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch (error) {
+      alert(`Bukti pembayaran belum tersimpan. ${error.message}\n\nSilakan coba kembali.`);
+      return;
     }
 
     // Broadcast to admin dashboard
