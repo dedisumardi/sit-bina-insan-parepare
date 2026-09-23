@@ -1167,6 +1167,9 @@
 
     document.getElementById('portal-parent-name').textContent = session.nama || 'Orang Tua / Wali Siswa';
     document.getElementById('portal-parent-wa').textContent = session.wa || '-';
+    document.getElementById('portal-parent-initials').textContent = (session.nama || 'Orang Tua').trim().split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase();
+    const accountWa = String(session.wa || '').replace(/\D/g, '').replace(/^0/, '62');
+    document.getElementById('portal-parent-wa-link').href = `https://wa.me/${accountWa}`;
 
     // Find record in storage
     let records = [];
@@ -1214,6 +1217,8 @@
     );
 
     const hasProof = !!record.buktiPembayaran;
+    document.querySelector('.portal-header-bar').dataset.paymentState = isApproved ? 'approved' : hasProof ? 'pending' : 'unpaid';
+    document.getElementById('portal-account-reference').textContent = record.regNumber?.startsWith('SPMB-') ? record.regNumber : 'Pendaftaran SPMB';
 
     if (isApproved) {
       // STATE 2 APPROVED / STATE 3 BIODATA
@@ -1227,8 +1232,6 @@
       document.getElementById('portal-approved-code').textContent = record.regNumber || 'SPMB-2026-001';
       populateStudentBioForm(record);
       badgeStatus.textContent = 'Pembayaran Terverifikasi & Diterima';
-      badgeStatus.style.background = '#dcfce7';
-      badgeStatus.style.color = '#15803d';
 
       step1?.classList.add('done');
       step1?.classList.remove('active');
@@ -1250,8 +1253,6 @@
       if (proofImg) proofImg.src = record.buktiPembayaran;
 
       badgeStatus.textContent = 'Menunggu Verifikasi Admin';
-      badgeStatus.style.background = '#fef3c7';
-      badgeStatus.style.color = '#b45309';
 
       const waBtn = document.getElementById('portal-wa-confirm-btn');
       if (waBtn) {
@@ -1271,8 +1272,6 @@
       if (stateBiodata) stateBiodata.style.display = 'none';
 
       badgeStatus.textContent = 'Menunggu Pembayaran (Rp 150.000)';
-      badgeStatus.style.background = '#fee2e2';
-      badgeStatus.style.color = '#991b1b';
 
       step1?.classList.add('active');
       step1?.classList.remove('done');

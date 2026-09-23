@@ -24,7 +24,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/spmb.css?v=20260924_biodata2">
+  <link rel="stylesheet" href="css/spmb.css?v=20260924_account1">
 </head>
 <body>
 
@@ -1787,16 +1787,20 @@
           <!-- Portal Header Bar -->
           <div class="portal-header-bar">
             <div class="portal-user-meta">
-              <div class="portal-avatar-icon">👤</div>
+              <div class="portal-avatar-icon"><span id="portal-parent-initials">OT</span><span class="portal-account-dot" aria-hidden="true"></span></div>
               <div class="portal-user-info">
                 <h2 id="portal-parent-name">Bapak/Ibu Orang Tua Siswa</h2>
-                <p>No. WhatsApp: <strong id="portal-parent-wa" class="font-mono">-</strong> &bull; Status: <span id="portal-badge-status" class="badge-tag" style="background:#ffffff; color:var(--primary-800); font-weight:700;">Memuat...</span></p>
+                <p>No. WhatsApp: <a id="portal-parent-wa-link" target="_blank" rel="noopener noreferrer"><strong id="portal-parent-wa" class="font-mono">-</strong></a></p>
               </div>
             </div>
+            <span id="portal-badge-status" class="portal-payment-badge" role="status">Memuat...</span>
+            <div class="portal-account-footer">
             <button type="button" class="portal-logout-btn" onclick="window.logoutParentPortal()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline; vertical-align:middle; margin-right:4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               Keluar / Ganti Akun
             </button>
+            <span class="portal-account-meta">Portal Orang Tua <span aria-hidden="true">•</span> <span id="portal-account-reference">Pendaftaran SPMB</span></span>
+            </div>
           </div>
 
           <!-- Portal 3-Step Flow Indicator -->
@@ -2304,7 +2308,7 @@
 
   <!-- Scripts -->
   <script src="js/data.js?v=20260923_dbsync2"></script>
-  <script src="js/spmb.js?v=20260924_biodata2"></script>
+  <script src="js/spmb.js?v=20260924_account1"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>
