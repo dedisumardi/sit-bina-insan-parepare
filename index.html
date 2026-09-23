@@ -24,7 +24,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/spmb.css">
+  <link rel="stylesheet" href="css/spmb.css?v=20260923_search1">
 </head>
 <body>
 
@@ -1695,6 +1695,13 @@
               PENERIMAAN SISWA BARU (SPMB) <span class="spmb-sync-tp">TP 2026/2027</span>
             </div>
             <h1 class="spmb-hero-title" id="spmb-title">Informasi Pendaftaran SPMB Online</h1>
+
+            <form id="form-quick-status-check" class="spmb-quick-search" onsubmit="window.handleQuickStatusCheck(event)">
+              <input type="text" id="quick-check-input" class="form-control" placeholder="Ketik Kode SPMB (contoh: SPMB-2026-001) atau No WA..." aria-label="Kode pendaftaran atau nomor WhatsApp" required>
+              <button type="submit" class="btn btn-primary">Cari Status</button>
+            </form>
+            <div id="quick-check-result" class="spmb-quick-result" aria-live="polite"></div>
+
             <p class="spmb-hero-desc">
               Selamat datang di Sistem Penerimaan Siswa Baru SIT Bina Insan Parepare (TKIT, SDIT, SMPIT). Membentuk generasi Qur'ani yang berakhlak mulia, cerdas, dan mandiri. Pendaftaran gelombang baru kini dibuka secara daring.
             </p>
@@ -1760,23 +1767,6 @@
                 <button type="button" class="btn btn-primary btn-lg" onclick="window.openSpmbModal('register')" style="padding: 0.85rem 2.25rem; font-weight: 800; border-radius: var(--radius-full);">
                   🚀 Mulai Pendaftaran Sekarang
                 </button>
-              </div>
-            </div>
-
-            <!-- Card 4: Quick Status Check Form -->
-            <div class="spmb-card-highlight" style="background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);">
-              <div style="text-align: center; max-width: 600px; margin: 0 auto;">
-                <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--neutral-900); margin-bottom: 0.5rem;">
-                  🔍 Sudah Memiliki Kode Pendaftaran?
-                </h3>
-                <p style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 1.25rem;">
-                  Masukkan Nomor Registrasi resmi atau Nomor WhatsApp Anda untuk melihat status verifikasi terkini:
-                </p>
-                <form id="form-quick-status-check" onsubmit="window.handleQuickStatusCheck(event)" style="display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
-                  <input type="text" id="quick-check-input" class="form-control" placeholder="Ketik Kode SPMB (contoh: SPMB-2026-001) atau No WA..." required style="max-width: 360px; font-weight: 700; text-transform: uppercase;">
-                  <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">Cari Status</button>
-                </form>
-                <div id="quick-check-result" style="margin-top: 1rem;"></div>
               </div>
             </div>
 
@@ -2229,7 +2219,7 @@
 
   <!-- Scripts -->
   <script src="js/data.js?v=20260923_dbsync2"></script>
-  <script src="js/spmb.js?v=20260923_dbsync3"></script>
+  <script src="js/spmb.js?v=20260923_search1"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>

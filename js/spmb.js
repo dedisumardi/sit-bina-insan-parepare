@@ -1306,38 +1306,37 @@
   };
 
   // Quick Status Check in Landing
-  window.handleQuickStatusCheck = function (e) {
+  window.handleQuickStatusCheck = async function (e) {
     e.preventDefault();
     const query = document.getElementById('quick-check-input')?.value.trim();
     const resBox = document.getElementById('quick-check-result');
     if (!query || !resBox) return;
 
-    let records = [];
+    resBox.innerHTML = '<div style="color:#ffffff; font-weight:700; padding:0.75rem;">Mencari data pendaftaran...</div>';
+    let found = null;
     try {
-      records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    } catch (err) {
-      records = [];
-    }
-
-    const cleanQ = query.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const found = records.find(r => {
-      const reg = (r.regNumber || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-      const wa = (r.waAyah || '').replace(/[^0-9]/g, '');
-      return reg.includes(cleanQ) || wa.includes(cleanQ);
-    });
+      const response = await fetch(`api/spmb.php?query=${encodeURIComponent(query)}`, { cache: 'no-store' });
+      const result = await response.json();
+      if (response.ok && result.success) found = result.data;
+    } catch (_) { /* The error state below covers temporary connectivity problems. */ }
 
     if (found) {
       resBox.innerHTML = `
         <div style="background:#ffffff; border:1.5px solid var(--primary-300); border-radius:var(--radius-lg); padding:1.25rem; text-align:left; box-shadow:var(--shadow-sm); max-width:480px; margin:0 auto;">
           <div style="font-size:0.75rem; color:var(--neutral-400); text-transform:uppercase; font-weight:700;">Data Ditemukan</div>
-          <div style="font-size:1.15rem; font-weight:800; color:var(--primary-800); margin:0.25rem 0;">${found.regNumber}</div>
+          <div style="font-size:1.15rem; font-weight:800; color:var(--primary-800); margin:0.25rem 0;">${escapeHtml(found.regNumber)}</div>
           <div style="font-size:0.875rem; color:var(--neutral-700);">Orang Tua: <strong>${escapeHtml(found.namaAyah || '-')}</strong></div>
           <div style="font-size:0.875rem; color:var(--neutral-700); margin-top:0.25rem;">Status: <span class="badge-tag" style="background:#eff6ff; color:#1d4ed8; font-weight:700;">${escapeHtml(found.status || '-')}</span></div>
-          <button type="button" class="btn btn-primary btn-sm" style="width:100%; margin-top:0.75rem;" onclick="localStorage.setItem('${PARENT_SESSION_KEY}', JSON.stringify({nama: '${escapeHtml(found.namaAyah || '')}', wa: '${escapeHtml(found.waAyah || '')}'})); window.renderParentPortal();">
+          <button type="button" id="quick-open-parent-portal" class="btn btn-primary btn-sm" style="width:100%; margin-top:0.75rem;">
             Buka Portal Pendaftar Ini ›
           </button>
         </div>
       `;
+      document.getElementById('quick-open-parent-portal')?.addEventListener('click', () => {
+        cacheSetItem(PARENT_SESSION_KEY, JSON.stringify({ nama: found.namaAyah || '', wa: found.waAyah || '' }));
+        renderParentPortal();
+        refreshParentFromDatabase();
+      });
     } else {
       resBox.innerHTML = `
         <div style="background:#fef2f2; border:1px solid #fecaca; color:#b91c1c; border-radius:var(--radius-md); padding:0.75rem; font-size:0.85rem; max-width:480px; margin:0 auto;">

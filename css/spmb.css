@@ -41,6 +41,33 @@
   line-height: 1.6;
 }
 
+.spmb-quick-search {
+  display: flex;
+  gap: 0.75rem;
+  max-width: 680px;
+  margin: 1.25rem auto 1rem;
+  justify-content: center;
+}
+
+.spmb-quick-search .form-control {
+  flex: 1;
+  max-width: 480px;
+  min-width: 0;
+  background: #ffffff;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.spmb-quick-search .btn {
+  flex: 0 0 auto;
+  padding: 0.75rem 1.5rem;
+}
+
+.spmb-quick-result {
+  max-width: 680px;
+  margin: 0 auto 1.25rem;
+}
+
 /* Gelombang Status Pill Ribbon */
 .waves-timeline-wrap {
   margin-block-start: 2rem;
@@ -780,6 +807,14 @@
   .spmb-hero-title {
     font-size: 2rem;
   }
+  .spmb-quick-search {
+    flex-direction: column;
+  }
+  .spmb-quick-search .form-control,
+  .spmb-quick-search .btn {
+    width: 100%;
+    max-width: none;
+  }
   .spmb-form-card {
     padding: 1.5rem;
   }
@@ -1333,4 +1368,3 @@
     bottom: 0.75rem;
   }
 }
-
