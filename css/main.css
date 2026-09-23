@@ -420,22 +420,49 @@ ul, ol {
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--neutral-700);
-  padding: 0.55rem 1rem;
-  border-radius: var(--radius-full);
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--radius-md);
   transition: all var(--trans-fast);
   cursor: pointer;
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 0.85rem;
+  right: 0.85rem;
+  height: 3px;
+  background-color: transparent;
+  border-radius: 9999px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-link:hover {
-  color: var(--primary-700);
+  color: var(--primary-600);
   background-color: var(--primary-50);
 }
 
-.nav-link.active {
-  color: var(--primary-700);
-  background-color: var(--primary-100);
+.nav-link:hover::after {
+  background-color: var(--primary-300);
+}
+
+.nav-link.active,
+.nav-link.active:hover {
+  color: var(--primary-600) !important;
+  background-color: transparent !important;
   font-weight: 700;
+}
+
+.nav-link.active::after,
+.nav-link.active:hover::after {
+  background-color: var(--primary-600) !important;
+  height: 3px;
+  bottom: 0px;
 }
 
 .nav-btn-spmb {
@@ -529,10 +556,17 @@ ul, ol {
   transition: background-color var(--trans-fast);
 }
 
-.mobile-nav-link:hover, .mobile-nav-link.active {
+.mobile-nav-link:hover {
   background-color: var(--primary-50);
-  color: var(--primary-700);
+  color: var(--primary-600);
+}
+
+.mobile-nav-link.active {
+  background-color: var(--primary-50);
+  color: var(--primary-600) !important;
   font-weight: 700;
+  border-left: 4px solid var(--primary-600);
+  border-bottom: 2px solid var(--primary-600);
 }
 
 /* ==========================================================================
