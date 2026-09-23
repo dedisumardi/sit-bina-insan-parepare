@@ -791,6 +791,13 @@
     }
   });
 
+  // Re-render portal when navigating to #spmb
+  window.addEventListener('hashchange', function () {
+    if (window.location.hash === '#spmb') {
+      renderParentPortal();
+    }
+  });
+
   function initParentPortalEngine() {
     renderParentPortal();
 
@@ -1045,6 +1052,14 @@
     window.closeSpmbModal();
     window.location.hash = '#spmb';
     renderParentPortal();
+    setTimeout(() => {
+      const portal = document.getElementById('spmb-parent-portal');
+      if (portal) {
+        portal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 80);
   };
 
   // Render Parent Portal based on session and record status

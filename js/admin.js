@@ -454,27 +454,34 @@
       title: "Pengaturan SPMB & Sekolah",
       desc: "Konfigurasi gelombang pendaftaran, biaya infaq, kontak WA, dan rekening BSI."
     }
-  };
+  };  function switchPanel(panelName) {
+    let activeTarget = panelName;
+    if (panelName === 'spmb-wali') {
+      activeTarget = 'spmb';
+      if (window.switchSpmbSubTab) window.switchSpmbSubTab('wali');
+    } else if (panelName === 'spmb') {
+      if (window.switchSpmbSubTab && currentSpmbSubTab !== 'wali') window.switchSpmbSubTab('siswa');
+    }
 
-  function switchPanel(panelName) {
     adminPanels.forEach(panel => {
-      panel.classList.toggle('active', panel.id === `panel-${panelName}`);
+      panel.classList.toggle('active', panel.id === `panel-${activeTarget}`);
     });
 
     navItemBtns.forEach(btn => {
       btn.classList.toggle('active', btn.dataset.panel === panelName);
     });
 
-    if (panelMeta[panelName]) {
-      topbarTitle.textContent = panelMeta[panelName].title;
-      topbarDesc.textContent = panelMeta[panelName].desc;
+    if (panelMeta[activeTarget]) {
+      topbarTitle.textContent = panelMeta[activeTarget].title;
+      topbarDesc.textContent = panelMeta[activeTarget].desc;
     }
 
-    if (panelName === 'dashboard') renderDashboard();
-    if (panelName === 'spmb') renderSpmbTable();
-    if (panelName === 'berita') renderArticlesTable();
-    if (panelName === 'settings') renderSettingsForm();
+    if (activeTarget === 'dashboard') renderDashboard();
+    if (activeTarget === 'spmb') renderSpmbTable();
+    if (activeTarget === 'berita') renderArticlesTable();
+    if (activeTarget === 'settings') renderSettingsForm();
   }
+  window.switchPanel = switchPanel;
 
   function initNavEvents() {
     navItemBtns.forEach(btn => {
@@ -492,38 +499,50 @@
   // View 1: Dashboard Panel
   // =========================================================================
   function renderDashboard() {
-    const totalCount = spmbList.length;
-    const tkitCount = spmbList.filter(s => s.jenjang === 'tkit').length;
-    const sditCount = spmbList.filter(s => s.jenjang === 'sdit').length;
-    const smpitCount = spmbList.filter(s => s.jenjang === 'smpit').length;
+    const studentList = spmbList.filter(isStudentApplicant);
+    const parentList = spmbList;
+    const totalCount = studentList.length;
+    const tkitCount = studentList.filter(s => s.jenjang === 'tkit').length;
+    const sditCount = studentList.filter(s => s.jenjang === 'sdit').length;
+    const smpitCount = studentList.filter(s => s.jenjang === 'smpit').length;
     const articleCount = articleList.length;
 
     // Badges & Counters
-    document.getElementById('stat-total-spmb').textContent = totalCount;
-    document.getElementById('stat-tkit').textContent = tkitCount;
-    document.getElementById('stat-sdit').textContent = sditCount;
-    document.getElementById('stat-smpit').textContent = smpitCount;
-    document.getElementById('stat-articles').textContent = articleCount;
+    const statTotalEl = document.getElementById('stat-total-spmb');
+    if (statTotalEl) statTotalEl.textContent = totalCount;
+    const statTkitEl = document.getElementById('stat-tkit');
+    if (statTkitEl) statTkitEl.textContent = tkitCount;
+    const statSditEl = document.getElementById('stat-sdit');
+    if (statSditEl) statSditEl.textContent = sditCount;
+    const statSmpitEl = document.getElementById('stat-smpit');
+    if (statSmpitEl) statSmpitEl.textContent = smpitCount;
+    const statArticlesEl = document.getElementById('stat-articles');
+    if (statArticlesEl) statArticlesEl.textContent = articleCount;
 
     // Sidebar counter
-    document.getElementById('sidebar-spmb-count').textContent = totalCount;
-    document.getElementById('sidebar-news-count').textContent = articleCount;
+    const sideSpmb = document.getElementById('sidebar-spmb-count');
+    if (sideSpmb) sideSpmb.textContent = totalCount;
+    const sideWali = document.getElementById('sidebar-wali-count');
+    if (sideWali) sideWali.textContent = parentList.length;
+    const sideNews = document.getElementById('sidebar-news-count');
+    if (sideNews) sideNews.textContent = articleCount;
 
     // Calculate Estimated Infaq
     let totalInfaq = 0;
-    spmbList.forEach(s => {
+    studentList.forEach(s => {
       if (s.jenjang === 'tkit') totalInfaq += 200000;
       else if (s.jenjang === 'sdit') totalInfaq += 250000;
       else if (s.jenjang === 'smpit') totalInfaq += 300000;
     });
     const formattedInfaq = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalInfaq);
-    document.getElementById('stat-infaq-est').textContent = formattedInfaq;
+    const infaqEl = document.getElementById('stat-infaq-est');
+    if (infaqEl) infaqEl.textContent = formattedInfaq;
 
     // Recent 5 Applicants Table
     const recentWrap = document.getElementById('dashboard-recent-table');
     if (!recentWrap) return;
 
-    const recent = spmbList.slice(0, 5);
+    const recent = studentList.length > 0 ? studentList.slice(0, 5) : spmbList.slice(0, 5);
     if (recent.length === 0) {
       recentWrap.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748b; padding:2rem;">Belum ada calon siswa yang mendaftar.</td></tr>`;
       return;
@@ -532,27 +551,24 @@
     recentWrap.innerHTML = recent.map(item => `
       <tr class="hover:bg-slate-50/80 transition duration-150">
         <td class="py-4 px-6 whitespace-nowrap font-mono text-xs font-semibold text-slate-700">
-          ${item.regNumber}
+          ${escapeHtml(item.regNumber)}
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
-          <div class="font-bold text-slate-900">${escapeHtml(item.namaSiswa)}</div>
+          <div class="font-bold text-slate-900">${escapeHtml(item.namaSiswa || item.namaAyah || '-')}</div>
           <span class="text-xs text-slate-400">Jalur ${escapeHtml(item.jalur ? item.jalur.toUpperCase() : 'Reguler')}</span>
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
           ${renderJenjangBadge(item.jenjang)}
         </td>
         <td class="py-4 px-6 whitespace-nowrap text-xs text-slate-600">
-          <span class="font-medium text-slate-800">${item.tanggalDaftar}</span>
+          <span class="font-medium text-slate-800">${escapeHtml(item.tanggalDaftar || '-')}</span>
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
           ${renderStatusBadge(item.status)}
         </td>
         <td class="py-4 px-6 whitespace-nowrap text-center">
-          <button class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 border border-transparent hover:border-emerald-200 transition-colors" title="Lihat Detail Pendaftar" type="button" onclick="window.viewApplicantDetail('${item.regNumber}')">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" stroke-linecap="round" stroke-linejoin="round"></path>
-              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
+          <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail Siswa">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
           </button>
         </td>
       </tr>
@@ -560,98 +576,152 @@
   }
 
   // =========================================================================
-  // View 2: SPMB Management Panel (Kelola Siswa Baru)
+  // View 2: SPMB Management Panel (Pemisahan Calon Siswa & Akun Orang Tua)
   // =========================================================================
+  let currentSpmbSubTab = 'siswa'; // 'siswa' or 'wali'
   let spmbFilterJenjang = 'all';
   let spmbFilterStatus = 'all';
   let spmbSearchQuery = '';
 
+  let waliFilterStatus = 'all';
+  let waliSearchQuery = '';
+
+  function isStudentApplicant(s) {
+    if (!s) return false;
+    const isPending = (s.regNumber || '').startsWith('PENDING-');
+    const isPlaceholderName = !s.namaSiswa || s.namaSiswa === '-' || s.namaSiswa.toLowerCase().startsWith('calon siswa (');
+    const isPlaceholderNik = !s.nik || s.nik === '-' || s.nik.startsWith('wa-') || s.nik.startsWith('WA-');
+    
+    // An entry is an actual student record if:
+    // It is an approved/official registration number (SPMB-...)
+    // OR it has real student name and real NIK
+    if (!isPending) return true;
+    return (!isPlaceholderName && !isPlaceholderNik);
+  }
+
+  window.switchSpmbSubTab = function (subTab) {
+    currentSpmbSubTab = subTab;
+    const tabBtnSiswa = document.getElementById('tab-btn-siswa');
+    const tabBtnWali = document.getElementById('tab-btn-wali');
+    const viewSiswa = document.getElementById('spmb-view-siswa');
+    const viewWali = document.getElementById('spmb-view-wali');
+    const activeDesc = document.getElementById('spmb-active-tab-desc');
+
+    if (subTab === 'siswa') {
+      tabBtnSiswa?.classList.remove('text-slate-600', 'hover:bg-slate-100');
+      tabBtnSiswa?.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
+      tabBtnWali?.classList.remove('bg-emerald-600', 'text-white', 'shadow-sm');
+      tabBtnWali?.classList.add('text-slate-600', 'hover:bg-slate-100');
+
+      if (viewSiswa) viewSiswa.style.display = 'block';
+      if (viewWali) viewWali.style.display = 'none';
+      if (activeDesc) activeDesc.innerHTML = '<span>🎓 Menampilkan berkas calon siswa terverifikasi</span>';
+    } else {
+      tabBtnWali?.classList.remove('text-slate-600', 'hover:bg-slate-100');
+      tabBtnWali?.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
+      tabBtnSiswa?.classList.remove('bg-emerald-600', 'text-white', 'shadow-sm');
+      tabBtnSiswa?.classList.add('text-slate-600', 'hover:bg-slate-100');
+
+      if (viewSiswa) viewSiswa.style.display = 'none';
+      if (viewWali) viewWali.style.display = 'block';
+      if (activeDesc) activeDesc.innerHTML = '<span>👥 Menampilkan akun pendaftar orang tua &amp; verifikasi transfer Rp 150.000</span>';
+    }
+
+    renderSpmbTable();
+  };
+
+  function updateSpmbCounts() {
+    const studentList = spmbList.filter(isStudentApplicant);
+    const parentList = spmbList;
+    const pendingProofs = spmbList.filter(s => s.buktiPembayaran && !(s.status || '').toLowerCase().includes('terverifikasi')).length;
+
+    const badgeSiswa = document.getElementById('badge-tab-siswa-count');
+    if (badgeSiswa) badgeSiswa.textContent = studentList.length;
+
+    const badgeWali = document.getElementById('badge-tab-wali-count');
+    if (badgeWali) {
+      badgeWali.textContent = pendingProofs > 0 ? `${parentList.length} (${pendingProofs} baru)` : parentList.length;
+    }
+
+    const sideSiswa = document.getElementById('sidebar-spmb-count');
+    if (sideSiswa) sideSiswa.textContent = studentList.length;
+
+    const sideWali = document.getElementById('sidebar-wali-count');
+    if (sideWali) sideWali.textContent = parentList.length;
+  }
+
   function renderSpmbTable() {
+    updateSpmbCounts();
+    renderStudentsTable();
+    renderWaliTable();
+  }
+
+  // 1. Render Tabel Data Calon Siswa
+  function renderStudentsTable() {
     const tableBody = document.getElementById('spmb-table-body');
     if (!tableBody) return;
 
-    let filtered = [...spmbList];
+    let students = spmbList.filter(isStudentApplicant);
 
     // Filter Jenjang
     if (spmbFilterJenjang !== 'all') {
-      filtered = filtered.filter(s => s.jenjang === spmbFilterJenjang);
+      students = students.filter(s => s.jenjang === spmbFilterJenjang);
     }
 
     // Filter Status
     if (spmbFilterStatus !== 'all') {
-      filtered = filtered.filter(s => s.status.toLowerCase().includes(spmbFilterStatus.toLowerCase()));
+      students = students.filter(s => (s.status || '').toLowerCase().includes(spmbFilterStatus.toLowerCase()));
     }
 
     // Filter Search
     if (spmbSearchQuery.trim() !== '') {
       const q = spmbSearchQuery.toLowerCase();
-      filtered = filtered.filter(s =>
-        s.regNumber.toLowerCase().includes(q) ||
-        s.namaSiswa.toLowerCase().includes(q) ||
-        s.nik.includes(q) ||
+      students = students.filter(s =>
+        (s.regNumber || '').toLowerCase().includes(q) ||
+        (s.namaSiswa || '').toLowerCase().includes(q) ||
+        (s.nik || '').includes(q) ||
         (s.namaAyah && s.namaAyah.toLowerCase().includes(q))
       );
     }
 
-    document.getElementById('spmb-filter-count').textContent = `Menampilkan ${filtered.length} dari ${spmbList.length} pendaftar`;
+    const countEl = document.getElementById('spmb-filter-count');
+    if (countEl) countEl.textContent = `Menampilkan ${students.length} dari ${spmbList.filter(isStudentApplicant).length} calon siswa`;
 
-    if (filtered.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada data pendaftar yang cocok dengan filter.</td></tr>`;
+    if (students.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada data calon siswa yang cocok dengan filter.</td></tr>`;
       return;
     }
 
-    tableBody.innerHTML = filtered.map(item => {
+    tableBody.innerHTML = students.map(item => {
       const isApproved = (item.status || '').toLowerCase().includes('terverifikasi');
-      const hasProof = !!item.buktiPembayaran;
-
-      let statusBadgeHtml = '';
-      if (isApproved) {
-        statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">✓ Lunas (Rp 150k)</span>`;
-      } else if (hasProof) {
-        statusBadgeHtml = `<button type="button" onclick="window.viewPaymentProof('${item.regNumber}')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 hover:bg-amber-200 border border-amber-300 transition cursor-pointer" title="Klik untuk verifikasi bukti transfer">💳 Bukti Diupload</button>`;
-      } else {
-        statusBadgeHtml = renderStatusBadge(item.status);
-      }
-
       return `
       <tr class="hover:bg-slate-50/80 transition duration-150">
         <td class="py-4 px-6 whitespace-nowrap font-mono text-xs font-bold ${isApproved ? 'text-emerald-700' : 'text-slate-700'}">
-          ${item.regNumber}
+          ${escapeHtml(item.regNumber)}
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
-          <div class="font-bold text-slate-900">${escapeHtml(item.namaSiswa)}</div>
-          <span class="text-xs text-slate-400 font-mono">NIK: ${item.nik}</span>
+          <div class="font-bold text-slate-900">${escapeHtml(item.namaSiswa || '-')}</div>
+          <span class="text-xs text-slate-400 font-mono">NIK: ${escapeHtml(item.nik || '-')}</span>
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
           ${renderJenjangBadge(item.jenjang)}
-          <span class="text-[11px] text-slate-400 block mt-1 uppercase font-medium tracking-wider">${item.jalur ? item.jalur.toUpperCase() : 'REGULER'}</span>
+          <span class="text-[11px] text-slate-400 block mt-1 uppercase font-medium tracking-wider">${escapeHtml(item.jalur ? item.jalur.toUpperCase() : 'REGULER')}</span>
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
           <div class="font-medium text-slate-800 text-xs">${escapeHtml(item.namaAyah || '-')}</div>
           <a href="https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent('Assalamu\'alaikum Bapak/Ibu wali dari ' + item.namaSiswa + ', kami dari Panitia SPMB SIT Bina Insan Parepare ingin mengonfirmasi pendaftaran ' + item.regNumber + '.')}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 mt-1" title="Kirim WhatsApp ke Orang Tua">
             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.573 1.761.854 2.806.854 3.18 0 5.767-2.587 5.768-5.766.001-3.182-2.585-5.769-5.768-5.769zm10.024 5.828c0 5.549-4.512 10.063-10.063 10.063-1.745 0-3.385-.45-4.821-1.242l-5.171 1.357 1.381-5.042c-.878-1.488-1.389-3.23-1.389-5.136 0-5.551 4.514-10.063 10.063-10.063 5.551 0 10.063 4.512 10.063 10.063z"/></svg>
-            <span>${item.waAyah}</span>
+            <span>${escapeHtml(item.waAyah || '-')}</span>
           </a>
         </td>
         <td class="py-4 px-6 whitespace-nowrap text-xs text-slate-600">
-          <span class="font-medium text-slate-800">${item.tanggalDaftar}</span>
+          <span class="font-medium text-slate-800">${escapeHtml(item.tanggalDaftar || '-')}</span>
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
-          ${statusBadgeHtml}
+          ${renderStatusBadge(item.status)}
         </td>
         <td class="py-4 px-6 whitespace-nowrap text-center">
           <div class="flex items-center justify-center gap-1.5">
-            ${hasProof ? `
-              <button type="button" class="p-1.5 rounded-lg text-amber-700 hover:text-amber-900 hover:bg-amber-50 border border-amber-200 transition-colors" onclick="window.viewPaymentProof('${item.regNumber}')" title="Lihat Bukti Transfer Rp 150.000">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
-              </button>
-            ` : ''}
-            ${!isApproved && hasProof ? `
-              <button type="button" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-sm flex items-center gap-1" onclick="window.approvePayment('${item.regNumber}')" title="Setujui Pembayaran & Terbitkan Kode Siswa">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Approve</span>
-              </button>
-            ` : ''}
             <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 border border-transparent hover:border-emerald-200 transition-colors" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail & Verifikasi Berkas">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
             </button>
@@ -659,6 +729,117 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24-1.047-.37-2.14-.37-3.26 0-5.523 4.477-10 10-10 1.12 0 2.213.13 3.26.37m-3.26 19.63c-1.047.24-2.14.37-3.26.37-5.523 0-10-4.477-10-10 0-1.12.13-2.213.37-3.26M6.75 6.75h10.5a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25H6.75a2.25 2.25 0 01-2.25-2.25v-7.5a2.25 2.25 0 012.25-2.25z" /></svg>
             </button>
             <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus Data Siswa">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+      `;
+    }).join('');
+  }
+
+  // 2. Render Tabel Akun Orang Tua & Pembayaran
+  function renderWaliTable() {
+    const tableBody = document.getElementById('wali-table-body');
+    if (!tableBody) return;
+
+    let parents = [...spmbList];
+
+    // Filter Wali Status
+    if (waliFilterStatus !== 'all') {
+      if (waliFilterStatus === 'pending_proof') {
+        parents = parents.filter(s => s.buktiPembayaran && !(s.status || '').toLowerCase().includes('terverifikasi'));
+      } else if (waliFilterStatus === 'unpaid') {
+        parents = parents.filter(s => !s.buktiPembayaran && !(s.status || '').toLowerCase().includes('terverifikasi'));
+      } else if (waliFilterStatus === 'approved') {
+        parents = parents.filter(s => (s.status || '').toLowerCase().includes('terverifikasi') || (s.regNumber && !s.regNumber.startsWith('PENDING-')));
+      }
+    }
+
+    // Filter Search
+    if (waliSearchQuery.trim() !== '') {
+      const q = waliSearchQuery.toLowerCase();
+      parents = parents.filter(s =>
+        (s.regNumber || '').toLowerCase().includes(q) ||
+        (s.namaAyah && s.namaAyah.toLowerCase().includes(q)) ||
+        (s.waAyah && s.waAyah.includes(q))
+      );
+    }
+
+    const countEl = document.getElementById('wali-filter-count');
+    if (countEl) countEl.textContent = `Menampilkan ${parents.length} dari ${spmbList.length} akun orang tua/wali`;
+
+    if (parents.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada akun orang tua yang cocok dengan filter.</td></tr>`;
+      return;
+    }
+
+    tableBody.innerHTML = parents.map(item => {
+      const isApproved = (item.status || '').toLowerCase().includes('terverifikasi') || (item.regNumber && !item.regNumber.startsWith('PENDING-'));
+      const hasProof = !!item.buktiPembayaran;
+
+      let statusBadge = '';
+      if (isApproved) {
+        statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">✓ Lunas &amp; Disetujui</span>`;
+      } else if (hasProof) {
+        statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 animate-pulse">💳 Bukti Diupload</span>`;
+      } else {
+        statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">🔴 Menunggu Bayar</span>`;
+      }
+
+      let proofThumb = '';
+      if (hasProof) {
+        proofThumb = `
+          <button type="button" onclick="window.viewPaymentProof('${item.regNumber}')" class="group relative inline-flex items-center gap-1.5 p-1 rounded-lg border border-amber-300 hover:border-amber-400 bg-amber-50 hover:bg-amber-100 transition cursor-pointer" title="Klik untuk lihat bukti transfer">
+            <img src="${item.buktiPembayaran}" alt="Bukti" class="w-8 h-8 rounded object-cover border border-amber-200">
+            <span class="text-[11px] font-bold text-amber-800 pr-1">Lihat Foto</span>
+          </button>
+        `;
+      } else {
+        proofThumb = `<span class="text-xs text-slate-400 italic">Belum Upload</span>`;
+      }
+
+      return `
+      <tr class="hover:bg-slate-50/80 transition duration-150">
+        <td class="py-4 px-6 whitespace-nowrap font-mono text-xs font-bold ${isApproved ? 'text-emerald-700' : 'text-slate-700'}">
+          ${escapeHtml(item.regNumber)}
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap">
+          <div class="font-bold text-slate-900">${escapeHtml(item.namaAyah || item.namaSiswa || 'Orang Tua / Wali')}</div>
+          <span class="text-xs text-slate-400">Pendaftar Akun SPMB</span>
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap">
+          <a href="https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent(`Assalamu'alaikum Bapak/Ibu ${item.namaAyah || ''}, kami dari Panitia SPMB SIT Bina Insan Parepare terkait akun pendaftaran ${item.regNumber}.`)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-200" title="Chat WhatsApp Orang Tua">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.573 1.761.854 2.806.854 3.18 0 5.767-2.587 5.768-5.766.001-3.182-2.585-5.769-5.768-5.769zm10.024 5.828c0 5.549-4.512 10.063-10.063 10.063-1.745 0-3.385-.45-4.821-1.242l-5.171 1.357 1.381-5.042c-.878-1.488-1.389-3.23-1.389-5.136 0-5.551 4.514-10.063 10.063-10.063 5.551 0 10.063 4.512 10.063 10.063z"/></svg>
+            <span class="font-mono">${escapeHtml(item.waAyah || '-')}</span>
+          </a>
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap text-xs font-bold text-slate-800">
+          Rp 150.000
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap">
+          ${proofThumb}
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap">
+          ${statusBadge}
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap text-xs text-slate-600">
+          <span class="font-medium text-slate-800">${escapeHtml(item.tanggalDaftar || '-')}</span>
+        </td>
+        <td class="py-4 px-6 whitespace-nowrap text-center">
+          <div class="flex items-center justify-center gap-1.5">
+            ${!isApproved ? `
+              <button type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-sm flex items-center gap-1" onclick="window.approvePayment('${item.regNumber}')" title="Setujui Pembayaran &amp; Terbitkan Kode Siswa Resmi">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Approve</span>
+              </button>
+            ` : `
+              <span class="text-xs text-emerald-600 font-bold flex items-center gap-1 px-2 py-1 bg-emerald-50 rounded border border-emerald-200">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Disetujui
+              </span>
+            `}
+            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus Akun Pendaftar">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
             </button>
           </div>
@@ -676,26 +857,44 @@
 
     filterJenjang?.addEventListener('change', (e) => {
       spmbFilterJenjang = e.target.value;
-      renderSpmbTable();
+      renderStudentsTable();
     });
 
     filterStatus?.addEventListener('change', (e) => {
       spmbFilterStatus = e.target.value;
-      renderSpmbTable();
+      renderStudentsTable();
     });
 
     searchInput?.addEventListener('input', (e) => {
       spmbSearchQuery = e.target.value;
-      renderSpmbTable();
+      renderStudentsTable();
     });
 
     exportBtn?.addEventListener('click', exportSpmbToCsv);
+
+    // Wali Controls
+    const waliFilter = document.getElementById('wali-filter-status');
+    const waliSearch = document.getElementById('wali-search-input');
+    const waliExport = document.getElementById('wali-export-btn');
+
+    waliFilter?.addEventListener('change', (e) => {
+      waliFilterStatus = e.target.value;
+      renderWaliTable();
+    });
+
+    waliSearch?.addEventListener('input', (e) => {
+      waliSearchQuery = e.target.value;
+      renderWaliTable();
+    });
+
+    waliExport?.addEventListener('click', exportWaliToCsv);
   }
 
-  // Export CSV
+  // Export CSV Siswa
   function exportSpmbToCsv() {
-    if (spmbList.length === 0) {
-      alert('Tidak ada data pendaftar untuk diekspor.');
+    const students = spmbList.filter(isStudentApplicant);
+    if (students.length === 0) {
+      alert('Tidak ada data calon siswa untuk diekspor.');
       return;
     }
 
@@ -705,24 +904,24 @@
       'Hafalan Quran', 'Prestasi', 'Tanggal Daftar', 'Status', 'Jadwal Observasi'
     ];
 
-    const rows = spmbList.map(s => [
+    const rows = students.map(s => [
       s.regNumber,
-      s.jenjang.toUpperCase(),
-      s.jalur.toUpperCase(),
+      (s.jenjang || 'sdit').toUpperCase(),
+      (s.jalur || 'reguler').toUpperCase(),
       `"${(s.namaSiswa || '').replace(/"/g, '""')}"`,
-      `'${s.nik}'`,
+      `'${s.nik || ''}'`,
       `"${(s.ttl || '').replace(/"/g, '""')}"`,
-      s.jk,
+      s.jk || 'Laki-laki',
       `"${(s.asalSekolah || '').replace(/"/g, '""')}"`,
       `"${(s.alamat || '').replace(/"/g, '""')}"`,
       `"${(s.namaAyah || '').replace(/"/g, '""')}"`,
       `"${(s.pekerjaanAyah || '').replace(/"/g, '""')}"`,
-      `'${s.waAyah}'`,
+      `'${s.waAyah || ''}'`,
       `"${(s.namaIbu || '').replace(/"/g, '""')}"`,
       s.email || '',
       `"${(s.hafalan || '').replace(/"/g, '""')}"`,
       `"${(s.prestasi || '').replace(/"/g, '""')}"`,
-      s.tanggalDaftar,
+      s.tanggalDaftar || '',
       `"${(s.status || '').replace(/"/g, '""')}"`,
       `"${(s.jadwalObservasi || '').replace(/"/g, '""')}"`
     ]);
@@ -731,16 +930,50 @@
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `DATA_SPMB_SIT_BINA_INSAN_PAREPARE_${new Date().toISOString().slice(0,10)}.csv`);
+    link.setAttribute('download', `DATA_CALON_SISWA_SPMB_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    showToast('File CSV pendaftar berhasil diunduh!');
+    showToast('File CSV Calon Siswa berhasil diunduh!');
+  }
+
+  // Export CSV Akun Wali
+  function exportWaliToCsv() {
+    if (spmbList.length === 0) {
+      alert('Tidak ada data akun orang tua untuk diekspor.');
+      return;
+    }
+
+    const headers = [
+      'ID/No. Registrasi', 'Nama Orang Tua / Wali', 'No WhatsApp', 'Nominal Pembayaran', 'Status Pembayaran', 'Ada Bukti Transfer', 'Tanggal Registrasi'
+    ];
+
+    const rows = spmbList.map(s => {
+      const isApproved = (s.status || '').toLowerCase().includes('terverifikasi');
+      return [
+        s.regNumber,
+        `"${(s.namaAyah || s.namaSiswa || '').replace(/"/g, '""')}"`,
+        `'${s.waAyah || ''}'`,
+        s.nominalPembayaran || 150000,
+        `"${(s.status || '').replace(/"/g, '""')}"`,
+        s.buktiPembayaran ? 'Ya' : 'Belum',
+        `"${(s.tanggalDaftar || '').replace(/"/g, '""')}"`
+      ];
+    });
+
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `DATA_AKUN_WALI_SPMB_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('File CSV Akun Orang Tua berhasil diunduh!');
   }
 
   // Modal Detail & Verifikasi Siswa
   window.viewApplicantDetail = function (regNumber) {
-    const item = spmbList.find(s => s.regNumber === regNumber || s.waAyah === regNumber);
     if (!item) return;
 
     document.getElementById('modal-app-reg').textContent = item.regNumber;
