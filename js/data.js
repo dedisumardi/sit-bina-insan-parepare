@@ -131,7 +131,9 @@ const SchoolData = {
         "Fasilitas sanitasi dan toilet"
       ],
       spmbFee: "Rp 250.000",
-      ageRequirement: "Usia minimal 6 tahun per 1 Juli tahun pelajaran berjalan"
+      ageRequirement: "Usia minimal 6 tahun per 1 Juli tahun pelajaran berjalan",
+      instagram: "https://www.instagram.com/sditbinainsanparepare/",
+      instagramHandle: "@sditbinainsanparepare"
     },
 
     smpit: {
