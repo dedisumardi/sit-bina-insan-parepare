@@ -877,7 +877,10 @@
     document.getElementById('modal-app-ttl').textContent = item.ttl || '-';
     document.getElementById('modal-app-jk').textContent = item.jk || '-';
     document.getElementById('modal-app-sekolah').textContent = item.asalSekolah || '-';
+    document.getElementById('modal-app-agama').textContent = item.agama || '-';
+    document.getElementById('modal-app-kewarganegaraan').textContent = item.kewarganegaraan || '-';
     document.getElementById('modal-app-alamat').textContent = item.alamat || '-';
+    document.getElementById('modal-app-wilayah').textContent = [item.desaKelurahan, item.kecamatan, item.kabupatenKota, item.provinsi].filter(Boolean).join(', ') || '-';
     document.getElementById('modal-app-ayah').textContent = `${item.namaAyah || '-'} (${item.pekerjaanAyah || '-'})`;
     document.getElementById('modal-app-ibu').textContent = `${item.namaIbu || '-'}`;
     document.getElementById('modal-app-wa').textContent = item.waAyah || '-';

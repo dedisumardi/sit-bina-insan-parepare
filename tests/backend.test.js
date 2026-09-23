@@ -50,17 +50,27 @@ test('API persistence and authorization in an isolated temporary schema', { skip
     const parent = await request('spmb', 'POST', { namaAyah: 'Test Parent', waAyah });
     assert.equal(parent.code, 201);
     const reg = parent.body.data.regNumber;
+    assert.equal((await request('spmb', 'POST', { action: 'save_biodata', regNumber: reg, namaAyah: 'Test Parent',
+      namaSiswa: 'Too Early', waAyah, nik: '1234567890123456', jenjang: 'sdit', jk: 'Laki-laki',
+      tempatLahir: 'Parepare', tanggalLahir: '2018-05-12', namaIbu: 'Test Mother', alamat: 'Jl. Test',
+      agama: 'Islam', kewarganegaraan: 'Indonesia', desaKelurahan: 'Bumi Harapan', kecamatan: 'Bacukiki Barat',
+      kabupatenKota: 'Kota Parepare', provinsi: 'Sulawesi Selatan' })).code, 403);
     assert.equal((await request('spmb', 'PUT', { reg_number: reg, status: 'Lulus' })).code, 401);
     const proof = 'data:image/png;base64,aGVsbG8=';
     assert.equal((await request('spmb', 'PUT', { reg_number: reg, waAyah, buktiPembayaran: proof })).code, 200);
     const approved = await request('spmb', 'PUT', { reg_number: reg, new_reg_number: 'generate', status: 'Pembayaran Terverifikasi' }, {}, true);
     assert.equal(approved.code, 200);
-    const full = await request('spmb', 'POST', { namaAyah: 'Test Parent', namaSiswa: 'Test Student', waAyah, nik: '1234567890123456' });
-    assert.equal(full.code, 201);
+    const full = await request('spmb', 'POST', { action: 'save_biodata', regNumber: approved.body.data.regNumber,
+      namaAyah: 'Test Parent', namaIbu: 'Test Mother', namaSiswa: 'Test Student', waAyah, nik: '1234567890123456', jenjang: 'sdit',
+      jk: 'Laki-laki', tempatLahir: 'Parepare', tanggalLahir: '2018-05-12', alamat: 'Jl. Test',
+      agama: 'Islam', kewarganegaraan: 'Indonesia', desaKelurahan: 'Bumi Harapan', kecamatan: 'Bacukiki Barat',
+      kabupatenKota: 'Kota Parepare', provinsi: 'Sulawesi Selatan' });
+    assert.equal(full.code, 200);
     assert.equal(full.body.data.id, parent.body.data.id);
     assert.equal(full.body.data.status, 'Pembayaran Terverifikasi');
     assert.equal(full.body.data.buktiPembayaran, proof);
     assert.equal(full.body.data.regNumber, approved.body.data.regNumber);
+    assert.equal(full.body.data.kecamatan, 'Bacukiki Barat');
     assert.equal((await request('spmb', 'GET', {}, { query: '1234567890123456' })).code, 200);
     assert.equal((await request('spmb', 'GET', {}, {}, true)).body.data.length, 1);
     assert.equal((await request('spmb', 'DELETE', { reg_number: full.body.data.regNumber }, {}, true)).code, 200);

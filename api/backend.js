@@ -19,7 +19,7 @@ function row(record) {
   return { ...record.data, id: record.id, ...(record.reg_number ? { regNumber: record.reg_number } : {}), createdAt: record.created_at };
 }
 function requireAdmin(admin) { if (!admin) fail(401, 'Silakan masuk sebagai admin.'); }
-const biodata = ['jenjang','jalur','namaSiswa','nik','ttl','jk','asalSekolah','alamat','namaAyah','pekerjaanAyah','waAyah','namaIbu','pekerjaanIbu','email','hafalan','prestasi'];
+const biodata = ['jenjang','jalur','namaSiswa','nik','ttl','tempatLahir','tanggalLahir','jk','asalSekolah','alamat','desaKelurahan','kecamatan','kabupatenKota','provinsi','agama','kewarganegaraan','namaAyah','pekerjaanAyah','waAyah','namaIbu','pekerjaanIbu','email','hafalan','prestasi'];
 const articleFields = ['title','category','categoryClass','author','date','readTime','image','excerpt','content'];
 const settingFields = Object.keys(require('../data_settings.json'));
 
@@ -129,6 +129,21 @@ async function handler(req, res) {
         data.namaAyah ||= String(input.namaOrangTua || '').trim();
         if (!data.namaAyah && !data.namaSiswa) fail(400, 'Nama wajib diisi.');
         if (!['tkit','sdit','smpit'].includes(data.jenjang || 'sdit')) fail(400, 'Jenjang tidak valid.');
+        if (input.action === 'save_biodata') {
+          const reg = String(input.regNumber || input.reg_number || '').trim();
+          if (!reg || reg.startsWith('PENDING-')) fail(403, 'Biodata dapat diisi setelah pembayaran disetujui admin.');
+          if (!/^\d{16}$/.test(data.nik || '')) fail(400, 'NIK siswa harus terdiri dari 16 digit angka.');
+          if (!data.namaSiswa || !data.tempatLahir || !/^\d{4}-\d{2}-\d{2}$/.test(data.tanggalLahir || '') ||
+              !data.namaIbu || !data.agama || !data.kewarganegaraan || !data.alamat || !data.desaKelurahan ||
+              !data.kecamatan || !data.kabupatenKota || !data.provinsi) fail(400, 'Lengkapi seluruh data wajib siswa.');
+          if (!['Laki-laki','Perempuan'].includes(data.jk || '')) fail(400, 'Jenis kelamin tidak valid.');
+          data.ttl = `${data.tempatLahir}, ${data.tanggalLahir}`;
+          data.biodataUpdatedAt = new Date().toISOString();
+          const result = await database().query(`UPDATE sipintu_applicants SET nik=$1, data=data || $2::jsonb
+            WHERE reg_number=$3 AND wa=$4 AND reg_number NOT LIKE 'PENDING-%' RETURNING *`, [data.nik, JSON.stringify(data), reg, wa]);
+          if (!result.rowCount) fail(404, 'Pendaftaran resmi tidak ditemukan.');
+          return send(row(result.rows[0]), 'Biodata siswa tersimpan.');
+        }
         const complete = /^\d{16}$/.test(data.nik || '');
         const nik = complete ? data.nik : `WA-${wa}`;
         const initial = { ...data, nik, jenjang: data.jenjang || 'sdit', namaSiswa: data.namaSiswa || `Calon Siswa (${data.namaAyah})`, status: 'Menunggu Pembayaran Uang Pendaftaran (Rp 150.000)', nominalPembayaran: 150000, jadwalObservasi: 'Menunggu verifikasi pembayaran', tanggalDaftar: new Date().toLocaleString('id-ID', { timeZone: 'Asia/Makassar' }) + ' WITA' };

@@ -736,6 +736,17 @@
     refreshParentFromDatabase();
     setInterval(refreshParentFromDatabase, 30000);
     window.addEventListener('focus', refreshParentFromDatabase);
+    const bioForm = document.getElementById('portal-student-bio-form');
+    bioForm?.addEventListener('input', () => {
+      bioForm.dataset.dirty = '1';
+      const status = document.getElementById('portal-bio-status');
+      if (status) {
+        status.textContent = 'Perubahan belum disimpan.';
+        status.className = 'portal-bio-status';
+      }
+    });
+    const birthDate = document.getElementById('bio-tanggal-lahir');
+    if (birthDate) birthDate.max = new Date().toISOString().slice(0, 10);
 
     // Dropzone drag and drop setup
     const dropzone = document.getElementById('portal-upload-dropzone');
@@ -1004,6 +1015,110 @@
     } catch (_) { /* Keep the last confirmed view during a temporary outage. */ }
   }
 
+  function populateStudentBioForm(record) {
+    const form = document.getElementById('portal-student-bio-form');
+    if (!form || form.dataset.dirty === '1') return;
+    const key = String(record.id || record.regNumber || '');
+    const set = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.value = value || '';
+    };
+    const ttlParts = String(record.ttl || '').split(',');
+    set('bio-jenjang', record.jenjang || 'sdit');
+    set('bio-jalur', record.jalur || 'reguler');
+    set('bio-nama', record.namaSiswa && !record.namaSiswa.startsWith('Calon Siswa (') ? record.namaSiswa : '');
+    set('bio-jk', record.jk || 'Laki-laki');
+    set('bio-nik', /^\d{16}$/.test(record.nik || '') ? record.nik : '');
+    set('bio-tempat-lahir', record.tempatLahir || ttlParts[0]?.trim());
+    set('bio-tanggal-lahir', record.tanggalLahir || (/^\d{4}-\d{2}-\d{2}$/.test(ttlParts[1]?.trim() || '') ? ttlParts[1].trim() : ''));
+    set('bio-nama-ibu', record.namaIbu);
+    set('bio-asal-sekolah', record.asalSekolah);
+    set('bio-agama', record.agama || 'Islam');
+    set('bio-kewarganegaraan', record.kewarganegaraan || 'Indonesia');
+    set('bio-alamat', record.alamat);
+    set('bio-desa', record.desaKelurahan);
+    set('bio-kecamatan', record.kecamatan || 'Bacukiki Barat');
+    set('bio-kabupaten', record.kabupatenKota || 'Kota Parepare');
+    set('bio-provinsi', record.provinsi || 'Sulawesi Selatan');
+    form.dataset.recordKey = key;
+    form.dataset.dirty = '0';
+    const complete = /^\d{16}$/.test(record.nik || '') && Boolean(record.namaSiswa && record.tanggalLahir);
+    const status = document.getElementById('portal-bio-status');
+    const submit = document.getElementById('portal-bio-submit');
+    if (status) {
+      status.textContent = complete ? '✓ Biodata siswa sudah tersimpan di database.' : 'Pastikan seluruh data wajib sudah benar.';
+      status.className = `portal-bio-status${complete ? ' is-success' : ''}`;
+    }
+    if (submit) submit.textContent = complete ? 'Perbarui Biodata Siswa' : 'Simpan Biodata Siswa';
+  }
+
+  window.submitStudentBiodata = async function (event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!form.reportValidity()) return;
+    const status = document.getElementById('portal-bio-status');
+    const submit = document.getElementById('portal-bio-submit');
+    let session;
+    let records;
+    try {
+      session = JSON.parse(localStorage.getItem(PARENT_SESSION_KEY) || 'null');
+      records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch (_) {}
+    const cleanWa = String(session?.wa || '').replace(/\D/g, '');
+    const record = Array.isArray(records) ? records.find(item => {
+      const itemWa = String(item.waAyah || '').replace(/\D/g, '');
+      return itemWa === cleanWa || (cleanWa.length >= 9 && itemWa.endsWith(cleanWa.slice(-9)));
+    }) : null;
+    if (!record?.regNumber || record.regNumber.startsWith('PENDING-')) {
+      if (status) {
+        status.textContent = 'Kode pendaftaran resmi belum tersedia. Tunggu persetujuan admin.';
+        status.className = 'portal-bio-status is-error';
+      }
+      return;
+    }
+    const value = id => document.getElementById(id)?.value.trim() || '';
+    const payload = {
+      action: 'save_biodata', regNumber: record.regNumber,
+      waAyah: session.wa, namaAyah: record.namaAyah || session.nama || '',
+      jenjang: value('bio-jenjang'), jalur: value('bio-jalur'), namaSiswa: value('bio-nama'),
+      jk: value('bio-jk'), nik: value('bio-nik'), tempatLahir: value('bio-tempat-lahir'),
+      tanggalLahir: value('bio-tanggal-lahir'), namaIbu: value('bio-nama-ibu'),
+      asalSekolah: value('bio-asal-sekolah'), agama: value('bio-agama'),
+      kewarganegaraan: value('bio-kewarganegaraan'), alamat: value('bio-alamat'),
+      desaKelurahan: value('bio-desa'), kecamatan: value('bio-kecamatan'),
+      kabupatenKota: value('bio-kabupaten'), provinsi: value('bio-provinsi')
+    };
+    if (submit) submit.disabled = true;
+    if (status) {
+      status.textContent = 'Menyimpan biodata ke database...';
+      status.className = 'portal-bio-status';
+    }
+    try {
+      const response = await fetch('api/spmb.php', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success || !result.data) throw new Error(result.message || 'Biodata gagal disimpan.');
+      const index = records.findIndex(item => item.id === result.data.id || item.regNumber === result.data.regNumber);
+      if (index === -1) records.unshift(result.data); else records[index] = result.data;
+      cacheSetItem(STORAGE_KEY, JSON.stringify(records));
+      form.dataset.dirty = '0';
+      populateStudentBioForm(result.data);
+      if (status) {
+        status.textContent = '✓ Biodata siswa berhasil disimpan ke database.';
+        status.className = 'portal-bio-status is-success';
+      }
+      renderParentPortal();
+    } catch (error) {
+      if (status) {
+        status.textContent = error.message || 'Biodata gagal disimpan. Silakan coba kembali.';
+        status.className = 'portal-bio-status is-error';
+      }
+    } finally {
+      if (submit) submit.disabled = false;
+    }
+  };
+
   // Render Parent Portal based on session and record status
   function renderParentPortal() {
     const landingView = document.getElementById('spmb-landing-view');
@@ -1086,6 +1201,7 @@
       stateApproved.style.display = 'block';
 
       document.getElementById('portal-approved-code').textContent = record.regNumber || 'SPMB-2026-001';
+      populateStudentBioForm(record);
       badgeStatus.textContent = 'Pembayaran Terverifikasi & Diterima';
       badgeStatus.style.background = '#dcfce7';
       badgeStatus.style.color = '#15803d';
@@ -1094,7 +1210,9 @@
       step1?.classList.remove('active');
       step2?.classList.add('done');
       step2?.classList.remove('active');
-      step3?.classList.add('active');
+      const biodataComplete = /^\d{16}$/.test(record.nik || '') && Boolean(record.namaSiswa && record.tanggalLahir);
+      step3?.classList.toggle('active', !biodataComplete);
+      step3?.classList.toggle('done', biodataComplete);
     } else if (hasProof) {
       // STATE 2: PENDING APPROVAL
       stateUnpaid.style.display = 'none';

@@ -24,7 +24,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/spmb.css?v=20260923_search1">
+  <link rel="stylesheet" href="css/spmb.css?v=20260923_biodata1">
 </head>
 <body>
 
@@ -1965,15 +1965,89 @@
               </div>
             </div>
 
-            <!-- Next Step Information Notice -->
-            <div style="background: #ffffff; border: 1.5px solid #86efac; border-radius: var(--radius-xl); padding: 1.5rem; max-width: 640px; margin: 0 auto 2rem; text-align: left;">
-              <h4 style="font-size: 1.05rem; font-weight: 800; color: #14532d; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;">
-                <span>📋</span> Langkah Pendaftaran Selanjutnya
-              </h4>
-              <p style="font-size: 0.875rem; color: #166534; line-height: 1.6; margin: 0;">
-                Kode pendaftaran ini adalah identitas resmi siswa di SIT Bina Insan Parepare. Pengisian formulir biodata lengkap (data diri siswa, pemilihan jenjang TKIT/SDIT/SMPIT, riwayat tahfizh, dan dokumen persyaratan) akan dipandu oleh panitia pada tahapan berikutnya.
-              </p>
-            </div>
+            <form id="portal-student-bio-form" class="portal-bio-form" onsubmit="window.submitStudentBiodata(event)">
+              <div class="portal-bio-heading">
+                <span class="badge-tag">LANGKAH 3</span>
+                <h3>Lengkapi Biodata Calon Siswa</h3>
+                <p>Isi data sesuai Kartu Keluarga dan dokumen resmi. Data akan tersimpan langsung ke database sekolah.</p>
+              </div>
+
+              <div class="portal-bio-grid">
+                <div class="form-group">
+                  <label class="form-label" for="bio-jenjang">Jenjang Pendidikan <span class="required">*</span></label>
+                  <select id="bio-jenjang" class="form-control" required>
+                    <option value="tkit">TKIT</option><option value="sdit">SDIT</option><option value="smpit">SMPIT</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-jalur">Jalur Pendaftaran <span class="required">*</span></label>
+                  <select id="bio-jalur" class="form-control" required>
+                    <option value="reguler">Reguler</option><option value="prestasi">Prestasi</option><option value="yatim">Beasiswa Yatim</option>
+                  </select>
+                </div>
+                <div class="form-group portal-bio-full">
+                  <label class="form-label" for="bio-nama">Nama Lengkap Siswa <span class="required">*</span></label>
+                  <input id="bio-nama" class="form-control" type="text" minlength="2" maxlength="150" autocomplete="name" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-jk">Jenis Kelamin <span class="required">*</span></label>
+                  <select id="bio-jk" class="form-control" required><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-nik">NIK Siswa <span class="required">*</span></label>
+                  <input id="bio-nik" class="form-control" type="text" inputmode="numeric" pattern="[0-9]{16}" minlength="16" maxlength="16" placeholder="16 digit NIK" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-tempat-lahir">Tempat Lahir <span class="required">*</span></label>
+                  <input id="bio-tempat-lahir" class="form-control" type="text" maxlength="100" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-tanggal-lahir">Tanggal Lahir <span class="required">*</span></label>
+                  <input id="bio-tanggal-lahir" class="form-control" type="date" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-nama-ibu">Nama Ibu Kandung <span class="required">*</span></label>
+                  <input id="bio-nama-ibu" class="form-control" type="text" maxlength="150" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-asal-sekolah">Asal Sekolah</label>
+                  <input id="bio-asal-sekolah" class="form-control" type="text" maxlength="200">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-agama">Agama <span class="required">*</span></label>
+                  <select id="bio-agama" class="form-control" required><option value="Islam">Islam</option></select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-kewarganegaraan">Kewarganegaraan <span class="required">*</span></label>
+                  <input id="bio-kewarganegaraan" class="form-control" type="text" value="Indonesia" maxlength="80" required>
+                </div>
+                <div class="form-group portal-bio-full">
+                  <label class="form-label" for="bio-alamat">Alamat Lengkap <span class="required">*</span></label>
+                  <textarea id="bio-alamat" class="form-control" rows="3" maxlength="1000" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-desa">Desa/Kelurahan <span class="required">*</span></label>
+                  <input id="bio-desa" class="form-control" type="text" maxlength="120" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-kecamatan">Kecamatan <span class="required">*</span></label>
+                  <input id="bio-kecamatan" class="form-control" type="text" value="Bacukiki Barat" maxlength="120" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-kabupaten">Kabupaten/Kota <span class="required">*</span></label>
+                  <input id="bio-kabupaten" class="form-control" type="text" value="Kota Parepare" maxlength="120" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-provinsi">Provinsi <span class="required">*</span></label>
+                  <input id="bio-provinsi" class="form-control" type="text" value="Sulawesi Selatan" maxlength="120" required>
+                </div>
+              </div>
+
+              <div class="portal-bio-actions">
+                <div id="portal-bio-status" class="portal-bio-status" aria-live="polite">Pastikan seluruh data wajib sudah benar.</div>
+                <button type="submit" id="portal-bio-submit" class="btn btn-primary">Simpan Biodata Siswa</button>
+              </div>
+            </form>
 
             <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
               <button type="button" class="btn btn-primary" onclick="window.printApprovedCard()" style="font-weight: 800; padding: 0.75rem 2rem;">
@@ -2219,7 +2293,7 @@
 
   <!-- Scripts -->
   <script src="js/data.js?v=20260923_dbsync2"></script>
-  <script src="js/spmb.js?v=20260923_search1"></script>
+  <script src="js/spmb.js?v=20260923_biodata1"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>
