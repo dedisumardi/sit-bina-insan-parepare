@@ -1479,21 +1479,32 @@
     const badge1 = document.getElementById('badge-wave1-status');
     const badge2 = document.getElementById('badge-wave2-status');
     const badge3 = document.getElementById('badge-wave3-status');
+    const btn1 = document.getElementById('btn-toggle-wave-1');
+    const btn2 = document.getElementById('btn-toggle-wave-2');
+    const btn3 = document.getElementById('btn-toggle-wave-3');
 
     [
-      { card: card1, badge: badge1, isAct: activeWave === 'wave1' },
-      { card: card2, badge: badge2, isAct: activeWave === 'wave2' },
-      { card: card3, badge: badge3, isAct: activeWave === 'wave3' }
-    ].forEach(({ card, badge, isAct }) => {
+      { card: card1, badge: badge1, btn: btn1, isAct: activeWave === 'wave1', label: 'Gelombang 1' },
+      { card: card2, badge: badge2, btn: btn2, isAct: activeWave === 'wave2', label: 'Gelombang 2' },
+      { card: card3, badge: badge3, btn: btn3, isAct: activeWave === 'wave3', label: 'Gelombang 3' }
+    ].forEach(({ card, badge, btn, isAct, label }) => {
       if (!card || !badge) return;
       if (isAct) {
         card.className = 'p-3.5 bg-white rounded-xl border-2 border-emerald-500 shadow-sm space-y-3 transition-all ring-2 ring-emerald-500/20';
         badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
         badge.textContent = 'Sedang Aktif';
+        if (btn) {
+          btn.className = 'w-full py-2 px-3 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-sm flex items-center justify-center gap-1.5 cursor-default';
+          btn.innerHTML = '✓ Sedang Aktif (Buka)';
+        }
       } else {
         card.className = 'p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm space-y-3 transition-all opacity-85 hover:opacity-100';
         badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600';
         badge.textContent = 'Standby';
+        if (btn) {
+          btn.className = 'w-full py-2 px-3 rounded-lg text-xs font-bold bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5 transition cursor-pointer';
+          btn.innerHTML = `▶ Aktifkan ${label}`;
+        }
       }
     });
   }
@@ -1689,28 +1700,7 @@
       updateNavbarWaveBadge(activeName, statusVal, yearVal);
     }
 
-    // Active wave select change handler
-    activeWaveSelect?.addEventListener('change', () => {
-      const actWave = activeWaveSelect.value;
-      if (actWave === 'wave1') {
-        if (noticeInput) noticeInput.value = `Pendaftaran ${w1NameInput?.value || 'Gelombang 1'} Sedang Berlangsung! Dapatkan Diskon Infaq Rp 500.000`;
-      } else if (actWave === 'wave2') {
-        if (noticeInput) noticeInput.value = `Pendaftaran ${w2NameInput?.value || 'Gelombang 2'} Resmi Dibuka! Segera daftarkan putra-putri tercinta.`;
-      } else if (actWave === 'wave3') {
-        if (noticeInput) noticeInput.value = `Pendaftaran ${w3NameInput?.value || 'Gelombang 3'} (Kuota Terbatas) Sedang Berlangsung!`;
-      } else if (actWave === 'closed') {
-        if (noticeInput) noticeInput.value = 'Pendaftaran SPMB Ditutup Sementara. Pantau pengumuman gelombang berikutnya.';
-      }
-      syncWaveFieldsAndPreview();
-    });
-
-    [acYearInput, statusSelect, w1NameInput, w1PromoInput, w1DatesInput, w2NameInput, w2PromoInput, w2DatesInput, w3NameInput, w3PromoInput, w3DatesInput].forEach(el => {
-      el?.addEventListener('input', syncWaveFieldsAndPreview);
-      el?.addEventListener('change', syncWaveFieldsAndPreview);
-    });
-
-    form?.addEventListener('submit', (e) => {
-      e.preventDefault();
+    function saveCurrentSettings(isQuick = false) {
       const academicYear = acYearInput ? acYearInput.value.trim() : '2026/2027';
       const activeWave = activeWaveSelect ? activeWaveSelect.value : 'wave1';
       const waveStatus = statusSelect ? statusSelect.value : (activeWave === 'closed' ? 'closed' : 'open');
@@ -1757,7 +1747,6 @@
         wave3Name,
         wave3Promo,
         wave3Dates,
-        // Legacy compatibility fields
         waveName: activeDisplayName,
         waveDates: activeDates,
         waveNotice,
@@ -1768,11 +1757,11 @@
         statSd: document.getElementById('set-stat-sd') ? document.getElementById('set-stat-sd').value.trim() : '650+',
         statSmp: document.getElementById('set-stat-smp') ? document.getElementById('set-stat-smp').value.trim() : '420+',
         statGuru: document.getElementById('set-stat-guru') ? document.getElementById('set-stat-guru').value.trim() : '85+',
-        tkitFee: document.getElementById('set-tkit-fee').value.trim(),
-        sditFee: document.getElementById('set-sdit-fee').value.trim(),
-        smpitFee: document.getElementById('set-smpit-fee').value.trim(),
-        whatsappHelpdesk: document.getElementById('set-wa').value.trim(),
-        bankAccount: document.getElementById('set-bank').value.trim()
+        tkitFee: document.getElementById('set-tkit-fee') ? document.getElementById('set-tkit-fee').value.trim() : 'Rp 200.000',
+        sditFee: document.getElementById('set-sdit-fee') ? document.getElementById('set-sdit-fee').value.trim() : 'Rp 250.000',
+        smpitFee: document.getElementById('set-smpit-fee') ? document.getElementById('set-smpit-fee').value.trim() : 'Rp 300.000',
+        whatsappHelpdesk: document.getElementById('set-wa') ? document.getElementById('set-wa').value.trim() : '6285190610569',
+        bankAccount: document.getElementById('set-bank') ? document.getElementById('set-bank').value.trim() : ''
       };
 
       // 1. Simpan ke LocalStorage
@@ -1799,9 +1788,58 @@
 
       updateNavbarWaveBadge(activeDisplayName, waveStatus, academicYear);
       updateWavePreview(activeDisplayName, waveStatus, academicYear);
+      updateWaveCardsUI(activeWave);
       const dbTpText = document.getElementById('admin-dashboard-tp-text');
       if (dbTpText) dbTpText.textContent = `Tahun Pelajaran ${academicYear}`;
-      showToast('Pengaturan Tahun Ajaran & 3 Gelombang SPMB berhasil disimpan secara Real-Time!');
+
+      if (isQuick) {
+        showToast(`✅ ${activeDisplayName} berhasil diaktifkan & disimpan! Website utama langsung terupdate.`);
+      } else {
+        showToast('Pengaturan Tahun Ajaran & 3 Gelombang SPMB berhasil disimpan secara Real-Time!');
+      }
+    }
+
+    // Expose activateWaveQuick globally so card buttons can call it directly
+    window.activateWaveQuick = function(waveKey) {
+      if (activeWaveSelect) activeWaveSelect.value = waveKey;
+      if (statusSelect) statusSelect.value = 'open';
+
+      if (waveKey === 'wave1') {
+        if (noticeInput) noticeInput.value = `Pendaftaran ${w1NameInput?.value || 'Gelombang 1'} Sedang Berlangsung! Dapatkan Diskon Infaq Rp 500.000`;
+      } else if (waveKey === 'wave2') {
+        if (noticeInput) noticeInput.value = `Pendaftaran ${w2NameInput?.value || 'Gelombang 2'} Resmi Dibuka! Segera daftarkan putra-putri tercinta.`;
+      } else if (waveKey === 'wave3') {
+        if (noticeInput) noticeInput.value = `Pendaftaran ${w3NameInput?.value || 'Gelombang 3'} (Kuota Terbatas) Sedang Berlangsung!`;
+      }
+
+      syncWaveFieldsAndPreview();
+      saveCurrentSettings(true);
+    };
+
+    // Active wave select change handler (auto-saves immediately)
+    activeWaveSelect?.addEventListener('change', () => {
+      const actWave = activeWaveSelect.value;
+      if (actWave === 'wave1') {
+        if (noticeInput) noticeInput.value = `Pendaftaran ${w1NameInput?.value || 'Gelombang 1'} Sedang Berlangsung! Dapatkan Diskon Infaq Rp 500.000`;
+      } else if (actWave === 'wave2') {
+        if (noticeInput) noticeInput.value = `Pendaftaran ${w2NameInput?.value || 'Gelombang 2'} Resmi Dibuka! Segera daftarkan putra-putri tercinta.`;
+      } else if (actWave === 'wave3') {
+        if (noticeInput) noticeInput.value = `Pendaftaran ${w3NameInput?.value || 'Gelombang 3'} (Kuota Terbatas) Sedang Berlangsung!`;
+      } else if (actWave === 'closed') {
+        if (noticeInput) noticeInput.value = 'Pendaftaran SPMB Ditutup Sementara. Pantau pengumuman gelombang berikutnya.';
+      }
+      syncWaveFieldsAndPreview();
+      saveCurrentSettings(true);
+    });
+
+    [acYearInput, statusSelect, w1NameInput, w1PromoInput, w1DatesInput, w2NameInput, w2PromoInput, w2DatesInput, w3NameInput, w3PromoInput, w3DatesInput].forEach(el => {
+      el?.addEventListener('input', syncWaveFieldsAndPreview);
+      el?.addEventListener('change', syncWaveFieldsAndPreview);
+    });
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveCurrentSettings(false);
     });
 
     resetBtn?.addEventListener('click', () => {

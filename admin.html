@@ -837,6 +837,11 @@
                       <label for="set-wave1-dates" class="block text-[11px] font-bold text-slate-600 mb-1">Rentang Tanggal</label>
                       <input type="text" id="set-wave1-dates" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Contoh: 1 Januari 2027 s/d 31 Maret 2027" required>
                     </div>
+                    <div class="pt-2 border-t border-slate-100">
+                      <button type="button" id="btn-toggle-wave-1" onclick="window.activateWaveQuick('wave1')" class="w-full py-2 px-3 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-sm flex items-center justify-center gap-1.5 transition">
+                        ✓ Sedang Aktif (Buka)
+                      </button>
+                    </div>
                   </div>
 
                   <!-- Kartu Gelombang 2 -->
@@ -860,6 +865,11 @@
                       <label for="set-wave2-dates" class="block text-[11px] font-bold text-slate-600 mb-1">Rentang Tanggal</label>
                       <input type="text" id="set-wave2-dates" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Contoh: 1 April 2027 s/d 31 Mei 2027" required>
                     </div>
+                    <div class="pt-2 border-t border-slate-100">
+                      <button type="button" id="btn-toggle-wave-2" onclick="window.activateWaveQuick('wave2')" class="w-full py-2 px-3 rounded-lg text-xs font-bold bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5 transition cursor-pointer">
+                        ▶ Aktifkan Gelombang 2
+                      </button>
+                    </div>
                   </div>
 
                   <!-- Kartu Gelombang 3 -->
@@ -882,6 +892,11 @@
                     <div>
                       <label for="set-wave3-dates" class="block text-[11px] font-bold text-slate-600 mb-1">Rentang Tanggal</label>
                       <input type="text" id="set-wave3-dates" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Contoh: 1 Juni 2027 s/d Kuota Terpenuhi" required>
+                    </div>
+                    <div class="pt-2 border-t border-slate-100">
+                      <button type="button" id="btn-toggle-wave-3" onclick="window.activateWaveQuick('wave3')" class="w-full py-2 px-3 rounded-lg text-xs font-bold bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5 transition cursor-pointer">
+                        ▶ Aktifkan Gelombang 3
+                      </button>
                     </div>
                   </div>
                 </div>

@@ -63,6 +63,11 @@
 
     // Update document title
     updateDocumentTitle(viewName);
+
+    // Refresh dynamic SPMB settings whenever entering SPMB or Beranda
+    if (viewName === 'spmb' || viewName === 'beranda') {
+      applySchoolSettings();
+    }
   }
 
   function updateDocumentTitle(viewName) {
@@ -414,9 +419,10 @@
     // Parse active wave
     let activeWave = settings.activeWave || 'wave1';
     if (typeof activeWave === 'string') {
-      const low = activeWave.toLowerCase();
-      if (low.includes('gelombang 2')) activeWave = 'wave2';
-      else if (low.includes('gelombang 3')) activeWave = 'wave3';
+      const low = activeWave.toLowerCase().trim();
+      if (low === 'wave2' || low.includes('gelombang 2') || low.includes('gelombang-2')) activeWave = 'wave2';
+      else if (low === 'wave3' || low.includes('gelombang 3') || low.includes('gelombang-3')) activeWave = 'wave3';
+      else if (low === 'wave1' || low.includes('gelombang 1') || low.includes('gelombang-1')) activeWave = 'wave1';
       else if (low.includes('tutup') || settings.waveStatus === 'closed') activeWave = 'closed';
       else if (!['wave1', 'wave2', 'wave3', 'closed'].includes(activeWave)) activeWave = 'wave1';
     }
@@ -496,7 +502,8 @@
       } else if (settings.waveNotice) {
         topbarWave.textContent = settings.waveNotice;
       } else {
-        const promoNotice = (activeWave === 'wave1' && w1Promo) ? ` (${w1Promo})` : '';
+        const curPromo = activeWave === 'wave1' ? w1Promo : (activeWave === 'wave2' ? w2Promo : w3Promo);
+        const promoNotice = curPromo ? ` (${curPromo})` : '';
         topbarWave.textContent = `Pendaftaran ${activeDisplayName}${promoNotice} Sedang Berlangsung!`;
       }
     }
@@ -507,7 +514,8 @@
       if (waveStatus === 'closed') {
         heroWaveTitle.textContent = 'Pendaftaran SPMB Ditutup Sementara';
       } else {
-        const promoSuffix = (activeWave === 'wave1' && w1Promo) ? ` (${w1Promo})` : '';
+        const curPromo = activeWave === 'wave1' ? w1Promo : (activeWave === 'wave2' ? w2Promo : w3Promo);
+        const promoSuffix = curPromo ? ` (${curPromo})` : '';
         heroWaveTitle.textContent = `Penerimaan Siswa Baru ${activeDisplayName}${promoSuffix}`;
       }
     }
@@ -656,12 +664,16 @@
       }
     } catch (e) {}
   }
-  setInterval(checkLiveSettings, 2500);
+  setInterval(checkLiveSettings, 1000);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
       checkLiveSettings();
       syncPublicData();
     }
+  });
+  window.addEventListener('focus', () => {
+    checkLiveSettings();
+    syncPublicData();
   });
 
   // =========================================================================
