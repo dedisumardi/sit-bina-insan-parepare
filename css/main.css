@@ -444,11 +444,11 @@ ul, ol {
 
 .nav-link:hover {
   color: var(--primary-600);
-  background-color: var(--primary-50);
+  background-color: transparent !important;
 }
 
 .nav-link:hover::after {
-  background-color: var(--primary-300);
+  background-color: transparent;
 }
 
 .nav-link.active,
@@ -557,12 +557,12 @@ ul, ol {
 }
 
 .mobile-nav-link:hover {
-  background-color: var(--primary-50);
+  background-color: transparent !important;
   color: var(--primary-600);
 }
 
 .mobile-nav-link.active {
-  background-color: var(--primary-50);
+  background-color: transparent !important;
   color: var(--primary-600) !important;
   font-weight: 700;
   border-left: 4px solid var(--primary-600);
