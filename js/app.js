@@ -380,8 +380,6 @@
         .catch(e => console.log('Public Articles sync: offline fallback'));
 
       // 2. Database adalah sumber utama pengaturan sekolah.
-      const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
-      const backupCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.backupUrl) || 'https://extendsclass.com/api/json-storage/bin/beceecd';
 
       const handleCloudSettings = (cloudData) => {
         if (cloudData && typeof cloudData === 'object' && cloudData.academicYear) {
@@ -401,23 +399,7 @@
           return res.json();
         })
         .then(resData => handleCloudSettings(resData && resData.success ? resData.data : null))
-        .catch(() => {
-          fetch(backupCloudUrl, { cache: 'no-store' })
-            .then(res => res.json())
-            .then(handleCloudSettings)
-            .catch(() => {
-              // Fallback ke MySQL cPanel jika di hosting cPanel
-              fetch('api/settings.php')
-                .then(res => res.json())
-                .then(resData => {
-                  if (resData && resData.success && resData.data) {
-                    localStorage.setItem('sit_bina_insan_settings', JSON.stringify(resData.data));
-                    applySchoolSettings(resData.data);
-                  }
-                })
-                .catch(e => console.log('Public Settings sync: offline fallback'));
-            });
-        });
+        .catch(() => console.log('Pengaturan belum dapat dimuat dari database.'));
     }
   }
 
@@ -443,6 +425,7 @@
       settings = window.SchoolData.settings;
     }
     if (!settings) return;
+    if (window.SchoolData) window.SchoolData.settings = settings;
 
     // 0. Academic Year & Wave Variables
     const academicYear = settings.academicYear || '2026/2027';

@@ -1,9 +1,16 @@
 # Ignore local dev server
 dev-server.js
 
-# Ignore PHP backend on Vercel (preserved for cPanel MySQL hosting)
-api/
+# PHP lama tetap disimpan untuk referensi; Vercel menjalankan api/backend.js.
+api/*.php
 database.sql
+scripts/
+tests/
+migrations/
+.agents/
+skills-lock.json
+.env*
+scratch/
 
 # Ignore archive files
 *.zip

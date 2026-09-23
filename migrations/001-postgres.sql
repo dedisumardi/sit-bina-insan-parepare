@@ -1,0 +1,16 @@
+BEGIN;
+CREATE TABLE IF NOT EXISTS sipintu_settings (
+  id INTEGER PRIMARY KEY CHECK (id=1), data JSONB NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS sipintu_articles (
+  id SERIAL PRIMARY KEY, data JSONB NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS sipintu_applicants (
+  id SERIAL PRIMARY KEY, reg_number TEXT NOT NULL UNIQUE, wa TEXT NOT NULL,
+  nik TEXT NOT NULL UNIQUE, data JSONB NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS sipintu_applicants_wa ON sipintu_applicants(wa);
+CREATE TABLE IF NOT EXISTS sipintu_admins (username TEXT PRIMARY KEY, password_hash TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS sipintu_sessions (token_hash TEXT PRIMARY KEY, expires_at TIMESTAMPTZ NOT NULL);
+CREATE TABLE IF NOT EXISTS sipintu_login_attempts (key TEXT PRIMARY KEY, attempts INTEGER NOT NULL DEFAULT 1, started_at TIMESTAMPTZ NOT NULL DEFAULT now());
+COMMIT;

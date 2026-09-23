@@ -371,16 +371,8 @@ const SchoolData = {
     sditFee: "Rp 250.000",
     smpitFee: "Rp 300.000",
     whatsappHelpdesk: "6285190610569",
-    bankAccount: "Bank Syariah Indonesia (BSI) No. Rek: 711-234-5678 a.n Yayasan Bina Insan Parepare",
-    cloudSyncUrl: "https://extendsclass.com/api/json-storage/bin/ccbdbfa",
-    cloudBackupUrl: "https://extendsclass.com/api/json-storage/bin/beceecd"
+    bankAccount: "Bank Syariah Indonesia (BSI) No. Rek: 711-234-5678 a.n Yayasan Bina Insan Parepare"
   }
-};
-
-// Global Cloud Sync Endpoints (Multi-Device Vercel Support)
-window.SIT_CLOUD_CONFIG = {
-  primaryUrl: "https://extendsclass.com/api/json-storage/bin/ccbdbfa",
-  backupUrl: "https://extendsclass.com/api/json-storage/bin/beceecd"
 };
 
 // Dynamic synchronization with localStorage (CMS integration)
@@ -418,4 +410,3 @@ window.SIT_CLOUD_CONFIG = {
 
 // Export to global scope
 window.SchoolData = SchoolData;
-

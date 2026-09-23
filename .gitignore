@@ -22,3 +22,10 @@ dist/
 
 # Scratch files
 scratch/
+
+# Agent/plugin metadata
+.agents/
+skills-lock.json
+
+.vercel
+.env*

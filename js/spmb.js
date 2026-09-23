@@ -11,58 +11,8 @@
   const totalSteps = 5;
   const STORAGE_KEY = 'sit_bina_insan_spmb_data';
 
-  // Seed default dummy records for testing Cek Status if storage empty
-  function initStorage() {
-    const existing = localStorage.getItem(STORAGE_KEY);
-    if (!existing) {
-      const initialRecords = [
-        {
-          regNumber: 'SPMB-2025-SD001',
-          jenjang: 'sdit',
-          jalur: 'reguler',
-          namaSiswa: 'Ahmad Rayhan Al-Fatih',
-          nik: '7372011205180001',
-          ttl: 'Parepare, 12 Mei 2018',
-          jk: 'Laki-laki',
-          asalSekolah: 'TKIT Bina Insan Parepare',
-          alamat: 'Jl. Bau Massepe No. 45, Bacukiki Barat, Parepare',
-          namaAyah: 'dr. H. Hendra Saputra, Sp.A',
-          pekerjaanAyah: 'Dokter Spesialis Anak',
-          waAyah: '081234567891',
-          namaIbu: 'dr. Hj. Salmawati, Sp.Rad',
-          pekerjaanIbu: 'Dokter',
-          email: 'hendra.saputra@gmail.com',
-          hafalan: 'Juz 30 (Lancar/Mutqin) dan An-Naba s/d Al-Infitar',
-          prestasi: 'Juara 1 Lomba Tahfizh Cilik Tingkat Kecamatan 2024',
-          tanggalDaftar: '12 Januari 2025, 09:30 WITA',
-          status: 'Terverifikasi (Jadwal Observasi: 22 Feb 2025)',
-          jadwalObservasi: 'Sabtu, 22 Februari 2025 | Pukul 08.30 WITA | Gedung Utama SDIT'
-        },
-        {
-          regNumber: 'SPMB-2025-TK002',
-          jenjang: 'tkit',
-          jalur: 'reguler',
-          namaSiswa: 'Khansa Naura Az-Zahra',
-          nik: '7372016508200002',
-          ttl: 'Parepare, 15 Agustus 2020',
-          jk: 'Perempuan',
-          asalSekolah: 'PAUD Melati Parepare',
-          alamat: 'Jl. Jenderal Sudirman No. 12, Soreang, Parepare',
-          namaAyah: 'Fadli Rahman, S.T',
-          pekerjaanAyah: 'PNS',
-          waAyah: '081342112233',
-          namaIbu: 'St. Aisyah, S.Pd',
-          pekerjaanIbu: 'Guru',
-          email: 'fadli.rahman@gmail.com',
-          hafalan: 'Surat Al-Fatihah, Al-Ikhlas, An-Nas, Al-Falaq',
-          prestasi: '-',
-          tanggalDaftar: '14 Januari 2025, 14:15 WITA',
-          status: 'Berkas Lengkap (Menunggu Jadwal Observasi)',
-          jadwalObservasi: 'Sabtu, 15 Maret 2025 | Pukul 09.00 WITA | Gedung TKIT'
-        }
-      ];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialRecords));
-    }
+  function cacheSetItem(key, value) {
+    try { localStorage.setItem(key, value); } catch (_) { /* A cache failure must not report a successful database write as failed. */ }
   }
 
   // DOM Elements
@@ -685,7 +635,6 @@
 
   // Initialization
   function init() {
-    initStorage();
     initSpmbTabs();
     initCheckStatus();
 
@@ -788,6 +737,9 @@
 
   function initParentPortalEngine() {
     renderParentPortal();
+    refreshParentFromDatabase();
+    setInterval(refreshParentFromDatabase, 30000);
+    window.addEventListener('focus', refreshParentFromDatabase);
 
     // Dropzone drag and drop setup
     const dropzone = document.getElementById('portal-upload-dropzone');
@@ -934,16 +886,6 @@
     });
 
     if (spmbModalMode === 'login') {
-      if (existing) {
-        // Successful login with existing record
-        const parentData = { nama: existing.namaAyah || 'Orang Tua Siswa', wa: existing.waAyah || rawWa };
-        localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
-        window.closeSpmbModal();
-        window.location.hash = '#spmb';
-        renderParentPortal();
-        return;
-      }
-
       // Try checking database API
       if (window.fetch) {
         fetch(`api/spmb.php?wa=${encodeURIComponent(rawWa)}`)
@@ -952,7 +894,7 @@
             if (resData && resData.success && resData.data) {
               const row = resData.data;
               records.unshift(row);
-              localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+              cacheSetItem(STORAGE_KEY, JSON.stringify(records));
               const parentData = { nama: row.namaAyah || 'Orang Tua Siswa', wa: row.waAyah || rawWa };
               localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
               window.closeSpmbModal();
@@ -1021,7 +963,7 @@
       const recordIndex = records.indexOf(existing);
       if (recordIndex !== -1) records[recordIndex] = result.data;
       existing = result.data;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      cacheSetItem(STORAGE_KEY, JSON.stringify(records));
     } catch (error) {
       if (errEl) {
         errEl.textContent = `Pendaftaran belum tersimpan: ${error.message}`;
@@ -1052,6 +994,19 @@
       }
     }, 80);
   };
+
+  async function refreshParentFromDatabase() {
+    if (document.hidden) return;
+    try {
+      const session = JSON.parse(localStorage.getItem(PARENT_SESSION_KEY) || 'null');
+      if (!session?.wa) return;
+      const response = await fetch(`api/spmb.php?wa=${encodeURIComponent(session.wa)}`, { cache: 'no-store' });
+      const result = await response.json();
+      if (!response.ok || !result.success || !result.data) return;
+      cacheSetItem(STORAGE_KEY, JSON.stringify([result.data]));
+      renderParentPortal();
+    } catch (_) { /* Keep the last confirmed view during a temporary outage. */ }
+  }
 
   // Render Parent Portal based on session and record status
   function renderParentPortal() {
@@ -1197,8 +1152,8 @@
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Ukuran file terlalu besar (maksimal 5MB).');
+    if (file.size > 2.5 * 1024 * 1024) {
+      alert('Ukuran file terlalu besar (maksimal 2,5MB).');
       return;
     }
 
@@ -1275,7 +1230,7 @@
         throw new Error(result?.message || 'Bukti pembayaran gagal disimpan ke database.');
       }
       Object.assign(record, result.data);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      cacheSetItem(STORAGE_KEY, JSON.stringify(records));
     } catch (error) {
       alert(`Bukti pembayaran belum tersimpan. ${error.message}\n\nSilakan coba kembali.`);
       return;

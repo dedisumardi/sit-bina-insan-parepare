@@ -1,6 +1,10 @@
 {
   "cleanUrls": true,
   "rewrites": [
+    { "source": "/api/auth.php", "destination": "/api/backend?resource=auth" },
+    { "source": "/api/settings.php", "destination": "/api/backend?resource=settings" },
+    { "source": "/api/articles.php", "destination": "/api/backend?resource=articles" },
+    { "source": "/api/spmb.php", "destination": "/api/backend?resource=spmb" },
     { "source": "/admin", "destination": "/admin.html" }
   ]
 }

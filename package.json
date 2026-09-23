@@ -1,0 +1,16 @@
+{
+  "name": "sipintu",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node --env-file-if-exists=.env.local --test tests/*.test.js",
+    "db:init": "node --env-file=.env.local scripts/init-db.js"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "dependencies": {
+    "@vercel/functions": "^3.9.9",
+    "pg": "^8.16.3"
+  }
+}

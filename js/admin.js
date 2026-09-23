@@ -18,6 +18,10 @@
   let settings = {};
   let currentEditingArticleId = null;
 
+  function cacheSetItem(key, value) {
+    try { localStorage.setItem(key, value); } catch (_) { /* Database remains authoritative when browser storage is full. */ }
+  }
+
   // Real-Time Cross-Tab / Cross-Window Synchronization
   let realtimeChannel = null;
   try {
@@ -26,12 +30,10 @@
       const msg = event.data;
       if (!msg) return;
       if (msg.type === 'spmb_new_registration') {
-        initData();
-        refreshAllViews();
+        syncFromDatabase(true);
         showToast('Pendaftar SPMB baru masuk secara real-time!');
       } else if (msg.type === 'spmb_proof_uploaded') {
-        initData();
-        refreshAllViews();
+        syncFromDatabase(true);
         showToast('💳 Bukti pembayaran baru diunggah oleh calon wali siswa!');
       }
     };
@@ -98,7 +100,6 @@
     spmbList = [];
     articleList = [];
     settings = getDefaultSettings();
-    syncFromDatabase();
   }
 
   async function syncFromDatabase(showFailure = false) {
@@ -114,9 +115,9 @@
       settings = Object.assign({}, getDefaultSettings(), settingsResult.data || {});
 
       // Cache ini hanya untuk memperbarui halaman publik pada tab yang sama; bukan sumber utama admin.
-      localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
-      localStorage.setItem(STORAGE_ARTICLES, JSON.stringify(articleList));
-      localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
+      cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
+      cacheSetItem(STORAGE_ARTICLES, JSON.stringify(articleList));
+      cacheSetItem(STORAGE_SETTINGS, JSON.stringify(settings));
       refreshAllViews();
     } catch (error) {
       console.error('Gagal memuat database:', error);
@@ -187,11 +188,14 @@
   // =========================================================================
   // Authentication
   // =========================================================================
-  function checkAuth() {
-    const session = localStorage.getItem(STORAGE_SESSION);
-    if (session === 'authenticated') {
+  async function checkAuth() {
+    loginOverlay.classList.remove('hidden');
+    try {
+      await apiRequest('api/auth.php');
       loginOverlay.classList.add('hidden');
-    } else {
+      await syncFromDatabase(true);
+    } catch (error) {
+      localStorage.removeItem(STORAGE_SESSION);
       loginOverlay.classList.remove('hidden');
     }
   }
@@ -220,8 +224,14 @@
       });
     });
 
-    logoutBtn?.addEventListener('click', () => {
+    logoutBtn?.addEventListener('click', async () => {
       if (confirm('Apakah Anda yakin ingin keluar dari sistem admin?')) {
+        try {
+          await apiRequest('api/auth.php', { method: 'DELETE' });
+        } catch (error) {
+          showToast(`Gagal keluar: ${error.message}`, true);
+          return;
+        }
         localStorage.removeItem(STORAGE_SESSION);
         loginOverlay.classList.remove('hidden');
         loginForm.reset();
@@ -863,8 +873,13 @@
   }
 
   // Modal Detail & Verifikasi Siswa
-  window.viewApplicantDetail = function (regNumber) {
+  window.viewApplicantDetail = async function (regNumber) {
+    const item = spmbList.find(s => s.regNumber === regNumber);
     if (!item) return;
+    try {
+      const result = await apiRequest(`api/spmb.php?reg_number=${encodeURIComponent(regNumber)}`);
+      Object.assign(item, result.data);
+    } catch (error) { showToast(error.message, true); return; }
 
     document.getElementById('modal-app-reg').textContent = item.regNumber;
     document.getElementById('modal-app-name').textContent = item.namaSiswa || 'Calon Siswa';
@@ -966,7 +981,7 @@
           })
         });
         Object.assign(item, result.data);
-        localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
+        cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
         applicantModal.classList.remove('open');
         renderSpmbTable();
         renderDashboard();
@@ -1069,7 +1084,7 @@
         })
       });
       Object.assign(item, result.data);
-      localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
+      cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
 
       renderSpmbTable();
       renderDashboard();
@@ -1084,7 +1099,7 @@
     });
       broadcastRealtime('spmb_updated', spmbList);
 
-    showToast(`✓ Pembayaran diterima! Nomor Registrasi Resmi diterbitkan: ${newReg}`);
+    showToast(`✓ Pembayaran diterima! Nomor Registrasi Resmi diterbitkan: ${item.regNumber}`);
     } catch (error) {
       showToast(`Gagal menyetujui pembayaran: ${error.message}`, true);
     }
@@ -1103,7 +1118,7 @@
           method: 'DELETE'
         });
         spmbList = spmbList.filter(s => s.regNumber !== regNumber);
-        localStorage.setItem(STORAGE_SPMB, JSON.stringify(spmbList));
+        cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
         renderSpmbTable();
         renderDashboard();
         broadcastRealtime('spmb_updated', spmbList);
@@ -1212,7 +1227,7 @@
           articleList.unshift(result.data);
           showToast('Berita baru berhasil diterbitkan dan disimpan ke database.');
         }
-        localStorage.setItem(STORAGE_ARTICLES, JSON.stringify(articleList));
+        cacheSetItem(STORAGE_ARTICLES, JSON.stringify(articleList));
         articleModal.classList.remove('open');
         renderArticlesTable();
         renderDashboard();
@@ -1250,7 +1265,7 @@
           method: 'DELETE'
         });
         articleList = articleList.filter(a => a.id !== id);
-        localStorage.setItem(STORAGE_ARTICLES, JSON.stringify(articleList));
+        cacheSetItem(STORAGE_ARTICLES, JSON.stringify(articleList));
         renderArticlesTable();
         renderDashboard();
         broadcastRealtime('articles_updated', articleList);
@@ -1608,40 +1623,9 @@
           body: JSON.stringify(nextSettings)
         });
         settings = Object.assign({}, nextSettings, result.data || {});
-        localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
+        cacheSetItem(STORAGE_SETTINGS, JSON.stringify(settings));
         broadcastRealtime('settings_updated', settings);
 
-        // Pengaturan yang ditampilkan selalu berasal dari hasil simpan database.
-        const primaryCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.primaryUrl) || 'https://extendsclass.com/api/json-storage/bin/ccbdbfa';
-        const backupCloudUrl = (window.SIT_CLOUD_CONFIG && window.SIT_CLOUD_CONFIG.backupUrl) || 'https://extendsclass.com/api/json-storage/bin/beceecd';
-        const payloadStr = JSON.stringify(settings);
-
-        fetch(primaryCloudUrl, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: payloadStr
-        })
-        .then(res => {
-          if (!res.ok) throw new Error('Cloud HTTP ' + res.status);
-          console.log('✅ Cloud settings synced to primary endpoint');
-        })
-        .catch(err => {
-          console.log('Syncing to backup cloud endpoint...');
-          fetch(backupCloudUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: payloadStr
-          }).catch(e => console.log('Backup cloud sync error:', e));
-        });
-
-        // Selalu update backup juga di latar belakang
-        try {
-          fetch(backupCloudUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: payloadStr
-          }).catch(() => {});
-        } catch (e) {}
       } catch (error) {
         showToast(`Gagal menyimpan pengaturan: ${error.message}`, true);
         return;
@@ -1713,7 +1697,7 @@
             body: JSON.stringify(defaults)
           });
           settings = Object.assign({}, defaults, result.data || {});
-          localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
+          cacheSetItem(STORAGE_SETTINGS, JSON.stringify(settings));
           renderSettingsForm();
           broadcastRealtime('settings_updated', settings);
           showToast('Pengaturan bawaan berhasil disimpan ke database.');
