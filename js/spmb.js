@@ -934,14 +934,14 @@
         jalur: 'reguler',
         namaSiswa: 'Calon Siswa (' + nama + ')',
         nik: 'WA-' + cleanWa,
-        ttl: 'Parepare, ' + new Date().toLocaleDateString('id-ID'),
-        jk: 'Laki-laki',
-        asalSekolah: '-',
-        alamat: 'Parepare',
+        ttl: '',
+        jk: '',
+        asalSekolah: '',
+        alamat: '',
         namaAyah: nama,
         pekerjaanAyah: '-',
         waAyah: rawWa,
-        namaIbu: '-',
+        namaIbu: '',
         pekerjaanIbu: '-',
         email: '-',
         hafalan: '-',
@@ -1018,29 +1018,27 @@
 
   function populateStudentBioForm(record) {
     const form = document.getElementById('portal-student-bio-form');
-    if (!form || form.dataset.dirty === '1') return;
     const key = String(record.id || record.regNumber || '');
+    if (!form || (form.dataset.recordKey === key && form.dataset.dirty === '1')) return;
+    const saved = Boolean(record.biodataUpdatedAt || (/^\d{16}$/.test(record.nik || '') && record.tanggalLahir));
+    const student = saved ? record : {};
     const set = (id, value) => {
       const el = document.getElementById(id);
       if (el) el.value = value || '';
     };
-    const ttlParts = String(record.ttl || '').split(',');
-    set('bio-jenjang', record.jenjang || 'sdit');
-    set('bio-jalur', record.jalur || 'reguler');
-    set('bio-nama', record.namaSiswa && !record.namaSiswa.startsWith('Calon Siswa (') ? record.namaSiswa : '');
-    set('bio-jk', record.jk || 'Laki-laki');
-    set('bio-nik', /^\d{16}$/.test(record.nik || '') ? record.nik : '');
-    set('bio-tempat-lahir', record.tempatLahir || ttlParts[0]?.trim());
-    set('bio-tanggal-lahir', record.tanggalLahir || (/^\d{4}-\d{2}-\d{2}$/.test(ttlParts[1]?.trim() || '') ? ttlParts[1].trim() : ''));
-    set('bio-nama-ibu', record.namaIbu);
-    set('bio-asal-sekolah', record.asalSekolah);
-    set('bio-agama', record.agama || 'Islam');
-    set('bio-kewarganegaraan', record.kewarganegaraan || 'Indonesia');
-    set('bio-alamat', record.alamat);
-    set('bio-desa', record.desaKelurahan);
-    set('bio-kecamatan', record.kecamatan || 'Bacukiki Barat');
-    set('bio-kabupaten', record.kabupatenKota || 'Kota Parepare');
-    set('bio-provinsi', record.provinsi || 'Sulawesi Selatan');
+    set('bio-jenjang', student.jenjang);
+    set('bio-jalur', 'reguler');
+    set('bio-nama', student.namaSiswa);
+    set('bio-jk', student.jk);
+    set('bio-nik', student.nik);
+    set('bio-tempat-lahir', student.tempatLahir);
+    set('bio-tanggal-lahir', student.tanggalLahir);
+    set('bio-nama-ibu', student.namaIbu === '-' ? '' : student.namaIbu);
+    set('bio-asal-sekolah', student.asalSekolah === '-' ? '' : student.asalSekolah);
+    set('bio-agama', student.agama);
+    set('bio-kewarganegaraan', student.kewarganegaraan);
+    set('bio-alamat', student.alamat);
+    window.StudentRegions?.populate(student, key);
     form.dataset.recordKey = key;
     form.dataset.dirty = '0';
     const complete = /^\d{16}$/.test(record.nik || '') && Boolean(record.namaSiswa && record.tanggalLahir);
@@ -1060,6 +1058,11 @@
     const status = document.getElementById('portal-bio-status');
     const submit = document.getElementById('portal-bio-submit');
     let session;
+    if (!window.StudentRegions?.isComplete()) {
+      status.textContent = 'Pilih provinsi, kabupaten/kota, kecamatan, dan desa/kelurahan terlebih dahulu.';
+      status.className = 'portal-bio-status is-error';
+      return;
+    }
     let records;
     try {
       session = JSON.parse(localStorage.getItem(PARENT_SESSION_KEY) || 'null');

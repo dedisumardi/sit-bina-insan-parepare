@@ -1997,13 +1997,13 @@
                 <div class="form-group">
                   <label class="form-label" for="bio-jenjang">Jenjang Pendidikan <span class="required">*</span></label>
                   <select id="bio-jenjang" class="form-control" required>
-                    <option value="tkit">TKIT</option><option value="sdit">SDIT</option><option value="smpit">SMPIT</option>
+                    <option value="">Pilih jenjang pendidikan</option><option value="tkit">TKIT</option><option value="sdit">SDIT</option><option value="smpit">SMPIT</option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="bio-jalur">Jalur Pendaftaran <span class="required">*</span></label>
                   <select id="bio-jalur" class="form-control" required>
-                    <option value="reguler">Reguler</option><option value="prestasi">Prestasi</option><option value="yatim">Beasiswa Yatim</option>
+                    <option value="reguler">Reguler</option>
                   </select>
                 </div>
                 <div class="form-group portal-bio-full">
@@ -2012,7 +2012,7 @@
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="bio-jk">Jenis Kelamin <span class="required">*</span></label>
-                  <select id="bio-jk" class="form-control" required><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select>
+                  <select id="bio-jk" class="form-control" required><option value="">Pilih jenis kelamin</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="bio-nik">NIK Siswa <span class="required">*</span></label>
@@ -2036,31 +2036,35 @@
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="bio-agama">Agama <span class="required">*</span></label>
-                  <select id="bio-agama" class="form-control" required><option value="Islam">Islam</option></select>
+                  <select id="bio-agama" class="form-control" required><option value="">Pilih agama</option><option value="Islam">Islam</option></select>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="bio-kewarganegaraan">Kewarganegaraan <span class="required">*</span></label>
-                  <input id="bio-kewarganegaraan" class="form-control" type="text" value="Indonesia" maxlength="80" required>
+                  <input id="bio-kewarganegaraan" class="form-control" type="text" maxlength="80" required>
                 </div>
                 <div class="form-group portal-bio-full">
                   <label class="form-label" for="bio-alamat">Alamat Lengkap <span class="required">*</span></label>
                   <textarea id="bio-alamat" class="form-control" rows="3" maxlength="1000" required></textarea>
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="bio-desa">Desa/Kelurahan <span class="required">*</span></label>
-                  <input id="bio-desa" class="form-control" type="text" maxlength="120" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-kecamatan">Kecamatan <span class="required">*</span></label>
-                  <input id="bio-kecamatan" class="form-control" type="text" value="Bacukiki Barat" maxlength="120" required>
+                  <label class="form-label" for="bio-provinsi">Provinsi <span class="required">*</span></label>
+                  <select id="bio-provinsi" class="form-control" required disabled><option value="">Memuat provinsi...</option></select>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="bio-kabupaten">Kabupaten/Kota <span class="required">*</span></label>
-                  <input id="bio-kabupaten" class="form-control" type="text" value="Kota Parepare" maxlength="120" required>
+                  <select id="bio-kabupaten" class="form-control" required disabled><option value="">Pilih provinsi terlebih dahulu</option></select>
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="bio-provinsi">Provinsi <span class="required">*</span></label>
-                  <input id="bio-provinsi" class="form-control" type="text" value="Sulawesi Selatan" maxlength="120" required>
+                  <label class="form-label" for="bio-kecamatan">Kecamatan <span class="required">*</span></label>
+                  <select id="bio-kecamatan" class="form-control" required disabled><option value="">Pilih kabupaten/kota terlebih dahulu</option></select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-desa">Desa/Kelurahan <span class="required">*</span></label>
+                  <select id="bio-desa" class="form-control" required disabled><option value="">Pilih kecamatan terlebih dahulu</option></select>
+                </div>
+                <div class="form-group portal-bio-full" id="bio-region-feedback" role="status" hidden>
+                  <span id="bio-region-message"></span>
+                  <button type="button" class="spmb-copy-pill" id="bio-region-retry">Coba Lagi</button>
                 </div>
               </div>
 
@@ -2306,7 +2310,8 @@
 
   <!-- Scripts -->
   <script src="js/data.js?v=20260923_dbsync2"></script>
-  <script src="js/spmb.js?v=20260924_account1"></script>
+  <script src="js/regions.js?v=20260924_regions1"></script>
+  <script src="js/spmb.js?v=20260924_regions1"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>
