@@ -1033,7 +1033,6 @@
     set('bio-nik', student.nik);
     set('bio-tempat-lahir', student.tempatLahir);
     set('bio-tanggal-lahir', student.tanggalLahir);
-    set('bio-nama-ibu', student.namaIbu === '-' ? '' : student.namaIbu);
     set('bio-asal-sekolah', student.asalSekolah === '-' ? '' : student.asalSekolah);
     set('bio-agama', student.agama);
     set('bio-kewarganegaraan', student.kewarganegaraan);
@@ -1086,7 +1085,7 @@
       waAyah: session.wa, namaAyah: record.namaAyah || session.nama || '',
       jenjang: value('bio-jenjang'), jalur: value('bio-jalur'), namaSiswa: value('bio-nama'),
       jk: value('bio-jk'), nik: value('bio-nik'), tempatLahir: value('bio-tempat-lahir'),
-      tanggalLahir: value('bio-tanggal-lahir'), namaIbu: value('bio-nama-ibu'),
+      tanggalLahir: value('bio-tanggal-lahir'),
       asalSekolah: value('bio-asal-sekolah'), agama: value('bio-agama'),
       kewarganegaraan: value('bio-kewarganegaraan'), alamat: value('bio-alamat'),
       desaKelurahan: value('bio-desa'), kecamatan: value('bio-kecamatan'),

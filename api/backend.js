@@ -133,8 +133,9 @@ async function handler(req, res) {
           const reg = String(input.regNumber || input.reg_number || '').trim();
           if (!reg || reg.startsWith('PENDING-')) fail(403, 'Biodata dapat diisi setelah pembayaran disetujui admin.');
           if (!/^\d{16}$/.test(data.nik || '')) fail(400, 'NIK siswa harus terdiri dari 16 digit angka.');
+          if (!data.asalSekolah || data.asalSekolah === '-') fail(400, 'Asal sekolah wajib diisi.');
           if (!data.namaSiswa || !data.tempatLahir || !/^\d{4}-\d{2}-\d{2}$/.test(data.tanggalLahir || '') ||
-              !data.namaIbu || !data.agama || !data.kewarganegaraan || !data.alamat || !data.desaKelurahan ||
+              !data.agama || !data.kewarganegaraan || !data.alamat || !data.desaKelurahan ||
               !data.kecamatan || !data.kabupatenKota || !data.provinsi) fail(400, 'Lengkapi seluruh data wajib siswa.');
           if (!['Laki-laki','Perempuan'].includes(data.jk || '')) fail(400, 'Jenis kelamin tidak valid.');
           data.ttl = `${data.tempatLahir}, ${data.tanggalLahir}`;

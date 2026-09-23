@@ -61,11 +61,17 @@ test('API persistence and authorization in an isolated temporary schema', { skip
     const approved = await request('spmb', 'PUT', { reg_number: reg, new_reg_number: 'generate', status: 'Pembayaran Terverifikasi' }, {}, true);
     assert.equal(approved.code, 200);
     const full = await request('spmb', 'POST', { action: 'save_biodata', regNumber: approved.body.data.regNumber,
-      namaAyah: 'Test Parent', namaIbu: 'Test Mother', namaSiswa: 'Test Student', waAyah, nik: '1234567890123456', jenjang: 'sdit',
+      namaAyah: 'Test Parent', asalSekolah: 'TK Pengujian', namaSiswa: 'Test Student', waAyah, nik: '1234567890123456', jenjang: 'sdit',
       jk: 'Laki-laki', tempatLahir: 'Parepare', tanggalLahir: '2018-05-12', alamat: 'Jl. Test',
       agama: 'Islam', kewarganegaraan: 'Indonesia', desaKelurahan: 'Bumi Harapan', kecamatan: 'Bacukiki Barat',
       kabupatenKota: 'Kota Parepare', provinsi: 'Sulawesi Selatan' });
     assert.equal(full.code, 200);
+    assert.equal(full.body.data.asalSekolah, 'TK Pengujian');
+    for (const asalSekolah of ['', '   ', '-']) {
+      const invalid = await request('spmb', 'POST', { ...full.body.data, action: 'save_biodata', asalSekolah });
+      assert.equal(invalid.code, 400);
+      assert.equal(invalid.body.message, 'Asal sekolah wajib diisi.');
+    }
     assert.equal(full.body.data.id, parent.body.data.id);
     assert.equal(full.body.data.status, 'Pembayaran Terverifikasi');
     assert.equal(full.body.data.buktiPembayaran, proof);
