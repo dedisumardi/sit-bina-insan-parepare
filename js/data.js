@@ -341,7 +341,38 @@ const SchoolData = {
       q: "Apakah SMPIT Bina Insan Parepare memiliki program asrama (boarding)?",
       a: "Betul. SMPIT Bina Insan menyediakan dua pilihan program: Program Full Day School (pulang sore pukul 16.00 WITA) dan Program Pesantren / Boarding School dengan asrama putra dan putri terpisah yang didampingi musyrif/musyrifah 24 jam."
     }
-  ]
+  ],
+
+  // Live School & SPMB Settings Repository (Sync with Admin Dashboard)
+  settings: {
+    academicYear: "2026/2027",
+    activeWave: "wave3",
+    waveStatus: "open",
+    waveName: "Gelombang 3",
+    waveDates: "1 Juni 2027 s/d Kuota Terpenuhi",
+    waveNotice: "Pendaftaran Gelombang 3 (Kuota Terbatas) Sedang Berlangsung!",
+    wave1Name: "Gelombang 1",
+    wave1Promo: "Diskon Rp500.000",
+    wave1Dates: "1 Januari 2027 s/d 31 Maret 2027",
+    wave2Name: "Gelombang 2",
+    wave2Promo: "Reguler",
+    wave2Dates: "1 April 2027 s/d 31 Mei 2027",
+    wave3Name: "Gelombang 3",
+    wave3Promo: "S/d Kuota Terpenuhi",
+    wave3Dates: "1 Juni 2027 s/d Kuota Terpenuhi",
+    wavePoint1: "Prioritas Penempatan Kelas & Seleksi Observasi Dini",
+    wavePoint2: "Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim",
+    wavePoint3: "Layanan Konsultasi Pemilihan Peminatan & Ekskul",
+    statTk: "180+",
+    statSd: "650+",
+    statSmp: "420+",
+    statGuru: "85+",
+    tkitFee: "Rp 200.000",
+    sditFee: "Rp 250.000",
+    smpitFee: "Rp 300.000",
+    whatsappHelpdesk: "6285190610569",
+    bankAccount: "Bank Syariah Indonesia (BSI) No. Rek: 711-234-5678 a.n Yayasan Bina Insan Parepare"
+  }
 };
 
 // Dynamic synchronization with localStorage (CMS integration)
@@ -359,11 +390,18 @@ const SchoolData = {
 
     const savedSettings = localStorage.getItem('sit_bina_insan_settings');
     if (savedSettings) {
-      const parsedSet = JSON.parse(savedSettings);
-      if (parsedSet.whatsappHelpdesk) {
-        SchoolData.profile.whatsappHelpdesk = parsedSet.whatsappHelpdesk;
-        SchoolData.profile.whatsapp = '+' + parsedSet.whatsappHelpdesk;
-      }
+      try {
+        const parsedSet = JSON.parse(savedSettings);
+        SchoolData.settings = Object.assign({}, SchoolData.settings, parsedSet);
+        if (parsedSet.whatsappHelpdesk) {
+          SchoolData.profile.whatsappHelpdesk = parsedSet.whatsappHelpdesk;
+          SchoolData.profile.whatsapp = '+' + parsedSet.whatsappHelpdesk;
+        }
+      } catch (err) {}
+    } else {
+      try {
+        localStorage.setItem('sit_bina_insan_settings', JSON.stringify(SchoolData.settings));
+      } catch (err) {}
     }
   } catch (e) {
     console.warn('LocalStorage sync warning:', e);
@@ -372,3 +410,4 @@ const SchoolData = {
 
 // Export to global scope
 window.SchoolData = SchoolData;
+

@@ -409,6 +409,10 @@
         if (raw) settings = JSON.parse(raw);
       } catch (e) {}
     }
+    // Fallback to SchoolData.settings if localStorage is not populated yet
+    if (!settings && window.SchoolData && window.SchoolData.settings) {
+      settings = window.SchoolData.settings;
+    }
     if (!settings) return;
 
     // 0. Academic Year & Wave Variables
@@ -661,6 +665,8 @@
         lastSettingsHash = raw;
         const data = JSON.parse(raw);
         applySchoolSettings(data);
+      } else if (!raw && window.SchoolData && window.SchoolData.settings) {
+        applySchoolSettings(window.SchoolData.settings);
       }
     } catch (e) {}
   }
@@ -668,12 +674,12 @@
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
       checkLiveSettings();
-      syncPublicData();
+      try { syncPublicData(); } catch (err) {}
     }
   });
   window.addEventListener('focus', () => {
     checkLiveSettings();
-    syncPublicData();
+    try { syncPublicData(); } catch (err) {}
   });
 
   // =========================================================================
