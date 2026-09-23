@@ -530,7 +530,7 @@
     if (sSmp && settings.statSmp) sSmp.textContent = settings.statSmp;
     if (sGuru && settings.statGuru) sGuru.textContent = settings.statGuru;
 
-    // 4. SPMB Timeline Waves Highlighting & Dates (All 3 waves rendered dynamically)
+    // 4. SPMB Timeline Waves Highlighting & Dates (Hanya gelombang yang sedang buka)
     const timelineWrap = document.getElementById('home-waves-timeline');
     if (timelineWrap) {
       const waves = [
@@ -539,19 +539,24 @@
         { key: 'wave3', name: w3Name, promo: w3Promo, dates: w3Dates }
       ];
 
-      timelineWrap.innerHTML = waves.map((w) => {
-        const isCurrent = (activeWave === w.key && waveStatus === 'open');
-        const promoHtml = w.promo ? ` <span class="wave-promo-badge">${escapeHtml(w.promo)}</span>` : '';
-        const statusHtml = isCurrent ? ` <span class="wave-open-label">(Sedang Buka)</span>` : '';
-        const dotStyle = isCurrent ? '' : 'style="background-color: var(--neutral-400); box-shadow: none;"';
+      // Hanya tampilkan gelombang yang statusnya sedang buka
+      const openWaves = waves.filter((w) => {
+        return (activeWave === w.key && waveStatus === 'open');
+      });
 
-        return `
-          <div class="wave-pill ${isCurrent ? 'active' : ''}">
-            <div class="wave-dot" ${dotStyle}></div>
-            <span><strong>${escapeHtml(w.name)}${promoHtml}:</strong> ${escapeHtml(w.dates)}${statusHtml}</span>
-          </div>
-        `;
-      }).join('');
+      if (openWaves.length > 0) {
+        timelineWrap.innerHTML = openWaves.map((w) => {
+          const promoHtml = w.promo ? ` <span class="wave-promo-badge">${escapeHtml(w.promo)}</span>` : '';
+          return `
+            <div class="wave-pill active">
+              <div class="wave-dot"></div>
+              <span><strong>${escapeHtml(w.name)}${promoHtml}:</strong> ${escapeHtml(w.dates)} <span class="wave-open-label">(Sedang Buka)</span></span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        timelineWrap.innerHTML = '';
+      }
     }
 
     // 5. Infaq Fee Dynamic Updates
