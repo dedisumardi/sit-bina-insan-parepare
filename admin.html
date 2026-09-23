@@ -699,38 +699,120 @@
                 </div>
               </div>
 
-              <!-- Detail Editable: Tahun Pelajaran, Nama Gelombang, Tanggal, Status, Notifikasi -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Baris Kontrol Utama: Tahun Pelajaran, Gelombang yang Sedang Buka, Status Pendaftaran -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label for="set-academic-year" class="block text-xs font-bold text-slate-700 mb-1.5">Tahun Ajaran / Pelajaran (TP)</label>
-                  <input type="text" id="set-academic-year" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5 bg-white" placeholder="Contoh: 2025/2026" required>
-                  <p class="text-[11px] text-slate-400 mt-1">Mengubah ini langsung menyinkronkan seluruh halaman website &amp; formulir SPMB.</p>
+                  <input type="text" id="set-academic-year" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-semibold py-2.5 px-3.5 bg-white" placeholder="Contoh: 2026/2027" required>
+                  <p class="text-[11px] text-slate-400 mt-1">Otomatis sinkron ke seluruh halaman &amp; kartu.</p>
                 </div>
                 <div>
-                  <label for="set-wave-name" class="block text-xs font-bold text-slate-700 mb-1.5">Nama Gelombang SPMB</label>
-                  <input type="text" id="set-wave-name" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5 bg-white" placeholder="Contoh: Gelombang 1 (Early Bird)" required>
-                  <p class="text-[11px] text-slate-400 mt-1">Nama gelombang pendaftaran yang sedang aktif.</p>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label for="set-wave-dates" class="block text-xs font-bold text-slate-700 mb-1.5">Periode / Rentang Tanggal</label>
-                  <input type="text" id="set-wave-dates" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5 bg-white" placeholder="Contoh: 1 Nov 2024 s/d 31 Jan 2025" required>
+                  <label for="set-active-wave-select" class="block text-xs font-bold text-slate-700 mb-1.5">Gelombang yang Sedang Aktif</label>
+                  <select id="set-active-wave-select" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-semibold py-2.5 px-3.5 bg-white">
+                    <option value="wave1">🟢 Gelombang 1 (Aktif Buka)</option>
+                    <option value="wave2">🟢 Gelombang 2 (Aktif Buka)</option>
+                    <option value="wave3">🟢 Gelombang 3 (Aktif Buka)</option>
+                    <option value="closed">🔴 Tutup Semua Gelombang Sementara</option>
+                  </select>
+                  <p class="text-[11px] text-slate-400 mt-1">Menentukan pill yang disorot 'Sedang Buka'.</p>
                 </div>
                 <div>
-                  <label for="set-wave-status" class="block text-xs font-bold text-slate-700 mb-1.5">Status Pendaftaran SPMB</label>
-                  <select id="set-wave-status" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5 bg-white">
+                  <label for="set-wave-status" class="block text-xs font-bold text-slate-700 mb-1.5">Status Pendaftaran Global</label>
+                  <select id="set-wave-status" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-semibold py-2.5 px-3.5 bg-white">
                     <option value="open">🟢 Pendaftaran Dibuka (Online Aktif)</option>
                     <option value="upcoming">🟡 Segera Dibuka</option>
                     <option value="closed">🔴 Pendaftaran Ditutup Sementara</option>
                   </select>
+                  <p class="text-[11px] text-slate-400 mt-1">Status sistem SPMB publik.</p>
                 </div>
               </div>
 
+              <!-- 3 Kartu Konfigurasi Tiap Gelombang (Gelombang 1, Gelombang 2, Gelombang 3) -->
+              <div>
+                <div class="flex items-center justify-between mb-2.5">
+                  <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">Detail Tiap Gelombang (Ditampilkan di Timeline Beranda &amp; SPMB)</label>
+                  <span class="text-[11px] text-slate-400">Semua 3 gelombang tampil di timeline website</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <!-- Kartu Gelombang 1 -->
+                  <div id="card-wave-1" class="p-3.5 bg-white rounded-xl border-2 border-emerald-500/70 shadow-sm space-y-3 transition-all">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                      <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg bg-emerald-600 text-white text-xs font-bold flex items-center justify-center">1</span>
+                        <span class="text-xs font-bold text-slate-900">Gelombang 1</span>
+                      </div>
+                      <span id="badge-wave1-status" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Sedang Aktif</span>
+                    </div>
+                    <div>
+                      <label for="set-wave1-name" class="block text-[11px] font-bold text-slate-600 mb-1">Nama Tampilan</label>
+                      <input type="text" id="set-wave1-name" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Gelombang 1" value="Gelombang 1" required>
+                    </div>
+                    <div>
+                      <label for="set-wave1-promo" class="block text-[11px] font-bold text-slate-600 mb-1">Promo / Diskon / Info</label>
+                      <input type="text" id="set-wave1-promo" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Contoh: Diskon Rp500.000">
+                    </div>
+                    <div>
+                      <label for="set-wave1-dates" class="block text-[11px] font-bold text-slate-600 mb-1">Rentang Tanggal</label>
+                      <input type="text" id="set-wave1-dates" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Contoh: 1 Januari 2027 s/d 31 Maret 2027" required>
+                    </div>
+                  </div>
+
+                  <!-- Kartu Gelombang 2 -->
+                  <div id="card-wave-2" class="p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm space-y-3 transition-all">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                      <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg bg-slate-600 text-white text-xs font-bold flex items-center justify-center">2</span>
+                        <span class="text-xs font-bold text-slate-900">Gelombang 2</span>
+                      </div>
+                      <span id="badge-wave2-status" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">Standby</span>
+                    </div>
+                    <div>
+                      <label for="set-wave2-name" class="block text-[11px] font-bold text-slate-600 mb-1">Nama Tampilan</label>
+                      <input type="text" id="set-wave2-name" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Gelombang 2" value="Gelombang 2" required>
+                    </div>
+                    <div>
+                      <label for="set-wave2-promo" class="block text-[11px] font-bold text-slate-600 mb-1">Promo / Diskon / Info</label>
+                      <input type="text" id="set-wave2-promo" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Contoh: Reguler">
+                    </div>
+                    <div>
+                      <label for="set-wave2-dates" class="block text-[11px] font-bold text-slate-600 mb-1">Rentang Tanggal</label>
+                      <input type="text" id="set-wave2-dates" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Contoh: 1 April 2027 s/d 31 Mei 2027" required>
+                    </div>
+                  </div>
+
+                  <!-- Kartu Gelombang 3 -->
+                  <div id="card-wave-3" class="p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm space-y-3 transition-all">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                      <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg bg-slate-600 text-white text-xs font-bold flex items-center justify-center">3</span>
+                        <span class="text-xs font-bold text-slate-900">Gelombang 3</span>
+                      </div>
+                      <span id="badge-wave3-status" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">Standby</span>
+                    </div>
+                    <div>
+                      <label for="set-wave3-name" class="block text-[11px] font-bold text-slate-600 mb-1">Nama Tampilan</label>
+                      <input type="text" id="set-wave3-name" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Gelombang 3" value="Gelombang 3" required>
+                    </div>
+                    <div>
+                      <label for="set-wave3-promo" class="block text-[11px] font-bold text-slate-600 mb-1">Promo / Diskon / Info</label>
+                      <input type="text" id="set-wave3-promo" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Contoh: S/d Kuota Terpenuhi">
+                    </div>
+                    <div>
+                      <label for="set-wave3-dates" class="block text-[11px] font-bold text-slate-600 mb-1">Rentang Tanggal</label>
+                      <input type="text" id="set-wave3-dates" class="w-full rounded-lg border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-xs font-medium py-2 px-2.5 bg-slate-50 focus:bg-white" placeholder="Contoh: 1 Juni 2027 s/d Kuota Terpenuhi" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hidden backward compatibility fields for legacy scripts -->
+              <input type="hidden" id="set-wave-name">
+              <input type="hidden" id="set-wave-dates">
+
               <div>
                 <label for="set-wave-notice" class="block text-xs font-bold text-slate-700 mb-1.5">Teks Notifikasi Banner Website Utama</label>
-                <input type="text" id="set-wave-notice" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5 bg-white" placeholder="Contoh: Pendaftaran Gelombang 1 (Early Bird) Sedang Berlangsung!" required>
+                <input type="text" id="set-wave-notice" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5 bg-white" placeholder="Contoh: Pendaftaran Gelombang 1 Sedang Berlangsung! Dapatkan Diskon Infaq Rp 500.000" required>
               </div>
 
               <!-- 3 Poin Keunggulan / Manfaat Gelombang (Ditampilkan di Kartu Utama Beranda) -->

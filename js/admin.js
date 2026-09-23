@@ -238,15 +238,28 @@
 
   function getDefaultSettings() {
     return {
-      academicYear: "2025/2026",
-      activeWave: "Gelombang 1 (Early Bird)",
-      waveName: "Gelombang 1 (Early Bird)",
-      waveDates: "1 Nov 2024 s/d 31 Jan 2025",
+      academicYear: "2026/2027",
+      activeWave: "wave1",
+      waveName: "Gelombang 1",
       waveStatus: "open",
-      waveNotice: "Pendaftaran Gelombang 1 (Early Bird) Sedang Berlangsung!",
-      wavePoint1: "Potongan Infaq Pembangunan hingga 20%",
+      waveNotice: "Pendaftaran Gelombang 1 Sedang Berlangsung! Dapatkan Diskon Infaq Rp 500.000",
+      wave1Name: "Gelombang 1",
+      wave1Promo: "Diskon Rp500.000",
+      wave1Dates: "1 Januari 2027 s/d 31 Maret 2027",
+      wave2Name: "Gelombang 2",
+      wave2Promo: "Reguler",
+      wave2Dates: "1 April 2027 s/d 31 Mei 2027",
+      wave3Name: "Gelombang 3",
+      wave3Promo: "S/d Kuota Terpenuhi",
+      wave3Dates: "1 Juni 2027 s/d Kuota Terpenuhi",
+      waveDates: "1 Januari 2027 s/d 31 Maret 2027",
+      wavePoint1: "Potongan Infaq Pembangunan hingga Rp 500.000",
       wavePoint2: "Prioritas Kuota Kelas & Seleksi Observasi Dini",
       wavePoint3: "Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim",
+      statTk: "180+",
+      statSd: "650+",
+      statSmp: "420+",
+      statGuru: "85+",
       tkitFee: "Rp 200.000",
       sditFee: "Rp 250.000",
       smpitFee: "Rp 300.000",
@@ -1025,37 +1038,137 @@
     }
   }
 
-  function renderSettingsForm() {
-    const academicYear = settings.academicYear || '2025/2026';
-    const waveName = settings.waveName || settings.activeWave || 'Gelombang 1 (Early Bird)';
-    const waveDates = settings.waveDates || '1 Nov 2024 s/d 31 Jan 2025';
-    const waveStatus = settings.waveStatus || (waveName.toLowerCase().includes('tutup') ? 'closed' : 'open');
-    const waveNotice = settings.waveNotice || `Pendaftaran ${waveName} Sedang Berlangsung!`;
+  function updateWaveCardsUI(activeWave) {
+    const card1 = document.getElementById('card-wave-1');
+    const card2 = document.getElementById('card-wave-2');
+    const card3 = document.getElementById('card-wave-3');
+    const badge1 = document.getElementById('badge-wave1-status');
+    const badge2 = document.getElementById('badge-wave2-status');
+    const badge3 = document.getElementById('badge-wave3-status');
 
+    [
+      { card: card1, badge: badge1, isAct: activeWave === 'wave1' },
+      { card: card2, badge: badge2, isAct: activeWave === 'wave2' },
+      { card: card3, badge: badge3, isAct: activeWave === 'wave3' }
+    ].forEach(({ card, badge, isAct }) => {
+      if (!card || !badge) return;
+      if (isAct) {
+        card.className = 'p-3.5 bg-white rounded-xl border-2 border-emerald-500 shadow-sm space-y-3 transition-all ring-2 ring-emerald-500/20';
+        badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+        badge.textContent = 'Sedang Aktif';
+      } else {
+        card.className = 'p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm space-y-3 transition-all opacity-85 hover:opacity-100';
+        badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600';
+        badge.textContent = 'Standby';
+      }
+    });
+  }
+
+  function renderSettingsForm() {
+    const academicYear = settings.academicYear || '2026/2027';
+    const targetYear = academicYear.split('/')[1]?.trim() || academicYear.split('/')[0]?.trim() || '2027';
+
+    // Parse active wave
+    let activeWave = settings.activeWave || 'wave1';
+    if (typeof activeWave === 'string') {
+      const low = activeWave.toLowerCase();
+      if (low.includes('gelombang 2')) activeWave = 'wave2';
+      else if (low.includes('gelombang 3')) activeWave = 'wave3';
+      else if (low.includes('tutup') || settings.waveStatus === 'closed') activeWave = 'closed';
+      else if (!['wave1', 'wave2', 'wave3', 'closed'].includes(activeWave)) activeWave = 'wave1';
+    }
+
+    const waveStatus = settings.waveStatus || (activeWave === 'closed' ? 'closed' : 'open');
+
+    // Wave 1 data
+    let w1Name = settings.wave1Name || 'Gelombang 1';
+    let w1Promo = settings.wave1Promo !== undefined ? settings.wave1Promo : '';
+    if (!w1Promo && settings.waveName && settings.waveName.toLowerCase().includes('diskon')) {
+      const match = settings.waveName.match(/diskon[^\)\:\,]+/i);
+      if (match) w1Promo = match[0].trim();
+    }
+    if (!w1Promo && !settings.wave1Promo && !settings.waveName) {
+      w1Promo = 'Diskon Rp500.000';
+    }
+    let w1Dates = settings.wave1Dates || settings.waveDates || `1 Januari ${targetYear} s/d 31 Maret ${targetYear}`;
+
+    // Wave 2 data
+    let w2Name = settings.wave2Name || 'Gelombang 2';
+    let w2Promo = settings.wave2Promo !== undefined ? settings.wave2Promo : 'Reguler';
+    let w2Dates = settings.wave2Dates || `1 April ${targetYear} s/d 31 Mei ${targetYear}`;
+
+    // Wave 3 data
+    let w3Name = settings.wave3Name || 'Gelombang 3';
+    let w3Promo = settings.wave3Promo !== undefined ? settings.wave3Promo : 'S/d Kuota Terpenuhi';
+    let w3Dates = settings.wave3Dates || `1 Juni ${targetYear} s/d Kuota Terpenuhi`;
+
+    // Active wave display name & dates
+    let activeDisplayName = w1Name;
+    let activeDates = w1Dates;
+    if (activeWave === 'wave2') {
+      activeDisplayName = w2Name;
+      activeDates = w2Dates;
+    } else if (activeWave === 'wave3') {
+      activeDisplayName = w3Name;
+      activeDates = w3Dates;
+    } else if (activeWave === 'closed') {
+      activeDisplayName = 'Pendaftaran Ditutup';
+    }
+
+    const waveNotice = settings.waveNotice || `Pendaftaran ${activeDisplayName} Sedang Berlangsung!`;
+
+    // Populate inputs
     const acYearInput = document.getElementById('set-academic-year');
     if (acYearInput) acYearInput.value = academicYear;
 
-    const nameInput = document.getElementById('set-wave-name');
-    if (nameInput) nameInput.value = waveName;
-
-    const datesInput = document.getElementById('set-wave-dates');
-    if (datesInput) datesInput.value = waveDates;
+    const activeWaveSelect = document.getElementById('set-active-wave-select');
+    if (activeWaveSelect) activeWaveSelect.value = activeWave;
 
     const statusSelect = document.getElementById('set-wave-status');
     if (statusSelect) statusSelect.value = waveStatus;
 
+    // Wave 1 inputs
+    const w1NameInput = document.getElementById('set-wave1-name');
+    if (w1NameInput) w1NameInput.value = w1Name;
+    const w1PromoInput = document.getElementById('set-wave1-promo');
+    if (w1PromoInput) w1PromoInput.value = w1Promo;
+    const w1DatesInput = document.getElementById('set-wave1-dates');
+    if (w1DatesInput) w1DatesInput.value = w1Dates;
+
+    // Wave 2 inputs
+    const w2NameInput = document.getElementById('set-wave2-name');
+    if (w2NameInput) w2NameInput.value = w2Name;
+    const w2PromoInput = document.getElementById('set-wave2-promo');
+    if (w2PromoInput) w2PromoInput.value = w2Promo;
+    const w2DatesInput = document.getElementById('set-wave2-dates');
+    if (w2DatesInput) w2DatesInput.value = w2Dates;
+
+    // Wave 3 inputs
+    const w3NameInput = document.getElementById('set-wave3-name');
+    if (w3NameInput) w3NameInput.value = w3Name;
+    const w3PromoInput = document.getElementById('set-wave3-promo');
+    if (w3PromoInput) w3PromoInput.value = w3Promo;
+    const w3DatesInput = document.getElementById('set-wave3-dates');
+    if (w3DatesInput) w3DatesInput.value = w3Dates;
+
+    // Hidden inputs for legacy scripts
+    const nameInput = document.getElementById('set-wave-name');
+    if (nameInput) nameInput.value = activeDisplayName;
+    const datesInput = document.getElementById('set-wave-dates');
+    if (datesInput) datesInput.value = activeDates;
+
     const noticeInput = document.getElementById('set-wave-notice');
     if (noticeInput) noticeInput.value = waveNotice;
 
+    // 3 benefit points
     const pt1Input = document.getElementById('set-wave-point-1');
-    if (pt1Input) pt1Input.value = settings.wavePoint1 || 'Potongan Infaq Pembangunan hingga 20%';
-
+    if (pt1Input) pt1Input.value = settings.wavePoint1 || 'Potongan Infaq Pembangunan hingga Rp 500.000';
     const pt2Input = document.getElementById('set-wave-point-2');
     if (pt2Input) pt2Input.value = settings.wavePoint2 || 'Prioritas Kuota Kelas & Seleksi Observasi Dini';
-
     const pt3Input = document.getElementById('set-wave-point-3');
     if (pt3Input) pt3Input.value = settings.wavePoint3 || 'Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim';
 
+    // Stats
     const statTkInput = document.getElementById('set-stat-tk');
     if (statTkInput) statTkInput.value = settings.statTk || '180+';
     const statSdInput = document.getElementById('set-stat-sd');
@@ -1065,8 +1178,9 @@
     const statGuruInput = document.getElementById('set-stat-guru');
     if (statGuruInput) statGuruInput.value = settings.statGuru || '85+';
 
-    updateWavePreview(waveName, waveStatus, academicYear);
-    updateNavbarWaveBadge(waveName, waveStatus, academicYear);
+    updateWaveCardsUI(activeWave);
+    updateWavePreview(activeDisplayName, waveStatus, academicYear);
+    updateNavbarWaveBadge(activeDisplayName, waveStatus, academicYear);
 
     const dbTpText = document.getElementById('admin-dashboard-tp-text');
     if (dbTpText) dbTpText.textContent = `Tahun Pelajaran ${academicYear}`;
@@ -1082,51 +1196,140 @@
     const form = document.getElementById('form-school-settings');
     const resetBtn = document.getElementById('btn-reset-sample-data');
     const acYearInput = document.getElementById('set-academic-year');
-    const nameInput = document.getElementById('set-wave-name');
-    const datesInput = document.getElementById('set-wave-dates');
+    const activeWaveSelect = document.getElementById('set-active-wave-select');
     const statusSelect = document.getElementById('set-wave-status');
     const noticeInput = document.getElementById('set-wave-notice');
+
+    const w1NameInput = document.getElementById('set-wave1-name');
+    const w1PromoInput = document.getElementById('set-wave1-promo');
+    const w1DatesInput = document.getElementById('set-wave1-dates');
+
+    const w2NameInput = document.getElementById('set-wave2-name');
+    const w2PromoInput = document.getElementById('set-wave2-promo');
+    const w2DatesInput = document.getElementById('set-wave2-dates');
+
+    const w3NameInput = document.getElementById('set-wave3-name');
+    const w3PromoInput = document.getElementById('set-wave3-promo');
+    const w3DatesInput = document.getElementById('set-wave3-dates');
+
     const pt1Input = document.getElementById('set-wave-point-1');
     const pt2Input = document.getElementById('set-wave-point-2');
     const pt3Input = document.getElementById('set-wave-point-3');
 
-    // Live preview when typing or changing status
-    [acYearInput, nameInput, statusSelect].forEach(el => {
-      el?.addEventListener('input', () => {
-        const yearVal = acYearInput ? acYearInput.value.trim() : '2025/2026';
-        const nameVal = nameInput ? nameInput.value.trim() : '';
-        const statusVal = statusSelect ? statusSelect.value : 'open';
-        updateWavePreview(nameVal, statusVal, yearVal);
-      });
-      el?.addEventListener('change', () => {
-        const yearVal = acYearInput ? acYearInput.value.trim() : '2025/2026';
-        const nameVal = nameInput ? nameInput.value.trim() : '';
-        const statusVal = statusSelect ? statusSelect.value : 'open';
-        updateWavePreview(nameVal, statusVal, yearVal);
-      });
+    function syncWaveFieldsAndPreview() {
+      const yearVal = acYearInput ? acYearInput.value.trim() : '2026/2027';
+      const actWave = activeWaveSelect ? activeWaveSelect.value : 'wave1';
+      let statusVal = statusSelect ? statusSelect.value : 'open';
+
+      if (actWave === 'closed') {
+        statusVal = 'closed';
+        if (statusSelect) statusSelect.value = 'closed';
+      } else if (statusVal === 'closed' && actWave !== 'closed') {
+        statusVal = 'open';
+        if (statusSelect) statusSelect.value = 'open';
+      }
+
+      updateWaveCardsUI(actWave);
+
+      let activeName = 'Gelombang 1';
+      let activeDates = '';
+      if (actWave === 'wave1') {
+        activeName = w1NameInput ? w1NameInput.value.trim() : 'Gelombang 1';
+        activeDates = w1DatesInput ? w1DatesInput.value.trim() : '';
+      } else if (actWave === 'wave2') {
+        activeName = w2NameInput ? w2NameInput.value.trim() : 'Gelombang 2';
+        activeDates = w2DatesInput ? w2DatesInput.value.trim() : '';
+      } else if (actWave === 'wave3') {
+        activeName = w3NameInput ? w3NameInput.value.trim() : 'Gelombang 3';
+        activeDates = w3DatesInput ? w3DatesInput.value.trim() : '';
+      } else {
+        activeName = 'Pendaftaran SPMB Ditutup';
+      }
+
+      const legacyName = document.getElementById('set-wave-name');
+      if (legacyName) legacyName.value = activeName;
+      const legacyDates = document.getElementById('set-wave-dates');
+      if (legacyDates) legacyDates.value = activeDates;
+
+      updateWavePreview(activeName, statusVal, yearVal);
+      updateNavbarWaveBadge(activeName, statusVal, yearVal);
+    }
+
+    // Active wave select change handler
+    activeWaveSelect?.addEventListener('change', () => {
+      const actWave = activeWaveSelect.value;
+      if (actWave === 'wave1') {
+        if (noticeInput) noticeInput.value = `Pendaftaran ${w1NameInput?.value || 'Gelombang 1'} Sedang Berlangsung! Dapatkan Diskon Infaq Rp 500.000`;
+      } else if (actWave === 'wave2') {
+        if (noticeInput) noticeInput.value = `Pendaftaran ${w2NameInput?.value || 'Gelombang 2'} Resmi Dibuka! Segera daftarkan putra-putri tercinta.`;
+      } else if (actWave === 'wave3') {
+        if (noticeInput) noticeInput.value = `Pendaftaran ${w3NameInput?.value || 'Gelombang 3'} (Kuota Terbatas) Sedang Berlangsung!`;
+      } else if (actWave === 'closed') {
+        if (noticeInput) noticeInput.value = 'Pendaftaran SPMB Ditutup Sementara. Pantau pengumuman gelombang berikutnya.';
+      }
+      syncWaveFieldsAndPreview();
+    });
+
+    [acYearInput, statusSelect, w1NameInput, w1PromoInput, w1DatesInput, w2NameInput, w2PromoInput, w2DatesInput, w3NameInput, w3PromoInput, w3DatesInput].forEach(el => {
+      el?.addEventListener('input', syncWaveFieldsAndPreview);
+      el?.addEventListener('change', syncWaveFieldsAndPreview);
     });
 
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
-      const academicYear = acYearInput ? acYearInput.value.trim() : '2025/2026';
-      const waveName = nameInput ? nameInput.value.trim() : 'Gelombang 1 (Early Bird)';
-      const waveDates = datesInput ? datesInput.value.trim() : '';
-      const waveStatus = statusSelect ? statusSelect.value : 'open';
-      const waveNotice = noticeInput ? noticeInput.value.trim() : `Pendaftaran ${waveName} Sedang Berlangsung!`;
-      const wavePoint1 = pt1Input ? pt1Input.value.trim() : 'Potongan Infaq Pembangunan hingga 20%';
+      const academicYear = acYearInput ? acYearInput.value.trim() : '2026/2027';
+      const activeWave = activeWaveSelect ? activeWaveSelect.value : 'wave1';
+      const waveStatus = statusSelect ? statusSelect.value : (activeWave === 'closed' ? 'closed' : 'open');
+
+      const wave1Name = w1NameInput ? w1NameInput.value.trim() : 'Gelombang 1';
+      const wave1Promo = w1PromoInput ? w1PromoInput.value.trim() : '';
+      const wave1Dates = w1DatesInput ? w1DatesInput.value.trim() : '';
+
+      const wave2Name = w2NameInput ? w2NameInput.value.trim() : 'Gelombang 2';
+      const wave2Promo = w2PromoInput ? w2PromoInput.value.trim() : '';
+      const wave2Dates = w2DatesInput ? w2DatesInput.value.trim() : '';
+
+      const wave3Name = w3NameInput ? w3NameInput.value.trim() : 'Gelombang 3';
+      const wave3Promo = w3PromoInput ? w3PromoInput.value.trim() : '';
+      const wave3Dates = w3DatesInput ? w3DatesInput.value.trim() : '';
+
+      let activeDisplayName = wave1Name;
+      let activeDates = wave1Dates;
+      if (activeWave === 'wave2') {
+        activeDisplayName = wave2Name;
+        activeDates = wave2Dates;
+      } else if (activeWave === 'wave3') {
+        activeDisplayName = wave3Name;
+        activeDates = wave3Dates;
+      } else if (activeWave === 'closed') {
+        activeDisplayName = 'Pendaftaran Ditutup';
+      }
+
+      const waveNotice = noticeInput ? noticeInput.value.trim() : `Pendaftaran ${activeDisplayName} Sedang Berlangsung!`;
+      const wavePoint1 = pt1Input ? pt1Input.value.trim() : 'Potongan Infaq Pembangunan hingga Rp 500.000';
       const wavePoint2 = pt2Input ? pt2Input.value.trim() : 'Prioritas Kuota Kelas & Seleksi Observasi Dini';
       const wavePoint3 = pt3Input ? pt3Input.value.trim() : 'Tersedia Jalur Prestasi Tahfizh & Beasiswa Yatim';
 
       settings = {
-        academicYear: academicYear,
-        activeWave: waveName,
-        waveName: waveName,
-        waveDates: waveDates,
-        waveStatus: waveStatus,
-        waveNotice: waveNotice,
-        wavePoint1: wavePoint1,
-        wavePoint2: wavePoint2,
-        wavePoint3: wavePoint3,
+        academicYear,
+        activeWave,
+        waveStatus,
+        wave1Name,
+        wave1Promo,
+        wave1Dates,
+        wave2Name,
+        wave2Promo,
+        wave2Dates,
+        wave3Name,
+        wave3Promo,
+        wave3Dates,
+        // Legacy compatibility fields
+        waveName: activeDisplayName,
+        waveDates: activeDates,
+        waveNotice,
+        wavePoint1,
+        wavePoint2,
+        wavePoint3,
         statTk: document.getElementById('set-stat-tk') ? document.getElementById('set-stat-tk').value.trim() : '180+',
         statSd: document.getElementById('set-stat-sd') ? document.getElementById('set-stat-sd').value.trim() : '650+',
         statSmp: document.getElementById('set-stat-smp') ? document.getElementById('set-stat-smp').value.trim() : '420+',
@@ -1160,11 +1363,11 @@
         .catch(e => console.log('Save settings MySQL fallback'));
       }
 
-      updateNavbarWaveBadge(waveName, waveStatus, academicYear);
-      updateWavePreview(waveName, waveStatus, academicYear);
+      updateNavbarWaveBadge(activeDisplayName, waveStatus, academicYear);
+      updateWavePreview(activeDisplayName, waveStatus, academicYear);
       const dbTpText = document.getElementById('admin-dashboard-tp-text');
       if (dbTpText) dbTpText.textContent = `Tahun Pelajaran ${academicYear}`;
-      showToast('Pengaturan Tahun Ajaran & Gelombang SPMB berhasil disimpan secara Real-Time!');
+      showToast('Pengaturan Tahun Ajaran & 3 Gelombang SPMB berhasil disimpan secara Real-Time!');
     });
 
     resetBtn?.addEventListener('click', () => {

@@ -124,7 +124,7 @@ const SchoolData = {
         "Klinik UKS & Konseling Karakter Siswa"
       ],
       spmbFee: "Rp 250.000",
-      ageRequirement: "Usia minimal 6 tahun pada 1 Juli 2025"
+      ageRequirement: "Usia minimal 6 tahun per 1 Juli tahun pelajaran berjalan"
     },
 
     smpit: {
@@ -314,7 +314,7 @@ const SchoolData = {
   spmbFaqs: [
     {
       q: "Kapan periode pendaftaran SPMB SIT Bina Insan dibuka?",
-      a: "Pendaftaran Gelombang 1 (Early Bird) dibuka mulai 1 November 2024 s/d 31 Januari 2025. Gelombang 2 berlangsung 1 Februari s/d 30 April 2025. Pendaftaran dapat ditutup lebih awal apabila kuota rombel kelas telah terpenuhi."
+      a: "Pendaftaran Gelombang 1 dibuka mulai 1 Januari s/d 31 Maret 2027. Gelombang 2 berlangsung 1 April s/d 31 Mei 2027, dan Gelombang 3 mulai 1 Juni 2027 s/d kuota terpenuhi. Pendaftaran dapat ditutup lebih awal apabila kuota rombel kelas telah terpenuhi."
     },
     {
       q: "Bagaimana tahapan seleksi masuk di TKIT, SDIT, dan SMPIT?",

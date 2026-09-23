@@ -387,6 +387,16 @@
     }
   }
 
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   function applySchoolSettings(settings) {
     if (!settings) {
       try {
@@ -397,10 +407,45 @@
     if (!settings) return;
 
     // 0. Academic Year & Wave Variables
-    const academicYear = settings.academicYear || '2025/2026';
-    const startYear = academicYear.split('/')[0].trim() || '2025';
-    const activeName = settings.waveName || settings.activeWave || 'Gelombang 1 (Early Bird)';
-    const waveStatus = settings.waveStatus || 'open';
+    const academicYear = settings.academicYear || '2026/2027';
+    const startYear = academicYear.split('/')[0]?.trim() || '2026';
+    const targetYear = academicYear.split('/')[1]?.trim() || startYear;
+
+    // Parse active wave
+    let activeWave = settings.activeWave || 'wave1';
+    if (typeof activeWave === 'string') {
+      const low = activeWave.toLowerCase();
+      if (low.includes('gelombang 2')) activeWave = 'wave2';
+      else if (low.includes('gelombang 3')) activeWave = 'wave3';
+      else if (low.includes('tutup') || settings.waveStatus === 'closed') activeWave = 'closed';
+      else if (!['wave1', 'wave2', 'wave3', 'closed'].includes(activeWave)) activeWave = 'wave1';
+    }
+    const waveStatus = settings.waveStatus || (activeWave === 'closed' ? 'closed' : 'open');
+
+    // Extract wave details
+    let w1Name = settings.wave1Name || 'Gelombang 1';
+    let w1Promo = settings.wave1Promo !== undefined ? settings.wave1Promo : '';
+    if (!w1Promo && settings.waveName && settings.waveName.toLowerCase().includes('diskon')) {
+      const match = settings.waveName.match(/diskon[^\)\:\,]+/i);
+      if (match) w1Promo = match[0].trim();
+    }
+    if (!w1Promo && !settings.wave1Promo && !settings.waveName) {
+      w1Promo = 'Diskon Rp500.000';
+    }
+    let w1Dates = settings.wave1Dates || settings.waveDates || `1 Januari ${targetYear} s/d 31 Maret ${targetYear}`;
+
+    let w2Name = settings.wave2Name || 'Gelombang 2';
+    let w2Promo = settings.wave2Promo !== undefined ? settings.wave2Promo : 'Reguler';
+    let w2Dates = settings.wave2Dates || `1 April ${targetYear} s/d 31 Mei ${targetYear}`;
+
+    let w3Name = settings.wave3Name || 'Gelombang 3';
+    let w3Promo = settings.wave3Promo !== undefined ? settings.wave3Promo : 'S/d Kuota Terpenuhi';
+    let w3Dates = settings.wave3Dates || `1 Juni ${targetYear} s/d Kuota Terpenuhi`;
+
+    let activeDisplayName = w1Name;
+    if (activeWave === 'wave2') activeDisplayName = w2Name;
+    else if (activeWave === 'wave3') activeDisplayName = w3Name;
+    else if (activeWave === 'closed') activeDisplayName = 'Pendaftaran Ditutup';
 
     // Global synchronizations across all views in the page
     document.querySelectorAll('.spmb-sync-tp').forEach(el => {
@@ -413,16 +458,16 @@
       el.textContent = startYear;
     });
     document.querySelectorAll('.spmb-sync-wave-name').forEach(el => {
-      el.textContent = activeName;
+      el.textContent = activeDisplayName;
     });
     document.querySelectorAll('.spmb-sync-wave-badge').forEach(el => {
-      el.textContent = activeName;
+      el.textContent = activeDisplayName;
     });
 
     // Update SchoolData profile in memory
     if (window.SchoolData && window.SchoolData.profile) {
       window.SchoolData.profile.academicYear = academicYear;
-      window.SchoolData.profile.activeWave = activeName;
+      window.SchoolData.profile.activeWave = activeDisplayName;
       window.SchoolData.profile.waveStatus = waveStatus;
     }
 
@@ -447,11 +492,12 @@
     const topbarWave = document.getElementById('home-topbar-wave');
     if (topbarWave) {
       if (waveStatus === 'closed') {
-        topbarWave.textContent = settings.waveNotice || `Pendaftaran SPMB (${activeName}) Ditutup Sementara`;
+        topbarWave.textContent = settings.waveNotice || 'Pendaftaran SPMB Ditutup Sementara';
       } else if (settings.waveNotice) {
         topbarWave.textContent = settings.waveNotice;
       } else {
-        topbarWave.textContent = `Pendaftaran ${activeName} Sedang Berlangsung!`;
+        const promoNotice = (activeWave === 'wave1' && w1Promo) ? ` (${w1Promo})` : '';
+        topbarWave.textContent = `Pendaftaran ${activeDisplayName}${promoNotice} Sedang Berlangsung!`;
       }
     }
 
@@ -459,9 +505,10 @@
     const heroWaveTitle = document.getElementById('home-hero-wave-title');
     if (heroWaveTitle) {
       if (waveStatus === 'closed') {
-        heroWaveTitle.textContent = `Pendaftaran SPMB (${activeName}) Ditutup Sementara`;
+        heroWaveTitle.textContent = 'Pendaftaran SPMB Ditutup Sementara';
       } else {
-        heroWaveTitle.textContent = `Penerimaan Siswa Baru ${activeName}`;
+        const promoSuffix = (activeWave === 'wave1' && w1Promo) ? ` (${w1Promo})` : '';
+        heroWaveTitle.textContent = `Penerimaan Siswa Baru ${activeDisplayName}${promoSuffix}`;
       }
     }
 
@@ -483,47 +530,28 @@
     if (sSmp && settings.statSmp) sSmp.textContent = settings.statSmp;
     if (sGuru && settings.statGuru) sGuru.textContent = settings.statGuru;
 
-    // 4. SPMB Timeline Waves Highlighting & Dates
+    // 4. SPMB Timeline Waves Highlighting & Dates (All 3 waves rendered dynamically)
     const timelineWrap = document.getElementById('home-waves-timeline');
     if (timelineWrap) {
-      const activeLower = activeName.toLowerCase();
-      const wavePills = timelineWrap.querySelectorAll('.wave-pill');
-      
-      wavePills.forEach((pill, idx) => {
-        let isCurrent = false;
-        if (waveStatus === 'closed') {
-          isCurrent = false;
-        } else if (activeLower.includes('gelombang 1') && idx === 0) {
-          isCurrent = true;
-        } else if (activeLower.includes('gelombang 2') && idx === 1) {
-          isCurrent = true;
-        } else if (activeLower.includes('gelombang 3') && idx === 2) {
-          isCurrent = true;
-        } else if (idx === 0 && !activeLower.includes('gelombang 2') && !activeLower.includes('gelombang 3')) {
-          isCurrent = waveStatus !== 'closed';
-        }
+      const waves = [
+        { key: 'wave1', name: w1Name, promo: w1Promo, dates: w1Dates },
+        { key: 'wave2', name: w2Name, promo: w2Promo, dates: w2Dates },
+        { key: 'wave3', name: w3Name, promo: w3Promo, dates: w3Dates }
+      ];
 
-        pill.classList.toggle('active', isCurrent);
-        const dot = pill.querySelector('.wave-dot');
-        if (dot) {
-          if (isCurrent) {
-            dot.style.backgroundColor = '';
-            dot.style.boxShadow = '';
-          } else {
-            dot.style.backgroundColor = 'var(--neutral-400)';
-            dot.style.boxShadow = 'none';
-          }
-        }
+      timelineWrap.innerHTML = waves.map((w) => {
+        const isCurrent = (activeWave === w.key && waveStatus === 'open');
+        const promoHtml = w.promo ? ` <span class="wave-promo-badge">${escapeHtml(w.promo)}</span>` : '';
+        const statusHtml = isCurrent ? ` <span class="wave-open-label">(Sedang Buka)</span>` : '';
+        const dotStyle = isCurrent ? '' : 'style="background-color: var(--neutral-400); box-shadow: none;"';
 
-        // Update date text if current and waveDates is specified
-        if (isCurrent && settings.waveDates) {
-          const span = pill.querySelector('span');
-          if (span) {
-            const waveLabel = idx === 0 ? 'Gelombang 1' : (idx === 1 ? 'Gelombang 2' : 'Gelombang 3');
-            span.innerHTML = `<strong>${settings.waveName || waveLabel}:</strong> ${settings.waveDates} (Sedang Buka)`;
-          }
-        }
-      });
+        return `
+          <div class="wave-pill ${isCurrent ? 'active' : ''}">
+            <div class="wave-dot" ${dotStyle}></div>
+            <span><strong>${escapeHtml(w.name)}${promoHtml}:</strong> ${escapeHtml(w.dates)}${statusHtml}</span>
+          </div>
+        `;
+      }).join('');
     }
 
     // 5. Infaq Fee Dynamic Updates
