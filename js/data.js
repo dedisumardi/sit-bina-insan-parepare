@@ -93,35 +93,42 @@ const SchoolData = {
       fullName: "Sekolah Dasar Islam Terpadu Bina Insan",
       heroImage: "/assets/images/sdit_recitation.jpg?v=2",
       accentColor: "#002f9b",
-      tagline: "Melejitkan Potensi Akademik dan Karakter Qur'ani Generasi Robbani",
-      description: "SDIT Bina Insan Parepare mengintegrasikan Kurikulum Nasional (Kurikulum Merdeka) dengan Kurikulum Kekhasan Jaringan Sekolah Islam Terpadu (JSIT). Fokus kami membimbing peserta didik menguasai ilmu pengetahuan, teknologi, sains, literasi, hafalan Al-Qur'an 3 hingga 5 Juz, serta kepribadian islami yang tangguh.",
-      vision: "Mewujudkan lulusan sekolah dasar yang beraqidah shohihah, beribadah shohihah, berakhlak mulia, berprestasi akademik unggul, dan berjiwa kepemimpinan.",
+      tagline: "Cinta Al-Qur’an, Hafiz, Akademik, Soft Skill, Melek Teknologi, Bahasa Asing",
+      description: "Sekolah Dasar Islam Terpadu Bina Insan Parepare berkomitmen untuk mewujudkan Generasi Rabbani yang berkarakter kuat, berilmu, serta siap mengemban peran sebagai Imamul Muttaqin (Pemimpin yang Beriman dan Bertakwa) dan aktif memakmurkan bumi melalui nilai- nilai keislaman dan penguasaan teknologi.",
+      vision: "Menciptakan pengalaman belajar yang aktif, mendalam, bermakna, sekaligus menguatkan Murid bahwa ilmu pengetahuan merupakan bagian dari tanda-tanda kebesaran Allah SWT.",
       keyPrograms: [
         {
-          title: "Program Unggulan Tahfizh 3 - 5 Juz",
-          desc: "Bimbingan tahsin metode Utsmani/Wafa dan target hafalan Juz 30, 29, 28, hingga 1-2 dengan ujian tasmi' terbuka serta wisuda tahfizh tahunan."
+          title: "01. Pendekatan Pembelajaran ADLX TERPADU (Fase B dan C)",
+          desc: "Active Deep Learning Experience (ADLX) diterapkan untuk menghadirkan pengalaman belajar yang membuat Murid aktif mengalami, mengeksplorasi, memahami, mengolah, dan menerapkan pengetahuan."
         },
         {
-          title: "Bina Pribadi Islami (BPI) & Mentoring",
-          desc: "Pembinaan karakter mingguan dalam kelompok kecil didampingi guru pembina untuk memupuk ibadah mandiri, empati, dan kepemimpinan."
+          title: "02. Al-Qur’an Metode Ilman Waruuhan",
+          desc: "Melalui program Tahfidz dan Tahsin dengan menggunakan Metode Ilman wa Ruuhan. Pembelajaran dirancang untuk membantu Murid membaca Al-Qur'an dengan baik dan benar, memperbaiki kualitas bacaan, menghafal Al-Qur'an secara bertahap, serta menumbuhkan kecintaan dan kedekatan dengan Al-Qur'an."
         },
         {
-          title: "Sains, Literasi Digital & Koding Cilik",
-          desc: "Pembelajaran saintifik berbasis eksperimen, literasi buku perpustakaan berjenjang, dan pengenalan logika algoritma & komputer dasar."
+          title: "03. Pendekatan Pembelajaran ITT Integrated Tauhidic Thinking (Fase A)",
+          desc: "Melalui Integrated Tauhidic Thinking (ITT) membangun pemahaman bahwa seluruh ciptaan, fenomena alam, dan perkembangan ilmu pengetahuan merupakan bagian dari tanda-tanda kekuasaan dan kebesaran Allah SWT."
         },
         {
-          title: "Full Day School Edukatif & Bermakna",
-          desc: "Jadwal harian seimbang: sholat dzuhur dan ashar berjamaah, makan siang gizi seimbang, istirahat teratur, dan tidak membebani PR berlebih di rumah."
+          title: "04. BPI (Bina Pribadi Islam)",
+          desc: "Membangun pribadi Murid yang beriman, berakhlak mulia, mandiri, bertanggung jawab, dan memiliki kepedulian terhadap sesama, dengan menjadikan nilai-nilai Islam sebagai landasan dalam kehidupan sehari-hari."
+        },
+        {
+          title: "05. Bahasa Asing & Teknologi",
+          desc: "Mengintegrasikan nilai-nilai Islam dengan penguasaan bahasa asing dan teknologi, sehingga Murid memiliki kemampuan komunikasi global, kecakapan digital, serta karakter yang kuat."
+        },
+        {
+          title: "06. 7 Kokurikuler",
+          desc: "Field Trip (belajar langsung relevan materi), Outing Class (eksplorasi lingkungan langsung), Guru Tamu (praktisi & profesional inspiratif), dan Program Kemandirian (disiplin, tanggung jawab & pengambilan keputusan)."
         }
       ],
       facilities: [
-        "Ruang Kelas Ber-AC & Multimedia Interaktif",
-        "Masjid & Musholla Sekolah Terpadu",
-        "Laboratorium Sains & Komputer Siswa",
-        "Perpustakaan Tematik JSIT & Pojok Literasi",
-        "Lapangan Olahraga Futsal & Basket Mini",
-        "Kantin Sehat Halalan Thayyiban",
-        "Klinik UKS & Konseling Karakter Siswa"
+        "Ruang Kelas Ber-AC & Ramah Anak",
+        "Perpustakaan sekolah",
+        "Ruang Usaha Kesehatan Sekolah (UKS)",
+        "Lapangan dan sarana aktivitas olahraga",
+        "Ruang rapat dan koordinasi sekolah",
+        "Fasilitas sanitasi dan toilet"
       ],
       spmbFee: "Rp 250.000",
       ageRequirement: "Usia minimal 6 tahun per 1 Juli tahun pelajaran berjalan"
