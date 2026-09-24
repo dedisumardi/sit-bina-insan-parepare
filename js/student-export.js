@@ -9,7 +9,8 @@
   }
   columns.splice(columns.findIndex(([key]) => key === 'asalSekolah') + 1, 0, ['alamatAsalSekolah', 'Alamat Asal Sekolah']);
   columns.push(['waAyah', 'Nomor WhatsApp Akun Portal'], ['hafalan', 'Hafalan Quran'],
-    ['prestasi', 'Prestasi'], ['ttl', 'Tempat/Tanggal Lahir (Data Lama)'],
+    ['prestasi', 'Prestasi'], ['sertifikatPrestasi', 'Sertifikat Prestasi Tersedia'],
+    ['ttl', 'Tempat/Tanggal Lahir (Data Lama)'],
     ['tanggalDaftar', 'Tanggal Daftar'], ['status', 'Status Pendaftaran'],
     ['nominalPembayaran', 'Nominal Pembayaran (Rp)'], ['buktiPembayaran', 'Bukti Pembayaran Tersedia'],
     ['jadwalObservasi', 'Jadwal Observasi'], ['biodataUpdatedAt', 'Terakhir Simpan Biodata Siswa'],
@@ -23,6 +24,7 @@
   function value(record, key) {
     if (key.endsWith('Wali') && key !== 'memilikiWali' && record.memilikiWali === 'Tidak') return '';
     if (key === 'buktiPembayaran') return record[key] ? 'Ya' : 'Tidak';
+    if (key === 'sertifikatPrestasi') return record[key] ? 'Ya' : 'Tidak';
     return record[key] ?? '';
   }
   function csv(records) {

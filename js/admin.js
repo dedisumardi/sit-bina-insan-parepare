@@ -916,6 +916,18 @@
     document.getElementById('modal-app-hafalan').textContent = item.hafalan || 'Belum ada';
     document.getElementById('modal-app-prestasi').textContent = item.prestasi || '-';
 
+    const certBox = document.getElementById('modal-app-sertifikat-container');
+    const certBtn = document.getElementById('modal-app-sertifikat-btn');
+    if (certBox && certBtn) {
+      if (item.sertifikatPrestasi) {
+        certBox.style.display = 'block';
+        certBtn.onclick = () => window.viewCertificateProof(item.regNumber);
+      } else {
+        certBox.style.display = 'none';
+        certBtn.onclick = null;
+      }
+    }
+
     // Status Pembayaran & Preview Bukti Transfer (Rp 150.000)
     const proofStatusEl = document.getElementById('modal-app-bayar-status');
     const proofContainer = document.getElementById('modal-app-proof-container');
@@ -1038,6 +1050,29 @@
     }
 
     modal.classList.add('open');
+  };
+
+  // Buka Sertifikat / Piagam Prestasi Siswa
+  window.viewCertificateProof = function (regNumber) {
+    const item = spmbList.find(s => s.regNumber === regNumber || s.waAyah === regNumber);
+    if (!item || !item.sertifikatPrestasi) return;
+    const cert = item.sertifikatPrestasi;
+    if (cert.startsWith('data:')) {
+      try {
+        const parts = cert.split(',');
+        const mime = parts[0].match(/:(.*?);/)?.[1] || 'application/octet-stream';
+        const binary = atob(parts[1]);
+        const array = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
+        const blob = new Blob([array], { type: mime });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      } catch (_) {
+        window.open(cert, '_blank');
+      }
+    } else {
+      window.open(cert, '_blank');
+    }
   };
 
   // Setujui (Approve) Pembayaran Rp 150.000 & Generate Kode Pendaftaran Siswa Resmi

@@ -810,6 +810,107 @@
         }
       }, false);
     }
+
+    const prestasiInput = document.getElementById('bio-prestasi');
+    if (prestasiInput) {
+      prestasiInput.addEventListener('input', updateSertifikatVisibility);
+    }
+    const sertifikatInput = document.getElementById('bio-sertifikat');
+    if (sertifikatInput) {
+      sertifikatInput.addEventListener('change', handleSertifikatFile);
+    }
+    const sertifikatRemoveBtn = document.getElementById('bio-sertifikat-remove');
+    if (sertifikatRemoveBtn) {
+      sertifikatRemoveBtn.addEventListener('click', removeSertifikatFile);
+    }
+    const sertifikatLink = document.getElementById('bio-sertifikat-link');
+    if (sertifikatLink) {
+      sertifikatLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const data = document.getElementById('bio-sertifikat-data')?.value;
+        if (!data) return;
+        if (data.startsWith('data:')) {
+          const parts = data.split(',');
+          const mime = parts[0].match(/:(.*?);/)?.[1] || 'application/octet-stream';
+          const binary = atob(parts[1]);
+          const array = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
+          const blob = new Blob([array], { type: mime });
+          const url = URL.createObjectURL(blob);
+          window.open(url, '_blank');
+        } else {
+          window.open(data, '_blank');
+        }
+      });
+    }
+  }
+
+  function handleSertifikatFile(e) {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (!file) return;
+    if (!file.type.match('image.*') && file.type !== 'application/pdf') {
+      alert('Mohon pilih file gambar (JPG, PNG, WEBP) atau PDF.');
+      e.target.value = '';
+      return;
+    }
+    if (file.size > 2.5 * 1024 * 1024) {
+      alert('Ukuran file sertifikat terlalu besar (maksimal 2,5 MB).');
+      e.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function (evt) {
+      const dataUrl = evt.target.result;
+      const dataInput = document.getElementById('bio-sertifikat-data');
+      if (dataInput) dataInput.value = dataUrl;
+      const previewBox = document.getElementById('bio-sertifikat-preview-box');
+      const previewLink = document.getElementById('bio-sertifikat-link');
+      const nameEl = document.getElementById('bio-sertifikat-name');
+      if (previewBox) previewBox.style.display = 'block';
+      if (previewLink) previewLink.href = dataUrl;
+      if (nameEl) nameEl.textContent = file.name;
+      const bioForm = document.getElementById('portal-student-bio-form');
+      if (bioForm) {
+        bioForm.dataset.dirty = '1';
+        const status = document.getElementById('portal-bio-status');
+        if (status) {
+          status.textContent = 'Perubahan belum disimpan.';
+          status.className = 'portal-bio-status';
+        }
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeSertifikatFile() {
+    const fileInput = document.getElementById('bio-sertifikat');
+    const dataInput = document.getElementById('bio-sertifikat-data');
+    const previewBox = document.getElementById('bio-sertifikat-preview-box');
+    const previewLink = document.getElementById('bio-sertifikat-link');
+    if (fileInput) fileInput.value = '';
+    if (dataInput) dataInput.value = '';
+    if (previewBox) previewBox.style.display = 'none';
+    if (previewLink) previewLink.href = '#';
+    const bioForm = document.getElementById('portal-student-bio-form');
+    if (bioForm) {
+      bioForm.dataset.dirty = '1';
+      const status = document.getElementById('portal-bio-status');
+      if (status) {
+        status.textContent = 'Perubahan belum disimpan.';
+        status.className = 'portal-bio-status';
+      }
+    }
+    updateSertifikatVisibility();
+  }
+
+  function updateSertifikatVisibility() {
+    const val = (document.getElementById('bio-prestasi')?.value || '').trim().toLowerCase();
+    const hasCert = Boolean(document.getElementById('bio-sertifikat-data')?.value.trim());
+    const isNoPrestasi = !val || ['-', 'tidak ada', 'belum ada', 'tidak', 'belum', 'none', 'nihil'].includes(val);
+    const group = document.getElementById('group-bio-sertifikat');
+    if (group) {
+      group.style.display = (!isNoPrestasi || hasCert) ? 'block' : 'none';
+    }
   }
 
   // Open Modal Popup
@@ -1073,6 +1174,23 @@
     set('bio-agama', student.agama);
     set('bio-kewarganegaraan', student.kewarganegaraan);
     set('bio-alamat', student.alamat);
+    set('bio-hafalan', student.hafalan === '-' ? '' : student.hafalan);
+    set('bio-prestasi', student.prestasi === '-' ? '' : student.prestasi);
+    set('bio-sertifikat-data', student.sertifikatPrestasi || '');
+    const certInput = document.getElementById('bio-sertifikat');
+    if (certInput) certInput.value = '';
+    const previewBox = document.getElementById('bio-sertifikat-preview-box');
+    const previewLink = document.getElementById('bio-sertifikat-link');
+    const nameEl = document.getElementById('bio-sertifikat-name');
+    if (student.sertifikatPrestasi) {
+      if (previewBox) previewBox.style.display = 'block';
+      if (previewLink) previewLink.href = student.sertifikatPrestasi;
+      if (nameEl) nameEl.textContent = 'Sertifikat Prestasi Terunggah';
+    } else {
+      if (previewBox) previewBox.style.display = 'none';
+      if (previewLink) previewLink.href = '#';
+    }
+    updateSertifikatVisibility();
     for (const field of ["tempatTinggal","modaTransportasi","anakKe","tinggiBadan","beratBadan","hobi","citaCita","jumlahSaudaraKandung","jarakRumahSekolah","saudaraDiSekolah"]) {
       const input = document.getElementById('bio-' + field);
       if (input) input.value = student[field] ?? '';
@@ -1133,7 +1251,10 @@
       alamatAsalSekolah: value('bio-alamat-asal-sekolah'),
       kewarganegaraan: value('bio-kewarganegaraan'), alamat: value('bio-alamat'),
       desaKelurahan: value('bio-desa'), kecamatan: value('bio-kecamatan'),
-      kabupatenKota: value('bio-kabupaten'), provinsi: value('bio-provinsi')
+      kabupatenKota: value('bio-kabupaten'), provinsi: value('bio-provinsi'),
+      hafalan: value('bio-hafalan') || 'Belum ada',
+      prestasi: value('bio-prestasi') || '-',
+      sertifikatPrestasi: value('bio-sertifikat-data')
     };
     for (const field of ["tempatTinggal","modaTransportasi","anakKe","tinggiBadan","beratBadan","hobi","citaCita","jumlahSaudaraKandung","jarakRumahSekolah","saudaraDiSekolah"]) {
       payload[field] = document.getElementById('bio-' + field)?.value.trim()

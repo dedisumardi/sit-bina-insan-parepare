@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `spmb_applicants` (
   `status` VARCHAR(100) NOT NULL DEFAULT 'Menunggu Konfirmasi Pembayaran',
   `nominal_pembayaran` INT NULL DEFAULT 150000,
   `bukti_pembayaran` LONGTEXT NULL,
+  `sertifikat_prestasi` LONGTEXT NULL,
   `jadwal_observasi` VARCHAR(255) DEFAULT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

@@ -12,7 +12,14 @@ function phone(value) {
 }
 function pick(input, keys) {
   return Object.fromEntries(keys.filter(k => input[k] !== undefined).map(k => {
-    if (typeof input[k] !== 'string' || input[k].length > 50000) fail(400, `Data ${k} tidak valid.`);
+    if (typeof input[k] !== 'string') fail(400, `Data ${k} tidak valid.`);
+    if (k === 'sertifikatPrestasi') {
+      if (input[k] && (!/^data:(image\/(jpeg|png|webp)|application\/pdf);base64,[A-Za-z0-9+/=]+$/.test(input[k]) && !/^https?:\/\//.test(input[k]) && !/^\/?assets\//.test(input[k]) || input[k].length > 4000000)) {
+        fail(400, 'Sertifikat harus berupa file gambar atau PDF maksimal 2,5 MB.');
+      }
+    } else if (input[k].length > 50000) {
+      fail(400, `Data ${k} tidak valid.`);
+    }
     return [k, input[k].trim()];
   }));
 }
@@ -20,7 +27,7 @@ function row(record) {
   return { ...record.data, id: record.id, ...(record.reg_number ? { regNumber: record.reg_number } : {}), createdAt: record.created_at };
 }
 function requireAdmin(admin) { if (!admin) fail(401, 'Silakan masuk sebagai admin.'); }
-const biodata = ['jenjang','jalur','namaSiswa','nik','ttl','tempatLahir','tanggalLahir','jk','asalSekolah','alamat','desaKelurahan','kecamatan','kabupatenKota','provinsi','agama','kewarganegaraan','namaAyah','pekerjaanAyah','waAyah','namaIbu','pekerjaanIbu','email','hafalan','prestasi'];
+const biodata = ['jenjang','jalur','namaSiswa','nik','ttl','tempatLahir','tanggalLahir','jk','asalSekolah','alamat','desaKelurahan','kecamatan','kabupatenKota','provinsi','agama','kewarganegaraan','namaAyah','pekerjaanAyah','waAyah','namaIbu','pekerjaanIbu','email','hafalan','prestasi','sertifikatPrestasi'];
 const articleFields = ['title','category','categoryClass','author','date','readTime','image','excerpt','content'];
 const studentExtraFields = ["tempatTinggal","modaTransportasi","anakKe","tinggiBadan","beratBadan","hobi","citaCita","jumlahSaudaraKandung","jarakRumahSekolah","saudaraDiSekolah"];
 biodata.push(...studentExtraFields);
@@ -37,8 +44,8 @@ function validateStudentExtras(data) {
       fail(400, 'Nilai ' + field + ' tidak valid.');
     }
   }
-  for (const field of ['hobi', 'citaCita']) {
-    if (data[field]?.length > 200) fail(400, 'Isian ' + field + ' maksimal 200 karakter.');
+  for (const field of ['hobi', 'citaCita', 'hafalan', 'prestasi']) {
+    if (data[field]?.length > 500) fail(400, 'Isian ' + field + ' maksimal 500 karakter.');
   }
 }
 const settingFields = Object.keys(require('../data_settings.json'));

@@ -2093,6 +2093,30 @@
                   <label class="form-label" for="bio-citaCita">Cita-cita <span class="required">*</span></label>
                   <input id="bio-citaCita" class="form-control" type="text" maxlength="200" required>
                 </div>
+                <div class="form-group portal-bio-full">
+                  <label class="form-label" for="bio-hafalan">Riwayat Hafalan Al-Qur'an <span class="required">*</span></label>
+                  <input id="bio-hafalan" class="form-control" type="text" maxlength="255" placeholder="Contoh: Juz 30, Surat-surat Pendek, atau Belum ada" required>
+                </div>
+                <div class="form-group portal-bio-full">
+                  <label class="form-label" for="bio-prestasi">Prestasi yang Pernah Diraih <span class="text-xs text-slate-500 font-normal" style="font-weight: normal; font-size: 0.8rem; color: #64748b;">(Isi jika ada, atau ketik '-' jika belum ada)</span></label>
+                  <input id="bio-prestasi" class="form-control" type="text" maxlength="255" placeholder="Contoh: Juara 1 Lomba Mewarnai Tingkat Kota (atau ketik - jika belum ada)">
+                </div>
+                <div class="form-group portal-bio-full" id="group-bio-sertifikat" style="display: none;">
+                  <label class="form-label" for="bio-sertifikat">Upload Sertifikat / Piagam Prestasi <span class="text-xs text-slate-500 font-normal" style="font-weight: normal; font-size: 0.8rem; color: #64748b;">(Opsional: format JPG, PNG, WEBP, atau PDF, maks. 2,5 MB)</span></label>
+                  <input id="bio-sertifikat" class="form-control" type="file" accept="image/jpeg,image/png,image/webp,application/pdf">
+                  <input type="hidden" id="bio-sertifikat-data">
+                  <div id="bio-sertifikat-preview-box" style="display: none; margin-top: 0.6rem; padding: 0.75rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;">
+                      <div id="bio-sertifikat-info" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 600; color: #1e293b;">
+                        <span>📄</span> <span id="bio-sertifikat-name">Sertifikat terlampir</span>
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <a id="bio-sertifikat-link" href="#" class="btn btn-outline-primary btn-sm" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">Lihat Berkas</a>
+                        <button type="button" id="bio-sertifikat-remove" class="btn btn-sm" style="padding: 0.25rem 0.6rem; font-size: 0.75rem; color: #dc2626; border: 1px solid #fca5a5; background: #fff;">Hapus</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="form-group">
                   <label class="form-label" for="bio-jumlahSaudaraKandung">Jumlah Saudara Kandung <span class="required">*</span></label>
                   <input id="bio-jumlahSaudaraKandung" class="form-control" type="number" min="0" step="1" required>
@@ -2539,7 +2563,7 @@
   <script src="js/regions.js?v=20260924_regions2"></script>
   <script src="js/parent-fields.js?v=20260924_schooladdress1"></script>
   <script src="js/parents.js?v=20260925_separatesave1"></script>
-  <script src="js/spmb.js?v=20260925_passgreen1"></script>
+  <script src="js/spmb.js?v=20260925_hafalanprestasi1"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>

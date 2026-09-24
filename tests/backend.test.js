@@ -102,6 +102,17 @@ test('API persistence and authorization in an isolated temporary schema', { skip
     assert.equal(full.body.data.buktiPembayaran, proof);
     assert.equal(full.body.data.regNumber, approved.body.data.regNumber);
     assert.equal(full.body.data.kecamatan, 'Bacukiki Barat');
+    const withCert = await request('spmb', 'POST', {
+      ...full.body.data,
+      action: 'save_biodata',
+      hafalan: 'Juz 30 Mutqin',
+      prestasi: 'Juara 1 Lomba Tahfizh Al-Qur\'an',
+      sertifikatPrestasi: 'data:image/png;base64,aGVsbG8='
+    });
+    assert.equal(withCert.code, 200);
+    assert.equal(withCert.body.data.hafalan, 'Juz 30 Mutqin');
+    assert.equal(withCert.body.data.prestasi, 'Juara 1 Lomba Tahfizh Al-Qur\'an');
+    assert.equal(withCert.body.data.sertifikatPrestasi, 'data:image/png;base64,aGVsbG8=');
     assert.equal((await request('spmb', 'GET', {}, { query: '1234567890123456' })).code, 200);
     assert.equal((await request('spmb', 'GET', {}, {}, true)).body.data.length, 1);
     const parentData = { action: 'save_parents', regNumber: full.body.data.regNumber, accountWa: waAyah, memilikiWali: 'Tidak' };
