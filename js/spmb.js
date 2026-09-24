@@ -1227,6 +1227,70 @@
     return { title: 'Menunggu Pengumuman', message: 'Hasil tes dan wawancara belum diumumkan oleh panitia. Halaman ini akan diperbarui setelah hasil ditetapkan.' };
   }
 
+  const registrationSteps = [
+    ['Pembayaran Pendaftaran', 'Bayar biaya pendaftaran dan unggah bukti pembayaran.'],
+    ['Verifikasi Pembayaran', 'Tunggu persetujuan panitia dan penerbitan kode pendaftaran sebelum melanjutkan.'],
+    ['Biodata Calon Siswa', 'Lengkapi seluruh biodata siswa. Lanjutkan akan memvalidasi dan menyimpan data.'],
+    ['Data Orang Tua dan Wali', 'Lengkapi data ayah, ibu, dan wali bila ada. Lanjutkan akan menyimpan data.'],
+    ['Jadwal Tes & Wawancara', 'Periksa jadwal terbaru dan cetak kartu peserta sebelum hadir.'],
+    ['Pengumuman Hasil Tes & Wawancara', 'Lihat hasil resmi yang ditetapkan panitia. Ini adalah langkah terakhir.']
+  ];
+  let registrationNavigation = { step: 1, regNumber: '', approved: false, proof: false };
+
+  window.navigateRegistration = function (direction) {
+    const { step, regNumber, approved, proof } = registrationNavigation;
+    if (![1, -1].includes(direction) || (step === 1 && direction < 0) || (step === 6 && direction > 0)) return;
+    if (document.getElementById('portal-bio-submit')?.disabled || document.getElementById('portal-parent-data-submit')?.disabled) return;
+    if (direction > 0 && step === 1 && !approved && !proof) {
+      alert('Unggah dan kirim bukti pembayaran terlebih dahulu.'); return;
+    }
+    if (direction > 0 && step === 2 && !approved) {
+      alert('Silakan tunggu pembayaran disetujui oleh panitia.'); return;
+    }
+    if (direction > 0 && (step === 3 || step === 4)) {
+      const form = document.getElementById(step === 3 ? 'portal-student-bio-form' : 'portal-parent-data-form');
+      form?.requestSubmit();
+      return;
+    }
+    const target = step + direction;
+    const suffix = [':start', ':payment', '', ':parents', ':schedule', ':results'][target - 1];
+    try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + suffix); } catch (_) {}
+    renderParentPortal();
+    if (target === 5 || target === 6) refreshParentFromDatabase();
+    document.getElementById('portal-step-navigation')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  function updateRegistrationNavigation(record, approved, proof) {
+    let view = '';
+    try { view = sessionStorage.getItem(PARENT_BIODATA_VIEW_KEY) || ''; } catch (_) {}
+    const summary = document.getElementById('portal-state-payment-summary');
+    summary.style.display = 'none';
+    let step = approved ? 2 : proof ? 2 : 1;
+    for (const [id, number] of [['biodata', 3], ['parents', 4], ['schedule', 5], ['results', 6]]) {
+      if (document.getElementById('portal-state-' + id)?.style.display === 'block') step = number;
+    }
+    if (view === record.regNumber + ':start') {
+      step = 1;
+      ['pending', 'approved', 'biodata', 'parents', 'schedule', 'results'].forEach(id => {
+        document.getElementById('portal-state-' + id).style.display = 'none';
+      });
+      document.getElementById('portal-state-unpaid').style.display = approved || proof ? 'none' : 'block';
+      if (approved || proof) {
+        summary.style.display = 'block';
+        document.getElementById('portal-payment-summary-status').textContent = approved ? 'Pembayaran telah disetujui.' : 'Bukti pembayaran sudah dikirim dan menunggu verifikasi.';
+        const image = document.getElementById('portal-payment-summary-proof');
+        image.src = record.buktiPembayaran || '';
+        image.style.display = proof ? 'block' : 'none';
+      }
+    }
+    registrationNavigation = { step, regNumber: record.regNumber, approved, proof };
+    document.getElementById('portal-current-step').textContent = 'LANGKAH ' + step + ' DARI 6';
+    document.getElementById('portal-current-title').textContent = registrationSteps[step - 1][0];
+    document.getElementById('portal-current-description').textContent = registrationSteps[step - 1][1];
+    document.getElementById('portal-step-back').disabled = step === 1;
+    document.getElementById('portal-step-next').disabled = step === 6 || (step === 1 && !approved && !proof) || (step === 2 && !approved);
+  }
+
   window.openResultsStage = function () {
     const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim();
     if (!regNumber) return;
@@ -1425,7 +1489,7 @@
           }
         } else {
           if (badgeEl) {
-            badgeEl.textContent = 'TAHAP 4: MENUNGGU JADWAL TES & WAWANCARA';
+            badgeEl.textContent = 'LANGKAH 5: MENUNGGU JADWAL TES & WAWANCARA';
             badgeEl.style.background = '#fef3c7';
             badgeEl.style.color = '#92400e';
           }
@@ -1527,6 +1591,7 @@
       if (flowLine2) flowLine2.style.background = 'var(--neutral-200)';
       if (flowLine3) flowLine3.style.background = 'var(--neutral-200)';
     }
+    updateRegistrationNavigation(record, isApproved, hasProof);
   }
 
   // Handle Proof File Input Selection

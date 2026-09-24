@@ -24,7 +24,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/spmb.css?v=20260924_printa4">
+  <link rel="stylesheet" href="css/spmb.css?v=20260925_navigation1">
 </head>
 <body>
 
@@ -1838,6 +1838,21 @@
             </div>
           </div>
 
+          <div id="portal-step-navigation" class="portal-step-navigation">
+            <div class="portal-nav-bar">
+              <button type="button" id="portal-step-back" class="portal-bio-back" onclick="window.navigateRegistration(-1)">← Kembali</button>
+              <button type="button" id="portal-step-next" class="portal-bio-back" onclick="window.navigateRegistration(1)">Lanjutkan →</button>
+            </div>
+            <span id="portal-current-step" class="badge-tag">LANGKAH 1 DARI 6</span>
+            <h3 id="portal-current-title">Pembayaran Pendaftaran</h3>
+            <p id="portal-current-description"></p>
+          </div>
+          <div id="portal-state-payment-summary" class="spmb-card-highlight" style="display:none;">
+            <h3>Bukti Pembayaran Pendaftaran</h3>
+            <p id="portal-payment-summary-status"></p>
+            <p>Data pembayaran sudah tersimpan. Anda tidak perlu membayar ulang.</p>
+            <img id="portal-payment-summary-proof" alt="Bukti pembayaran pendaftaran" style="display:none; max-width:100%; max-height:420px; object-fit:contain;">
+          </div>
           <!-- STATE 1: BELUM BAYAR / BELUM UPLOAD BUKTI -->
           <div id="portal-state-unpaid" class="spmb-card-highlight">
             <div style="text-align: center; max-width: 680px; margin: 0 auto 2rem;">
@@ -2130,7 +2145,7 @@
             <button type="button" class="portal-bio-back" onclick="window.openStudentBiodata()">← Kembali ke Biodata Siswa</button>
             <form id="portal-parent-data-form" class="portal-bio-form">
               <div class="portal-bio-heading">
-                <span class="badge-tag">DATA ORANG TUA DAN WALI</span>
+                <span class="badge-tag">LANGKAH 4 — DATA ORANG TUA DAN WALI</span>
                 <h3>Lengkapi Data Orang Tua dan Wali</h3>
                 <p>Semua isian ayah dan ibu wajib diisi. Pilih Ya pada bagian wali untuk melengkapi data wali.</p>
               </div>
@@ -2157,7 +2172,7 @@
             <div class="portal-schedule-card">
               <!-- Dynamic Status Tag -->
               <span id="portal-schedule-badge" class="badge-tag" style="background:#fef3c7; color:#92400e; font-weight:800; font-size:0.85rem;">
-                TAHAP 4: MENUNGGU JADWAL TES &amp; WAWANCARA
+                LANGKAH 5: MENUNGGU JADWAL TES &amp; WAWANCARA
               </span>
 
               <h2 id="portal-schedule-title" class="portal-schedule-heading">
@@ -2549,7 +2564,7 @@
   <script src="js/regions.js?v=20260924_regions2"></script>
   <script src="js/parent-fields.js?v=20260924_schooladdress1"></script>
   <script src="js/parents.js?v=20260924_parents1"></script>
-  <script src="js/spmb.js?v=20260924_backfirst1"></script>
+  <script src="js/spmb.js?v=20260925_navigation1"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>

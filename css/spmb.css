@@ -802,6 +802,20 @@
   }
 }
 
+.portal-step-navigation { margin: 1rem 0 1.5rem; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; }
+.portal-step-navigation .portal-nav-bar { margin-bottom: 1rem; }
+.portal-step-navigation h3 { margin: .75rem 0 .35rem; }
+.portal-step-navigation p { color: #64748b; font-size: .9rem; }
+.portal-step-navigation button:disabled { opacity: .45; cursor: not-allowed; }
+#spmb-parent-portal .portal-flow-steps,
+#portal-state-biodata > .portal-bio-back,
+#portal-state-parents > .portal-bio-back,
+#portal-state-schedule > .portal-nav-bar,
+#portal-state-results > .portal-nav-bar,
+#portal-state-approved .portal-next-bio-btn,
+#portal-bio-submit, #portal-parent-data-submit { display: none !important; }
+@media print { .portal-step-navigation { display: none !important; } }
+
 #schedule-print-sheet {
   position: absolute;
   left: -10000px;
