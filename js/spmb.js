@@ -1159,8 +1159,9 @@
     });
   };
 
-  window.openScheduleStage = function () {
-    const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim() ||
+  window.openScheduleStage = function (passedReg) {
+    const regNumber = passedReg ||
+      document.getElementById('portal-approved-code')?.textContent?.trim() ||
       document.getElementById('portal-sched-reg')?.textContent?.trim();
     if (!regNumber) return;
     try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + ':schedule'); } catch (_) {}
