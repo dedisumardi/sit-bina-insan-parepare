@@ -28,6 +28,7 @@ test('export includes every student payload and parent field in separate columns
   for (const match of payload.matchAll(/(\w+): value\(/g)) assert.ok(keys.includes(match[1]), match[1]);
   const extraKeys = JSON.parse(payload.match(/for \(const field of (\[[^\]]+\])/)[1]);
   for (const key of extraKeys) assert.ok(keys.includes(key), key);
+  assert.equal(keys.includes('email'), false);
 });
 
 test('CSV keeps columns aligned, quotes/newlines intact, zero values and identifiers safe', () => {

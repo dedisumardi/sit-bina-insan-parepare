@@ -8,7 +8,7 @@
     for (const field of parents.fields) columns.push([field.key + role, field.label + ' ' + role]);
   }
   columns.splice(columns.findIndex(([key]) => key === 'asalSekolah') + 1, 0, ['alamatAsalSekolah', 'Alamat Asal Sekolah']);
-  columns.push(['waAyah', 'Nomor WhatsApp Akun Portal'], ['email', 'Email'], ['hafalan', 'Hafalan Quran'],
+  columns.push(['waAyah', 'Nomor WhatsApp Akun Portal'], ['hafalan', 'Hafalan Quran'],
     ['prestasi', 'Prestasi'], ['ttl', 'Tempat/Tanggal Lahir (Data Lama)'],
     ['tanggalDaftar', 'Tanggal Daftar'], ['status', 'Status Pendaftaran'],
     ['nominalPembayaran', 'Nominal Pembayaran (Rp)'], ['buktiPembayaran', 'Bukti Pembayaran Tersedia'],

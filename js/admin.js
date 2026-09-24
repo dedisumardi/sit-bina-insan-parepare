@@ -913,7 +913,6 @@
     document.getElementById('modal-app-ayah').textContent = `${item.namaAyah || '-'} (${item.pekerjaanAyah || '-'})`;
     document.getElementById('modal-app-ibu').textContent = `${item.namaIbu || '-'}`;
     document.getElementById('modal-app-wa').textContent = item.waAyah || '-';
-    document.getElementById('modal-app-email').textContent = item.email || '-';
     document.getElementById('modal-app-hafalan').textContent = item.hafalan || 'Belum ada';
     document.getElementById('modal-app-prestasi').textContent = item.prestasi || '-';
 
