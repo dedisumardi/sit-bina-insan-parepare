@@ -3,6 +3,27 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
+test('one schedule per level is saved for both test and interview', () => {
+  const html = fs.readFileSync('admin.html', 'utf8');
+  assert.equal((html.match(/data-schedule-part="date"/g) || []).length, 3);
+  assert.equal((html.match(/data-schedule-part="start"/g) || []).length, 3);
+  assert.equal((html.match(/data-schedule-part="end"/g) || []).length, 3);
+  assert.ok(!html.includes('data-schedule-editor="tkit_jadwalWawancara"'));
+  const source = fs.readFileSync('js/admin.js', 'utf8');
+  const begin = source.indexOf("        document.querySelectorAll('[data-schedule-setting]').forEach");
+  const finish = source.indexOf("        const result = await apiRequest('api/settings.php'", begin);
+  const nextSettings = {};
+  const values = { tkit_jadwalTes: 'Jadwal TKIT', sdit_jadwalTes: 'Jadwal SDIT', smpit_jadwalTes: '' };
+  vm.runInNewContext(source.slice(begin, finish), {
+    nextSettings,
+    document: { querySelectorAll: () => Object.entries(values).map(([key, value]) => ({ dataset: { scheduleSetting: key }, value })) }
+  });
+  for (const level of ['tkit', 'sdit', 'smpit']) {
+    assert.equal(nextSettings[level + '_jadwalTes'], values[level + '_jadwalTes']);
+    assert.equal(nextSettings[level + '_jadwalWawancara'], values[level + '_jadwalTes']);
+  }
+});
+
 test('schedule pickers restore, format WITA, validate and preserve legacy schedules', () => {
   const source = fs.readFileSync('js/admin.js', 'utf8');
   const code = source.slice(source.indexOf('  function renderScheduleEditors()'), source.indexOf('  function renderSettingsForm()'));

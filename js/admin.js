@@ -1434,7 +1434,8 @@
 
   function renderSettingsForm() {
     document.querySelectorAll('[data-schedule-setting]').forEach(input => {
-      input.value = settings[input.dataset.scheduleSetting] || '';
+      const key = input.dataset.scheduleSetting;
+      input.value = settings[key] || (key.endsWith('_jadwalTes') ? settings[key.replace('_jadwalTes', '_jadwalWawancara')] : '') || '';
     });
     renderScheduleEditors();
     const academicYear = settings.academicYear || '2026/2027';
@@ -1694,6 +1695,9 @@
         document.querySelectorAll('[data-schedule-setting]').forEach(input => {
           nextSettings[input.dataset.scheduleSetting] = input.value.trim();
         });
+        for (const level of ['tkit', 'sdit', 'smpit']) {
+          nextSettings[level + '_jadwalWawancara'] = nextSettings[level + '_jadwalTes'];
+        }
         const result = await apiRequest('api/settings.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
