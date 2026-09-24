@@ -61,6 +61,7 @@
   form.addEventListener('input', () => { dirty = true; status.textContent = 'Perubahan belum disimpan.'; status.className = 'portal-bio-status'; });
   form.addEventListener('change', () => { dirty = true; toggleGuardian(); });
   window.ParentBiodata = {
+    hasUnsavedChanges() { return dirty; },
     populate(record) {
       if (currentRecord?.regNumber === record.regNumber && dirty) return;
       const version = JSON.stringify([record.regNumber, record.parentDataUpdatedAt]);
@@ -98,9 +99,7 @@
       try { localStorage.setItem('sit_bina_insan_spmb_data', JSON.stringify([result.data])); } catch (_) {}
       dirty = false;
       window.ParentBiodata.populate(result.data);
-      if (typeof window.openScheduleStage === 'function') {
-        window.openScheduleStage(result.data.regNumber);
-      }
+      window.renderParentPortal?.();
     } catch (error) {
       status.textContent = error.message || 'Data gagal disimpan. Silakan coba kembali.';
       status.className = 'portal-bio-status is-error';

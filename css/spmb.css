@@ -811,8 +811,7 @@
 #portal-state-parents > .portal-bio-back,
 #portal-state-schedule > .portal-nav-bar,
 #portal-state-results > .portal-nav-bar,
-#portal-state-approved .portal-next-bio-btn,
-#portal-bio-submit, #portal-parent-data-submit { display: none !important; }
+#portal-state-approved .portal-next-bio-btn { display: none !important; }
 @media print { .portal-step-navigation { display: none !important; } }
 
 #schedule-print-sheet {

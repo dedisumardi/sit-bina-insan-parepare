@@ -1155,13 +1155,11 @@
       cacheSetItem(STORAGE_KEY, JSON.stringify(records));
       form.dataset.dirty = '0';
       populateStudentBioForm(result.data);
-      try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, result.data.regNumber + ':parents'); } catch (_) {}
       if (status) {
         status.textContent = '✓ Biodata siswa berhasil disimpan ke database.';
         status.className = 'portal-bio-status is-success';
       }
       renderParentPortal();
-      document.getElementById('portal-state-parents')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (error) {
       if (status) {
         status.textContent = error.message || 'Biodata gagal disimpan. Silakan coba kembali.';
@@ -1230,8 +1228,8 @@
   const registrationSteps = [
     ['Pembayaran Pendaftaran', 'Bayar biaya pendaftaran dan unggah bukti pembayaran.'],
     ['Verifikasi Pembayaran', 'Tunggu persetujuan panitia dan penerbitan kode pendaftaran sebelum melanjutkan.'],
-    ['Biodata Calon Siswa', 'Lengkapi seluruh biodata siswa. Lanjutkan akan memvalidasi dan menyimpan data.'],
-    ['Data Orang Tua dan Wali', 'Lengkapi data ayah, ibu, dan wali bila ada. Lanjutkan akan menyimpan data.'],
+    ['Biodata Calon Siswa', 'Lengkapi biodata dan klik Simpan Data Siswa. Setelah tersimpan, klik Lanjutkan.'],
+    ['Data Orang Tua dan Wali', 'Lengkapi data ayah, ibu, dan wali bila ada, lalu klik Simpan Data Orang Tua dan Wali sebelum Lanjutkan.'],
     ['Jadwal Tes & Wawancara', 'Periksa jadwal terbaru dan cetak kartu peserta sebelum hadir.'],
     ['Pengumuman Hasil Tes & Wawancara', 'Lihat hasil resmi yang ditetapkan panitia. Ini adalah langkah terakhir.']
   ];
@@ -1249,8 +1247,13 @@
     }
     if (direction > 0 && (step === 3 || step === 4)) {
       const form = document.getElementById(step === 3 ? 'portal-student-bio-form' : 'portal-parent-data-form');
-      form?.requestSubmit();
-      return;
+      if (form && !form.reportValidity()) return;
+      const saved = step === 3 ? registrationNavigation.studentSaved : registrationNavigation.parentsSaved;
+      const dirty = step === 3 ? form?.dataset.dirty === '1' : window.ParentBiodata?.hasUnsavedChanges();
+      if (!saved || dirty) {
+        alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum melanjutkan.');
+        return;
+      }
     }
     const target = step + direction;
     const suffix = [':start', ':payment', '', ':parents', ':schedule', ':results'][target - 1];
@@ -1283,7 +1286,7 @@
         image.style.display = proof ? 'block' : 'none';
       }
     }
-    registrationNavigation = { step, regNumber: record.regNumber, approved, proof };
+    registrationNavigation = { step, regNumber: record.regNumber, approved, proof, studentSaved: Boolean(record.biodataUpdatedAt), parentsSaved: Boolean(record.parentDataUpdatedAt) };
     document.getElementById('portal-current-step').textContent = 'LANGKAH ' + step + ' DARI 6';
     for (let number = 1; number <= 6; number++) {
       const indicator = document.getElementById('flow-step-' + number);
