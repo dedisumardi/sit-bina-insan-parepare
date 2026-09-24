@@ -10,6 +10,39 @@
   let currentStep = 1;
   const totalSteps = 5;
   const STORAGE_KEY = 'sit_bina_insan_spmb_data';
+  let scheduleSettings = null;
+  let scheduleLoadError = false;
+  let scheduleRequest = null;
+
+  function getSharedSchedule(record, settings) {
+    const level = String(record.jenjang || '').trim().toLowerCase();
+    if (!settings || !['tkit', 'sdit', 'smpit'].includes(level)) return { time: '', location: '', notes: '' };
+    return {
+      time: settings[level + '_jadwalTes'] || '',
+      location: settings[level + '_lokasiTes'] || '',
+      notes: settings[level + '_catatanJadwal'] || ''
+    };
+  }
+
+  async function refreshScheduleSettings() {
+    if (document.hidden || !localStorage.getItem(PARENT_SESSION_KEY)) return;
+    if (scheduleRequest) return scheduleRequest;
+    scheduleRequest = (async () => {
+      try {
+        const response = await fetch('api/settings.php', { cache: 'no-store' });
+        const result = await response.json();
+        if (!response.ok || !result.success || !result.data) throw new Error('Jadwal tidak tersedia');
+        scheduleSettings = result.data;
+        scheduleLoadError = false;
+      } catch (_) {
+        scheduleLoadError = true;
+      } finally {
+        scheduleRequest = null;
+        renderParentPortal();
+      }
+    })();
+    return scheduleRequest;
+  }
 
   function cacheSetItem(key, value) {
     try { localStorage.setItem(key, value); } catch (_) { /* A cache failure must not report a successful database write as failed. */ }
@@ -736,6 +769,7 @@
     renderParentPortal();
     refreshParentFromDatabase();
     setInterval(refreshParentFromDatabase, 30000);
+    setInterval(refreshScheduleSettings, 10000);
     window.addEventListener('focus', refreshParentFromDatabase);
     const bioForm = document.getElementById('portal-student-bio-form');
     bioForm?.addEventListener('input', () => {
@@ -1005,6 +1039,7 @@
 
   async function refreshParentFromDatabase() {
     if (document.hidden) return;
+    refreshScheduleSettings();
     try {
       const session = JSON.parse(localStorage.getItem(PARENT_SESSION_KEY) || 'null');
       if (!session?.wa) return;
@@ -1165,6 +1200,7 @@
       document.getElementById('portal-sched-reg')?.textContent?.trim();
     if (!regNumber) return;
     try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + ':schedule'); } catch (_) {}
+    refreshScheduleSettings();
     renderParentPortal();
     requestAnimationFrame(() => {
       document.getElementById('portal-state-schedule')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1302,7 +1338,8 @@
       document.getElementById('portal-approved-code').textContent = record.regNumber || 'SPMB-2026-001';
       populateStudentBioForm(record);
 
-      const hasSchedule = Boolean(record.jadwalTes || (record.jadwalObservasi && !record.jadwalObservasi.toLowerCase().includes('menunggu') && record.jadwalObservasi !== '-'));
+      const sharedSchedule = getSharedSchedule(record, scheduleSettings);
+      const hasSchedule = Boolean(sharedSchedule.time) && !scheduleLoadError;
 
       // Populate Schedule Stage UI
       if (stateSchedule) {
@@ -1337,15 +1374,11 @@
 
           const valTestDate = document.getElementById('portal-sched-val-test-date');
           const valTestLoc = document.getElementById('portal-sched-val-test-loc');
-          const valInterviewDate = document.getElementById('portal-sched-val-interview-date');
-          const valInterviewLoc = document.getElementById('portal-sched-val-interview-loc');
           const valNotes = document.getElementById('portal-sched-val-notes');
 
-          if (valTestDate) valTestDate.textContent = record.jadwalTes || record.jadwalObservasi || '-';
-          if (valTestLoc) valTestLoc.textContent = record.lokasiTes || 'Gedung Utama SIT Bina Insan Parepare';
-          if (valInterviewDate) valInterviewDate.textContent = record.jadwalWawancara || record.jadwalTes || record.jadwalObservasi || '-';
-          if (valInterviewLoc) valInterviewLoc.textContent = record.lokasiTes || 'Ruang Konseling & Wawancara';
-          if (valNotes) valNotes.textContent = record.catatanJadwal || 'Hadir 15 menit sebelum waktu tes dengan pakaian muslim/muslimah rapi.';
+          if (valTestDate) valTestDate.textContent = sharedSchedule.time;
+          if (valTestLoc) valTestLoc.textContent = sharedSchedule.location || '-';
+          if (valNotes) valNotes.textContent = sharedSchedule.notes || '-';
 
           const confirmWaBtn = document.getElementById('portal-sched-wa-confirm-btn');
           if (confirmWaBtn) {
@@ -1365,6 +1398,13 @@
           }
           if (waitingView) waitingView.style.display = 'block';
           if (confirmedView) confirmedView.style.display = 'none';
+          if (scheduleLoadError || !scheduleSettings) {
+            if (titleEl) titleEl.textContent = scheduleLoadError ? 'Jadwal belum dapat dimuat' : 'Memuat jadwal terbaru...';
+            if (subtitleEl) subtitleEl.textContent = scheduleLoadError ? 'Koneksi ke database terganggu. Jadwal akan dimuat ulang secara otomatis.' : 'Mengambil jadwal resmi dari database sekolah.';
+            if (statusPill) statusPill.textContent = scheduleLoadError ? 'Gagal memuat jadwal' : 'Memuat jadwal';
+            if (badgeEl) badgeEl.textContent = 'JADWAL TES & WAWANCARA';
+            if (waitingView) waitingView.style.display = 'none';
+          }
 
           const waInquireBtn = document.getElementById('portal-sched-wa-inquire-btn');
           if (waInquireBtn) {
