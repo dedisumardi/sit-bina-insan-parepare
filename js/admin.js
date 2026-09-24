@@ -881,6 +881,20 @@
     document.getElementById('modal-app-kewarganegaraan').textContent = item.kewarganegaraan || '-';
     document.getElementById('modal-app-alamat').textContent = item.alamat || '-';
     document.getElementById('modal-app-wilayah').textContent = [item.desaKelurahan, item.kecamatan, item.kabupatenKota, item.provinsi].filter(Boolean).join(', ') || '-';
+    const extraContainer = document.getElementById('modal-app-extra');
+    extraContainer.replaceChildren();
+    for (const [key, label] of [["tempatTinggal","Tempat Tinggal"],["modaTransportasi","Moda Transportasi"],["anakKe","Anak ke Berapa"],["tinggiBadan","Tinggi Badan (cm)"],["beratBadan","Berat Badan (kg)"],["hobi","Hobi"],["citaCita","Cita-cita"],["jumlahSaudaraKandung","Jumlah Saudara Kandung"],["jarakRumahSekolah","Jarak Rumah ke Sekolah"],["saudaraDiSekolah","Apakah memiliki saudara kandung yang bersekolah di SIT Bina Insan Parepare?"]]) {
+      const card = document.createElement('div');
+      card.className = 'p-3 bg-slate-50 rounded-xl border border-slate-100';
+      const title = document.createElement('span');
+      title.className = 'text-slate-400 block text-[10px] font-bold uppercase';
+      title.textContent = label;
+      const value = document.createElement('span');
+      value.className = 'font-bold text-slate-800';
+      value.textContent = item[key] === undefined || item[key] === '' ? '-' : String(item[key]);
+      card.append(title, value);
+      extraContainer.append(card);
+    }
     document.getElementById('modal-app-ayah').textContent = `${item.namaAyah || '-'} (${item.pekerjaanAyah || '-'})`;
     document.getElementById('modal-app-ibu').textContent = `${item.namaIbu || '-'}`;
     document.getElementById('modal-app-wa').textContent = item.waAyah || '-';

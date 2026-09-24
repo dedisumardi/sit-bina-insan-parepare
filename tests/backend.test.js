@@ -60,12 +60,20 @@ test('API persistence and authorization in an isolated temporary schema', { skip
     assert.equal((await request('spmb', 'PUT', { reg_number: reg, waAyah, buktiPembayaran: proof })).code, 200);
     const approved = await request('spmb', 'PUT', { reg_number: reg, new_reg_number: 'generate', status: 'Pembayaran Terverifikasi' }, {}, true);
     assert.equal(approved.code, 200);
-    const full = await request('spmb', 'POST', { action: 'save_biodata', regNumber: approved.body.data.regNumber,
+    const extra = { tempatTinggal: 'Bersama orang tua', modaTransportasi: 'Jalan kaki', anakKe: '1',
+      tinggiBadan: '125.5', beratBadan: '25.5', hobi: 'Membaca', citaCita: 'Dokter',
+      jarakRumahSekolah: 'Kurang dari 1 km', jumlahSaudaraKandung: '0', saudaraDiSekolah: 'Tidak' };
+    const full = await request('spmb', 'POST', { ...extra, action: 'save_biodata', regNumber: approved.body.data.regNumber,
       namaAyah: 'Test Parent', asalSekolah: 'TK Pengujian', namaSiswa: 'Test Student', waAyah, nik: '1234567890123456', jenjang: 'sdit',
       jk: 'Laki-laki', tempatLahir: 'Parepare', tanggalLahir: '2018-05-12', alamat: 'Jl. Test',
       agama: 'Islam', kewarganegaraan: 'Indonesia', desaKelurahan: 'Bumi Harapan', kecamatan: 'Bacukiki Barat',
       kabupatenKota: 'Kota Parepare', provinsi: 'Sulawesi Selatan' });
     assert.equal(full.code, 200);
+    const readBack = await request('spmb', 'GET', {}, { query: '1234567890123456' });
+    for (const [key, value] of Object.entries(extra)) assert.equal(readBack.body.data[key], value);
+    for (const invalidExtra of [{ anakKe: '0' }, { jumlahSaudaraKandung: '-1' }, { tinggiBadan: 'abc' }, { beratBadan: '-2' }, { modaTransportasi: 'Pesawat' }, { saudaraDiSekolah: 'Mungkin' }]) {
+      assert.equal((await request('spmb', 'POST', { ...full.body.data, ...invalidExtra, action: 'save_biodata' })).code, 400);
+    }
     assert.equal(full.body.data.asalSekolah, 'TK Pengujian');
     for (const asalSekolah of ['', '   ', '-']) {
       const invalid = await request('spmb', 'POST', { ...full.body.data, action: 'save_biodata', asalSekolah });

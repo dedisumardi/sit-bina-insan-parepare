@@ -2064,6 +2064,49 @@
                 </div>
               </div>
 
+              <div class="portal-bio-grid">
+                <div class="form-group">
+                  <label class="form-label" for="bio-tempatTinggal">Tempat Tinggal</label>
+                  <select id="bio-tempatTinggal" class="form-control"><option value="">Pilih tempat tinggal</option><option value="Bersama orang tua">Bersama orang tua</option><option value="Wali">Wali</option><option value="Lainnya">Lainnya</option></select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-modaTransportasi">Moda Transportasi</label>
+                  <select id="bio-modaTransportasi" class="form-control"><option value="">Pilih moda transportasi</option><option value="Jalan kaki">Jalan kaki</option><option value="Angkutan umum">Angkutan umum</option><option value="Ojek">Ojek</option><option value="Sepeda">Sepeda</option><option value="Motor pribadi">Motor pribadi</option><option value="Mobil pribadi">Mobil pribadi</option><option value="Lainnya">Lainnya</option></select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-anakKe">Anak ke Berapa</label>
+                  <input id="bio-anakKe" class="form-control" type="number" min="1" step="1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-tinggiBadan">Tinggi Badan (cm)</label>
+                  <input id="bio-tinggiBadan" class="form-control" type="number" min="1" step="0.1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-beratBadan">Berat Badan (kg)</label>
+                  <input id="bio-beratBadan" class="form-control" type="number" min="1" step="0.1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-hobi">Hobi</label>
+                  <input id="bio-hobi" class="form-control" type="text" maxlength="200">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-citaCita">Cita-cita</label>
+                  <input id="bio-citaCita" class="form-control" type="text" maxlength="200">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="bio-jumlahSaudaraKandung">Jumlah Saudara Kandung</label>
+                  <input id="bio-jumlahSaudaraKandung" class="form-control" type="number" min="0" step="1">
+                </div>
+                <fieldset class="form-group portal-bio-full" style="border:0; padding:0;">
+                  <legend class="form-label">Jarak Rumah ke Sekolah</legend>
+                  <div style="display:flex; flex-wrap:wrap; gap:1.5rem;"><label><input type="radio" name="bio-jarakRumahSekolah" value="Kurang dari 1 km"> Kurang dari 1 km</label><label><input type="radio" name="bio-jarakRumahSekolah" value="Lebih dari 1 km"> Lebih dari 1 km</label></div>
+                </fieldset>
+                <fieldset class="form-group portal-bio-full" style="border:0; padding:0;">
+                  <legend class="form-label">Apakah memiliki saudara kandung yang bersekolah di SIT Bina Insan Parepare?</legend>
+                  <div style="display:flex; flex-wrap:wrap; gap:1.5rem;"><label><input type="radio" name="bio-saudaraDiSekolah" value="Ya"> Ya</label><label><input type="radio" name="bio-saudaraDiSekolah" value="Tidak"> Tidak</label></div>
+                </fieldset>
+              </div>
+
               <div class="portal-bio-actions">
                 <div id="portal-bio-status" class="portal-bio-status" aria-live="polite">Pastikan seluruh data wajib sudah benar.</div>
                 <button type="submit" id="portal-bio-submit" class="btn btn-primary">Simpan Biodata Siswa</button>
@@ -2307,7 +2350,7 @@
   <!-- Scripts -->
   <script src="js/data.js?v=20260923_dbsync2"></script>
   <script src="js/regions.js?v=20260924_regions1"></script>
-  <script src="js/spmb.js?v=20260924_school1"></script>
+  <script src="js/spmb.js?v=20260924_extra1"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>

@@ -21,6 +21,24 @@ function row(record) {
 function requireAdmin(admin) { if (!admin) fail(401, 'Silakan masuk sebagai admin.'); }
 const biodata = ['jenjang','jalur','namaSiswa','nik','ttl','tempatLahir','tanggalLahir','jk','asalSekolah','alamat','desaKelurahan','kecamatan','kabupatenKota','provinsi','agama','kewarganegaraan','namaAyah','pekerjaanAyah','waAyah','namaIbu','pekerjaanIbu','email','hafalan','prestasi'];
 const articleFields = ['title','category','categoryClass','author','date','readTime','image','excerpt','content'];
+const studentExtraFields = ["tempatTinggal","modaTransportasi","anakKe","tinggiBadan","beratBadan","hobi","citaCita","jumlahSaudaraKandung","jarakRumahSekolah","saudaraDiSekolah"];
+biodata.push(...studentExtraFields);
+function validateStudentExtras(data) {
+  const choices = {"tempatTinggal":["Bersama orang tua","Wali","Lainnya"],"modaTransportasi":["Jalan kaki","Angkutan umum","Ojek","Sepeda","Motor pribadi","Mobil pribadi","Lainnya"],"jarakRumahSekolah":["Kurang dari 1 km","Lebih dari 1 km"],"saudaraDiSekolah":["Ya","Tidak"]};
+  for (const [field, allowed] of Object.entries(choices)) {
+    if (data[field] && !allowed.includes(data[field])) fail(400, 'Pilihan ' + field + ' tidak valid.');
+  }
+  for (const [field, min, integer] of [['anakKe', 1, true], ['jumlahSaudaraKandung', 0, true], ['tinggiBadan', 1, false], ['beratBadan', 1, false]]) {
+    if (data[field] === undefined || data[field] === '') continue;
+    const value = Number(data[field]);
+    if (!/^\d+(\.\d+)?$/.test(data[field]) || !Number.isFinite(value) || value < min || (integer && !Number.isInteger(value))) {
+      fail(400, 'Nilai ' + field + ' tidak valid.');
+    }
+  }
+  for (const field of ['hobi', 'citaCita']) {
+    if (data[field]?.length > 200) fail(400, 'Isian ' + field + ' maksimal 200 karakter.');
+  }
+}
 const settingFields = Object.keys(require('../data_settings.json'));
 
 async function handler(req, res) {
@@ -124,6 +142,7 @@ async function handler(req, res) {
       }
       if (method === 'POST') {
         const data = pick(input, biodata);
+        validateStudentExtras(data);
         const wa = phone(data.waAyah || input.wa_ayah || input.noWhatsapp);
         data.waAyah = wa;
         data.namaAyah ||= String(input.namaOrangTua || '').trim();

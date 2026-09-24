@@ -1037,6 +1037,13 @@
     set('bio-agama', student.agama);
     set('bio-kewarganegaraan', student.kewarganegaraan);
     set('bio-alamat', student.alamat);
+    for (const field of ["tempatTinggal","modaTransportasi","anakKe","tinggiBadan","beratBadan","hobi","citaCita","jumlahSaudaraKandung","jarakRumahSekolah","saudaraDiSekolah"]) {
+      const input = document.getElementById('bio-' + field);
+      if (input) input.value = student[field] ?? '';
+      else form.querySelectorAll('input[name="bio-' + field + '"]').forEach(radio => {
+        radio.checked = radio.value === student[field];
+      });
+    }
     window.StudentRegions?.populate(student, key);
     form.dataset.recordKey = key;
     form.dataset.dirty = '0';
@@ -1091,6 +1098,10 @@
       desaKelurahan: value('bio-desa'), kecamatan: value('bio-kecamatan'),
       kabupatenKota: value('bio-kabupaten'), provinsi: value('bio-provinsi')
     };
+    for (const field of ["tempatTinggal","modaTransportasi","anakKe","tinggiBadan","beratBadan","hobi","citaCita","jumlahSaudaraKandung","jarakRumahSekolah","saudaraDiSekolah"]) {
+      payload[field] = document.getElementById('bio-' + field)?.value.trim()
+        ?? form.querySelector('input[name="bio-' + field + '"]:checked')?.value ?? '';
+    }
     if (submit) submit.disabled = true;
     if (status) {
       status.textContent = 'Menyimpan biodata ke database...';
