@@ -953,6 +953,34 @@
               <textarea id="set-bank" rows="2" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-medium py-2.5 px-3.5" required></textarea>
             </div>
 
+            <section class="p-4 rounded-xl border border-emerald-200 space-y-4">
+              <h3 class="font-bold text-sm">Penjadwalan Tes Calon Murid &amp; Wawancara Orang Tua</h3>
+              <p class="text-xs text-slate-600">Jadwal acuan per jenjang. Terapkan lewat preset pada detail siswa. Jadwal siswa yang sudah ditetapkan tidak berubah otomatis.</p>
+              <fieldset class="space-y-3 border rounded-xl p-4">
+                <legend class="font-bold">TKIT</legend>
+                <div><label class="block text-xs font-bold mb-1" for="set-tkit-jadwalTes">Tanggal & Waktu Tes Calon Siswa</label><input type="text" id="set-tkit-jadwalTes" data-schedule-setting="tkit_jadwalTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div><label class="block text-xs font-bold mb-1" for="set-tkit-jadwalWawancara">Tanggal & Waktu Wawancara Orang Tua</label><input type="text" id="set-tkit-jadwalWawancara" data-schedule-setting="tkit_jadwalWawancara" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div><label class="block text-xs font-bold mb-1" for="set-tkit-lokasiTes">Lokasi / Ruangan Tes & Wawancara</label><input type="text" id="set-tkit-lokasiTes" data-schedule-setting="tkit_lokasiTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div><label class="block text-xs font-bold mb-1" for="set-tkit-catatanJadwal">Petunjuk & Catatan untuk Orang Tua / Siswa</label><textarea rows="2" id="set-tkit-catatanJadwal" data-schedule-setting="tkit_catatanJadwal" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></textarea></div>
+                <button type="button" class="text-xs font-bold text-amber-800" onclick="this.closest('fieldset').querySelectorAll('[data-schedule-setting]').forEach(input => input.value = '')">Reset Menunggu</button>
+              </fieldset>
+              <fieldset class="space-y-3 border rounded-xl p-4">
+                <legend class="font-bold">SDIT</legend>
+                <div><label class="block text-xs font-bold mb-1" for="set-sdit-jadwalTes">Tanggal & Waktu Tes Calon Siswa</label><input type="text" id="set-sdit-jadwalTes" data-schedule-setting="sdit_jadwalTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div><label class="block text-xs font-bold mb-1" for="set-sdit-jadwalWawancara">Tanggal & Waktu Wawancara Orang Tua</label><input type="text" id="set-sdit-jadwalWawancara" data-schedule-setting="sdit_jadwalWawancara" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div><label class="block text-xs font-bold mb-1" for="set-sdit-lokasiTes">Lokasi / Ruangan Tes & Wawancara</label><input type="text" id="set-sdit-lokasiTes" data-schedule-setting="sdit_lokasiTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div><label class="block text-xs font-bold mb-1" for="set-sdit-catatanJadwal">Petunjuk & Catatan untuk Orang Tua / Siswa</label><textarea rows="2" id="set-sdit-catatanJadwal" data-schedule-setting="sdit_catatanJadwal" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></textarea></div>
+                <button type="button" class="text-xs font-bold text-amber-800" onclick="this.closest('fieldset').querySelectorAll('[data-schedule-setting]').forEach(input => input.value = '')">Reset Menunggu</button>
+              </fieldset>
+              <fieldset class="space-y-3 border rounded-xl p-4">
+                <legend class="font-bold">SMPIT</legend>
+                <div><label class="block text-xs font-bold mb-1" for="set-smpit-jadwalTes">Tanggal & Waktu Tes Calon Siswa</label><input type="text" id="set-smpit-jadwalTes" data-schedule-setting="smpit_jadwalTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div><label class="block text-xs font-bold mb-1" for="set-smpit-jadwalWawancara">Tanggal & Waktu Wawancara Orang Tua</label><input type="text" id="set-smpit-jadwalWawancara" data-schedule-setting="smpit_jadwalWawancara" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div><label class="block text-xs font-bold mb-1" for="set-smpit-lokasiTes">Lokasi / Ruangan Tes & Wawancara</label><input type="text" id="set-smpit-lokasiTes" data-schedule-setting="smpit_lokasiTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div><label class="block text-xs font-bold mb-1" for="set-smpit-catatanJadwal">Petunjuk & Catatan untuk Orang Tua / Siswa</label><textarea rows="2" id="set-smpit-catatanJadwal" data-schedule-setting="smpit_catatanJadwal" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></textarea></div>
+                <button type="button" class="text-xs font-bold text-amber-800" onclick="this.closest('fieldset').querySelectorAll('[data-schedule-setting]').forEach(input => input.value = '')">Reset Menunggu</button>
+              </fieldset>
+            </section>
             <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
               <button type="button" id="btn-reset-sample-data" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition duration-150">
                 Reset Pengaturan Bawaan
@@ -1306,6 +1334,6 @@
   <script src="js/data.js?v=20260923_dbsync2"></script>
   <script src="js/parent-fields.js?v=20260924_schooladdress1"></script>
   <script src="js/student-export.js?v=20260924_schooladdress1"></script>
-  <script src="js/admin.js?v=20260924_schooladdress1"></script>
+  <script src="js/admin.js?v=20260924_schedule1"></script>
 </body>
 </html>

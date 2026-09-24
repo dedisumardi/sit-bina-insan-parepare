@@ -42,6 +42,9 @@ function validateStudentExtras(data) {
   }
 }
 const settingFields = Object.keys(require('../data_settings.json'));
+for (const level of ['tkit', 'sdit', 'smpit']) {
+  for (const field of ['jadwalTes', 'jadwalWawancara', 'lokasiTes', 'catatanJadwal']) settingFields.push(level + '_' + field);
+}
 
 async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');

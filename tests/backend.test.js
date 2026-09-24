@@ -32,11 +32,22 @@ test('API persistence and authorization in an isolated temporary schema', { skip
       return { code, body: response, headers };
     }
     assert.equal((await request('settings', 'PUT', { activeWave: 'wave3' })).code, 401);
+    const schedule = {};
+    for (const level of ['tkit', 'sdit', 'smpit']) {
+      Object.assign(schedule, { [level + '_jadwalTes']: 'Sabtu | 08.00 WITA', [level + '_jadwalWawancara']: 'Sabtu | 10.00 WITA',
+        [level + '_lokasiTes']: 'Ruang tes ' + level, [level + '_catatanJadwal']: 'Bawa kartu peserta' });
+    }
     assert.equal((await request('spmb')).code, 401);
     assert.equal((await request('auth', 'POST', { username: 'test-admin', password: 'wrong' })).code, 401);
     const login = await request('auth', 'POST', { username: 'test-admin', password });
     assert.equal(login.code, 200);
     cookie = login.headers['Set-Cookie'].split(';')[0];
+    assert.equal((await request('settings', 'PUT', schedule, {}, true)).code, 200);
+    const savedSchedule = (await request('settings')).body.data;
+    for (const [key, value] of Object.entries(schedule)) assert.equal(savedSchedule[key], value);
+    assert.equal((await request('settings', 'PUT', { tkit_jadwalTes: '', tkit_jadwalWawancara: '' }, {}, true)).code, 200);
+    assert.equal((await request('settings')).body.data.tkit_jadwalTes, '');
+    assert.equal((await request('settings')).body.data.sdit_jadwalTes, schedule.sdit_jadwalTes);
     assert.equal((await request('auth', 'GET', {}, {}, true)).code, 200);
     assert.equal((await request('settings', 'PUT', { activeWave: 'wave3', statTk: '199+' }, {}, true)).code, 200);
     assert.equal((await request('settings')).body.data.statTk, '199+');

@@ -1044,36 +1044,23 @@
     const btnPresetSmpit = document.getElementById('btn-preset-smpit');
     const btnPresetReset = document.getElementById('btn-preset-reset');
 
-    if (btnPresetSdit) {
-      btnPresetSdit.onclick = () => {
-        if (inputJadwalTes) inputJadwalTes.value = 'Sabtu, 28 Maret 2026 | Pukul 08.00 - 10.00 WITA';
-        if (inputJadwalWawancara) inputJadwalWawancara.value = 'Sabtu, 28 Maret 2026 | Pukul 10.00 - 11.30 WITA';
-        if (inputLokasiTes) inputLokasiTes.value = 'Kampus Utama SDIT Bina Insan, Lantai 1 (Ruang Observasi & Konseling)';
-        if (inputCatatanJadwal) inputCatatanJadwal.value = 'Membawa Kartu Tanda Peserta SPMB, fotokopi KK & Akta Kelahiran, dan pensil 2B. Calon siswa berpakaian muslim/muslimah rapi.';
-        statusSelect.value = 'Jadwal Tes & Wawancara Ditetapkan';
-        updateWaJadwalBtn();
-      };
+    function applySavedSchedule(level) {
+      const tes = settings[level + '_jadwalTes'] || '';
+      const waw = settings[level + '_jadwalWawancara'] || '';
+      if (!tes && !waw) {
+        alert('Jadwal ' + level.toUpperCase() + ' belum diatur. Silakan simpan jadwal di Pengaturan SPMB.');
+        return;
+      }
+      if (inputJadwalTes) inputJadwalTes.value = tes;
+      if (inputJadwalWawancara) inputJadwalWawancara.value = waw;
+      if (inputLokasiTes) inputLokasiTes.value = settings[level + '_lokasiTes'] || '';
+      if (inputCatatanJadwal) inputCatatanJadwal.value = settings[level + '_catatanJadwal'] || '';
+      statusSelect.value = 'Jadwal Tes & Wawancara Ditetapkan';
+      updateWaJadwalBtn();
     }
-    if (btnPresetTkit) {
-      btnPresetTkit.onclick = () => {
-        if (inputJadwalTes) inputJadwalTes.value = 'Sabtu, 21 Maret 2026 | Pukul 08.30 - 10.00 WITA';
-        if (inputJadwalWawancara) inputJadwalWawancara.value = 'Sabtu, 21 Maret 2026 | Pukul 09.30 - 11.00 WITA';
-        if (inputLokasiTes) inputLokasiTes.value = 'Gedung Sentra PAUD / TKIT Bina Insan Parepare';
-        if (inputCatatanJadwal) inputCatatanJadwal.value = 'Membawa Kartu Peserta SPMB, fotokopi KK & Akta Kelahiran. Calon ananda memakai pakaian bebas rapi dan bersepatu.';
-        statusSelect.value = 'Jadwal Tes & Wawancara Ditetapkan';
-        updateWaJadwalBtn();
-      };
-    }
-    if (btnPresetSmpit) {
-      btnPresetSmpit.onclick = () => {
-        if (inputJadwalTes) inputJadwalTes.value = 'Sabtu, 4 April 2026 | Pukul 08.00 - 11.00 WITA';
-        if (inputJadwalWawancara) inputJadwalWawancara.value = 'Sabtu, 4 April 2026 | Pukul 10.00 - 12.00 WITA';
-        if (inputLokasiTes) inputLokasiTes.value = 'Aula Utama & Ruang Kelas SMPIT Bina Insan Parepare';
-        if (inputCatatanJadwal) inputCatatanJadwal.value = 'Membawa Kartu Peserta Tes, fotokopi rapor SD kelas 4-6, KK, dan alat tulis. Seragam sekolah asal atau muslim/muslimah rapi.';
-        statusSelect.value = 'Jadwal Tes & Wawancara Ditetapkan';
-        updateWaJadwalBtn();
-      };
-    }
+    if (btnPresetSdit) btnPresetSdit.onclick = () => applySavedSchedule('sdit');
+    if (btnPresetTkit) btnPresetTkit.onclick = () => applySavedSchedule('tkit');
+    if (btnPresetSmpit) btnPresetSmpit.onclick = () => applySavedSchedule('smpit');
     if (btnPresetReset) {
       btnPresetReset.onclick = () => {
         if (inputJadwalTes) inputJadwalTes.value = '';
@@ -1510,6 +1497,9 @@
   }
 
   function renderSettingsForm() {
+    document.querySelectorAll('[data-schedule-setting]').forEach(input => {
+      input.value = settings[input.dataset.scheduleSetting] || '';
+    });
     const academicYear = settings.academicYear || '2026/2027';
     const targetYear = academicYear.split('/')[1]?.trim() || academicYear.split('/')[0]?.trim() || '2027';
 
@@ -1763,6 +1753,9 @@
       };
 
       try {
+        document.querySelectorAll('[data-schedule-setting]').forEach(input => {
+          nextSettings[input.dataset.scheduleSetting] = input.value.trim();
+        });
         const result = await apiRequest('api/settings.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
