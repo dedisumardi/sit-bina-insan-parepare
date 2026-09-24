@@ -596,6 +596,7 @@
     tableBody.innerHTML = students.map(item => {
       const isApproved = (item.status || '').toLowerCase().includes('terverifikasi');
       const hasData = Boolean(item.biodataUpdatedAt && item.parentDataUpdatedAt);
+      const hasPassed = item.status === 'Lulus Seleksi Observasi & Diterima';
       const hasSched = Boolean(item.jadwalTes || (item.jadwalObservasi && !item.jadwalObservasi.toLowerCase().includes('menunggu') && item.jadwalObservasi !== '-'));
       return `
       <tr class="hover:bg-slate-50/80 transition duration-150">
@@ -626,6 +627,7 @@
         </td>
         <td class="py-4 px-6 whitespace-nowrap text-center">
           <div class="flex items-center justify-center gap-1.5">
+            <button type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.passApplicant(this.dataset.regNumber, this)" ${hasPassed || !hasData ? 'disabled' : ''} title="${hasPassed ? 'Siswa sudah dinyatakan lulus' : !hasData ? 'Lengkapi biodata siswa dan orang tua/wali terlebih dahulu' : 'Tetapkan lulus tes dan wawancara'}">${hasPassed ? '✓ Lulus' : 'Luluskan'}</button>
             <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 border border-transparent hover:border-emerald-200 transition-colors" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail & Verifikasi Berkas">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
             </button>
@@ -1150,6 +1152,38 @@
     // Open main page and trigger print ticket
     window.open(`index.html#spmb`, '_blank');
     alert(`Untuk mencetak kartu ${regNumber}, silakan buka menu 'Cek Status Pendaftaran' di tab website yang terbuka dan masukkan nomor registrasi tersebut.`);
+  };
+
+  const passingApplicants = new Set();
+  window.passApplicant = async function (regNumber, button) {
+    const item = spmbList.find(student => student.regNumber === regNumber);
+    const passedStatus = 'Lulus Seleksi Observasi & Diterima';
+    if (!item || item.status === passedStatus || passingApplicants.has(regNumber)) return;
+    if (!item.biodataUpdatedAt || !item.parentDataUpdatedAt || !regNumber.startsWith('SPMB-')) {
+      showToast('Pastikan pembayaran disetujui serta biodata siswa dan orang tua/wali lengkap.', true);
+      return;
+    }
+    if (!confirm('Luluskan ' + (item.namaSiswa || regNumber) + ' (' + regNumber + ')? Hasil lulus dan diterima akan tampil di halaman pengumuman orang tua.')) return;
+    passingApplicants.add(regNumber);
+    if (button) button.disabled = true;
+    try {
+      const result = await apiRequest('api/spmb.php', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reg_number: regNumber, status: passedStatus })
+      });
+      Object.assign(item, result.data);
+      cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
+      renderSpmbTable();
+      renderDashboard();
+      broadcastRealtime('spmb_updated', spmbList);
+      showToast('Kelulusan ' + regNumber + ' berhasil disimpan. Hasil tersedia di halaman pengumuman.');
+    } catch (error) {
+      showToast('Gagal menyimpan kelulusan: ' + error.message, true);
+    } finally {
+      passingApplicants.delete(regNumber);
+      if (button) button.disabled = item.status === passedStatus;
+    }
   };
 
   window.deleteApplicant = async function (regNumber) {
