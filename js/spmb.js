@@ -1054,7 +1054,7 @@
       status.textContent = complete ? '✓ Biodata siswa sudah tersimpan di database.' : 'Pastikan seluruh data wajib sudah benar.';
       status.className = `portal-bio-status${complete ? ' is-success' : ''}`;
     }
-    if (submit) submit.textContent = complete ? 'Perbarui Biodata Siswa' : 'Simpan Biodata Siswa';
+    if (submit) submit.textContent = 'Isi Data Selanjutnya';
   }
 
   window.submitStudentBiodata = async function (event) {
@@ -1118,11 +1118,13 @@
       cacheSetItem(STORAGE_KEY, JSON.stringify(records));
       form.dataset.dirty = '0';
       populateStudentBioForm(result.data);
+      try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, result.data.regNumber + ':parents'); } catch (_) {}
       if (status) {
         status.textContent = '✓ Biodata siswa berhasil disimpan ke database.';
         status.className = 'portal-bio-status is-success';
       }
       renderParentPortal();
+      document.getElementById('portal-state-parents')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (error) {
       if (status) {
         status.textContent = error.message || 'Biodata gagal disimpan. Silakan coba kembali.';
@@ -1213,6 +1215,8 @@
     const statePending = document.getElementById('portal-state-pending');
     const stateApproved = document.getElementById('portal-state-approved');
     const stateBiodata = document.getElementById('portal-state-biodata');
+    const stateParents = document.getElementById('portal-state-parents');
+    if (stateParents) stateParents.style.display = 'none';
     const badgeStatus = document.getElementById('portal-badge-status');
 
     const step1 = document.getElementById('flow-step-1');
@@ -1236,11 +1240,18 @@
     if (isApproved) {
       // STATE 2 APPROVED / STATE 3 BIODATA
       let biodataViewOpen = false;
-      try { biodataViewOpen = sessionStorage.getItem(PARENT_BIODATA_VIEW_KEY) === record.regNumber; } catch (_) {}
+      let parentsViewOpen = false;
+      try {
+        const view = sessionStorage.getItem(PARENT_BIODATA_VIEW_KEY);
+        parentsViewOpen = view === record.regNumber + ':parents' && Boolean(record.biodataUpdatedAt);
+        biodataViewOpen = view === record.regNumber;
+      } catch (_) {}
       stateUnpaid.style.display = 'none';
       statePending.style.display = 'none';
-      stateApproved.style.display = biodataViewOpen ? 'none' : 'block';
+      stateApproved.style.display = (biodataViewOpen || parentsViewOpen) ? 'none' : 'block';
       if (stateBiodata) stateBiodata.style.display = biodataViewOpen ? 'block' : 'none';
+      if (stateParents) stateParents.style.display = parentsViewOpen ? 'block' : 'none';
+      window.ParentBiodata?.populate(record);
 
       document.getElementById('portal-approved-code').textContent = record.regNumber || 'SPMB-2026-001';
       populateStudentBioForm(record);

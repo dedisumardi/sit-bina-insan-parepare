@@ -1,6 +1,7 @@
 const { randomBytes, createHash } = require('node:crypto');
 const { database } = require('../lib/database');
 const { isAdmin, verifyPassword, createSession, logout } = require('../lib/session');
+const parentFields = require('../js/parent-fields');
 
 function fail(status, message) { throw Object.assign(new Error(message), { status }); }
 function phone(value) {
@@ -141,6 +142,23 @@ async function handler(req, res) {
         return send({ regNumber: reg });
       }
       if (method === 'POST') {
+        if (input.action === 'save_parents') {
+          const reg = String(input.regNumber || '').trim();
+          if (!reg || reg.startsWith('PENDING-')) fail(403, 'Lengkapi biodata siswa setelah pembayaran disetujui.');
+          const accountWa = phone(input.accountWa);
+          const parents = pick(input, parentFields.keys);
+          const error = parentFields.validate(parents);
+          if (error) fail(400, error);
+          if (parents.memilikiWali === 'Tidak') {
+            for (const field of parentFields.fields) parents[field.key + 'Wali'] = '';
+          }
+          parents.parentDataUpdatedAt = new Date().toISOString();
+          const result = await database().query(`UPDATE sipintu_applicants SET data=data || $1::jsonb
+            WHERE reg_number=$2 AND wa=$3 AND reg_number NOT LIKE 'PENDING-%'
+            AND data->>'biodataUpdatedAt' IS NOT NULL RETURNING *`, [JSON.stringify(parents), reg, accountWa]);
+          if (!result.rowCount) fail(403, 'Simpan biodata siswa terlebih dahulu atau periksa akun pendaftaran.');
+          return send(row(result.rows[0]), 'Data orang tua dan wali tersimpan.');
+        }
         const data = pick(input, biodata);
         validateStudentExtras(data);
         const wa = phone(data.waAyah || input.wa_ayah || input.noWhatsapp);

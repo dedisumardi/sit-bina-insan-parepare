@@ -2108,12 +2108,27 @@
 
               <div class="portal-bio-actions">
                 <div id="portal-bio-status" class="portal-bio-status" aria-live="polite">Pastikan seluruh data wajib sudah benar.</div>
-                <button type="submit" id="portal-bio-submit" class="btn btn-primary">Simpan Biodata Siswa</button>
+                <button type="submit" id="portal-bio-submit" class="btn btn-primary">Isi Data Selanjutnya</button>
               </div>
             </form>
 
           </div>
 
+          <div id="portal-state-parents" class="portal-biodata-page" style="display:none;">
+            <button type="button" class="portal-bio-back" onclick="window.openStudentBiodata()">← Kembali ke Biodata Siswa</button>
+            <form id="portal-parent-data-form" class="portal-bio-form">
+              <div class="portal-bio-heading">
+                <span class="badge-tag">DATA ORANG TUA DAN WALI</span>
+                <h3>Lengkapi Data Orang Tua dan Wali</h3>
+                <p>Semua isian ayah dan ibu wajib diisi. Pilih Ya pada bagian wali untuk melengkapi data wali.</p>
+              </div>
+              <div id="portal-parent-fields"></div>
+              <div class="portal-bio-actions">
+                <div id="portal-parent-data-status" class="portal-bio-status" aria-live="polite">Semua isian wajib dilengkapi.</div>
+                <button type="submit" id="portal-parent-data-submit" class="btn btn-primary">Simpan Data Orang Tua dan Wali</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 
@@ -2349,7 +2364,9 @@
   <!-- Scripts -->
   <script src="js/data.js?v=20260923_dbsync2"></script>
   <script src="js/regions.js?v=20260924_regions2"></script>
-  <script src="js/spmb.js?v=20260924_extra1"></script>
+  <script src="js/parent-fields.js?v=20260924_parents1"></script>
+  <script src="js/parents.js?v=20260924_parents1"></script>
+  <script src="js/spmb.js?v=20260924_parents1"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>

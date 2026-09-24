@@ -93,6 +93,32 @@ test('API persistence and authorization in an isolated temporary schema', { skip
     assert.equal(full.body.data.kecamatan, 'Bacukiki Barat');
     assert.equal((await request('spmb', 'GET', {}, { query: '1234567890123456' })).code, 200);
     assert.equal((await request('spmb', 'GET', {}, {}, true)).body.data.length, 1);
+    const parentData = { action: 'save_parents', regNumber: full.body.data.regNumber, accountWa: waAyah, memilikiWali: 'Tidak' };
+    for (const role of ['Ayah', 'Ibu', 'Wali']) {
+      Object.assign(parentData, { ['statusHidup' + role]: 'Hidup', ['nama' + role]: 'Test ' + role,
+        ['nik' + role]: '1234567890123456', ['tahunLahir' + role]: '1985', ['pendidikan' + role]: 'Sarjana (S1)',
+        ['pekerjaan' + role]: 'Wiraswasta', ['penghasilan' + role]: 'Rp2.000.000 - Rp5.000.000', ['telepon' + role]: '081122334455' });
+    }
+    assert.equal((await request('spmb', 'POST', { ...parentData, regNumber: reg })).code, 403);
+    assert.equal((await request('spmb', 'POST', { ...parentData, accountWa: '081999999999' })).code, 403);
+    const withoutGuardian = await request('spmb', 'POST', parentData);
+    assert.equal(withoutGuardian.code, 200);
+    assert.equal(withoutGuardian.body.data.namaWali, '');
+    assert.equal(withoutGuardian.body.data.waAyah, full.body.data.waAyah);
+    assert.equal(withoutGuardian.body.data.buktiPembayaran, proof);
+    assert.equal(withoutGuardian.body.data.nik, full.body.data.nik);
+    const withGuardian = await request('spmb', 'POST', { ...parentData, memilikiWali: 'Ya' });
+    assert.equal(withGuardian.code, 200);
+    const parentsReadBack = await request('spmb', 'GET', {}, { wa: waAyah });
+    assert.equal(parentsReadBack.body.data.namaWali, 'Test Wali');
+    assert.equal(parentsReadBack.body.data.teleponAyah, '081122334455');
+    assert.equal((await request('spmb', 'POST', { ...parentData, memilikiWali: 'Ya', nikWali: '' })).code, 400);
+    assert.equal((await request('spmb', 'POST', { ...parentData, nikAyah: '12' })).code, 400);
+    assert.equal((await request('spmb', 'POST', { ...parentData, tahunLahirIbu: '2099' })).code, 400);
+    assert.equal((await request('spmb', 'POST', { ...parentData, namaIbu: ' ' })).code, 400);
+    const clearedGuardian = await request('spmb', 'POST', parentData);
+    assert.equal(clearedGuardian.code, 200);
+    assert.equal(clearedGuardian.body.data.nikWali, '');
     assert.equal((await request('spmb', 'DELETE', { reg_number: full.body.data.regNumber }, {}, true)).code, 200);
     await request('auth', 'DELETE', {}, {}, true);
     assert.equal((await request('auth', 'GET', {}, {}, true)).code, 401);

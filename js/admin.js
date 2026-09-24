@@ -882,6 +882,23 @@
     document.getElementById('modal-app-alamat').textContent = item.alamat || '-';
     document.getElementById('modal-app-wilayah').textContent = [item.desaKelurahan, item.kecamatan, item.kabupatenKota, item.provinsi].filter(Boolean).join(', ') || '-';
     const extraContainer = document.getElementById('modal-app-extra');
+    const parentContainer = document.getElementById('modal-app-parents');
+    parentContainer.replaceChildren();
+    const parentRows = [['memilikiWali', 'Memiliki Wali'], ...window.ParentFields.roles
+      .filter(role => role !== 'Wali' || item.memilikiWali === 'Ya')
+      .flatMap(role => window.ParentFields.fields.map(field => [field.key + role, field.label + ' ' + role]))];
+    for (const [key, label] of parentRows) {
+      const card = document.createElement('div');
+      card.className = 'p-3 bg-slate-50 rounded-xl border border-slate-100';
+      const title = document.createElement('span');
+      title.className = 'text-slate-400 block text-[10px] font-bold uppercase';
+      title.textContent = label;
+      const value = document.createElement('span');
+      value.className = 'font-bold text-slate-800';
+      value.textContent = item[key] || '-';
+      card.append(title, value);
+      parentContainer.append(card);
+    }
     extraContainer.replaceChildren();
     for (const [key, label] of [["tempatTinggal","Tempat Tinggal"],["modaTransportasi","Moda Transportasi"],["anakKe","Anak ke Berapa"],["tinggiBadan","Tinggi Badan (cm)"],["beratBadan","Berat Badan (kg)"],["hobi","Hobi"],["citaCita","Cita-cita"],["jumlahSaudaraKandung","Jumlah Saudara Kandung"],["jarakRumahSekolah","Jarak Rumah ke Sekolah"],["saudaraDiSekolah","Apakah memiliki saudara kandung yang bersekolah di SIT Bina Insan Parepare?"]]) {
       const card = document.createElement('div');
