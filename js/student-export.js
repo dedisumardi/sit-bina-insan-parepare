@@ -27,7 +27,7 @@
     return '\uFEFF' + [columns.map(([, label]) => cell(label)).join(','),
       ...records.map(record => columns.map(([key]) => cell(value(record, key), key)).join(','))].join('\r\n');
   }
-  const exporter = { columns, csv };
+  const exporter = { columns, csv, value };
   if (typeof module !== 'undefined' && module.exports) module.exports = exporter;
   else root.StudentExport = exporter;
 })(globalThis);

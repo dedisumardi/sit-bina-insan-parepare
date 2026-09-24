@@ -784,20 +784,21 @@
     const button = document.getElementById('spmb-export-btn');
     if (button) button.disabled = true;
     try {
-      const result = await apiRequest('api/spmb.php');
-      if (!Array.isArray(result.data)) throw new Error('Data siswa tidak valid.');
-      const students = result.data.filter(isStudentApplicant);
-      if (!students.length) { alert('Tidak ada data calon siswa untuk diekspor.'); return; }
-      const blob = new Blob([window.StudentExport.csv(students)], { type: 'text/csv;charset=utf-8;' });
+      const response = await fetch('api/export-students', { cache: 'no-store' });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Gagal mengunduh file Excel.');
+      }
+      const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `DATA_SISWA_LENGKAP_SPMB_${new Date().toISOString().slice(0,10)}.csv`;
+      link.download = `DATA_SISWA_LENGKAP_SPMB_${new Date().toISOString().slice(0,10)}.xlsx`;
       document.body.appendChild(link);
       link.click();
       link.remove();
       setTimeout(() => URL.revokeObjectURL(url), 10000);
-      showToast(`Data lengkap ${students.length} siswa berhasil diunduh!`);
+      showToast('File Excel data siswa lengkap berhasil diunduh!');
     } catch (error) {
       alert('Unduhan gagal: ' + (error.message || 'Silakan coba kembali.'));
     } finally {
