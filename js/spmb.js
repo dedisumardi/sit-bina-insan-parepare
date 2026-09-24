@@ -1215,6 +1215,27 @@
     });
   };
 
+  function getTestAnnouncement(status) {
+    if (status === 'Lulus Seleksi Observasi & Diterima') {
+      return { title: 'Lulus Tes & Wawancara — Diterima', message: 'Alhamdulillah, calon siswa dinyatakan lulus tes dan wawancara serta diterima. Silakan mengikuti arahan panitia untuk proses selanjutnya.' };
+    }
+    if (status === 'Cadangan') {
+      return { title: 'Status Cadangan', message: 'Calon siswa ditetapkan sebagai cadangan. Silakan menunggu informasi lanjutan dari panitia.' };
+    }
+    return { title: 'Menunggu Pengumuman', message: 'Hasil tes dan wawancara belum diumumkan oleh panitia. Halaman ini akan diperbarui setelah hasil ditetapkan.' };
+  }
+
+  window.openResultsStage = function () {
+    const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim();
+    if (!regNumber) return;
+    try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + ':results'); } catch (_) {}
+    renderParentPortal();
+    refreshParentFromDatabase();
+    requestAnimationFrame(() => {
+      document.getElementById('portal-state-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
   // Render Parent Portal based on session and record status
   function renderParentPortal() {
     const landingView = document.getElementById('spmb-landing-view');
@@ -1279,6 +1300,8 @@
     const stateBiodata = document.getElementById('portal-state-biodata');
     const stateParents = document.getElementById('portal-state-parents');
     const stateSchedule = document.getElementById('portal-state-schedule');
+    const stateResults = document.getElementById('portal-state-results');
+    if (stateResults) stateResults.style.display = 'none';
     if (stateParents) stateParents.style.display = 'none';
     if (stateSchedule) stateSchedule.style.display = 'none';
     const badgeStatus = document.getElementById('portal-badge-status');
@@ -1313,9 +1336,12 @@
       let biodataViewOpen = false;
       let parentsViewOpen = false;
       let scheduleViewOpen = false;
+      let resultsViewOpen = false;
       try {
         const view = sessionStorage.getItem(PARENT_BIODATA_VIEW_KEY);
-        if (view === record.regNumber + ':schedule') {
+        if (view === record.regNumber + ':results' && biodataComplete && parentsComplete) {
+          resultsViewOpen = true;
+        } else if (view === record.regNumber + ':schedule') {
           scheduleViewOpen = true;
         } else if (view === record.regNumber + ':parents' && Boolean(record.biodataUpdatedAt)) {
           parentsViewOpen = true;
@@ -1328,10 +1354,19 @@
 
       stateUnpaid.style.display = 'none';
       statePending.style.display = 'none';
-      stateApproved.style.display = (biodataViewOpen || parentsViewOpen || scheduleViewOpen) ? 'none' : 'block';
+      stateApproved.style.display = (biodataViewOpen || parentsViewOpen || scheduleViewOpen || resultsViewOpen) ? 'none' : 'block';
       if (stateBiodata) stateBiodata.style.display = biodataViewOpen ? 'block' : 'none';
       if (stateParents) stateParents.style.display = parentsViewOpen ? 'block' : 'none';
       if (stateSchedule) stateSchedule.style.display = scheduleViewOpen ? 'block' : 'none';
+      if (stateResults) {
+        stateResults.style.display = resultsViewOpen ? 'block' : 'none';
+        const announcement = getTestAnnouncement(record.status);
+        document.getElementById('portal-results-reg').textContent = record.regNumber || '-';
+        document.getElementById('portal-results-name').textContent = record.namaSiswa || '-';
+        document.getElementById('portal-results-level').textContent = (record.jenjang || '-').toUpperCase();
+        document.getElementById('portal-results-title').textContent = announcement.title;
+        document.getElementById('portal-results-message').textContent = announcement.message;
+      }
 
       window.ParentBiodata?.populate(record);
 

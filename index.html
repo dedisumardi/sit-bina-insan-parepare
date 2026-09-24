@@ -2146,16 +2146,11 @@
           <div id="portal-state-schedule" class="portal-schedule-page" style="display:none;">
             <!-- Top Navigation & Actions -->
             <div class="portal-nav-bar">
-              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                <button type="button" class="portal-bio-back" onclick="window.openStudentBiodata()">
-                  <span aria-hidden="true">📝</span> Lihat / Ubah Biodata Siswa
-                </button>
-                <button type="button" class="portal-bio-back" onclick="window.openParentBiodata()">
-                  <span aria-hidden="true">👥</span> Lihat / Ubah Data Orang Tua
-                </button>
-              </div>
-              <button type="button" class="portal-bio-back" onclick="window.backToPaymentApproval()">
-                <span aria-hidden="true">←</span> Ringkasan Bukti Pembayaran
+              <button type="button" class="portal-bio-back" onclick="window.openParentBiodata()">
+                <span aria-hidden="true">←</span> Kembali
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="window.openResultsStage()">
+                Lanjutkan <span aria-hidden="true">→</span>
               </button>
             </div>
 
@@ -2223,7 +2218,7 @@
                   </div>
                   <div class="portal-sched-step-card">
                     <span class="step-num-badge">3</span>
-                    <h4>Pengumuman Hasil Seleksi</h4>
+                    <h4>Pengumuman Hasil Tes &amp; Wawancara</h4>
                     <p>Hasil kelulusan dan penempatan kelas akan diumumkan secara transparan melalui portal SPMB ini.</p>
                   </div>
                 </div>
@@ -2298,6 +2293,24 @@
               </div>
 
             </div>
+          </div>
+          <div id="portal-state-results" class="portal-schedule-page" style="display:none;">
+            <div class="portal-nav-bar">
+              <button type="button" class="portal-bio-back" onclick="window.openScheduleStage()">← Kembali</button>
+            </div>
+            <section class="portal-schedule-card" aria-labelledby="portal-results-heading">
+              <h2 id="portal-results-heading" class="portal-schedule-heading">Pengumuman Hasil Tes &amp; Wawancara</h2>
+              <p class="portal-schedule-subheading">Hasil resmi sesuai status yang ditetapkan oleh panitia SPMB.</p>
+              <div class="portal-sched-meta-strip">
+                <div class="portal-sched-meta-item"><span class="meta-label">No. Registrasi</span><span id="portal-results-reg" class="meta-value">-</span></div>
+                <div class="portal-sched-meta-item"><span class="meta-label">Nama Calon Siswa</span><span id="portal-results-name" class="meta-value">-</span></div>
+                <div class="portal-sched-meta-item"><span class="meta-label">Jenjang</span><span id="portal-results-level" class="meta-value">-</span></div>
+              </div>
+              <div class="portal-sched-box" role="status" aria-live="polite">
+                <h3 id="portal-results-title">Menunggu Pengumuman</h3>
+                <p id="portal-results-message" class="portal-schedule-subheading" style="margin-top:1rem;">Hasil tes dan wawancara belum diumumkan oleh panitia.</p>
+              </div>
+            </section>
           </div>
         </div>
       </div>
@@ -2536,7 +2549,7 @@
   <script src="js/regions.js?v=20260924_regions2"></script>
   <script src="js/parent-fields.js?v=20260924_schooladdress1"></script>
   <script src="js/parents.js?v=20260924_parents1"></script>
-  <script src="js/spmb.js?v=20260924_printa4"></script>
+  <script src="js/spmb.js?v=20260924_results1"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>
