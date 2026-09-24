@@ -958,27 +958,81 @@
               <p class="text-xs text-slate-600">Jadwal acuan per jenjang. Jadwal siswa yang sudah ditetapkan tidak berubah otomatis.</p>
               <fieldset class="space-y-3 border rounded-xl p-4">
                 <legend class="font-bold">TKIT</legend>
-                <div><label class="block text-xs font-bold mb-1" for="set-tkit-jadwalTes">Tanggal & Waktu Tes Calon Siswa</label><input type="text" id="set-tkit-jadwalTes" data-schedule-setting="tkit_jadwalTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
-                <div><label class="block text-xs font-bold mb-1" for="set-tkit-jadwalWawancara">Tanggal & Waktu Wawancara Orang Tua</label><input type="text" id="set-tkit-jadwalWawancara" data-schedule-setting="tkit_jadwalWawancara" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div data-schedule-editor="tkit_jadwalTes" class="space-y-2">
+                  <h4 class="text-xs font-bold">Tes / Observasi Calon Siswa</h4>
+                  <input type="hidden" id="set-tkit-jadwalTes" data-schedule-setting="tkit_jadwalTes">
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div><label for="set-tkit-jadwalTes-date" class="block text-xs mb-1">Tanggal</label><input type="date" id="set-tkit-jadwalTes-date" data-schedule-part="date" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-tkit-jadwalTes-start" class="block text-xs mb-1">Jam Mulai (WITA)</label><input type="time" id="set-tkit-jadwalTes-start" data-schedule-part="start" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-tkit-jadwalTes-end" class="block text-xs mb-1">Jam Selesai (WITA)</label><input type="time" id="set-tkit-jadwalTes-end" data-schedule-part="end" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                  </div>
+                  <p data-schedule-legacy class="text-xs text-slate-500" hidden></p>
+                </div>
+                <div data-schedule-editor="tkit_jadwalWawancara" class="space-y-2">
+                  <h4 class="text-xs font-bold">Wawancara Orang Tua / Wali</h4>
+                  <input type="hidden" id="set-tkit-jadwalWawancara" data-schedule-setting="tkit_jadwalWawancara">
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div><label for="set-tkit-jadwalWawancara-date" class="block text-xs mb-1">Tanggal</label><input type="date" id="set-tkit-jadwalWawancara-date" data-schedule-part="date" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-tkit-jadwalWawancara-start" class="block text-xs mb-1">Jam Mulai (WITA)</label><input type="time" id="set-tkit-jadwalWawancara-start" data-schedule-part="start" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-tkit-jadwalWawancara-end" class="block text-xs mb-1">Jam Selesai (WITA)</label><input type="time" id="set-tkit-jadwalWawancara-end" data-schedule-part="end" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                  </div>
+                  <p data-schedule-legacy class="text-xs text-slate-500" hidden></p>
+                </div>
                 <div><label class="block text-xs font-bold mb-1" for="set-tkit-lokasiTes">Lokasi / Ruangan Tes & Wawancara</label><input type="text" id="set-tkit-lokasiTes" data-schedule-setting="tkit_lokasiTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
                 <div><label class="block text-xs font-bold mb-1" for="set-tkit-catatanJadwal">Petunjuk & Catatan untuk Orang Tua / Siswa</label><textarea rows="2" id="set-tkit-catatanJadwal" data-schedule-setting="tkit_catatanJadwal" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></textarea></div>
-                <button type="button" class="text-xs font-bold text-amber-800" onclick="this.closest('fieldset').querySelectorAll('[data-schedule-setting]').forEach(input => input.value = '')">Reset Menunggu</button>
+                <button type="button" class="text-xs font-bold text-amber-800" onclick="this.closest('fieldset').querySelectorAll('[data-schedule-setting], [data-schedule-part]').forEach(input => { input.value = ''; input.required = false; input.setCustomValidity(''); }); this.closest('fieldset').querySelectorAll('[data-schedule-legacy]').forEach(note => note.hidden = true)">Reset Menunggu</button>
               </fieldset>
               <fieldset class="space-y-3 border rounded-xl p-4">
                 <legend class="font-bold">SDIT</legend>
-                <div><label class="block text-xs font-bold mb-1" for="set-sdit-jadwalTes">Tanggal & Waktu Tes Calon Siswa</label><input type="text" id="set-sdit-jadwalTes" data-schedule-setting="sdit_jadwalTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
-                <div><label class="block text-xs font-bold mb-1" for="set-sdit-jadwalWawancara">Tanggal & Waktu Wawancara Orang Tua</label><input type="text" id="set-sdit-jadwalWawancara" data-schedule-setting="sdit_jadwalWawancara" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div data-schedule-editor="sdit_jadwalTes" class="space-y-2">
+                  <h4 class="text-xs font-bold">Tes / Observasi Calon Siswa</h4>
+                  <input type="hidden" id="set-sdit-jadwalTes" data-schedule-setting="sdit_jadwalTes">
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div><label for="set-sdit-jadwalTes-date" class="block text-xs mb-1">Tanggal</label><input type="date" id="set-sdit-jadwalTes-date" data-schedule-part="date" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-sdit-jadwalTes-start" class="block text-xs mb-1">Jam Mulai (WITA)</label><input type="time" id="set-sdit-jadwalTes-start" data-schedule-part="start" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-sdit-jadwalTes-end" class="block text-xs mb-1">Jam Selesai (WITA)</label><input type="time" id="set-sdit-jadwalTes-end" data-schedule-part="end" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                  </div>
+                  <p data-schedule-legacy class="text-xs text-slate-500" hidden></p>
+                </div>
+                <div data-schedule-editor="sdit_jadwalWawancara" class="space-y-2">
+                  <h4 class="text-xs font-bold">Wawancara Orang Tua / Wali</h4>
+                  <input type="hidden" id="set-sdit-jadwalWawancara" data-schedule-setting="sdit_jadwalWawancara">
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div><label for="set-sdit-jadwalWawancara-date" class="block text-xs mb-1">Tanggal</label><input type="date" id="set-sdit-jadwalWawancara-date" data-schedule-part="date" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-sdit-jadwalWawancara-start" class="block text-xs mb-1">Jam Mulai (WITA)</label><input type="time" id="set-sdit-jadwalWawancara-start" data-schedule-part="start" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-sdit-jadwalWawancara-end" class="block text-xs mb-1">Jam Selesai (WITA)</label><input type="time" id="set-sdit-jadwalWawancara-end" data-schedule-part="end" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                  </div>
+                  <p data-schedule-legacy class="text-xs text-slate-500" hidden></p>
+                </div>
                 <div><label class="block text-xs font-bold mb-1" for="set-sdit-lokasiTes">Lokasi / Ruangan Tes & Wawancara</label><input type="text" id="set-sdit-lokasiTes" data-schedule-setting="sdit_lokasiTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
                 <div><label class="block text-xs font-bold mb-1" for="set-sdit-catatanJadwal">Petunjuk & Catatan untuk Orang Tua / Siswa</label><textarea rows="2" id="set-sdit-catatanJadwal" data-schedule-setting="sdit_catatanJadwal" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></textarea></div>
-                <button type="button" class="text-xs font-bold text-amber-800" onclick="this.closest('fieldset').querySelectorAll('[data-schedule-setting]').forEach(input => input.value = '')">Reset Menunggu</button>
+                <button type="button" class="text-xs font-bold text-amber-800" onclick="this.closest('fieldset').querySelectorAll('[data-schedule-setting], [data-schedule-part]').forEach(input => { input.value = ''; input.required = false; input.setCustomValidity(''); }); this.closest('fieldset').querySelectorAll('[data-schedule-legacy]').forEach(note => note.hidden = true)">Reset Menunggu</button>
               </fieldset>
               <fieldset class="space-y-3 border rounded-xl p-4">
                 <legend class="font-bold">SMPIT</legend>
-                <div><label class="block text-xs font-bold mb-1" for="set-smpit-jadwalTes">Tanggal & Waktu Tes Calon Siswa</label><input type="text" id="set-smpit-jadwalTes" data-schedule-setting="smpit_jadwalTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
-                <div><label class="block text-xs font-bold mb-1" for="set-smpit-jadwalWawancara">Tanggal & Waktu Wawancara Orang Tua</label><input type="text" id="set-smpit-jadwalWawancara" data-schedule-setting="smpit_jadwalWawancara" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                <div data-schedule-editor="smpit_jadwalTes" class="space-y-2">
+                  <h4 class="text-xs font-bold">Tes / Observasi Calon Siswa</h4>
+                  <input type="hidden" id="set-smpit-jadwalTes" data-schedule-setting="smpit_jadwalTes">
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div><label for="set-smpit-jadwalTes-date" class="block text-xs mb-1">Tanggal</label><input type="date" id="set-smpit-jadwalTes-date" data-schedule-part="date" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-smpit-jadwalTes-start" class="block text-xs mb-1">Jam Mulai (WITA)</label><input type="time" id="set-smpit-jadwalTes-start" data-schedule-part="start" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-smpit-jadwalTes-end" class="block text-xs mb-1">Jam Selesai (WITA)</label><input type="time" id="set-smpit-jadwalTes-end" data-schedule-part="end" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                  </div>
+                  <p data-schedule-legacy class="text-xs text-slate-500" hidden></p>
+                </div>
+                <div data-schedule-editor="smpit_jadwalWawancara" class="space-y-2">
+                  <h4 class="text-xs font-bold">Wawancara Orang Tua / Wali</h4>
+                  <input type="hidden" id="set-smpit-jadwalWawancara" data-schedule-setting="smpit_jadwalWawancara">
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div><label for="set-smpit-jadwalWawancara-date" class="block text-xs mb-1">Tanggal</label><input type="date" id="set-smpit-jadwalWawancara-date" data-schedule-part="date" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-smpit-jadwalWawancara-start" class="block text-xs mb-1">Jam Mulai (WITA)</label><input type="time" id="set-smpit-jadwalWawancara-start" data-schedule-part="start" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                    <div><label for="set-smpit-jadwalWawancara-end" class="block text-xs mb-1">Jam Selesai (WITA)</label><input type="time" id="set-smpit-jadwalWawancara-end" data-schedule-part="end" class="w-full rounded-lg border-slate-200 text-sm"></div>
+                  </div>
+                  <p data-schedule-legacy class="text-xs text-slate-500" hidden></p>
+                </div>
                 <div><label class="block text-xs font-bold mb-1" for="set-smpit-lokasiTes">Lokasi / Ruangan Tes & Wawancara</label><input type="text" id="set-smpit-lokasiTes" data-schedule-setting="smpit_lokasiTes" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></div>
                 <div><label class="block text-xs font-bold mb-1" for="set-smpit-catatanJadwal">Petunjuk & Catatan untuk Orang Tua / Siswa</label><textarea rows="2" id="set-smpit-catatanJadwal" data-schedule-setting="smpit_catatanJadwal" maxlength="2000" class="w-full rounded-lg border-slate-200 text-sm"></textarea></div>
-                <button type="button" class="text-xs font-bold text-amber-800" onclick="this.closest('fieldset').querySelectorAll('[data-schedule-setting]').forEach(input => input.value = '')">Reset Menunggu</button>
+                <button type="button" class="text-xs font-bold text-amber-800" onclick="this.closest('fieldset').querySelectorAll('[data-schedule-setting], [data-schedule-part]').forEach(input => { input.value = ''; input.required = false; input.setCustomValidity(''); }); this.closest('fieldset').querySelectorAll('[data-schedule-legacy]').forEach(note => note.hidden = true)">Reset Menunggu</button>
               </fieldset>
             </section>
             <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -1277,6 +1331,6 @@
   <script src="js/data.js?v=20260923_dbsync2"></script>
   <script src="js/parent-fields.js?v=20260924_schooladdress1"></script>
   <script src="js/student-export.js?v=20260924_schooladdress1"></script>
-  <script src="js/admin.js?v=20260924_verification1"></script>
+  <script src="js/admin.js?v=20260924_schedulepicker1"></script>
 </body>
 </html>

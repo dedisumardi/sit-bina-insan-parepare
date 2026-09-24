@@ -1397,10 +1397,46 @@
     });
   }
 
+  function renderScheduleEditors() {
+    const months = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'];
+    document.querySelectorAll('[data-schedule-editor]').forEach(editor => {
+      const stored = editor.querySelector('[data-schedule-setting]');
+      const date = editor.querySelector('[data-schedule-part="date"]');
+      const start = editor.querySelector('[data-schedule-part="start"]');
+      const end = editor.querySelector('[data-schedule-part="end"]');
+      const legacy = editor.querySelector('[data-schedule-legacy]');
+      const match = stored.value.match(/(\d{1,2})\s+([a-z]+)\s+(\d{4}).*?(\d{2})[.:](\d{2})\s*[-–]\s*(\d{2})[.:](\d{2})/i);
+      date.value = start.value = end.value = '';
+      if (match && months.includes(match[2].toLowerCase())) {
+        date.value = match[3] + '-' + String(months.indexOf(match[2].toLowerCase()) + 1).padStart(2, '0') + '-' + match[1].padStart(2, '0');
+        start.value = match[4] + ':' + match[5];
+        end.value = match[6] + ':' + match[7];
+      }
+      legacy.hidden = !stored.value || Boolean(date.value);
+      legacy.textContent = legacy.hidden ? '' : 'Jadwal tersimpan: ' + stored.value + '. Pilih tanggal dan jam untuk menggantinya.';
+      [date, start, end].forEach(input => {
+        input.required = false;
+        input.setCustomValidity('');
+        input.oninput = () => {
+          const any = Boolean(date.value || start.value || end.value);
+          [date, start, end].forEach(part => { part.required = any; });
+          end.setCustomValidity(start.value && end.value && end.value <= start.value ? 'Jam selesai harus setelah jam mulai.' : '');
+          if (!any) stored.value = '';
+          else if (date.value && start.value && end.value) {
+            const formatted = new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Makassar' }).format(new Date(date.value + 'T00:00:00+08:00'));
+            stored.value = formatted + ' | Pukul ' + start.value.replace(':', '.') + ' - ' + end.value.replace(':', '.') + ' WITA';
+          }
+          legacy.hidden = true;
+        };
+      });
+    });
+  }
+
   function renderSettingsForm() {
     document.querySelectorAll('[data-schedule-setting]').forEach(input => {
       input.value = settings[input.dataset.scheduleSetting] || '';
     });
+    renderScheduleEditors();
     const academicYear = settings.academicYear || '2026/2027';
     const targetYear = academicYear.split('/')[1]?.trim() || academicYear.split('/')[0]?.trim() || '2027';
 
@@ -1592,6 +1628,7 @@
     }
 
     async function saveCurrentSettings(isQuick = false) {
+      if (!document.getElementById('form-school-settings').reportValidity()) return;
       const academicYear = acYearInput ? acYearInput.value.trim() : '2026/2027';
       const activeWave = activeWaveSelect ? activeWaveSelect.value : 'wave1';
       const waveStatus = statusSelect ? statusSelect.value : (activeWave === 'closed' ? 'closed' : 'open');
