@@ -974,17 +974,7 @@
       }
     }
 
-    // Status Select & Jadwal inputs
-    const statusSelect = document.getElementById('modal-app-status-select');
-    statusSelect.value = item.status || 'Menunggu Konfirmasi Pembayaran';
-    if (!statusSelect.value) {
-      for (const opt of statusSelect.options) {
-        if (opt.value.toLowerCase() === (item.status || '').toLowerCase()) {
-          statusSelect.value = opt.value;
-          break;
-        }
-      }
-    }
+    document.getElementById('modal-app-status-display').textContent = getApplicantProgressStatus(item, settings);
 
     // Completeness badges
     const bioStatusBadge = document.getElementById('modal-app-bio-status-badge');
@@ -1008,34 +998,6 @@
     if (waModalBtn) {
       waModalBtn.href = `https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent('Assalamu\'alaikum Bapak/Ibu wali dari ' + (item.namaSiswa || item.namaAyah) + ', kami dari Panitia SPMB SIT Bina Insan Parepare ingin mengonfirmasi status pendaftaran: ' + item.regNumber + '.')}`;
     }
-
-    // Save changes handler
-    const saveBtn = document.getElementById('modal-app-save-btn');
-    saveBtn.onclick = async function () {
-      const newStatus = statusSelect.value;
-      saveBtn.disabled = true;
-      try {
-        const result = await apiRequest('api/spmb.php', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            reg_number: item.regNumber,
-            status: newStatus
-          })
-        });
-        Object.assign(item, result.data);
-        cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
-        applicantModal.classList.remove('open');
-        renderSpmbTable();
-        renderDashboard();
-        broadcastRealtime('spmb_updated', spmbList);
-        showToast(`Status ${item.regNumber} berhasil disimpan ke database.`);
-      } catch (error) {
-        showToast(`Gagal menyimpan status: ${error.message}`, true);
-      } finally {
-        saveBtn.disabled = false;
-      }
-    };
 
     applicantModal.classList.add('open');
   };
@@ -1153,6 +1115,19 @@
     window.open(`index.html#spmb`, '_blank');
     alert(`Untuk mencetak kartu ${regNumber}, silakan buka menu 'Cek Status Pendaftaran' di tab website yang terbuka dan masukkan nomor registrasi tersebut.`);
   };
+
+  function getApplicantProgressStatus(item, schoolSettings) {
+    if (item.status === 'Lulus Seleksi Observasi & Diterima' || item.status === 'Cadangan') return item.status;
+    if (!String(item.regNumber || '').startsWith('SPMB-')) {
+      return item.buktiPembayaran ? 'Menunggu Verifikasi Pembayaran oleh Admin' : 'Menunggu Pembayaran Uang Pendaftaran';
+    }
+    if (!item.biodataUpdatedAt) return 'Pembayaran Disetujui (Menunggu Biodata Siswa)';
+    if (!item.parentDataUpdatedAt) return 'Biodata Siswa Tersimpan (Menunggu Data Orang Tua/Wali)';
+    const level = String(item.jenjang || '').trim().toLowerCase();
+    return schoolSettings[level + '_jadwalTes']
+      ? 'Jadwal Tes & Wawancara Ditetapkan'
+      : 'Biodata Lengkap (Menunggu Jadwal Tes & Wawancara)';
+  }
 
   const passingApplicants = new Set();
   window.passApplicant = async function (regNumber, button) {

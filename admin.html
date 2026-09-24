@@ -1140,21 +1140,13 @@
         <!-- Status Pendaftaran Calon Siswa -->
         <div class="p-3.5 bg-slate-100 rounded-xl border border-slate-200 space-y-2.5">
           <div class="flex items-center justify-between">
-            <label for="modal-app-status-select" class="block text-xs font-bold text-slate-800">Status Verifikasi Calon Siswa</label>
+            <label id="modal-app-status-label" class="block text-xs font-bold text-slate-800">Status Verifikasi Calon Siswa</label>
             <div id="modal-app-bio-status-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">
               Memeriksa Berkas...
             </div>
           </div>
-          <select id="modal-app-status-select" class="w-full text-xs font-semibold rounded-lg border-slate-300 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-white">
-            <option value="Menunggu Konfirmasi Pembayaran">Menunggu Konfirmasi Pembayaran</option>
-            <option value="Pembayaran Disetujui (Menunggu Biodata Lengkap)">Pembayaran Disetujui (Menunggu Biodata Lengkap)</option>
-            <option value="Biodata Lengkap (Menunggu Jadwal Tes & Wawancara)">Biodata Lengkap (Menunggu Jadwal Tes &amp; Wawancara)</option>
-            <option value="Jadwal Tes & Wawancara Ditetapkan">Jadwal Tes &amp; Wawancara Ditetapkan</option>
-            <option value="Terverifikasi (Jadwal Observasi Ditetapkan)">Terverifikasi (Jadwal Observasi Ditetapkan)</option>
-            <option value="Lulus Seleksi Observasi & Diterima">Lulus Seleksi Observasi &amp; Diterima</option>
-            <option value="Cadangan">Cadangan</option>
-            <option value="Berkas Belum Lengkap">Berkas Belum Lengkap</option>
-          </select>
+          <p id="modal-app-status-display" aria-labelledby="modal-app-status-label" class="w-full text-xs font-semibold rounded-lg border border-slate-300 py-2 px-3 bg-white"></p>
+          <p class="text-xs text-slate-500">Status otomatis mengikuti pembayaran, kelengkapan data, jadwal, dan hasil kelulusan.</p>
         </div>
 
       </div>
@@ -1167,7 +1159,6 @@
         </a>
         <div class="w-full sm:w-auto flex items-center justify-end gap-2">
           <button type="button" class="adm-modal-close flex-1 sm:flex-none px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition text-center">Tutup</button>
-          <button type="button" id="modal-app-save-btn" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition text-center">Simpan Perubahan</button>
         </div>
       </div>
     </div>
@@ -1301,6 +1292,6 @@
   <script src="js/data.js?v=20260923_dbsync2"></script>
   <script src="js/parent-fields.js?v=20260924_schooladdress1"></script>
   <script src="js/student-export.js?v=20260924_schooladdress1"></script>
-  <script src="js/admin.js?v=20260925_pass1"></script>
+  <script src="js/admin.js?v=20260925_readonlystatus1"></script>
 </body>
 </html>
