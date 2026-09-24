@@ -120,6 +120,21 @@ test('API persistence and authorization in an isolated temporary schema', { skip
     const clearedGuardian = await request('spmb', 'POST', parentData);
     assert.equal(clearedGuardian.code, 200);
     assert.equal(clearedGuardian.body.data.nikWali, '');
+    const scheduled = await request('spmb', 'PUT', {
+      reg_number: full.body.data.regNumber,
+      jadwalTes: '2026-10-15 08:00',
+      jadwalWawancara: '2026-10-15 09:30',
+      lokasiTes: 'Gedung SDIT Bina Insan - Ruang Aula Lantai 2',
+      catatanJadwal: 'Membawa kartu peserta dan pensil 2B'
+    }, {}, true);
+    assert.equal(scheduled.code, 200);
+    assert.equal(scheduled.body.data.jadwalTes, '2026-10-15 08:00');
+    assert.equal(scheduled.body.data.jadwalWawancara, '2026-10-15 09:30');
+    assert.equal(scheduled.body.data.lokasiTes, 'Gedung SDIT Bina Insan - Ruang Aula Lantai 2');
+    assert.equal(scheduled.body.data.catatanJadwal, 'Membawa kartu peserta dan pensil 2B');
+    const scheduleReadBack = await request('spmb', 'GET', {}, { query: full.body.data.regNumber });
+    assert.equal(scheduleReadBack.body.data.jadwalTes, '2026-10-15 08:00');
+    assert.equal(scheduleReadBack.body.data.jadwalWawancara, '2026-10-15 09:30');
     assert.equal((await request('spmb', 'DELETE', { reg_number: full.body.data.regNumber }, {}, true)).code, 200);
     await request('auth', 'DELETE', {}, {}, true);
     assert.equal((await request('auth', 'GET', {}, {}, true)).code, 401);

@@ -609,7 +609,9 @@
 
               <!-- Filter Status -->
               <select id="spmb-filter-status" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50 flex-1 sm:flex-none min-w-[130px]">
-                <option value="all">Semua Status Berkas</option>
+                <option value="all">Semua Status Pendaftaran</option>
+                <option value="menunggu_jadwal">⏳ Menunggu Input Jadwal</option>
+                <option value="jadwal_ditetapkan">🗓️ Jadwal Ditetapkan</option>
                 <option value="terverifikasi">Terverifikasi</option>
                 <option value="lulus">Lulus Seleksi</option>
                 <option value="observasi">Observasi</option>
@@ -1083,23 +1085,82 @@
           </div>
         </div>
 
-        <!-- Status & Observasi Update Box -->
-        <div class="p-4 bg-slate-100 rounded-xl border border-slate-200 space-y-3">
-          <div>
-            <label for="modal-app-status-select" class="block text-xs font-bold text-slate-800 mb-1">Status Verifikasi Calon Siswa</label>
-            <select id="modal-app-status-select" class="w-full text-xs font-semibold rounded-lg border-slate-300 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-white">
-              <option value="Menunggu Konfirmasi Pembayaran">Menunggu Konfirmasi Pembayaran</option>
-              <option value="Terverifikasi (Jadwal Observasi Ditetapkan)">Terverifikasi (Jadwal Observasi Ditetapkan)</option>
-              <option value="Lulus Seleksi Observasi & Diterima">Lulus Seleksi Observasi &amp; Diterima</option>
-              <option value="Cadangan">Cadangan</option>
-              <option value="Berkas Belum Lengkap">Berkas Belum Lengkap</option>
-            </select>
+        <!-- Status Pendaftaran Calon Siswa -->
+        <div class="p-3.5 bg-slate-100 rounded-xl border border-slate-200 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label for="modal-app-status-select" class="block text-xs font-bold text-slate-800">Status Verifikasi Calon Siswa</label>
+            <div id="modal-app-bio-status-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">
+              Memeriksa Berkas...
+            </div>
+          </div>
+          <select id="modal-app-status-select" class="w-full text-xs font-semibold rounded-lg border-slate-300 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-white">
+            <option value="Menunggu Konfirmasi Pembayaran">Menunggu Konfirmasi Pembayaran</option>
+            <option value="Pembayaran Disetujui (Menunggu Biodata Lengkap)">Pembayaran Disetujui (Menunggu Biodata Lengkap)</option>
+            <option value="Biodata Lengkap (Menunggu Jadwal Tes & Wawancara)">Biodata Lengkap (Menunggu Jadwal Tes &amp; Wawancara)</option>
+            <option value="Jadwal Tes & Wawancara Ditetapkan">Jadwal Tes &amp; Wawancara Ditetapkan</option>
+            <option value="Terverifikasi (Jadwal Observasi Ditetapkan)">Terverifikasi (Jadwal Observasi Ditetapkan)</option>
+            <option value="Lulus Seleksi Observasi & Diterima">Lulus Seleksi Observasi &amp; Diterima</option>
+            <option value="Cadangan">Cadangan</option>
+            <option value="Berkas Belum Lengkap">Berkas Belum Lengkap</option>
+          </select>
+        </div>
+
+        <!-- Input Jadwal Tes & Wawancara (Oleh Panitia / Admin) -->
+        <div class="p-3.5 bg-emerald-50/70 rounded-xl border border-emerald-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-emerald-900 font-bold uppercase text-[11px] flex items-center gap-1.5">
+              <span>📅</span> Penjadwalan Tes Calon Murid &amp; Wawancara Orang Tua
+            </span>
+            <span id="modal-app-sched-status-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+              ⏳ Menunggu Jadwal
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label for="modal-app-jadwal-tes" class="block text-[11px] font-bold text-slate-700 mb-1">
+                📝 Tanggal &amp; Waktu Tes Calon Siswa
+              </label>
+              <input type="text" id="modal-app-jadwal-tes" class="w-full text-xs rounded-lg border-slate-300 py-2 px-2.5 focus:ring-emerald-500 focus:border-emerald-500 bg-white" placeholder="Contoh: Sabtu, 28 Maret 2026 | 08.00 - 10.00 WITA">
+            </div>
+            <div>
+              <label for="modal-app-jadwal-wawancara" class="block text-[11px] font-bold text-slate-700 mb-1">
+                👥 Tanggal &amp; Waktu Wawancara Orang Tua
+              </label>
+              <input type="text" id="modal-app-jadwal-wawancara" class="w-full text-xs rounded-lg border-slate-300 py-2 px-2.5 focus:ring-emerald-500 focus:border-emerald-500 bg-white" placeholder="Contoh: Sabtu, 28 Maret 2026 | 10.00 - 11.30 WITA">
+            </div>
           </div>
 
           <div>
-            <label for="modal-app-jadwal" class="block text-xs font-bold text-slate-800 mb-1">Jadwal Observasi / Catatan Panitia</label>
-            <input type="text" id="modal-app-jadwal" class="w-full text-xs rounded-lg border-slate-300 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-white" placeholder="Contoh: Sabtu, 22 Feb 2025 | Pukul 08.30 WITA">
+            <label for="modal-app-lokasi-tes" class="block text-[11px] font-bold text-slate-700 mb-1">
+              📍 Lokasi / Ruangan Tes &amp; Wawancara
+            </label>
+            <input type="text" id="modal-app-lokasi-tes" class="w-full text-xs rounded-lg border-slate-300 py-2 px-2.5 focus:ring-emerald-500 focus:border-emerald-500 bg-white" placeholder="Contoh: Kampus Utama SIT Bina Insan Parepare, Ruang Observasi A &amp; Konseling">
           </div>
+
+          <div>
+            <label for="modal-app-catatan-jadwal" class="block text-[11px] font-bold text-slate-700 mb-1">
+              📋 Petunjuk &amp; Catatan untuk Orang Tua / Siswa
+            </label>
+            <textarea id="modal-app-catatan-jadwal" rows="2" class="w-full text-xs rounded-lg border-slate-300 py-1.5 px-2.5 focus:ring-emerald-500 focus:border-emerald-500 bg-white" placeholder="Contoh: Membawa Kartu Tanda Peserta Tes, fotokopi KK &amp; Akta Kelahiran, dan pensil. Calon siswa berpakaian muslim/muslimah rapi."></textarea>
+          </div>
+
+          <!-- Preset Jadwal Cepat (1-Klik untuk Admin) -->
+          <div class="pt-2 border-t border-emerald-200/80 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="text-[10px] font-bold text-emerald-800 uppercase mr-1">Preset:</span>
+              <button type="button" id="btn-preset-sdit" class="px-2 py-1 rounded text-[10px] font-bold bg-white text-emerald-800 border border-emerald-300 hover:bg-emerald-100 transition shadow-2xs">SDIT</button>
+              <button type="button" id="btn-preset-tkit" class="px-2 py-1 rounded text-[10px] font-bold bg-white text-emerald-800 border border-emerald-300 hover:bg-emerald-100 transition shadow-2xs">TKIT</button>
+              <button type="button" id="btn-preset-smpit" class="px-2 py-1 rounded text-[10px] font-bold bg-white text-emerald-800 border border-emerald-300 hover:bg-emerald-100 transition shadow-2xs">SMPIT</button>
+              <button type="button" id="btn-preset-reset" class="px-2 py-1 rounded text-[10px] font-bold bg-white text-amber-800 border border-amber-300 hover:bg-amber-100 transition shadow-2xs">Reset Menunggu</button>
+            </div>
+            <a id="modal-app-wa-jadwal-btn" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-white bg-emerald-700 hover:bg-emerald-800 transition shadow-xs">
+              <span>💬 Kirim Jadwal via WA</span>
+            </a>
+          </div>
+
+          <!-- Hidden compatibility input for modal-app-jadwal -->
+          <input type="hidden" id="modal-app-jadwal">
         </div>
       </div>
 

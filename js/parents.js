@@ -78,6 +78,10 @@
       toggleGuardian();
       status.textContent = record.parentDataUpdatedAt ? 'Data orang tua dan wali sudah tersimpan.' : 'Semua isian wajib dilengkapi.';
       status.className = 'portal-bio-status' + (record.parentDataUpdatedAt ? ' is-success' : '');
+      const gotoScheduleBtn = document.getElementById('portal-parent-goto-schedule');
+      if (gotoScheduleBtn) {
+        gotoScheduleBtn.style.display = record.parentDataUpdatedAt ? 'inline-flex' : 'none';
+      }
     }
   };
   form.addEventListener('submit', async event => {
@@ -98,8 +102,15 @@
       try { localStorage.setItem('sit_bina_insan_spmb_data', JSON.stringify([result.data])); } catch (_) {}
       dirty = false;
       window.ParentBiodata.populate(result.data);
-      status.textContent = 'Data orang tua dan wali berhasil disimpan.';
+      status.textContent = '✓ Data orang tua dan wali berhasil disimpan! Menuju tahap Jadwal...';
       status.className = 'portal-bio-status is-success';
+      const gotoScheduleBtn = document.getElementById('portal-parent-goto-schedule');
+      if (gotoScheduleBtn) gotoScheduleBtn.style.display = 'inline-flex';
+      setTimeout(() => {
+        if (typeof window.openScheduleStage === 'function') {
+          window.openScheduleStage();
+        }
+      }, 700);
     } catch (error) {
       status.textContent = error.message || 'Data gagal disimpan. Silakan coba kembali.';
       status.className = 'portal-bio-status is-error';

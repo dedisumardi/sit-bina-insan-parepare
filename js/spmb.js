@@ -1138,12 +1138,35 @@
   };
 
   window.openStudentBiodata = function () {
-    const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim();
+    const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim() ||
+      document.getElementById('portal-sched-reg')?.textContent?.trim();
     if (!regNumber) return;
     try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber); } catch (_) {}
     renderParentPortal();
     requestAnimationFrame(() => {
       document.getElementById('portal-state-biodata')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  window.openParentBiodata = function () {
+    const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim() ||
+      document.getElementById('portal-sched-reg')?.textContent?.trim();
+    if (!regNumber) return;
+    try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + ':parents'); } catch (_) {}
+    renderParentPortal();
+    requestAnimationFrame(() => {
+      document.getElementById('portal-state-parents')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  window.openScheduleStage = function () {
+    const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim() ||
+      document.getElementById('portal-sched-reg')?.textContent?.trim();
+    if (!regNumber) return;
+    try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + ':schedule'); } catch (_) {}
+    renderParentPortal();
+    requestAnimationFrame(() => {
+      document.getElementById('portal-state-schedule')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   };
 
@@ -1218,13 +1241,18 @@
     const stateApproved = document.getElementById('portal-state-approved');
     const stateBiodata = document.getElementById('portal-state-biodata');
     const stateParents = document.getElementById('portal-state-parents');
+    const stateSchedule = document.getElementById('portal-state-schedule');
     if (stateParents) stateParents.style.display = 'none';
+    if (stateSchedule) stateSchedule.style.display = 'none';
     const badgeStatus = document.getElementById('portal-badge-status');
 
     const step1 = document.getElementById('flow-step-1');
     const step2 = document.getElementById('flow-step-2');
     const step3 = document.getElementById('flow-step-3');
+    const step4 = document.getElementById('flow-step-4');
+    const flowLine1 = document.getElementById('flow-line-1');
     const flowLine2 = document.getElementById('flow-line-2');
+    const flowLine3 = document.getElementById('flow-line-3');
 
     // Check approval status
     const isApproved = record.status && (
@@ -1232,6 +1260,7 @@
       record.status.toLowerCase().includes('disetujui') ||
       record.status.toLowerCase().includes('lulus') ||
       record.status.toLowerCase().includes('diterima') ||
+      record.status.toLowerCase().includes('jadwal') ||
       (record.regNumber && !record.regNumber.startsWith('PENDING-'))
     );
 
@@ -1240,40 +1269,145 @@
     document.getElementById('portal-account-reference').textContent = record.regNumber?.startsWith('SPMB-') ? record.regNumber : 'Pendaftaran SPMB';
 
     if (isApproved) {
-      // STATE 2 APPROVED / STATE 3 BIODATA
+      // STATE 2 APPROVED / STATE 3 BIODATA / STATE 4 PARENTS / STATE 5 SCHEDULE
+      const biodataComplete = Boolean(record.biodataUpdatedAt) || (/^\d{16}$/.test(record.nik || '') && Boolean(record.namaSiswa && record.tanggalLahir));
+      const parentsComplete = Boolean(record.parentDataUpdatedAt);
+
       let biodataViewOpen = false;
       let parentsViewOpen = false;
+      let scheduleViewOpen = false;
       try {
         const view = sessionStorage.getItem(PARENT_BIODATA_VIEW_KEY);
-        parentsViewOpen = view === record.regNumber + ':parents' && Boolean(record.biodataUpdatedAt);
-        biodataViewOpen = view === record.regNumber;
+        if (view === record.regNumber + ':schedule') {
+          scheduleViewOpen = true;
+        } else if (view === record.regNumber + ':parents' && Boolean(record.biodataUpdatedAt)) {
+          parentsViewOpen = true;
+        } else if (view === record.regNumber) {
+          biodataViewOpen = true;
+        } else if (biodataComplete && parentsComplete) {
+          scheduleViewOpen = true;
+        }
       } catch (_) {}
+
       stateUnpaid.style.display = 'none';
       statePending.style.display = 'none';
-      stateApproved.style.display = (biodataViewOpen || parentsViewOpen) ? 'none' : 'block';
+      stateApproved.style.display = (biodataViewOpen || parentsViewOpen || scheduleViewOpen) ? 'none' : 'block';
       if (stateBiodata) stateBiodata.style.display = biodataViewOpen ? 'block' : 'none';
       if (stateParents) stateParents.style.display = parentsViewOpen ? 'block' : 'none';
+      if (stateSchedule) stateSchedule.style.display = scheduleViewOpen ? 'block' : 'none';
+
       window.ParentBiodata?.populate(record);
 
       document.getElementById('portal-approved-code').textContent = record.regNumber || 'SPMB-2026-001';
       populateStudentBioForm(record);
-      badgeStatus.textContent = 'Pembayaran Terverifikasi & Diterima';
+
+      const hasSchedule = Boolean(record.jadwalTes || (record.jadwalObservasi && !record.jadwalObservasi.toLowerCase().includes('menunggu') && record.jadwalObservasi !== '-'));
+
+      // Populate Schedule Stage UI
+      if (stateSchedule) {
+        const regEl = document.getElementById('portal-sched-reg');
+        const nameEl = document.getElementById('portal-sched-nama');
+        const jenjangEl = document.getElementById('portal-sched-jenjang');
+        const statusPill = document.getElementById('portal-sched-status-pill');
+        const badgeEl = document.getElementById('portal-schedule-badge');
+        const titleEl = document.getElementById('portal-schedule-title');
+        const subtitleEl = document.getElementById('portal-schedule-subtitle');
+        const waitingView = document.getElementById('portal-sched-waiting-view');
+        const confirmedView = document.getElementById('portal-sched-confirmed-view');
+
+        if (regEl) regEl.textContent = record.regNumber || '-';
+        if (nameEl) nameEl.textContent = record.namaSiswa || 'Calon Siswa';
+        if (jenjangEl) jenjangEl.textContent = (record.jenjang || 'SDIT').toUpperCase();
+
+        if (hasSchedule) {
+          if (badgeEl) {
+            badgeEl.textContent = 'JADWAL RESMI TELAH DITETAPKAN';
+            badgeEl.style.background = '#dcfce7';
+            badgeEl.style.color = '#15803d';
+          }
+          if (titleEl) titleEl.textContent = 'Jadwal Tes Calon Murid Baru & Wawancara Ditetapkan';
+          if (subtitleEl) subtitleEl.textContent = `Alhamdulillah, Panitia SPMB SIT Bina Insan Parepare telah menetapkan jadwal seleksi calon murid baru dan wawancara orang tua untuk ananda ${record.namaSiswa || ''}.`;
+          if (statusPill) {
+            statusPill.textContent = '✓ Jadwal Ditetapkan';
+            statusPill.style.color = '#15803d';
+          }
+          if (waitingView) waitingView.style.display = 'none';
+          if (confirmedView) confirmedView.style.display = 'block';
+
+          const valTestDate = document.getElementById('portal-sched-val-test-date');
+          const valTestLoc = document.getElementById('portal-sched-val-test-loc');
+          const valInterviewDate = document.getElementById('portal-sched-val-interview-date');
+          const valInterviewLoc = document.getElementById('portal-sched-val-interview-loc');
+          const valNotes = document.getElementById('portal-sched-val-notes');
+
+          if (valTestDate) valTestDate.textContent = record.jadwalTes || record.jadwalObservasi || '-';
+          if (valTestLoc) valTestLoc.textContent = record.lokasiTes || 'Gedung Utama SIT Bina Insan Parepare';
+          if (valInterviewDate) valInterviewDate.textContent = record.jadwalWawancara || record.jadwalTes || record.jadwalObservasi || '-';
+          if (valInterviewLoc) valInterviewLoc.textContent = record.lokasiTes || 'Ruang Konseling & Wawancara';
+          if (valNotes) valNotes.textContent = record.catatanJadwal || 'Hadir 15 menit sebelum waktu tes dengan pakaian muslim/muslimah rapi.';
+
+          const confirmWaBtn = document.getElementById('portal-sched-wa-confirm-btn');
+          if (confirmWaBtn) {
+            confirmWaBtn.href = `https://wa.me/6285190610569?text=${encodeURIComponent(`Assalamu'alaikum Admin SPMB SIT Bina Insan Parepare, saya ${session.nama || record.namaAyah} orang tua dari ${record.namaSiswa || ''} (${record.regNumber}), mengonfirmasi siap hadir sesuai jadwal tes & wawancara yang telah ditetapkan. Terima kasih.`)}`;
+          }
+        } else {
+          if (badgeEl) {
+            badgeEl.textContent = 'TAHAP 4: MENUNGGU JADWAL TES & WAWANCARA';
+            badgeEl.style.background = '#fef3c7';
+            badgeEl.style.color = '#92400e';
+          }
+          if (titleEl) titleEl.textContent = 'Pengisian Biodata Selesai! Menunggu Jadwal Tes & Wawancara';
+          if (subtitleEl) subtitleEl.textContent = 'Alhamdulillah, data calon siswa dan data orang tua/wali telah berhasil disimpan lengkap di database resmi SIT Bina Insan Parepare. Tahap berikutnya adalah menunggu admin menetapkan tanggal jadwal tes calon murid baru & wawancara.';
+          if (statusPill) {
+            statusPill.textContent = '⏳ Menunggu Input Admin';
+            statusPill.style.color = '#b45309';
+          }
+          if (waitingView) waitingView.style.display = 'block';
+          if (confirmedView) confirmedView.style.display = 'none';
+
+          const waInquireBtn = document.getElementById('portal-sched-wa-inquire-btn');
+          if (waInquireBtn) {
+            waInquireBtn.href = `https://wa.me/6285190610569?text=${encodeURIComponent(`Assalamu'alaikum Admin SPMB SIT Bina Insan Parepare, saya ${session.nama || record.namaAyah} orang tua dari ${record.namaSiswa || ''} (${record.regNumber}), telah melengkapi seluruh biodata siswa & orang tua. Mohon informasi penetapan jadwal tes & wawancara. Terima kasih.`)}`;
+          }
+        }
+      }
+
+      badgeStatus.textContent = hasSchedule ? 'Jadwal Tes & Wawancara Ditetapkan' : (biodataComplete && parentsComplete) ? 'Biodata Lengkap (Menunggu Jadwal)' : 'Pembayaran Terverifikasi & Diterima';
 
       step1?.classList.add('done');
       step1?.classList.remove('active');
       step2?.classList.add('done');
       step2?.classList.remove('active');
-      const biodataComplete = /^\d{16}$/.test(record.nik || '') && Boolean(record.namaSiswa && record.tanggalLahir);
+
       step3?.classList.remove('active', 'done', 'current-success');
-      if (biodataComplete) step3?.classList.add('done');
-      else if (biodataViewOpen) step3?.classList.add('current-success');
-      if (flowLine2) flowLine2.style.background = (biodataViewOpen || biodataComplete) ? '#22c55e' : 'var(--neutral-200)';
+      if (biodataComplete && parentsComplete) {
+        step3?.classList.add('done');
+      } else if (biodataViewOpen || parentsViewOpen) {
+        step3?.classList.add('current-success');
+      } else {
+        step3?.classList.add('active');
+      }
+
+      step4?.classList.remove('active', 'done', 'current-success');
+      if (hasSchedule) {
+        step4?.classList.add('done');
+      } else if (scheduleViewOpen) {
+        step4?.classList.add('current-success');
+      } else if (biodataComplete && parentsComplete) {
+        step4?.classList.add('active');
+      }
+
+      if (flowLine1) flowLine1.style.background = '#22c55e';
+      if (flowLine2) flowLine2.style.background = '#22c55e';
+      if (flowLine3) flowLine3.style.background = (biodataComplete && parentsComplete) ? '#22c55e' : 'var(--neutral-200)';
     } else if (hasProof) {
       // STATE 2: PENDING APPROVAL
       stateUnpaid.style.display = 'none';
       statePending.style.display = 'block';
       stateApproved.style.display = 'none';
       if (stateBiodata) stateBiodata.style.display = 'none';
+      if (stateParents) stateParents.style.display = 'none';
+      if (stateSchedule) stateSchedule.style.display = 'none';
 
       const proofImg = document.getElementById('portal-pending-proof-img');
       if (proofImg) proofImg.src = record.buktiPembayaran;
@@ -1289,13 +1423,18 @@
       step1?.classList.remove('active');
       step2?.classList.add('active');
       step3?.classList.remove('active', 'done', 'current-success');
+      step4?.classList.remove('active', 'done', 'current-success');
+      if (flowLine1) flowLine1.style.background = '#22c55e';
       if (flowLine2) flowLine2.style.background = 'var(--neutral-200)';
+      if (flowLine3) flowLine3.style.background = 'var(--neutral-200)';
     } else {
       // STATE 1: UNPAID
       stateUnpaid.style.display = 'block';
       statePending.style.display = 'none';
       stateApproved.style.display = 'none';
       if (stateBiodata) stateBiodata.style.display = 'none';
+      if (stateParents) stateParents.style.display = 'none';
+      if (stateSchedule) stateSchedule.style.display = 'none';
 
       badgeStatus.textContent = 'Menunggu Pembayaran (Rp 150.000)';
 
@@ -1303,7 +1442,10 @@
       step1?.classList.remove('done');
       step2?.classList.remove('active', 'done');
       step3?.classList.remove('active', 'done', 'current-success');
+      step4?.classList.remove('active', 'done', 'current-success');
+      if (flowLine1) flowLine1.style.background = 'var(--neutral-200)';
       if (flowLine2) flowLine2.style.background = 'var(--neutral-200)';
+      if (flowLine3) flowLine3.style.background = 'var(--neutral-200)';
     }
   }
 

@@ -1528,6 +1528,197 @@
   animation: pulse-soft 2s infinite ease-in-out;
 }
 
+/* Portal State: Jadwal Tes & Wawancara */
+.portal-schedule-page {
+  background: #f8fafc;
+  border: 1px solid var(--neutral-200);
+  border-radius: 24px;
+  padding: 1.5rem 1.75rem 2rem;
+  box-shadow: var(--shadow-md);
+}
+
+.portal-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.portal-schedule-card {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.portal-schedule-heading {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--neutral-900);
+  margin: 0.75rem 0 0.5rem;
+}
+
+.portal-schedule-subheading {
+  color: var(--neutral-600);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0 auto 1.5rem;
+}
+
+.portal-sched-meta-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: #ffffff;
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-xl);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+}
+
+.portal-sched-meta-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.portal-sched-meta-item .meta-label {
+  font-size: 0.725rem;
+  font-weight: 700;
+  color: var(--neutral-400);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.portal-sched-meta-item .meta-value {
+  font-size: 0.95rem;
+  font-weight: 750;
+  color: var(--neutral-800);
+}
+
+.portal-schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.portal-sched-box {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  border: 1.5px solid #bbf7d0;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.portal-sched-box:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.portal-sched-box-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #15803d;
+  margin-bottom: 0.75rem;
+}
+
+.portal-sched-box-time {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #14532d;
+  margin-bottom: 0.5rem;
+  line-height: 1.35;
+}
+
+.portal-sched-box-desc {
+  font-size: 0.85rem;
+  color: var(--neutral-600);
+  line-height: 1.5;
+}
+
+.portal-sched-info-card {
+  background: #f0fdf4;
+  border: 1.5px dashed #86efac;
+  border-radius: var(--radius-xl);
+  padding: 1.35rem 1.5rem;
+  text-align: left;
+  margin-bottom: 1.75rem;
+}
+
+.portal-sched-waiting-container {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  border-radius: var(--radius-2xl);
+  padding: 2.25rem 1.75rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+}
+
+.portal-sched-steps-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+
+.portal-sched-step-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-lg);
+  padding: 1.1rem;
+}
+
+.portal-sched-step-card .step-num-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f59e0b;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.portal-sched-step-card h4 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--neutral-800);
+  margin: 0 0 0.35rem;
+}
+
+.portal-sched-step-card p {
+  font-size: 0.8rem;
+  color: var(--neutral-600);
+  line-height: 1.45;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .portal-schedule-grid { grid-template-columns: 1fr; }
+  .portal-sched-steps-list { grid-template-columns: 1fr; }
+  .portal-schedule-page { padding: 1rem; }
+  .portal-sched-meta-strip { flex-direction: column; align-items: flex-start; }
+}
+
 /* Sticky Quick Action Bar on SPMB Landing Page */
 .spmb-sticky-bar {
   position: fixed;

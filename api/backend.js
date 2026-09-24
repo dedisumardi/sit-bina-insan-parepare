@@ -224,7 +224,11 @@ async function handler(req, res) {
         if (proof !== undefined) Object.assign(patch, { buktiPembayaran: proof, status: 'Menunggu Verifikasi Pembayaran oleh Admin' });
         if (admin) {
           Object.assign(patch, pick(input, ['status']));
-          if (input.jadwalObservasi !== undefined || input.jadwal_observasi !== undefined) patch.jadwalObservasi = String(input.jadwalObservasi ?? input.jadwal_observasi).slice(0, 1000);
+          for (const key of ['jadwalObservasi', 'jadwalTes', 'jadwalWawancara', 'lokasiTes', 'catatanJadwal']) {
+            const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+            const val = input[key] ?? input[snakeKey];
+            if (val !== undefined) patch[key] = String(val).slice(0, 1000);
+          }
           if (input.nominalPembayaran !== undefined || input.nominal_pembayaran !== undefined) {
             const amount = Number(input.nominalPembayaran ?? input.nominal_pembayaran);
             if (!Number.isSafeInteger(amount) || amount < 0) fail(400, 'Nominal tidak valid.');

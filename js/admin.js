@@ -559,7 +559,19 @@
 
     // Filter Status
     if (spmbFilterStatus !== 'all') {
-      students = students.filter(s => (s.status || '').toLowerCase().includes(spmbFilterStatus.toLowerCase()));
+      if (spmbFilterStatus === 'menunggu_jadwal') {
+        students = students.filter(s => {
+          const hasData = Boolean(s.biodataUpdatedAt && s.parentDataUpdatedAt);
+          const hasSched = Boolean(s.jadwalTes || (s.jadwalObservasi && !s.jadwalObservasi.toLowerCase().includes('menunggu') && s.jadwalObservasi !== '-'));
+          return hasData && !hasSched;
+        });
+      } else if (spmbFilterStatus === 'jadwal_ditetapkan') {
+        students = students.filter(s => {
+          return Boolean(s.jadwalTes || (s.jadwalObservasi && !s.jadwalObservasi.toLowerCase().includes('menunggu') && s.jadwalObservasi !== '-'));
+        });
+      } else {
+        students = students.filter(s => (s.status || '').toLowerCase().includes(spmbFilterStatus.toLowerCase()));
+      }
     }
 
     // Filter Search
@@ -583,6 +595,8 @@
 
     tableBody.innerHTML = students.map(item => {
       const isApproved = (item.status || '').toLowerCase().includes('terverifikasi');
+      const hasData = Boolean(item.biodataUpdatedAt && item.parentDataUpdatedAt);
+      const hasSched = Boolean(item.jadwalTes || (item.jadwalObservasi && !item.jadwalObservasi.toLowerCase().includes('menunggu') && item.jadwalObservasi !== '-'));
       return `
       <tr class="hover:bg-slate-50/80 transition duration-150">
         <td class="py-4 px-6 whitespace-nowrap font-mono text-xs font-bold ${isApproved ? 'text-emerald-700' : 'text-slate-700'}">
@@ -608,6 +622,7 @@
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
           ${renderStatusBadge(item.status)}
+          ${hasSched ? `<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 mt-1 block max-w-fit" title="${escapeHtml(item.jadwalTes || item.jadwalObservasi)}">🗓️ Jadwal Ditetapkan</span>` : hasData ? `<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 mt-1 block max-w-fit">⏳ Menunggu Jadwal</span>` : ''}
         </td>
         <td class="py-4 px-6 whitespace-nowrap text-center">
           <div class="flex items-center justify-center gap-1.5">
@@ -957,10 +972,123 @@
       }
     }
 
-    // Status Select & Jadwal input
+    // Status Select & Jadwal inputs
     const statusSelect = document.getElementById('modal-app-status-select');
-    statusSelect.value = item.status;
-    document.getElementById('modal-app-jadwal').value = item.jadwalObservasi || '';
+    statusSelect.value = item.status || 'Menunggu Konfirmasi Pembayaran';
+    if (!statusSelect.value) {
+      for (const opt of statusSelect.options) {
+        if (opt.value.toLowerCase() === (item.status || '').toLowerCase()) {
+          statusSelect.value = opt.value;
+          break;
+        }
+      }
+    }
+
+    // Completeness badges
+    const bioStatusBadge = document.getElementById('modal-app-bio-status-badge');
+    const schedStatusBadge = document.getElementById('modal-app-sched-status-badge');
+    const hasData = Boolean(item.biodataUpdatedAt && item.parentDataUpdatedAt);
+    const hasSched = Boolean(item.jadwalTes || (item.jadwalObservasi && !item.jadwalObservasi.toLowerCase().includes('menunggu') && item.jadwalObservasi !== '-'));
+
+    if (bioStatusBadge) {
+      if (hasData) {
+        bioStatusBadge.textContent = '✓ Data Siswa & Ortu Lengkap';
+        bioStatusBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+      } else if (item.biodataUpdatedAt) {
+        bioStatusBadge.textContent = 'Data Siswa Saja (Ortu Belum)';
+        bioStatusBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
+      } else {
+        bioStatusBadge.textContent = 'Biodata Belum Lengkap';
+        bioStatusBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700';
+      }
+    }
+
+    if (schedStatusBadge) {
+      if (hasSched) {
+        schedStatusBadge.textContent = '✓ Jadwal Ditetapkan';
+        schedStatusBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+      } else {
+        schedStatusBadge.textContent = '⏳ Menunggu Jadwal';
+        schedStatusBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
+      }
+    }
+
+    // Populate schedule inputs
+    const inputJadwalTes = document.getElementById('modal-app-jadwal-tes');
+    const inputJadwalWawancara = document.getElementById('modal-app-jadwal-wawancara');
+    const inputLokasiTes = document.getElementById('modal-app-lokasi-tes');
+    const inputCatatanJadwal = document.getElementById('modal-app-catatan-jadwal');
+    const inputJadwalLegacy = document.getElementById('modal-app-jadwal');
+
+    if (inputJadwalTes) inputJadwalTes.value = item.jadwalTes || (hasSched ? item.jadwalObservasi : '');
+    if (inputJadwalWawancara) inputJadwalWawancara.value = item.jadwalWawancara || '';
+    if (inputLokasiTes) inputLokasiTes.value = item.lokasiTes || '';
+    if (inputCatatanJadwal) inputCatatanJadwal.value = item.catatanJadwal || '';
+    if (inputJadwalLegacy) inputJadwalLegacy.value = item.jadwalObservasi || '';
+
+    // Function to update WhatsApp notification link
+    function updateWaJadwalBtn() {
+      const waJadwalBtn = document.getElementById('modal-app-wa-jadwal-btn');
+      if (!waJadwalBtn) return;
+      const tes = inputJadwalTes?.value.trim() || '-';
+      const waw = inputJadwalWawancara?.value.trim() || '-';
+      const lok = inputLokasiTes?.value.trim() || 'Kampus SIT Bina Insan Parepare';
+      const cat = inputCatatanJadwal?.value.trim() || '-';
+      const msg = `Assalamu'alaikum Warahmatullahi Wabarakatuh Bapak/Ibu wali dari ${item.namaSiswa || item.namaAyah},\n\nPanitia SPMB SIT Bina Insan Parepare menginformasikan bahwa berkas pendaftaran ananda (${item.regNumber}) telah lengkap. Berikut disampaikan Jadwal Tes Calon Murid Baru & Wawancara Orang Tua:\n\n📝 Jadwal Tes Calon Siswa:\n${tes}\n\n👥 Jadwal Wawancara Orang Tua:\n${waw}\n\n📍 Lokasi:\n${lok}\n\n📋 Petunjuk:\n${cat}\n\nSilakan cek rincian jadwal dan cetak Kartu Peserta melalui portal pendaftaran: sitbinainsanparepare.sch.id\nTerima kasih.\nWassalamu'alaikum Warahmatullahi Wabarakatuh.\n- Panitia SPMB SIT Bina Insan Parepare`;
+      waJadwalBtn.href = `https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent(msg)}`;
+    }
+
+    // Preset buttons handlers
+    const btnPresetSdit = document.getElementById('btn-preset-sdit');
+    const btnPresetTkit = document.getElementById('btn-preset-tkit');
+    const btnPresetSmpit = document.getElementById('btn-preset-smpit');
+    const btnPresetReset = document.getElementById('btn-preset-reset');
+
+    if (btnPresetSdit) {
+      btnPresetSdit.onclick = () => {
+        if (inputJadwalTes) inputJadwalTes.value = 'Sabtu, 28 Maret 2026 | Pukul 08.00 - 10.00 WITA';
+        if (inputJadwalWawancara) inputJadwalWawancara.value = 'Sabtu, 28 Maret 2026 | Pukul 10.00 - 11.30 WITA';
+        if (inputLokasiTes) inputLokasiTes.value = 'Kampus Utama SDIT Bina Insan, Lantai 1 (Ruang Observasi & Konseling)';
+        if (inputCatatanJadwal) inputCatatanJadwal.value = 'Membawa Kartu Tanda Peserta SPMB, fotokopi KK & Akta Kelahiran, dan pensil 2B. Calon siswa berpakaian muslim/muslimah rapi.';
+        statusSelect.value = 'Jadwal Tes & Wawancara Ditetapkan';
+        updateWaJadwalBtn();
+      };
+    }
+    if (btnPresetTkit) {
+      btnPresetTkit.onclick = () => {
+        if (inputJadwalTes) inputJadwalTes.value = 'Sabtu, 21 Maret 2026 | Pukul 08.30 - 10.00 WITA';
+        if (inputJadwalWawancara) inputJadwalWawancara.value = 'Sabtu, 21 Maret 2026 | Pukul 09.30 - 11.00 WITA';
+        if (inputLokasiTes) inputLokasiTes.value = 'Gedung Sentra PAUD / TKIT Bina Insan Parepare';
+        if (inputCatatanJadwal) inputCatatanJadwal.value = 'Membawa Kartu Peserta SPMB, fotokopi KK & Akta Kelahiran. Calon ananda memakai pakaian bebas rapi dan bersepatu.';
+        statusSelect.value = 'Jadwal Tes & Wawancara Ditetapkan';
+        updateWaJadwalBtn();
+      };
+    }
+    if (btnPresetSmpit) {
+      btnPresetSmpit.onclick = () => {
+        if (inputJadwalTes) inputJadwalTes.value = 'Sabtu, 4 April 2026 | Pukul 08.00 - 11.00 WITA';
+        if (inputJadwalWawancara) inputJadwalWawancara.value = 'Sabtu, 4 April 2026 | Pukul 10.00 - 12.00 WITA';
+        if (inputLokasiTes) inputLokasiTes.value = 'Aula Utama & Ruang Kelas SMPIT Bina Insan Parepare';
+        if (inputCatatanJadwal) inputCatatanJadwal.value = 'Membawa Kartu Peserta Tes, fotokopi rapor SD kelas 4-6, KK, dan alat tulis. Seragam sekolah asal atau muslim/muslimah rapi.';
+        statusSelect.value = 'Jadwal Tes & Wawancara Ditetapkan';
+        updateWaJadwalBtn();
+      };
+    }
+    if (btnPresetReset) {
+      btnPresetReset.onclick = () => {
+        if (inputJadwalTes) inputJadwalTes.value = '';
+        if (inputJadwalWawancara) inputJadwalWawancara.value = '';
+        if (inputLokasiTes) inputLokasiTes.value = '';
+        if (inputCatatanJadwal) inputCatatanJadwal.value = '';
+        statusSelect.value = hasData ? 'Biodata Lengkap (Menunggu Jadwal Tes & Wawancara)' : 'Pembayaran Disetujui (Menunggu Biodata Lengkap)';
+        updateWaJadwalBtn();
+      };
+    }
+
+    [inputJadwalTes, inputJadwalWawancara, inputLokasiTes, inputCatatanJadwal].forEach(inp => {
+      if (inp) inp.oninput = updateWaJadwalBtn;
+    });
+    updateWaJadwalBtn();
 
     // Direct WhatsApp Button in modal
     const waModalBtn = document.getElementById('modal-app-wa-btn');
@@ -972,7 +1100,18 @@
     const saveBtn = document.getElementById('modal-app-save-btn');
     saveBtn.onclick = async function () {
       const newStatus = statusSelect.value;
-      const newJadwal = document.getElementById('modal-app-jadwal').value.trim();
+      const newJadwalTes = inputJadwalTes?.value.trim() || '';
+      const newJadwalWawancara = inputJadwalWawancara?.value.trim() || '';
+      const newLokasiTes = inputLokasiTes?.value.trim() || '';
+      const newCatatanJadwal = inputCatatanJadwal?.value.trim() || '';
+
+      let compositeJadwal = '';
+      if (newJadwalTes || newJadwalWawancara) {
+        compositeJadwal = `Tes: ${newJadwalTes || '-'} | Wawancara: ${newJadwalWawancara || '-'}${newLokasiTes ? ' | Lokasi: ' + newLokasiTes : ''}`;
+      } else {
+        compositeJadwal = inputJadwalLegacy?.value.trim() || '';
+      }
+
       saveBtn.disabled = true;
       try {
         const result = await apiRequest('api/spmb.php', {
@@ -981,16 +1120,26 @@
           body: JSON.stringify({
             reg_number: item.regNumber,
             status: newStatus,
-            jadwal_observasi: newJadwal
+            jadwal_tes: newJadwalTes,
+            jadwal_wawancara: newJadwalWawancara,
+            lokasi_tes: newLokasiTes,
+            catatan_jadwal: newCatatanJadwal,
+            jadwal_observasi: compositeJadwal
           })
         });
-        Object.assign(item, result.data);
+        Object.assign(item, result.data, {
+          jadwalTes: newJadwalTes,
+          jadwalWawancara: newJadwalWawancara,
+          lokasiTes: newLokasiTes,
+          catatanJadwal: newCatatanJadwal,
+          jadwalObservasi: compositeJadwal
+        });
         cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
         applicantModal.classList.remove('open');
         renderSpmbTable();
         renderDashboard();
         broadcastRealtime('spmb_updated', spmbList);
-        showToast(`Status ${item.regNumber} berhasil disimpan ke database.`);
+        showToast(`Jadwal & status ${item.regNumber} berhasil disimpan ke database.`);
       } catch (error) {
         showToast(`Gagal menyimpan status: ${error.message}`, true);
       } finally {

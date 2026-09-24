@@ -269,7 +269,14 @@ switch ($method) {
             $params[] = $nominalPembayaran;
         }
 
-        if (isset($input['jadwalObservasi']) || isset($input['jadwal_observasi'])) {
+        $jadwalTes = trim($input['jadwalTes'] ?? $input['jadwal_tes'] ?? '');
+        $jadwalWawancara = trim($input['jadwalWawancara'] ?? $input['jadwal_wawancara'] ?? '');
+        $lokasiTes = trim($input['lokasiTes'] ?? $input['lokasi_tes'] ?? '');
+        if (!empty($jadwalTes) || !empty($jadwalWawancara)) {
+            $composite = 'Tes: ' . ($jadwalTes ?: '-') . ' | Wawancara: ' . ($jadwalWawancara ?: '-') . ($lokasiTes ? ' | Lokasi: ' . $lokasiTes : '');
+            $fields[] = "`jadwal_observasi` = ?";
+            $params[] = $composite;
+        } elseif (isset($input['jadwalObservasi']) || isset($input['jadwal_observasi'])) {
             $fields[] = "`jadwal_observasi` = ?";
             $params[] = trim($input['jadwalObservasi'] ?? $input['jadwal_observasi']);
         }
