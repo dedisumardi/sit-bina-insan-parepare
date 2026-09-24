@@ -780,50 +780,29 @@
   }
 
   // Export CSV Siswa
-  function exportSpmbToCsv() {
-    const students = spmbList.filter(isStudentApplicant);
-    if (students.length === 0) {
-      alert('Tidak ada data calon siswa untuk diekspor.');
-      return;
+  async function exportSpmbToCsv() {
+    const button = document.getElementById('spmb-export-btn');
+    if (button) button.disabled = true;
+    try {
+      const result = await apiRequest('api/spmb.php');
+      if (!Array.isArray(result.data)) throw new Error('Data siswa tidak valid.');
+      const students = result.data.filter(isStudentApplicant);
+      if (!students.length) { alert('Tidak ada data calon siswa untuk diekspor.'); return; }
+      const blob = new Blob([window.StudentExport.csv(students)], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `DATA_SISWA_LENGKAP_SPMB_${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      showToast(`Data lengkap ${students.length} siswa berhasil diunduh!`);
+    } catch (error) {
+      alert('Unduhan gagal: ' + (error.message || 'Silakan coba kembali.'));
+    } finally {
+      if (button) button.disabled = false;
     }
-
-    const headers = [
-      'No. Registrasi', 'Jenjang', 'Jalur', 'Nama Lengkap Siswa', 'NIK', 'TTL', 'Jenis Kelamin',
-      'Asal Sekolah', 'Alamat', 'Nama Ayah', 'Pekerjaan Ayah', 'No WA Ayah', 'Nama Ibu', 'Email',
-      'Hafalan Quran', 'Prestasi', 'Tanggal Daftar', 'Status', 'Jadwal Observasi'
-    ];
-
-    const rows = students.map(s => [
-      s.regNumber,
-      (s.jenjang || 'sdit').toUpperCase(),
-      (s.jalur || 'reguler').toUpperCase(),
-      `"${(s.namaSiswa || '').replace(/"/g, '""')}"`,
-      `'${s.nik || ''}'`,
-      `"${(s.ttl || '').replace(/"/g, '""')}"`,
-      s.jk || 'Laki-laki',
-      `"${(s.asalSekolah || '').replace(/"/g, '""')}"`,
-      `"${(s.alamat || '').replace(/"/g, '""')}"`,
-      `"${(s.namaAyah || '').replace(/"/g, '""')}"`,
-      `"${(s.pekerjaanAyah || '').replace(/"/g, '""')}"`,
-      `'${s.waAyah || ''}'`,
-      `"${(s.namaIbu || '').replace(/"/g, '""')}"`,
-      s.email || '',
-      `"${(s.hafalan || '').replace(/"/g, '""')}"`,
-      `"${(s.prestasi || '').replace(/"/g, '""')}"`,
-      s.tanggalDaftar || '',
-      `"${(s.status || '').replace(/"/g, '""')}"`,
-      `"${(s.jadwalObservasi || '').replace(/"/g, '""')}"`
-    ]);
-
-    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `DATA_CALON_SISWA_SPMB_${new Date().toISOString().slice(0,10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showToast('File CSV Calon Siswa berhasil diunduh!');
   }
 
   // Export CSV Akun Wali
