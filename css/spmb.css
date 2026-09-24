@@ -807,7 +807,6 @@
 .portal-step-navigation h3 { margin: .75rem 0 .35rem; }
 .portal-step-navigation p { color: #64748b; font-size: .9rem; }
 .portal-step-navigation button:disabled { opacity: .45; cursor: not-allowed; }
-#spmb-parent-portal .portal-flow-steps,
 #portal-state-biodata > .portal-bio-back,
 #portal-state-parents > .portal-bio-back,
 #portal-state-schedule > .portal-nav-bar,
@@ -1358,6 +1357,15 @@
   position: relative;
   z-index: 1;
 }
+
+.portal-flow-six { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1rem; padding: 1.25rem; }
+#spmb-parent-portal .portal-flow-six .portal-flow-step { color: #15803d; font-size: .75rem; gap: .5rem; min-width: 0; }
+.portal-flow-six .flow-step-label { display: block; font-size: .65rem; text-transform: uppercase; margin-bottom: .2rem; }
+#spmb-parent-portal .portal-flow-six .portal-flow-step .num-circle { background: #16a34a; color: white; flex-shrink: 0; box-shadow: none; }
+.portal-flow-six .portal-flow-step[aria-current="step"] { background: #f0fdf4; border-radius: 10px; outline: 2px solid #86efac; outline-offset: 5px; }
+#spmb-parent-portal .portal-flow-six .portal-flow-step[aria-current="step"] .num-circle { box-shadow: 0 0 0 3px #dcfce7; }
+@media (max-width: 1000px) { .portal-flow-six { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem 1rem; } }
+@media (max-width: 520px) { .portal-flow-six { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 .portal-flow-step.active {
   color: var(--primary-700);

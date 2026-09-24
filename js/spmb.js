@@ -1285,6 +1285,11 @@
     }
     registrationNavigation = { step, regNumber: record.regNumber, approved, proof };
     document.getElementById('portal-current-step').textContent = 'LANGKAH ' + step + ' DARI 6';
+    for (let number = 1; number <= 6; number++) {
+      const indicator = document.getElementById('flow-step-' + number);
+      if (number === step) indicator?.setAttribute?.('aria-current', 'step');
+      else indicator?.removeAttribute?.('aria-current');
+    }
     document.getElementById('portal-current-title').textContent = registrationSteps[step - 1][0];
     document.getElementById('portal-current-description').textContent = registrationSteps[step - 1][1];
     document.getElementById('portal-step-back').disabled = step === 1;
