@@ -1358,14 +1358,31 @@
   z-index: 1;
 }
 
-.portal-flow-six { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1rem; padding: 1.25rem; }
+.portal-flow-six { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1.75rem; padding: 1.25rem; }
+.portal-flow-six .portal-flow-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: calc(100% + .4rem);
+  top: 50%;
+  width: .95rem;
+  height: 2px;
+  background: #86efac;
+  pointer-events: none;
+}
 #spmb-parent-portal .portal-flow-six .portal-flow-step { color: #15803d; font-size: .75rem; gap: .5rem; min-width: 0; }
 .portal-flow-six .flow-step-label { display: block; font-size: .65rem; text-transform: uppercase; margin-bottom: .2rem; }
 #spmb-parent-portal .portal-flow-six .portal-flow-step .num-circle { background: #16a34a; color: white; flex-shrink: 0; box-shadow: none; }
 .portal-flow-six .portal-flow-step[aria-current="step"] { background: #f0fdf4; border-radius: 10px; outline: 2px solid #86efac; outline-offset: 5px; }
 #spmb-parent-portal .portal-flow-six .portal-flow-step[aria-current="step"] .num-circle { box-shadow: 0 0 0 3px #dcfce7; }
-@media (max-width: 1000px) { .portal-flow-six { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem 1rem; } }
-@media (max-width: 520px) { .portal-flow-six { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 1000px) {
+  .portal-flow-six { grid-template-columns: 1fr; gap: 1.25rem; }
+  .portal-flow-six .portal-flow-step:not(:last-child)::after {
+    left: 15px;
+    top: calc(100% + .25rem);
+    width: 2px;
+    height: .75rem;
+  }
+}
 
 .portal-flow-step.active {
   color: var(--primary-700);
