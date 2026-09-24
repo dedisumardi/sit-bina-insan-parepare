@@ -7,7 +7,7 @@
     { key: 'tahunLahir', label: 'Tahun Lahir', type: 'number', min: 1900 },
     { key: 'pendidikan', label: 'Pendidikan Terakhir', type: 'select', options: ['SD/MI/sederajat', 'SMP/MTs/sederajat', 'SMA/MA/SMK/sederajat', 'Diploma I (D1)', 'Diploma II (D2)', 'Diploma III (D3)', 'Diploma IV (D4)/Sarjana Terapan', 'Sarjana (S1)', 'Profesi', 'Magister (S2)', 'Spesialis', 'Doktor (S3)/PhD', 'Subspesialis'] },
     { key: 'pekerjaan', label: 'Pekerjaan', type: 'select', options: ['Tidak bekerja', 'Ibu rumah tangga', 'PNS/ASN', 'TNI', 'Polri', 'Karyawan BUMN/BUMD', 'Karyawan swasta', 'Wiraswasta', 'Pedagang', 'Petani/Pekebun', 'Peternak', 'Nelayan', 'Buruh', 'Guru/Dosen', 'Tenaga kesehatan', 'Pengemudi/Ojek', 'Pekerja lepas', 'Pensiunan', 'Lainnya'] },
-    { key: 'penghasilan', label: 'Penghasilan per Bulan', type: 'select', options: ['Rp500.000 - Rp2.000.000', 'Rp2.000.000 - Rp5.000.000', '>Rp5.000.000'] },
+    { key: 'penghasilan', label: 'Penghasilan per Bulan', type: 'select', options: ['Tidak berpenghasilan', 'Rp500.000 - Rp2.000.000', 'Rp2.000.000 - Rp5.000.000', '>Rp5.000.000'] },
     { key: 'telepon', label: 'Nomor WhatsApp/Telepon', type: 'tel', pattern: '[+]?[0-9 ()-]{8,25}', maxLength: 25 }
   ];
   const roles = ['Ayah', 'Ibu', 'Wali'];

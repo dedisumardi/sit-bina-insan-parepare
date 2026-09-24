@@ -24,6 +24,7 @@ const biodata = ['jenjang','jalur','namaSiswa','nik','ttl','tempatLahir','tangga
 const articleFields = ['title','category','categoryClass','author','date','readTime','image','excerpt','content'];
 const studentExtraFields = ["tempatTinggal","modaTransportasi","anakKe","tinggiBadan","beratBadan","hobi","citaCita","jumlahSaudaraKandung","jarakRumahSekolah","saudaraDiSekolah"];
 biodata.push(...studentExtraFields);
+biodata.push('alamatAsalSekolah');
 function validateStudentExtras(data) {
   const choices = {"tempatTinggal":["Bersama orang tua","Wali","Lainnya"],"modaTransportasi":["Jalan kaki","Angkutan umum","Ojek","Sepeda","Motor pribadi","Mobil pribadi","Lainnya"],"jarakRumahSekolah":["Kurang dari 1 km","Lebih dari 1 km"],"saudaraDiSekolah":["Ya","Tidak"]};
   for (const [field, allowed] of Object.entries(choices)) {
@@ -171,6 +172,7 @@ async function handler(req, res) {
           if (!reg || reg.startsWith('PENDING-')) fail(403, 'Biodata dapat diisi setelah pembayaran disetujui admin.');
           if (!/^\d{16}$/.test(data.nik || '')) fail(400, 'NIK siswa harus terdiri dari 16 digit angka.');
           if (!data.asalSekolah || data.asalSekolah === '-') fail(400, 'Asal sekolah wajib diisi.');
+          if (!data.alamatAsalSekolah || data.alamatAsalSekolah === '-' || data.alamatAsalSekolah.length > 1000) fail(400, 'Alamat asal sekolah wajib diisi, maksimal 1000 karakter.');
           if (!data.jenjang || data.jalur !== 'reguler' || studentExtraFields.some(field => !data[field])) {
             fail(400, 'Seluruh isian biodata wajib dilengkapi.');
           }

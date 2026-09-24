@@ -1034,6 +1034,7 @@
     set('bio-tempat-lahir', student.tempatLahir);
     set('bio-tanggal-lahir', student.tanggalLahir);
     set('bio-asal-sekolah', student.asalSekolah === '-' ? '' : student.asalSekolah);
+    set('bio-alamat-asal-sekolah', student.alamatAsalSekolah);
     set('bio-agama', student.agama);
     set('bio-kewarganegaraan', student.kewarganegaraan);
     set('bio-alamat', student.alamat);
@@ -1094,6 +1095,7 @@
       jk: value('bio-jk'), nik: value('bio-nik'), tempatLahir: value('bio-tempat-lahir'),
       tanggalLahir: value('bio-tanggal-lahir'),
       asalSekolah: value('bio-asal-sekolah'), agama: value('bio-agama'),
+      alamatAsalSekolah: value('bio-alamat-asal-sekolah'),
       kewarganegaraan: value('bio-kewarganegaraan'), alamat: value('bio-alamat'),
       desaKelurahan: value('bio-desa'), kecamatan: value('bio-kecamatan'),
       kabupatenKota: value('bio-kabupaten'), provinsi: value('bio-provinsi')

@@ -60,7 +60,7 @@ test('API persistence and authorization in an isolated temporary schema', { skip
     assert.equal((await request('spmb', 'PUT', { reg_number: reg, waAyah, buktiPembayaran: proof })).code, 200);
     const approved = await request('spmb', 'PUT', { reg_number: reg, new_reg_number: 'generate', status: 'Pembayaran Terverifikasi' }, {}, true);
     assert.equal(approved.code, 200);
-    const extra = { jalur: 'reguler', tempatTinggal: 'Bersama orang tua', modaTransportasi: 'Jalan kaki', anakKe: '1',
+    const extra = { alamatAsalSekolah: 'Jl. Sekolah No. 1', jalur: 'reguler', tempatTinggal: 'Bersama orang tua', modaTransportasi: 'Jalan kaki', anakKe: '1',
       tinggiBadan: '125.5', beratBadan: '25.5', hobi: 'Membaca', citaCita: 'Dokter',
       jarakRumahSekolah: 'Kurang dari 1 km', jumlahSaudaraKandung: '0', saudaraDiSekolah: 'Tidak' };
     const full = await request('spmb', 'POST', { ...extra, action: 'save_biodata', regNumber: approved.body.data.regNumber,
@@ -97,7 +97,7 @@ test('API persistence and authorization in an isolated temporary schema', { skip
     for (const role of ['Ayah', 'Ibu', 'Wali']) {
       Object.assign(parentData, { ['statusHidup' + role]: 'Hidup', ['nama' + role]: 'Test ' + role,
         ['nik' + role]: '1234567890123456', ['tahunLahir' + role]: '1985', ['pendidikan' + role]: 'Sarjana (S1)',
-        ['pekerjaan' + role]: 'Wiraswasta', ['penghasilan' + role]: 'Rp2.000.000 - Rp5.000.000', ['telepon' + role]: '081122334455' });
+        ['pekerjaan' + role]: 'Tidak bekerja', ['penghasilan' + role]: 'Tidak berpenghasilan', ['telepon' + role]: '081122334455' });
     }
     assert.equal((await request('spmb', 'POST', { ...parentData, regNumber: reg })).code, 403);
     assert.equal((await request('spmb', 'POST', { ...parentData, accountWa: '081999999999' })).code, 403);
@@ -111,6 +111,7 @@ test('API persistence and authorization in an isolated temporary schema', { skip
     assert.equal(withGuardian.code, 200);
     const parentsReadBack = await request('spmb', 'GET', {}, { wa: waAyah });
     assert.equal(parentsReadBack.body.data.namaWali, 'Test Wali');
+    for (const role of ['Ayah', 'Ibu', 'Wali']) assert.equal(parentsReadBack.body.data['penghasilan' + role], 'Tidak berpenghasilan');
     assert.equal(parentsReadBack.body.data.teleponAyah, '081122334455');
     assert.equal((await request('spmb', 'POST', { ...parentData, memilikiWali: 'Ya', nikWali: '' })).code, 400);
     assert.equal((await request('spmb', 'POST', { ...parentData, nikAyah: '12' })).code, 400);

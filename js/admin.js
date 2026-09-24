@@ -857,6 +857,7 @@
     document.getElementById('modal-app-ttl').textContent = item.ttl || '-';
     document.getElementById('modal-app-jk').textContent = item.jk || '-';
     document.getElementById('modal-app-sekolah').textContent = item.asalSekolah || '-';
+    document.getElementById('modal-app-alamat-sekolah').textContent = item.alamatAsalSekolah || '-';
     document.getElementById('modal-app-agama').textContent = item.agama || '-';
     document.getElementById('modal-app-kewarganegaraan').textContent = item.kewarganegaraan || '-';
     document.getElementById('modal-app-alamat').textContent = item.alamat || '-';

@@ -3,9 +3,11 @@
   const parents = typeof module !== 'undefined' && module.exports ? require('./parent-fields') : root.ParentFields;
   const columns = [["regNumber","No. Registrasi"],["jenjang","Jenjang Pendidikan"],["jalur","Jalur Pendaftaran"],["namaSiswa","Nama Lengkap Siswa"],["jk","Jenis Kelamin"],["nik","NIK Siswa"],["tempatLahir","Tempat Lahir"],["tanggalLahir","Tanggal Lahir"],["asalSekolah","Asal Sekolah"],["agama","Agama"],["kewarganegaraan","Kewarganegaraan"],["alamat","Alamat Lengkap"],["provinsi","Provinsi"],["kabupatenKota","Kabupaten/Kota"],["kecamatan","Kecamatan"],["desaKelurahan","Desa/Kelurahan"],["tempatTinggal","Tempat Tinggal"],["modaTransportasi","Moda Transportasi"],["anakKe","Anak ke Berapa"],["tinggiBadan","Tinggi Badan (cm)"],["beratBadan","Berat Badan (kg)"],["hobi","Hobi"],["citaCita","Cita-cita"],["jarakRumahSekolah","Jarak Rumah ke Sekolah"],["jumlahSaudaraKandung","Jumlah Saudara Kandung"],["saudaraDiSekolah","Saudara Kandung di SIT Bina Insan Parepare"]];
   for (const role of parents.roles) {
+    // The school address follows its name in the exported spreadsheet.
     if (role === 'Wali') columns.push(['memilikiWali', 'Memiliki Wali']);
     for (const field of parents.fields) columns.push([field.key + role, field.label + ' ' + role]);
   }
+  columns.splice(columns.findIndex(([key]) => key === 'asalSekolah') + 1, 0, ['alamatAsalSekolah', 'Alamat Asal Sekolah']);
   columns.push(['waAyah', 'Nomor WhatsApp Akun Portal'], ['email', 'Email'], ['hafalan', 'Hafalan Quran'],
     ['prestasi', 'Prestasi'], ['ttl', 'Tempat/Tanggal Lahir (Data Lama)'],
     ['tanggalDaftar', 'Tanggal Daftar'], ['status', 'Status Pendaftaran'],
