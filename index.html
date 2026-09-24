@@ -24,7 +24,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/spmb.css?v=20260925_separatesave1">
+  <link rel="stylesheet" href="css/spmb.css?v=20260925_passgreen1">
 </head>
 <body>
 
@@ -2291,7 +2291,12 @@
                 <div class="portal-sched-meta-item"><span class="meta-label">Nama Calon Siswa</span><span id="portal-results-name" class="meta-value">-</span></div>
                 <div class="portal-sched-meta-item"><span class="meta-label">Jenjang</span><span id="portal-results-level" class="meta-value">-</span></div>
               </div>
-              <div class="portal-sched-box" role="status" aria-live="polite">
+              <div id="portal-results-card" class="portal-sched-box" role="status" aria-live="polite">
+                <div id="portal-results-success" hidden>
+                  <span class="result-success-check" aria-hidden="true">✓</span>
+                  <p class="result-success-label">SELAMAT! ANDA DINYATAKAN</p>
+                  <p class="result-success-heading">LULUS &amp; DITERIMA</p>
+                </div>
                 <h3 id="portal-results-title">Menunggu Pengumuman</h3>
                 <p id="portal-results-message" class="portal-schedule-subheading" style="margin-top:1rem;">Hasil tes dan wawancara belum diumumkan oleh panitia.</p>
               </div>
@@ -2534,7 +2539,7 @@
   <script src="js/regions.js?v=20260924_regions2"></script>
   <script src="js/parent-fields.js?v=20260924_schooladdress1"></script>
   <script src="js/parents.js?v=20260925_separatesave1"></script>
-  <script src="js/spmb.js?v=20260925_separatesave1"></script>
+  <script src="js/spmb.js?v=20260925_passgreen1"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>

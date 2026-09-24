@@ -1752,6 +1752,23 @@
   margin-bottom: 1.75rem;
 }
 
+#portal-results-card.is-passed {
+  background: #ecfdf5;
+  border: 2px solid #22c55e;
+  box-shadow: 0 8px 24px rgba(22, 163, 74, .12);
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+.result-success-check {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px; border-radius: 50%;
+  background: #15803d; color: white; font-size: 2.5rem; font-weight: 800;
+  margin-bottom: 1rem;
+}
+#portal-results-card .result-success-label { color: #166534; font-size: .8rem; font-weight: 800; letter-spacing: .08em; }
+#portal-results-card .result-success-heading { color: #14532d; font-size: clamp(1.7rem, 5vw, 2.6rem); font-weight: 900; line-height: 1.2; margin: .5rem 0 1rem; }
+#portal-results-card.is-passed #portal-results-title { color: #166534; }
+#portal-results-card.is-passed #portal-results-message { color: #166534; margin-bottom: 0; }
+
 .portal-sched-waiting-container {
   background: #ffffff;
   border: 1.5px solid #fde68a;

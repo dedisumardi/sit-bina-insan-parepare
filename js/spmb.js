@@ -1437,6 +1437,9 @@
       if (stateResults) {
         stateResults.style.display = resultsViewOpen ? 'block' : 'none';
         const announcement = getTestAnnouncement(record.status);
+        const hasPassed = record.status === 'Lulus Seleksi Observasi & Diterima';
+        document.getElementById('portal-results-card').classList.toggle('is-passed', hasPassed);
+        document.getElementById('portal-results-success').hidden = !hasPassed;
         document.getElementById('portal-results-reg').textContent = record.regNumber || '-';
         document.getElementById('portal-results-name').textContent = record.namaSiswa || '-';
         document.getElementById('portal-results-level').textContent = (record.jenjang || '-').toUpperCase();
