@@ -802,6 +802,60 @@
   }
 }
 
+#schedule-print-sheet {
+  position: absolute;
+  left: -10000px;
+  top: 0;
+  width: 186mm;
+  visibility: hidden;
+  background: white;
+  text-align: center;
+}
+#schedule-print-sheet * {
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+#schedule-print-sheet .portal-sched-meta-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 3mm;
+  padding: 4mm;
+  margin-bottom: 5mm;
+}
+#schedule-print-sheet .portal-sched-meta-item .meta-label { font-size: 7pt; }
+#schedule-print-sheet .portal-sched-meta-item .meta-value { font-size: 9pt; }
+#schedule-print-sheet .schedule-print-content > div:last-child {
+  padding: 6mm !important;
+  margin: 0 !important;
+}
+#schedule-print-sheet .portal-sched-box { padding: 5mm; }
+#schedule-print-sheet .schedule-print-content { width: 186mm; }
+#schedule-print-sheet .portal-sched-info-card { margin-bottom: 0; padding: 4mm; }
+
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+  body.printing-schedule {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  body.printing-schedule > :not(#schedule-print-sheet) { display: none !important; }
+  body.printing-schedule #schedule-print-sheet {
+    position: static;
+    visibility: visible;
+    display: block !important;
+    width: 186mm;
+    margin: 0;
+    padding: 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  #schedule-print-sheet .schedule-print-content { break-inside: avoid; }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .spmb-hero-title {

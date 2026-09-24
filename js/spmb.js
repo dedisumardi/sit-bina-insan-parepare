@@ -1658,6 +1658,45 @@
     window.print();
   };
 
+  window.printScheduleCard = async function () {
+    await refreshScheduleSettings();
+    const confirmed = document.getElementById('portal-sched-confirmed-view');
+    const metadata = document.querySelector('#portal-state-schedule .portal-sched-meta-strip');
+    if (scheduleLoadError || !confirmed || confirmed.style.display === 'none' || !metadata) {
+      alert('Jadwal belum tersedia. Pastikan koneksi internet aktif dan jadwal telah ditetapkan.');
+      return;
+    }
+    document.getElementById('schedule-print-sheet')?.remove();
+    const sheet = document.createElement('section');
+    sheet.id = 'schedule-print-sheet';
+    sheet.setAttribute('aria-hidden', 'true');
+    const content = document.createElement('div');
+    content.className = 'schedule-print-content';
+    const details = confirmed.firstElementChild.cloneNode(true);
+    details.querySelector('button')?.parentElement.remove();
+    content.append(metadata.cloneNode(true), details);
+    content.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'));
+    sheet.append(content);
+    document.body.append(sheet);
+    document.body.classList.add('printing-schedule');
+    const cleanup = () => {
+      sheet.remove();
+      document.body.classList.remove('printing-schedule');
+    };
+    try {
+      await document.fonts?.ready;
+      // Fit the complete card, including long notes, inside the A4 printable area.
+      const maxHeight = 270 * 96 / 25.4;
+      const scale = Math.min(1, maxHeight / content.getBoundingClientRect().height);
+      content.style.zoom = String(scale);
+      window.addEventListener('afterprint', cleanup, { once: true });
+      window.print();
+    } catch (error) {
+      cleanup();
+      alert('Tidak dapat membuka cetakan. Silakan coba lagi.');
+    }
+  };
+
   // Quick Status Check in Landing
   window.handleQuickStatusCheck = async function (e) {
     e.preventDefault();
