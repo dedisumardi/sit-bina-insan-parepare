@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
-test('region selectors start empty, restore saved hierarchy, reset children and retry failures', async () => {
+test('region selectors start empty, restore saved hierarchy, reset children and handle failures', async () => {
   class Element {
     dataset = {}; listeners = {}; options = []; value = ''; disabled = false;
     replaceChildren(...options) { this.options = options; this.value = options[0]?.value || ''; }
@@ -47,7 +47,7 @@ test('region selectors start empty, restore saved hierarchy, reset children and 
   assert.equal(window.StudentRegions.isComplete(), false);
   assert.equal(get('bio-region-feedback').hidden, false);
   fail = false;
-  get('bio-region-retry').listeners.click();
+  get('bio-provinsi').listeners.change();
   await settle();
   assert.equal(get('bio-kabupaten').disabled, false);
   assert.equal(get('bio-kabupaten').options[1].value, 'Kabupaten Simeulue');

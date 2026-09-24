@@ -15,7 +15,6 @@
   const cache = new Map();
   let generation = 0;
   let lastSignature;
-  let retry;
   const normalize = value => String(value || '').toLowerCase().replace(/^(provinsi|prov\.|kec\.)\s*/, '').trim();
 
   function reset(index, loading = false) {
@@ -57,7 +56,6 @@
     const token = ++generation;
     feedback.hidden = true;
     for (let i = index; i < selects.length; i++) reset(i);
-    retry = () => run(index, record);
     try {
       for (let i = index; i < selects.length; i++) {
         const selected = await load(i, token, record[levels[i][1]]);
@@ -65,7 +63,7 @@
       }
     } catch (_) {
       if (token !== generation) return;
-      message.textContent = 'Daftar wilayah gagal dimuat. Periksa koneksi lalu tekan Coba Lagi.';
+      message.textContent = 'Daftar wilayah gagal dimuat. Periksa koneksi lalu muat ulang halaman.';
       feedback.hidden = false;
     }
   }
@@ -74,7 +72,6 @@
     document.getElementById('portal-student-bio-form').dataset.dirty = '1';
     if (index < selects.length - 1) run(index + 1);
   }));
-  document.getElementById('bio-region-retry').addEventListener('click', () => retry?.());
   window.StudentRegions = {
     populate(record, key) {
       const signature = JSON.stringify([key, ...levels.map(level => record[level[1]] || '')]);
