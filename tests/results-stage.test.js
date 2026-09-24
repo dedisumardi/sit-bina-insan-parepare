@@ -33,3 +33,22 @@ test('results only announce explicit final admin decisions', () => {
   assert.ok(nav.includes('window.openResultsStage()'));
   assert.ok(html.includes('id="portal-state-results"'));
 });
+
+test('back to first step preserves registration and explicitly selects payment summary', () => {
+  const source = fs.readFileSync('js/spmb.js', 'utf8');
+  const start = source.indexOf('  window.backToPaymentApproval =');
+  const end = source.indexOf('  function getTestAnnouncement', start);
+  const writes = [];
+  const context = {
+    window: {}, PARENT_BIODATA_VIEW_KEY: 'view',
+    document: { getElementById: () => ({ textContent: 'SPMB-TEST', scrollIntoView() {} }) },
+    sessionStorage: { setItem: (...args) => writes.push(args) },
+    renderParentPortal() {}, requestAnimationFrame: fn => fn()
+  };
+  vm.runInNewContext(source.slice(start, end), context);
+  context.window.backToPaymentApproval();
+  assert.deepEqual(writes, [['view', 'SPMB-TEST:payment']]);
+  assert.ok(source.includes("if (view === record.regNumber + ':payment')"));
+  const html = fs.readFileSync('index.html', 'utf8');
+  assert.ok(html.includes('onclick="window.backToPaymentApproval()">← Kembali ke Langkah Pertama'));
+});

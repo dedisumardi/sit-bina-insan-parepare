@@ -1208,7 +1208,9 @@
   };
 
   window.backToPaymentApproval = function () {
-    try { sessionStorage.removeItem(PARENT_BIODATA_VIEW_KEY); } catch (_) {}
+    const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim();
+    if (!regNumber) return;
+    try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + ':payment'); } catch (_) {}
     renderParentPortal();
     requestAnimationFrame(() => {
       document.getElementById('portal-state-approved')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1339,7 +1341,9 @@
       let resultsViewOpen = false;
       try {
         const view = sessionStorage.getItem(PARENT_BIODATA_VIEW_KEY);
-        if (view === record.regNumber + ':results' && biodataComplete && parentsComplete) {
+        if (view === record.regNumber + ':payment') {
+          // Show the saved payment summary without restarting registration or charging again.
+        } else if (view === record.regNumber + ':results' && biodataComplete && parentsComplete) {
           resultsViewOpen = true;
         } else if (view === record.regNumber + ':schedule') {
           scheduleViewOpen = true;
