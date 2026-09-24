@@ -60,7 +60,7 @@ test('API persistence and authorization in an isolated temporary schema', { skip
     assert.equal((await request('spmb', 'PUT', { reg_number: reg, waAyah, buktiPembayaran: proof })).code, 200);
     const approved = await request('spmb', 'PUT', { reg_number: reg, new_reg_number: 'generate', status: 'Pembayaran Terverifikasi' }, {}, true);
     assert.equal(approved.code, 200);
-    const extra = { tempatTinggal: 'Bersama orang tua', modaTransportasi: 'Jalan kaki', anakKe: '1',
+    const extra = { jalur: 'reguler', tempatTinggal: 'Bersama orang tua', modaTransportasi: 'Jalan kaki', anakKe: '1',
       tinggiBadan: '125.5', beratBadan: '25.5', hobi: 'Membaca', citaCita: 'Dokter',
       jarakRumahSekolah: 'Kurang dari 1 km', jumlahSaudaraKandung: '0', saudaraDiSekolah: 'Tidak' };
     const full = await request('spmb', 'POST', { ...extra, action: 'save_biodata', regNumber: approved.body.data.regNumber,
@@ -69,6 +69,12 @@ test('API persistence and authorization in an isolated temporary schema', { skip
       agama: 'Islam', kewarganegaraan: 'Indonesia', desaKelurahan: 'Bumi Harapan', kecamatan: 'Bacukiki Barat',
       kabupatenKota: 'Kota Parepare', provinsi: 'Sulawesi Selatan' });
     assert.equal(full.code, 200);
+    for (const field of Object.keys(extra)) {
+      for (const empty of ['', '   ', undefined]) {
+        const incomplete = { ...full.body.data, action: 'save_biodata', [field]: empty };
+        assert.equal((await request('spmb', 'POST', incomplete)).code, 400, field + ' must be required');
+      }
+    }
     const readBack = await request('spmb', 'GET', {}, { query: '1234567890123456' });
     for (const [key, value] of Object.entries(extra)) assert.equal(readBack.body.data[key], value);
     for (const invalidExtra of [{ anakKe: '0' }, { jumlahSaudaraKandung: '-1' }, { tinggiBadan: 'abc' }, { beratBadan: '-2' }, { modaTransportasi: 'Pesawat' }, { saudaraDiSekolah: 'Mungkin' }]) {

@@ -153,6 +153,9 @@ async function handler(req, res) {
           if (!reg || reg.startsWith('PENDING-')) fail(403, 'Biodata dapat diisi setelah pembayaran disetujui admin.');
           if (!/^\d{16}$/.test(data.nik || '')) fail(400, 'NIK siswa harus terdiri dari 16 digit angka.');
           if (!data.asalSekolah || data.asalSekolah === '-') fail(400, 'Asal sekolah wajib diisi.');
+          if (!data.jenjang || data.jalur !== 'reguler' || studentExtraFields.some(field => !data[field])) {
+            fail(400, 'Seluruh isian biodata wajib dilengkapi.');
+          }
           if (!data.namaSiswa || !data.tempatLahir || !/^\d{4}-\d{2}-\d{2}$/.test(data.tanggalLahir || '') ||
               !data.agama || !data.kewarganegaraan || !data.alamat || !data.desaKelurahan ||
               !data.kecamatan || !data.kabupatenKota || !data.provinsi) fail(400, 'Lengkapi seluruh data wajib siswa.');
