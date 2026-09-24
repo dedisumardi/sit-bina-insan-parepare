@@ -986,9 +986,7 @@
 
     // Completeness badges
     const bioStatusBadge = document.getElementById('modal-app-bio-status-badge');
-    const schedStatusBadge = document.getElementById('modal-app-sched-status-badge');
     const hasData = Boolean(item.biodataUpdatedAt && item.parentDataUpdatedAt);
-    const hasSched = Boolean(item.jadwalTes || (item.jadwalObservasi && !item.jadwalObservasi.toLowerCase().includes('menunggu') && item.jadwalObservasi !== '-'));
 
     if (bioStatusBadge) {
       if (hasData) {
@@ -1003,80 +1001,6 @@
       }
     }
 
-    if (schedStatusBadge) {
-      if (hasSched) {
-        schedStatusBadge.textContent = '✓ Jadwal Ditetapkan';
-        schedStatusBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
-      } else {
-        schedStatusBadge.textContent = '⏳ Menunggu Jadwal';
-        schedStatusBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
-      }
-    }
-
-    // Populate schedule inputs
-    const inputJadwalTes = document.getElementById('modal-app-jadwal-tes');
-    const inputJadwalWawancara = document.getElementById('modal-app-jadwal-wawancara');
-    const inputLokasiTes = document.getElementById('modal-app-lokasi-tes');
-    const inputCatatanJadwal = document.getElementById('modal-app-catatan-jadwal');
-    const inputJadwalLegacy = document.getElementById('modal-app-jadwal');
-
-    if (inputJadwalTes) inputJadwalTes.value = item.jadwalTes || (hasSched ? item.jadwalObservasi : '');
-    if (inputJadwalWawancara) inputJadwalWawancara.value = item.jadwalWawancara || '';
-    if (inputLokasiTes) inputLokasiTes.value = item.lokasiTes || '';
-    if (inputCatatanJadwal) inputCatatanJadwal.value = item.catatanJadwal || '';
-    if (inputJadwalLegacy) inputJadwalLegacy.value = item.jadwalObservasi || '';
-
-    // Function to update WhatsApp notification link
-    function updateWaJadwalBtn() {
-      const waJadwalBtn = document.getElementById('modal-app-wa-jadwal-btn');
-      if (!waJadwalBtn) return;
-      const tes = inputJadwalTes?.value.trim() || '-';
-      const waw = inputJadwalWawancara?.value.trim() || '-';
-      const lok = inputLokasiTes?.value.trim() || 'Kampus SIT Bina Insan Parepare';
-      const cat = inputCatatanJadwal?.value.trim() || '-';
-      const msg = `Assalamu'alaikum Warahmatullahi Wabarakatuh Bapak/Ibu wali dari ${item.namaSiswa || item.namaAyah},\n\nPanitia SPMB SIT Bina Insan Parepare menginformasikan bahwa berkas pendaftaran ananda (${item.regNumber}) telah lengkap. Berikut disampaikan Jadwal Tes Calon Murid Baru & Wawancara Orang Tua:\n\n📝 Jadwal Tes Calon Siswa:\n${tes}\n\n👥 Jadwal Wawancara Orang Tua:\n${waw}\n\n📍 Lokasi:\n${lok}\n\n📋 Petunjuk:\n${cat}\n\nSilakan cek rincian jadwal dan cetak Kartu Peserta melalui portal pendaftaran: sitbinainsanparepare.sch.id\nTerima kasih.\nWassalamu'alaikum Warahmatullahi Wabarakatuh.\n- Panitia SPMB SIT Bina Insan Parepare`;
-      waJadwalBtn.href = `https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent(msg)}`;
-    }
-
-    // Preset buttons handlers
-    const btnPresetSdit = document.getElementById('btn-preset-sdit');
-    const btnPresetTkit = document.getElementById('btn-preset-tkit');
-    const btnPresetSmpit = document.getElementById('btn-preset-smpit');
-    const btnPresetReset = document.getElementById('btn-preset-reset');
-
-    function applySavedSchedule(level) {
-      const tes = settings[level + '_jadwalTes'] || '';
-      const waw = settings[level + '_jadwalWawancara'] || '';
-      if (!tes && !waw) {
-        alert('Jadwal ' + level.toUpperCase() + ' belum diatur. Silakan simpan jadwal di Pengaturan SPMB.');
-        return;
-      }
-      if (inputJadwalTes) inputJadwalTes.value = tes;
-      if (inputJadwalWawancara) inputJadwalWawancara.value = waw;
-      if (inputLokasiTes) inputLokasiTes.value = settings[level + '_lokasiTes'] || '';
-      if (inputCatatanJadwal) inputCatatanJadwal.value = settings[level + '_catatanJadwal'] || '';
-      statusSelect.value = 'Jadwal Tes & Wawancara Ditetapkan';
-      updateWaJadwalBtn();
-    }
-    if (btnPresetSdit) btnPresetSdit.onclick = () => applySavedSchedule('sdit');
-    if (btnPresetTkit) btnPresetTkit.onclick = () => applySavedSchedule('tkit');
-    if (btnPresetSmpit) btnPresetSmpit.onclick = () => applySavedSchedule('smpit');
-    if (btnPresetReset) {
-      btnPresetReset.onclick = () => {
-        if (inputJadwalTes) inputJadwalTes.value = '';
-        if (inputJadwalWawancara) inputJadwalWawancara.value = '';
-        if (inputLokasiTes) inputLokasiTes.value = '';
-        if (inputCatatanJadwal) inputCatatanJadwal.value = '';
-        statusSelect.value = hasData ? 'Biodata Lengkap (Menunggu Jadwal Tes & Wawancara)' : 'Pembayaran Disetujui (Menunggu Biodata Lengkap)';
-        updateWaJadwalBtn();
-      };
-    }
-
-    [inputJadwalTes, inputJadwalWawancara, inputLokasiTes, inputCatatanJadwal].forEach(inp => {
-      if (inp) inp.oninput = updateWaJadwalBtn;
-    });
-    updateWaJadwalBtn();
-
     // Direct WhatsApp Button in modal
     const waModalBtn = document.getElementById('modal-app-wa-btn');
     if (waModalBtn) {
@@ -1087,18 +1011,6 @@
     const saveBtn = document.getElementById('modal-app-save-btn');
     saveBtn.onclick = async function () {
       const newStatus = statusSelect.value;
-      const newJadwalTes = inputJadwalTes?.value.trim() || '';
-      const newJadwalWawancara = inputJadwalWawancara?.value.trim() || '';
-      const newLokasiTes = inputLokasiTes?.value.trim() || '';
-      const newCatatanJadwal = inputCatatanJadwal?.value.trim() || '';
-
-      let compositeJadwal = '';
-      if (newJadwalTes || newJadwalWawancara) {
-        compositeJadwal = `Tes: ${newJadwalTes || '-'} | Wawancara: ${newJadwalWawancara || '-'}${newLokasiTes ? ' | Lokasi: ' + newLokasiTes : ''}`;
-      } else {
-        compositeJadwal = inputJadwalLegacy?.value.trim() || '';
-      }
-
       saveBtn.disabled = true;
       try {
         const result = await apiRequest('api/spmb.php', {
@@ -1106,27 +1018,16 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             reg_number: item.regNumber,
-            status: newStatus,
-            jadwal_tes: newJadwalTes,
-            jadwal_wawancara: newJadwalWawancara,
-            lokasi_tes: newLokasiTes,
-            catatan_jadwal: newCatatanJadwal,
-            jadwal_observasi: compositeJadwal
+            status: newStatus
           })
         });
-        Object.assign(item, result.data, {
-          jadwalTes: newJadwalTes,
-          jadwalWawancara: newJadwalWawancara,
-          lokasiTes: newLokasiTes,
-          catatanJadwal: newCatatanJadwal,
-          jadwalObservasi: compositeJadwal
-        });
+        Object.assign(item, result.data);
         cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
         applicantModal.classList.remove('open');
         renderSpmbTable();
         renderDashboard();
         broadcastRealtime('spmb_updated', spmbList);
-        showToast(`Jadwal & status ${item.regNumber} berhasil disimpan ke database.`);
+        showToast(`Status ${item.regNumber} berhasil disimpan ke database.`);
       } catch (error) {
         showToast(`Gagal menyimpan status: ${error.message}`, true);
       } finally {
