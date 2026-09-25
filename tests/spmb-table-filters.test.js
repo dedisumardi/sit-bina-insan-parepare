@@ -8,6 +8,8 @@ test('admin.html contains wave filter, select-all checkbox, and number column he
   assert.ok(html.includes('id="spmb-select-all"'), 'spmb-select-all exists');
   assert.ok(html.includes('>No.</th>'), 'No. header exists');
   assert.ok(html.includes('id="spmb-bulk-actions"'), 'Bulk action bar exists');
+  assert.ok(html.includes('>Jenjang</th>'), 'Jenjang header exists separately');
+  assert.ok(html.includes('>Jalur</th>'), 'Jalur header exists separately');
 });
 
 test('admin.js contains wave detection, wave filtering, and select-all handling', () => {
@@ -19,5 +21,8 @@ test('admin.js contains wave detection, wave filtering, and select-all handling'
   assert.ok(adminJs.includes('spmb-select-all'), 'select all checkbox handled');
   assert.ok(adminJs.includes('let waliFilterStatus'), 'waliFilterStatus declared');
   assert.ok(adminJs.includes('let waliSearchQuery'), 'waliSearchQuery declared');
+  assert.ok(adminJs.includes('colspan="10"'), 'empty state spans 10 columns');
+  assert.ok(adminJs.includes('flex flex-col items-start gap-1'), 'status column stacks vertically');
 });
+
 

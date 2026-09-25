@@ -665,7 +665,7 @@
     if (countEl) countEl.textContent = `Menampilkan ${students.length} dari ${spmbList.filter(isStudentApplicant).length} calon siswa`;
 
     if (students.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada data calon siswa yang cocok dengan filter.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada data calon siswa yang cocok dengan filter.</td></tr>`;
       updateSelectAllCheckbox([]);
       updateBulkActionBar();
       return;
@@ -692,11 +692,13 @@
           <div class="font-bold text-slate-900">${escapeHtml(item.namaSiswa || '-')}</div>
           <span class="text-xs text-slate-400 font-mono">NIK: ${escapeHtml(item.nik || '-')}</span>
         </td>
-        <td class="py-4 px-6 whitespace-nowrap">
+        <td class="py-4 px-4 whitespace-nowrap text-center">
           ${renderJenjangBadge(item.jenjang)}
-          <div class="flex items-center gap-1.5 mt-1">
-            <span class="text-[11px] text-slate-400 uppercase font-medium tracking-wider">${escapeHtml(item.jalur ? item.jalur.toUpperCase() : 'REGULER')}</span>
-            <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">${escapeHtml(getStudentWaveName(item))}</span>
+        </td>
+        <td class="py-4 px-4 whitespace-nowrap">
+          <div class="font-bold text-xs text-slate-700 uppercase tracking-wide">${escapeHtml(item.jalur ? item.jalur.toUpperCase() : 'REGULER')}</div>
+          <div class="mt-0.5">
+            <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 inline-block">${escapeHtml(getStudentWaveName(item))}</span>
           </div>
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
@@ -710,8 +712,10 @@
           <span class="font-medium text-slate-800">${escapeHtml(item.tanggalDaftar || '-')}</span>
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
-          ${renderStatusBadge(item.status)}
-          ${hasSched ? `<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 mt-1 block max-w-fit" title="${escapeHtml(item.jadwalTes || item.jadwalObservasi)}">🗓️ Jadwal Ditetapkan</span>` : hasData ? `<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 mt-1 block max-w-fit">⏳ Menunggu Jadwal</span>` : ''}
+          <div class="flex flex-col items-start gap-1">
+            ${renderStatusBadge(item.status)}
+            ${hasSched ? `<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200" title="${escapeHtml(item.jadwalTes || item.jadwalObservasi)}">🗓️ Jadwal Ditetapkan</span>` : hasData ? `<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">⏳ Menunggu Jadwal</span>` : ''}
+          </div>
         </td>
         <td class="py-4 px-6 whitespace-nowrap text-center">
           <div class="flex items-center justify-center gap-1.5">
