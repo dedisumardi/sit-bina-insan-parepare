@@ -10,6 +10,7 @@ test('admin.html contains wave filter, select-all checkbox, and number column he
   assert.ok(html.includes('id="spmb-bulk-actions"'), 'Bulk action bar exists');
   assert.ok(html.includes('>Jenjang</th>'), 'Jenjang header exists separately');
   assert.ok(html.includes('>Jalur</th>'), 'Jalur header exists separately');
+  assert.ok(html.includes('>Berkas KK &amp; Akta</th>'), 'Berkas KK & Akta header exists');
 });
 
 test('admin.js contains wave detection, wave filtering, and select-all handling', () => {
@@ -21,8 +22,10 @@ test('admin.js contains wave detection, wave filtering, and select-all handling'
   assert.ok(adminJs.includes('spmb-select-all'), 'select all checkbox handled');
   assert.ok(adminJs.includes('let waliFilterStatus'), 'waliFilterStatus declared');
   assert.ok(adminJs.includes('let waliSearchQuery'), 'waliSearchQuery declared');
-  assert.ok(adminJs.includes('colspan="10"'), 'empty state spans 10 columns');
+  assert.ok(adminJs.includes('colspan="11"'), 'empty state spans 11 columns');
   assert.ok(adminJs.includes('flex flex-col items-start gap-1'), 'status column stacks vertically');
+  assert.ok(adminJs.includes('renderStudentReregDocsColumn'), 'renderStudentReregDocsColumn helper exists');
+  assert.ok(adminJs.includes('window.viewApplicantDoc'), 'window.viewApplicantDoc handler exists');
 });
 
 

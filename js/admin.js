@@ -950,6 +950,34 @@
     `;
   }
 
+  // Kolom Berkas KK & Akta Pendaftaran Ulang
+  function renderStudentReregDocsColumn(item) {
+    const kkData = item.berkasKk || item.berkas_kk;
+    const aktaData = item.berkasAkta || item.berkas_akta;
+    const hasKk = Boolean(kkData);
+    const hasAkta = Boolean(aktaData);
+
+    if (!hasKk && !hasAkta) {
+      return `<span class="text-slate-400 text-[11px] italic font-normal">Belum ada</span>`;
+    }
+
+    const kkEl = hasKk
+      ? `<button type="button" class="inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-bold bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 hover:border-sky-300 transition shadow-2xs cursor-pointer" onclick="window.viewApplicantDoc('${escapeHtml(item.regNumber)}', 'kk')" title="Lihat Berkas Kartu Keluarga (KK)">
+          <i class="ph ph-file-text text-xs"></i>
+          <span>KK</span>
+        </button>`
+      : `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium text-slate-400 bg-slate-50 border border-dashed border-slate-200" title="Kartu Keluarga Belum Diunggah">KK -</span>`;
+
+    const aktaEl = hasAkta
+      ? `<button type="button" class="inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-bold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 hover:border-indigo-300 transition shadow-2xs cursor-pointer" onclick="window.viewApplicantDoc('${escapeHtml(item.regNumber)}', 'akta')" title="Lihat Berkas Akta Kelahiran">
+          <i class="ph ph-certificate text-xs"></i>
+          <span>Akta</span>
+        </button>`
+      : `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium text-slate-400 bg-slate-50 border border-dashed border-slate-200" title="Akta Kelahiran Belum Diunggah">Akta -</span>`;
+
+    return `<div class="inline-flex items-center justify-center gap-1.5 flex-wrap">${kkEl}${aktaEl}</div>`;
+  }
+
   // 1. Render Tabel Data Calon Siswa
   function renderStudentsTable() {
     const tableBody = document.getElementById('spmb-table-body');
@@ -962,7 +990,7 @@
 
     if (students.length === 0) {
       if (countEl) countEl.textContent = 'Menampilkan 0 calon siswa';
-      tableBody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada data calon siswa yang cocok dengan filter.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="11" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada data calon siswa yang cocok dengan filter.</td></tr>`;
       updateSelectAllCheckbox([]);
       updateBulkActionBar();
       renderPaginationControls(0, 1, spmbPageSize);
@@ -1025,6 +1053,9 @@
           <div class="flex flex-col items-start gap-1">
             ${renderStudentStatusColumn(item)}
           </div>
+        </td>
+        <td class="py-4 px-3 text-center">
+          ${renderStudentReregDocsColumn(item)}
         </td>
         <td class="py-4 px-5 text-center whitespace-nowrap">
           ${renderStudentActionButtons(item)}
@@ -1610,7 +1641,7 @@
   window.viewApplicantDoc = function (regNumber, docType) {
     const item = spmbList.find(s => s.regNumber === regNumber || s.waAyah === regNumber);
     if (!item) return;
-    const docData = docType === 'kk' ? item.berkasKk : item.berkasAkta;
+    const docData = docType === 'kk' ? (item.berkasKk || item.berkas_kk) : (item.berkasAkta || item.berkas_akta);
     if (!docData) {
       alert(`Berkas ${docType === 'kk' ? 'Kartu Keluarga' : 'Akta Kelahiran'} belum diunggah.`);
       return;
