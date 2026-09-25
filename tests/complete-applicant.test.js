@@ -11,6 +11,14 @@ test('portal completion elements and thank you messages are present in index.htm
   const adminHtml = fs.readFileSync('admin.html', 'utf8');
   assert.ok(adminHtml.includes('id="modal-app-complete-box"'), 'admin.html must have modal-app-complete-box');
   assert.ok(adminHtml.includes('value="selesai"'), 'admin.html must have selesai filter option');
+
+  // Verify all 6 registration guide steps are present in index.html
+  assert.ok(indexHtml.includes('Pendaftaran Akun &amp; Pembayaran'), 'Step 1 must be present');
+  assert.ok(indexHtml.includes('Verifikasi Pembayaran &amp; Terbit No. Registrasi'), 'Step 2 must be present');
+  assert.ok(indexHtml.includes('Pengisian Biodata Siswa &amp; Orang Tua/Wali'), 'Step 3 must be present');
+  assert.ok(indexHtml.includes('Jadwal Tes Observasi &amp; Wawancara'), 'Step 4 must be present');
+  assert.ok(indexHtml.includes('Pengumuman Hasil Kelulusan'), 'Step 5 must be present');
+  assert.ok(indexHtml.includes('Daftar Ulang &amp; Unggah Berkas (Selesai)'), 'Step 6 must be present');
 });
 
 test('admin action button turns to Selesai only when student is graduated and re-registered', () => {
