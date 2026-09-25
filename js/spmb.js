@@ -433,11 +433,16 @@
     const prefix = jenjangVal.toUpperCase().substring(0, 2);
 
     let yearPrefix = '2025';
+    let currentWave = 'Gelombang 1';
     try {
       const raw = localStorage.getItem('sit_bina_insan_settings');
       if (raw) {
         const s = JSON.parse(raw);
         if (s.academicYear) yearPrefix = s.academicYear.split('/')[0].trim();
+        const act = (s.activeWave || 'wave1').toLowerCase();
+        if (act === 'wave2' || act.includes('gelombang 2')) currentWave = s.wave2Name || 'Gelombang 2';
+        else if (act === 'wave3' || act.includes('gelombang 3')) currentWave = s.wave3Name || 'Gelombang 3';
+        else if (s.wave1Name) currentWave = s.wave1Name;
       }
     } catch (e) {}
 
@@ -468,6 +473,7 @@
       email,
       hafalan,
       prestasi,
+      gelombang: currentWave,
       tanggalDaftar: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' WITA',
       status: 'Menunggu Konfirmasi Pembayaran',
       jadwalObservasi

@@ -469,11 +469,117 @@
   // =========================================================================
   let currentSpmbSubTab = 'siswa'; // 'siswa' or 'wali'
   let spmbFilterJenjang = 'all';
+  let spmbFilterGelombang = 'all';
   let spmbFilterStatus = 'all';
   let spmbSearchQuery = '';
+  const spmbSelectedRows = new Set();
 
-  let waliFilterStatus = 'all';
-  let waliSearchQuery = '';
+  function getStudentWave(s) {
+    if (!s) return 'wave1';
+    const val = (s.gelombang || s.wave || s.waveKey || '').toLowerCase();
+    if (val.includes('3') || val === 'wave3') return 'wave3';
+    if (val.includes('2') || val === 'wave2') return 'wave2';
+    if (val.includes('1') || val === 'wave1') return 'wave1';
+
+    const dateStr = s.createdAt || s.tanggalDaftar || '';
+    if (dateStr) {
+      const lower = dateStr.toLowerCase();
+      if (lower.includes('april') || lower.includes('mei') || lower.includes('/4/') || lower.includes('/5/')) {
+        return 'wave2';
+      }
+      if (lower.includes('juni') || lower.includes('juli') || lower.includes('agustus') || lower.includes('/6/') || lower.includes('/7/') || lower.includes('/8/')) {
+        return 'wave3';
+      }
+    }
+    return 'wave1';
+  }
+
+  function getStudentWaveName(s) {
+    const waveKey = getStudentWave(s);
+    if (waveKey === 'wave2') return settings.wave2Name || 'Gelombang 2';
+    if (waveKey === 'wave3') return settings.wave3Name || 'Gelombang 3';
+    return settings.wave1Name || 'Gelombang 1';
+  }
+
+  function getFilteredStudents() {
+    let students = spmbList.filter(isStudentApplicant);
+
+    // Filter Jenjang
+    if (spmbFilterJenjang !== 'all') {
+      students = students.filter(s => s.jenjang === spmbFilterJenjang);
+    }
+
+    // Filter Gelombang
+    if (spmbFilterGelombang !== 'all') {
+      students = students.filter(s => getStudentWave(s) === spmbFilterGelombang);
+    }
+
+    // Filter Status
+    if (spmbFilterStatus !== 'all') {
+      if (spmbFilterStatus === 'menunggu_jadwal') {
+        students = students.filter(s => {
+          const hasData = Boolean(s.biodataUpdatedAt && s.parentDataUpdatedAt);
+          const hasSched = Boolean(s.jadwalTes || (s.jadwalObservasi && !s.jadwalObservasi.toLowerCase().includes('menunggu') && s.jadwalObservasi !== '-'));
+          return hasData && !hasSched;
+        });
+      } else if (spmbFilterStatus === 'jadwal_ditetapkan') {
+        students = students.filter(s => {
+          return Boolean(s.jadwalTes || (s.jadwalObservasi && !s.jadwalObservasi.toLowerCase().includes('menunggu') && s.jadwalObservasi !== '-'));
+        });
+      } else {
+        students = students.filter(s => (s.status || '').toLowerCase().includes(spmbFilterStatus.toLowerCase()));
+      }
+    }
+
+    // Filter Search
+    if (spmbSearchQuery.trim() !== '') {
+      const q = spmbSearchQuery.toLowerCase();
+      students = students.filter(s =>
+        (s.regNumber || '').toLowerCase().includes(q) ||
+        (s.namaSiswa || '').toLowerCase().includes(q) ||
+        (s.nik || '').includes(q) ||
+        (s.namaAyah && s.namaAyah.toLowerCase().includes(q))
+      );
+    }
+
+    return students;
+  }
+
+  function updateSelectAllCheckbox(visibleStudents) {
+    const selectAll = document.getElementById('spmb-select-all');
+    if (!selectAll) return;
+    if (!visibleStudents || visibleStudents.length === 0) {
+      selectAll.checked = false;
+      selectAll.indeterminate = false;
+      return;
+    }
+    const visibleRegs = visibleStudents.map(s => s.regNumber);
+    const selectedCount = visibleRegs.filter(reg => spmbSelectedRows.has(reg)).length;
+    if (selectedCount === 0) {
+      selectAll.checked = false;
+      selectAll.indeterminate = false;
+    } else if (selectedCount === visibleRegs.length) {
+      selectAll.checked = true;
+      selectAll.indeterminate = false;
+    } else {
+      selectAll.checked = false;
+      selectAll.indeterminate = true;
+    }
+  }
+
+  function updateBulkActionBar() {
+    const bar = document.getElementById('spmb-bulk-actions');
+    const countEl = document.getElementById('spmb-selected-count');
+    if (!bar) return;
+    const count = spmbSelectedRows.size;
+    if (count > 0) {
+      bar.style.display = 'flex';
+      if (countEl) countEl.textContent = count;
+    } else {
+      bar.style.display = 'none';
+      if (countEl) countEl.textContent = '0';
+    }
+  }
 
   function isStudentApplicant(s) {
     if (!s) return false;
@@ -550,56 +656,32 @@
     const tableBody = document.getElementById('spmb-table-body');
     if (!tableBody) return;
 
-    let students = spmbList.filter(isStudentApplicant);
-
-    // Filter Jenjang
-    if (spmbFilterJenjang !== 'all') {
-      students = students.filter(s => s.jenjang === spmbFilterJenjang);
-    }
-
-    // Filter Status
-    if (spmbFilterStatus !== 'all') {
-      if (spmbFilterStatus === 'menunggu_jadwal') {
-        students = students.filter(s => {
-          const hasData = Boolean(s.biodataUpdatedAt && s.parentDataUpdatedAt);
-          const hasSched = Boolean(s.jadwalTes || (s.jadwalObservasi && !s.jadwalObservasi.toLowerCase().includes('menunggu') && s.jadwalObservasi !== '-'));
-          return hasData && !hasSched;
-        });
-      } else if (spmbFilterStatus === 'jadwal_ditetapkan') {
-        students = students.filter(s => {
-          return Boolean(s.jadwalTes || (s.jadwalObservasi && !s.jadwalObservasi.toLowerCase().includes('menunggu') && s.jadwalObservasi !== '-'));
-        });
-      } else {
-        students = students.filter(s => (s.status || '').toLowerCase().includes(spmbFilterStatus.toLowerCase()));
-      }
-    }
-
-    // Filter Search
-    if (spmbSearchQuery.trim() !== '') {
-      const q = spmbSearchQuery.toLowerCase();
-      students = students.filter(s =>
-        (s.regNumber || '').toLowerCase().includes(q) ||
-        (s.namaSiswa || '').toLowerCase().includes(q) ||
-        (s.nik || '').includes(q) ||
-        (s.namaAyah && s.namaAyah.toLowerCase().includes(q))
-      );
-    }
+    const students = getFilteredStudents();
 
     const countEl = document.getElementById('spmb-filter-count');
     if (countEl) countEl.textContent = `Menampilkan ${students.length} dari ${spmbList.filter(isStudentApplicant).length} calon siswa`;
 
     if (students.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada data calon siswa yang cocok dengan filter.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada data calon siswa yang cocok dengan filter.</td></tr>`;
+      updateSelectAllCheckbox([]);
+      updateBulkActionBar();
       return;
     }
 
-    tableBody.innerHTML = students.map(item => {
+    tableBody.innerHTML = students.map((item, index) => {
       const isApproved = (item.status || '').toLowerCase().includes('terverifikasi');
       const hasData = Boolean(item.biodataUpdatedAt && item.parentDataUpdatedAt);
       const hasPassed = item.status === 'Lulus Seleksi Observasi & Diterima';
       const hasSched = Boolean(item.jadwalTes || (item.jadwalObservasi && !item.jadwalObservasi.toLowerCase().includes('menunggu') && item.jadwalObservasi !== '-'));
+      const isSelected = spmbSelectedRows.has(item.regNumber);
       return `
-      <tr class="hover:bg-slate-50/80 transition duration-150">
+      <tr class="hover:bg-slate-50/80 transition duration-150 ${isSelected ? 'bg-emerald-50/60' : ''}" data-reg="${escapeHtml(item.regNumber)}">
+        <td class="py-4 px-4 text-center">
+          <input type="checkbox" class="spmb-row-checkbox w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" data-reg="${escapeHtml(item.regNumber)}" ${isSelected ? 'checked' : ''}>
+        </td>
+        <td class="py-4 px-4 text-center text-xs font-semibold text-slate-500">
+          ${index + 1}
+        </td>
         <td class="py-4 px-6 whitespace-nowrap font-mono text-xs font-bold ${isApproved ? 'text-emerald-700' : 'text-slate-700'}">
           ${escapeHtml(item.regNumber)}
         </td>
@@ -609,7 +691,10 @@
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
           ${renderJenjangBadge(item.jenjang)}
-          <span class="text-[11px] text-slate-400 block mt-1 uppercase font-medium tracking-wider">${escapeHtml(item.jalur ? item.jalur.toUpperCase() : 'REGULER')}</span>
+          <div class="flex items-center gap-1.5 mt-1">
+            <span class="text-[11px] text-slate-400 uppercase font-medium tracking-wider">${escapeHtml(item.jalur ? item.jalur.toUpperCase() : 'REGULER')}</span>
+            <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">${escapeHtml(getStudentWaveName(item))}</span>
+          </div>
         </td>
         <td class="py-4 px-6 whitespace-nowrap">
           <div class="font-medium text-slate-800 text-xs">${escapeHtml(item.namaAyah || '-')}</div>
@@ -642,6 +727,9 @@
       </tr>
       `;
     }).join('');
+
+    updateSelectAllCheckbox(students);
+    updateBulkActionBar();
   }
 
   // 2. Render Tabel Akun Orang Tua & Pembayaran
@@ -757,12 +845,18 @@
 
   function initSpmbControls() {
     const filterJenjang = document.getElementById('spmb-filter-jenjang');
+    const filterGelombang = document.getElementById('spmb-filter-gelombang');
     const filterStatus = document.getElementById('spmb-filter-status');
     const searchInput = document.getElementById('spmb-search-input');
     const exportBtn = document.getElementById('spmb-export-btn');
 
     filterJenjang?.addEventListener('change', (e) => {
       spmbFilterJenjang = e.target.value;
+      renderStudentsTable();
+    });
+
+    filterGelombang?.addEventListener('change', (e) => {
+      spmbFilterGelombang = e.target.value;
       renderStudentsTable();
     });
 
@@ -777,6 +871,103 @@
     });
 
     exportBtn?.addEventListener('click', exportSpmbToCsv);
+
+    // Checkbox Pilih Semua
+    const selectAll = document.getElementById('spmb-select-all');
+    selectAll?.addEventListener('change', (e) => {
+      const isChecked = e.target.checked;
+      const visible = getFilteredStudents();
+      for (const s of visible) {
+        if (isChecked) spmbSelectedRows.add(s.regNumber);
+        else spmbSelectedRows.delete(s.regNumber);
+      }
+      document.querySelectorAll('.spmb-row-checkbox').forEach(cb => {
+        cb.checked = isChecked;
+        cb.closest('tr')?.classList.toggle('bg-emerald-50/60', isChecked);
+      });
+      selectAll.indeterminate = false;
+      updateBulkActionBar();
+    });
+
+    // Checkbox Baris
+    const tableBody = document.getElementById('spmb-table-body');
+    tableBody?.addEventListener('change', (e) => {
+      const cb = e.target.closest('.spmb-row-checkbox');
+      if (!cb) return;
+      const reg = cb.dataset.reg;
+      if (cb.checked) spmbSelectedRows.add(reg);
+      else spmbSelectedRows.delete(reg);
+      cb.closest('tr')?.classList.toggle('bg-emerald-50/60', cb.checked);
+      updateSelectAllCheckbox(getFilteredStudents());
+      updateBulkActionBar();
+    });
+
+    // Bulk Action Buttons
+    document.getElementById('spmb-bulk-clear-btn')?.addEventListener('click', () => {
+      spmbSelectedRows.clear();
+      document.querySelectorAll('.spmb-row-checkbox').forEach(cb => {
+        cb.checked = false;
+        cb.closest('tr')?.classList.remove('bg-emerald-50/60');
+      });
+      const selectAll = document.getElementById('spmb-select-all');
+      if (selectAll) { selectAll.checked = false; selectAll.indeterminate = false; }
+      updateBulkActionBar();
+    });
+
+    document.getElementById('spmb-bulk-pass-btn')?.addEventListener('click', async () => {
+      if (spmbSelectedRows.size === 0) return;
+      const selected = spmbList.filter(s => spmbSelectedRows.has(s.regNumber));
+      const eligible = selected.filter(s => s.status !== 'Lulus Seleksi Observasi & Diterima' && s.biodataUpdatedAt && s.parentDataUpdatedAt && s.regNumber.startsWith('SPMB-'));
+      if (eligible.length === 0) {
+        showToast('Tidak ada calon siswa terpilih yang siap diluluskan (pastikan data lengkap dan belum lulus).', true);
+        return;
+      }
+      if (!confirm(`Luluskan ${eligible.length} calon siswa yang dipilih? Hasil kelulusan akan langsung diperbarui di portal pengumuman.`)) return;
+
+      let successCount = 0;
+      for (const item of eligible) {
+        try {
+          const result = await apiRequest('api/spmb.php', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reg_number: item.regNumber, status: 'Lulus Seleksi Observasi & Diterima' })
+          });
+          Object.assign(item, result.data);
+          successCount++;
+        } catch (err) {
+          console.error('Gagal meluluskan siswa', item.regNumber, err);
+        }
+      }
+      cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
+      renderSpmbTable();
+      renderDashboard();
+      broadcastRealtime('spmb_updated', spmbList);
+      showToast(`Berhasil meluluskan ${successCount} calon siswa terpilih.`);
+    });
+
+    document.getElementById('spmb-bulk-delete-btn')?.addEventListener('click', async () => {
+      if (spmbSelectedRows.size === 0) return;
+      const count = spmbSelectedRows.size;
+      if (!confirm(`Apakah Anda yakin ingin menghapus ${count} data calon siswa yang dipilih? Tindakan ini tidak dapat dibatalkan.`)) return;
+
+      const regs = Array.from(spmbSelectedRows);
+      let successCount = 0;
+      for (const reg of regs) {
+        try {
+          await apiRequest(`api/spmb.php?reg_number=${encodeURIComponent(reg)}`, { method: 'DELETE' });
+          spmbList = spmbList.filter(s => s.regNumber !== reg);
+          spmbSelectedRows.delete(reg);
+          successCount++;
+        } catch (err) {
+          console.error('Gagal menghapus siswa', reg, err);
+        }
+      }
+      cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
+      renderSpmbTable();
+      renderDashboard();
+      broadcastRealtime('spmb_updated', spmbList);
+      showToast(`Berhasil menghapus ${successCount} data calon siswa terpilih.`);
+    });
 
     // Wali Controls
     const waliFilter = document.getElementById('wali-filter-status');
@@ -1597,6 +1788,16 @@
     updateWaveCardsUI(activeWave);
     updateWavePreview(activeDisplayName, waveStatus, academicYear);
     updateNavbarWaveBadge(activeDisplayName, waveStatus, academicYear);
+
+    const filterGelombang = document.getElementById('spmb-filter-gelombang');
+    if (filterGelombang) {
+      const optW1 = filterGelombang.querySelector('option[value="wave1"]');
+      if (optW1) optW1.textContent = w1Name;
+      const optW2 = filterGelombang.querySelector('option[value="wave2"]');
+      if (optW2) optW2.textContent = w2Name;
+      const optW3 = filterGelombang.querySelector('option[value="wave3"]');
+      if (optW3) optW3.textContent = w3Name;
+    }
 
     const dbTpText = document.getElementById('admin-dashboard-tp-text');
     if (dbTpText) dbTpText.textContent = `Tahun Pelajaran ${academicYear}`;

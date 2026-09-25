@@ -27,7 +27,7 @@ function row(record) {
   return { ...record.data, id: record.id, ...(record.reg_number ? { regNumber: record.reg_number } : {}), createdAt: record.created_at };
 }
 function requireAdmin(admin) { if (!admin) fail(401, 'Silakan masuk sebagai admin.'); }
-const biodata = ['jenjang','jalur','namaSiswa','nik','ttl','tempatLahir','tanggalLahir','jk','asalSekolah','alamat','desaKelurahan','kecamatan','kabupatenKota','provinsi','agama','kewarganegaraan','namaAyah','pekerjaanAyah','waAyah','namaIbu','pekerjaanIbu','email','hafalan','prestasi','sertifikatPrestasi'];
+const biodata = ['jenjang','jalur','namaSiswa','nik','ttl','tempatLahir','tanggalLahir','jk','asalSekolah','alamat','desaKelurahan','kecamatan','kabupatenKota','provinsi','agama','kewarganegaraan','namaAyah','pekerjaanAyah','waAyah','namaIbu','pekerjaanIbu','email','hafalan','prestasi','sertifikatPrestasi','gelombang'];
 const articleFields = ['title','category','categoryClass','author','date','readTime','image','excerpt','content'];
 const studentExtraFields = ["tempatTinggal","modaTransportasi","anakKe","tinggiBadan","beratBadan","hobi","citaCita","jumlahSaudaraKandung","jarakRumahSekolah","saudaraDiSekolah"];
 biodata.push(...studentExtraFields);
