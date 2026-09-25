@@ -796,20 +796,46 @@
     const s = (item.status || '').toLowerCase();
     const hasData = Boolean(item.biodataUpdatedAt && item.parentDataUpdatedAt);
     const hasSched = Boolean(item.jadwalTes || (item.jadwalObservasi && !item.jadwalObservasi.toLowerCase().includes('menunggu') && item.jadwalObservasi !== '-'));
-    const isPassed = s.includes('lulus') || s.includes('diterima');
+    const hasPassed = s.includes('lulus') || s.includes('diterima');
     const isApproved = s.includes('terverifikasi') || s.includes('lengkap');
+    const hasRereg = Boolean((item.berkasKk && item.berkasAkta) || (item.berkas_kk && item.berkas_akta));
+    const isCompleted = s.includes('selesai');
+
+    // 0. Alur Selesai (Completed)
+    if (isCompleted) {
+      return `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+          <i class="fa-regular fa-circle-check text-emerald-600"></i>
+          <span>Lulus &amp; Pendaftaran Selesai</span>
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <i class="fa-solid fa-check-double text-emerald-600"></i>
+          <span>Alur SPMB Selesai</span>
+        </span>
+      `;
+    }
 
     // 1. Lulus Seleksi Observasi & Diterima (Row 1)
-    if (isPassed) {
+    if (hasPassed) {
+      const subBadge = hasRereg
+        ? `
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <i class="fa-solid fa-file-circle-check text-emerald-600"></i>
+          <span>Daftar Ulang Selesai</span>
+        </span>
+        `
+        : `
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-sky-50 text-sky-800 border border-sky-200">
+          <i class="fa-regular fa-calendar-check text-sky-600"></i>
+          <span>Jadwal Ditetapkan</span>
+        </span>
+        `;
       return `
         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-800 border border-blue-200/80">
           <i class="fa-regular fa-circle-check text-blue-600"></i>
           <span>Lulus Seleksi Observasi &amp; Diterima</span>
         </span>
-        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-sky-50 text-sky-800 border border-sky-200">
-          <i class="fa-regular fa-calendar-check text-sky-600"></i>
-          <span>Jadwal Ditetapkan</span>
-        </span>
+        ${subBadge}
       `;
     }
 
@@ -886,11 +912,27 @@
     const hasPassed = s.includes('lulus') || s.includes('diterima');
     const isApproved = s.includes('terverifikasi') || s.includes('lengkap');
     const hasSched = Boolean(item.jadwalTes || (item.jadwalObservasi && !item.jadwalObservasi.toLowerCase().includes('menunggu') && item.jadwalObservasi !== '-'));
+    const hasRereg = Boolean((item.berkasKk && item.berkasAkta) || (item.berkas_kk && item.berkas_akta));
+    const isCompleted = s.includes('selesai');
 
     let primaryBtn = '';
 
-    // Row 1: Green "Lulus"
-    if (hasPassed) {
+    // Jika sudah lulus dan sudah mendaftar ulang (upload KK dan Akta): tombol jadi "Selesai"
+    if (hasPassed && hasRereg) {
+      const btnClass = isCompleted
+        ? 'bg-emerald-600 text-white hover:bg-emerald-700 border-emerald-600'
+        : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200';
+      const btnTitle = isCompleted
+        ? 'Alur Pendaftaran SPMB Telah Selesai'
+        : 'Selesaikan Alur Pendaftaran SPMB';
+      primaryBtn = `
+        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold ${btnClass} border transition-colors shadow-2xs" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.completeApplicant(this.dataset.regNumber, this)" title="${btnTitle}">
+          <i class="ph ph-check-circle text-sm"></i>
+          <span>Selesai</span>
+        </button>
+      `;
+    } else if (hasPassed) {
+      // Row 1: Green "Lulus"
       primaryBtn = `
         <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Siswa Lulus Seleksi">
           <i class="ph ph-check-circle text-sm"></i>
@@ -1623,6 +1665,37 @@
             reregTime.style.display = 'none';
           }
         }
+        const completeBox = document.getElementById('modal-app-complete-box');
+        const completeBtn = document.getElementById('modal-app-complete-btn');
+        const completeDesc = document.getElementById('modal-app-complete-desc');
+        if (completeBox) {
+          if (isGraduated && (item.berkasKk && item.berkasAkta)) {
+            completeBox.style.display = 'flex';
+            const isFinished = (item.status || '').toLowerCase().includes('selesai');
+            if (isFinished) {
+              if (completeDesc) completeDesc.textContent = 'Alur pendaftaran telah selesai:';
+              if (completeBtn) {
+                completeBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Alur Pendaftaran Selesai';
+                completeBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300';
+                completeBtn.onclick = function () {
+                  window.completeApplicant(item.regNumber);
+                };
+              }
+            } else {
+              if (completeDesc) completeDesc.textContent = 'Berkas KK & Akta lengkap:';
+              if (completeBtn) {
+                completeBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Selesaikan Alur Pendaftaran';
+                completeBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition';
+                completeBtn.onclick = function () {
+                  window.completeApplicant(item.regNumber);
+                  applicantModal.classList.remove('open');
+                };
+              }
+            }
+          } else {
+            completeBox.style.display = 'none';
+          }
+        }
       } else {
         reregBox.style.display = 'none';
       }
@@ -1812,6 +1885,7 @@
   };
 
   function getApplicantProgressStatus(item, schoolSettings) {
+    if ((item.status || '').toLowerCase().includes('selesai')) return item.status;
     if (item.status === 'Lulus Seleksi Observasi & Diterima' || item.status === 'Cadangan') return item.status;
     if (!String(item.regNumber || '').startsWith('SPMB-')) {
       return item.buktiPembayaran ? 'Menunggu Verifikasi Pembayaran oleh Admin' : 'Menunggu Pembayaran Uang Pendaftaran';
@@ -1853,6 +1927,59 @@
     } finally {
       passingApplicants.delete(regNumber);
       if (button) button.disabled = item.status === passedStatus;
+    }
+  };
+
+  const completingApplicants = new Set();
+  window.completeApplicant = async function (regNumber, button) {
+    const item = spmbList.find(student => student.regNumber === regNumber);
+    if (!item) return;
+
+    const completedStatus = 'Lulus Seleksi Observasi & Diterima (Pendaftaran Selesai)';
+    const thankYouMessage = 'Selamat & terima kasih telah memilih sekolah kami untuk pendidikan anak anda, jazakallahu khairan';
+
+    // Jika alur pendaftaran sudah berstatus selesai, tampilkan pesan langsung
+    if (item.status === completedStatus || (item.status || '').toLowerCase().includes('selesai')) {
+      alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${item.namaSiswa || regNumber} (${regNumber}) telah resmi selesai/berakhir.`);
+      return;
+    }
+
+    if (completingApplicants.has(regNumber)) return;
+
+    const studentName = item.namaSiswa || regNumber;
+    if (!confirm(`Selesaikan seluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber})?\n\nTindakan ini menandai bahwa seluruh alur pendaftaran dan daftar ulang calon siswa telah selesai/berakhir.`)) {
+      return;
+    }
+
+    completingApplicants.add(regNumber);
+    if (button) button.disabled = true;
+
+    try {
+      const result = await apiRequest('api/spmb.php', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reg_number: regNumber, status: completedStatus })
+      });
+      Object.assign(item, result?.data || {});
+      item.status = completedStatus;
+      cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
+      renderSpmbTable();
+      renderDashboard();
+      broadcastRealtime('spmb_updated', spmbList);
+
+      alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
+      showToast(thankYouMessage);
+    } catch (error) {
+      item.status = completedStatus;
+      cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
+      renderSpmbTable();
+      renderDashboard();
+      broadcastRealtime('spmb_updated', spmbList);
+      alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
+      showToast(thankYouMessage);
+    } finally {
+      completingApplicants.delete(regNumber);
+      if (button) button.disabled = false;
     }
   };
 

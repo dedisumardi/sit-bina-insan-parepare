@@ -1388,7 +1388,7 @@
   };
 
   function getTestAnnouncement(status) {
-    if (status === 'Lulus Seleksi Observasi & Diterima') {
+    if (status && status.includes('Lulus')) {
       return { title: 'Lulus Tes & Wawancara — Diterima', message: 'Alhamdulillah, calon siswa dinyatakan lulus tes dan wawancara serta diterima. Silakan mengikuti arahan panitia untuk proses selanjutnya.' };
     }
     if (status === 'Cadangan') {
@@ -1500,7 +1500,7 @@
       const badge5 = document.querySelector('#flow-step-5 .step-label-badge');
       if (badge5) badge5.textContent = step > 5 || (record?.status && record.status.includes('Lulus')) ? 'Lulus' : (step === 5 ? 'Pengumuman' : 'Jadwal Ditentukan');
       const badge6 = document.querySelector('#flow-step-6 .step-label-badge');
-      if (badge6) badge6.textContent = (record?.berkasKk && record?.berkasAkta) ? 'Selesai' : (step === 6 ? 'Daftar Ulang' : 'Tahap Akhir');
+      if (badge6) badge6.textContent = (record?.status && record.status.includes('Selesai')) ? 'Selesai' : ((record?.berkasKk && record?.berkasAkta) ? 'Berkas Lengkap' : (step === 6 ? 'Daftar Ulang' : 'Tahap Akhir'));
     }
     const titleEl = document.getElementById('portal-current-title');
     if (titleEl) titleEl.textContent = registrationSteps[step - 1][0];
@@ -1720,7 +1720,7 @@
       if (stateResults) {
         stateResults.style.display = resultsViewOpen ? 'block' : 'none';
         const announcement = getTestAnnouncement(record.status);
-        const hasPassed = record.status === 'Lulus Seleksi Observasi & Diterima';
+        const hasPassed = Boolean(record.status && record.status.includes('Lulus'));
         document.getElementById('portal-results-card').classList.toggle('is-passed', hasPassed);
         document.getElementById('portal-results-success').hidden = !hasPassed;
         document.getElementById('portal-results-reg').textContent = record.regNumber || '-';
@@ -1820,9 +1820,12 @@
         }
       }
 
-      const isPassed = record.status === 'Lulus Seleksi Observasi & Diterima';
+      const isPassed = Boolean(record.status && record.status.includes('Lulus'));
       const hasRereg = Boolean(record.berkasKk && record.berkasAkta);
-      if (hasRereg) {
+      const isFinished = Boolean(record.status && record.status.includes('Selesai'));
+      if (isFinished) {
+        badgeStatus.textContent = 'Alur Pendaftaran Selesai (Resmi Diterima)';
+      } else if (hasRereg) {
         badgeStatus.textContent = 'Pendaftaran Ulang Selesai (Berkas Terkirim)';
       } else if (isPassed) {
         badgeStatus.textContent = 'Lulus Seleksi — Menunggu Pendaftaran Ulang';
@@ -2198,7 +2201,23 @@
     }
 
     const hasBoth = Boolean(record.berkasKk && record.berkasAkta);
-    if (hasBoth) {
+    const isFinished = Boolean(record.status && record.status.toLowerCase().includes('selesai'));
+    const completedCard = document.getElementById('portal-spmb-completed-card');
+    if (completedCard) {
+      completedCard.style.display = isFinished ? 'block' : 'none';
+    }
+
+    if (isFinished) {
+      if (statusPill) {
+        statusPill.innerHTML = '<i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> Pendaftaran Selesai';
+        statusPill.style.color = '#15803d';
+      }
+      if (savedCard) savedCard.style.display = 'none';
+      if (statusText) {
+        statusText.innerHTML = '<strong style="color:#15803d;">✓ Seluruh alur pendaftaran SPMB telah selesai.</strong> Selamat &amp; terima kasih telah memilih sekolah kami untuk pendidikan anak anda, jazakallahu khairan.';
+        statusText.style.color = '#15803d';
+      }
+    } else if (hasBoth) {
       if (statusPill) {
         statusPill.innerHTML = '<i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> Berkas Lengkap';
         statusPill.style.color = '#15803d';

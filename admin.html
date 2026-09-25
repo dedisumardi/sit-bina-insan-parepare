@@ -718,6 +718,7 @@
                       <option value="jadwal_ditetapkan">Jadwal Ditetapkan</option>
                       <option value="terverifikasi">Berkas Lengkap &amp; Terverifikasi</option>
                       <option value="lulus">Lulus Seleksi Observasi &amp; Diterima</option>
+                      <option value="selesai">Pendaftaran Selesai</option>
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
                       <i class="fa-solid fa-chevron-down text-xs"></i>
@@ -1316,6 +1317,12 @@
             </div>
           </div>
           <div id="modal-app-rereg-time" class="mt-2 text-[10px] text-blue-700 italic text-right" style="display:none;"></div>
+          <div id="modal-app-complete-box" style="display:none;" class="mt-3 pt-2.5 border-t border-blue-200 flex items-center justify-between gap-2 flex-wrap">
+            <span class="text-xs text-blue-900 font-medium" id="modal-app-complete-desc">Berkas KK &amp; Akta lengkap:</span>
+            <button type="button" id="modal-app-complete-btn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition">
+              <i class="fa-solid fa-circle-check"></i> Selesaikan Alur Pendaftaran
+            </button>
+          </div>
         </div>
 
         <!-- Status Pendaftaran Calon Siswa -->
