@@ -320,6 +320,32 @@ switch ($method) {
             $params[] = trim($input['jadwalObservasi'] ?? $input['jadwal_observasi']);
         }
 
+        // Admin Edit Data: Siswa & Orang Tua
+        $editableStudentFields = [
+            'namaSiswa'     => 'nama_siswa',
+            'jenjang'       => 'jenjang',
+            'jalur'         => 'jalur',
+            'nik'           => 'nik',
+            'ttl'           => 'ttl',
+            'jk'            => 'jk',
+            'asalSekolah'   => 'asal_sekolah',
+            'alamat'        => 'alamat',
+            'hafalan'       => 'hafalan',
+            'prestasi'      => 'prestasi',
+            'namaAyah'      => 'nama_ayah',
+            'pekerjaanAyah' => 'pekerjaan_ayah',
+            'namaIbu'       => 'nama_ibu',
+            'waAyah'        => 'wa_ayah',
+            'teleponAyah'   => 'wa_ayah',
+            'email'         => 'email'
+        ];
+        foreach ($editableStudentFields as $jsKey => $dbCol) {
+            if (isset($input[$jsKey])) {
+                $fields[] = "`{$dbCol}` = ?";
+                $params[] = trim($input[$jsKey]);
+            }
+        }
+
         if (empty($fields)) {
             sendJsonResponse(false, null, 'Tidak ada data perubahan yang dikirim.', 400);
         }

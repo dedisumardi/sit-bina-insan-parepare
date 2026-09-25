@@ -255,6 +255,39 @@ async function handler(req, res) {
             if (!Number.isSafeInteger(amount) || amount < 0) fail(400, 'Nominal tidak valid.');
             patch.nominalPembayaran = amount;
           }
+
+          // Admin can edit student & parent/guardian data
+          const studentEditFields = [
+            'jenjang', 'jalur', 'namaSiswa', 'nik', 'tempatLahir', 'tanggalLahir', 'ttl', 'jk',
+            'asalSekolah', 'alamatAsalSekolah', 'agama', 'kewarganegaraan', 'alamat',
+            'desaKelurahan', 'kecamatan', 'kabupatenKota', 'provinsi',
+            'tempatTinggal', 'modaTransportasi', 'anakKe', 'tinggiBadan', 'beratBadan',
+            'hobi', 'citaCita', 'jumlahSaudaraKandung', 'jarakRumahSekolah', 'saudaraDiSekolah',
+            'hafalan', 'prestasi'
+          ];
+          for (const key of studentEditFields) {
+            if (input[key] !== undefined) {
+              patch[key] = typeof input[key] === 'string' ? input[key].trim() : input[key];
+            }
+          }
+          if (patch.tempatLahir && patch.tanggalLahir) {
+            patch.ttl = `${patch.tempatLahir}, ${patch.tanggalLahir}`;
+          }
+
+          const parentEditKeys = [
+            'memilikiWali',
+            ...parentFields.keys,
+            'namaAyah', 'nikAyah', 'statusHidupAyah', 'tahunLahirAyah', 'pendidikanAyah', 'pekerjaanAyah', 'penghasilanAyah', 'teleponAyah', 'waAyah',
+            'namaIbu', 'nikIbu', 'statusHidupIbu', 'tahunLahirIbu', 'pendidikanIbu', 'pekerjaanIbu', 'penghasilanIbu', 'teleponIbu',
+            'namaWali', 'nikWali', 'statusHidupWali', 'tahunLahirWali', 'pendidikanWali', 'pekerjaanWali', 'penghasilanWali', 'teleponWali'
+          ];
+          for (const key of parentEditKeys) {
+            if (input[key] !== undefined) {
+              patch[key] = typeof input[key] === 'string' ? input[key].trim() : input[key];
+            }
+          }
+          if (patch.namaAyah && !patch.teleponAyah && patch.waAyah) patch.teleponAyah = patch.waAyah;
+          if (patch.teleponAyah && !patch.waAyah) patch.waAyah = patch.teleponAyah;
         }
         const approval = admin && (input.newRegNumber || input.new_reg_number);
         const result = await db.query(`UPDATE sipintu_applicants SET data=
@@ -264,8 +297,9 @@ async function handler(req, res) {
             THEN (data || ($1::jsonb - 'status'))
             ELSE (data || $1::jsonb)
           END,
+          nik=CASE WHEN $5::text IS NOT NULL THEN $5::text ELSE nik END,
           reg_number=CASE WHEN $2::boolean AND reg_number LIKE 'PENDING-%' THEN 'SPMB-' || to_char(now(),'YYYY') || '-' || lpad(id::text,6,'0') ELSE reg_number END
-          WHERE id=(SELECT id FROM sipintu_applicants WHERE ($3::text IS NULL OR reg_number=$3) AND ($4::text IS NULL OR wa=$4) ORDER BY id DESC LIMIT 1) RETURNING *`, [JSON.stringify(patch), Boolean(approval), reg || null, wa ? phone(wa) : null]);
+          WHERE id=(SELECT id FROM sipintu_applicants WHERE ($3::text IS NULL OR reg_number=$3) AND ($4::text IS NULL OR wa=$4) ORDER BY id DESC LIMIT 1) RETURNING *`, [JSON.stringify(patch), Boolean(approval), reg || null, wa ? phone(wa) : null, (admin && patch.nik && /^\d{16}$/.test(patch.nik)) ? patch.nik : null]);
         if (!result.rowCount) fail(404, 'Pendaftaran tidak ditemukan.');
         return send(row(result.rows[0]), 'Data tersimpan.');
       }

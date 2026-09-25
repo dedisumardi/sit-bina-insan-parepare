@@ -1345,7 +1345,11 @@
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.573 1.761.854 2.806.854 3.18 0 5.767-2.587 5.768-5.766.001-3.182-2.585-5.769-5.768-5.769zm10.024 5.828c0 5.549-4.512 10.063-10.063 10.063-1.745 0-3.385-.45-4.821-1.242l-5.171 1.357 1.381-5.042c-.878-1.488-1.389-3.23-1.389-5.136 0-5.551 4.514-10.063 10.063-10.063 5.551 0 10.063 4.512 10.063 10.063z"/></svg>
           <span>Chat WhatsApp Wali</span>
         </a>
-        <div class="w-full sm:w-auto flex items-center justify-end gap-2">
+        <div class="w-full sm:w-auto flex items-center justify-end gap-2 flex-wrap">
+          <button type="button" id="modal-app-edit-btn" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 border border-amber-300 transition text-center cursor-pointer" onclick="window.editApplicant(document.getElementById('modal-app-reg').textContent)">
+            <i class="ph ph-pencil-simple text-sm"></i>
+            <span>Edit Data Siswa &amp; Orang Tua</span>
+          </button>
           <button type="button" class="adm-modal-close flex-1 sm:flex-none px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition text-center">Tutup</button>
         </div>
       </div>
@@ -1473,6 +1477,496 @@
     </div>
   </div>
 
+  <!-- =========================================================================
+       MODAL 4: EDIT DATA CALON SISWA & ORANG TUA/WALI (KHUSUS DATA INI)
+       ========================================================================= -->
+  <div class="adm-modal-overlay p-3 sm:p-4" id="modal-edit-applicant">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+      <!-- Header -->
+      <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-base shadow-2xs">
+            <i class="ph ph-pencil-simple text-lg"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Edit Data Calon Siswa &amp; Orang Tua</h3>
+            <p class="text-xs text-slate-500">No. Registrasi: <strong class="text-emerald-700 font-mono" id="edit-app-reg">-</strong></p>
+          </div>
+        </div>
+        <button type="button" class="adm-modal-close text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition" onclick="document.getElementById('modal-edit-applicant').classList.remove('open')">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+
+      <!-- Navigation Tabs (Siswa vs Orang Tua) -->
+      <div class="flex border-b border-slate-200 bg-slate-50/75 px-5 gap-2 pt-2">
+        <button type="button" id="tab-edit-student" class="py-2.5 px-4 text-xs font-bold border-b-2 border-emerald-600 text-emerald-800 transition flex items-center gap-1.5 cursor-pointer" onclick="window.switchEditApplicantTab('student')">
+          <i class="fa-solid fa-user-graduate"></i>
+          <span>1. Data Calon Siswa</span>
+        </button>
+        <button type="button" id="tab-edit-parent" class="py-2.5 px-4 text-xs font-semibold text-slate-500 hover:text-slate-800 border-b-2 border-transparent transition flex items-center gap-1.5 cursor-pointer" onclick="window.switchEditApplicantTab('parent')">
+          <i class="fa-solid fa-users"></i>
+          <span>2. Data Orang Tua &amp; Wali</span>
+        </button>
+      </div>
+
+      <!-- Form Body -->
+      <form id="form-edit-applicant" class="flex-1 flex flex-col overflow-hidden">
+        <div class="p-5 overflow-y-auto space-y-4 text-xs">
+          <!-- Information Guard Banner -->
+          <div class="p-3 bg-amber-50 rounded-xl border border-amber-200/80 text-amber-900 text-xs flex items-start gap-2.5">
+            <i class="fa-solid fa-shield-halved text-amber-600 text-sm mt-0.5 shrink-0"></i>
+            <div class="leading-relaxed">
+              <strong>Batasan Hak Akses:</strong> Hanya data calon siswa dan data orang tua/wali yang dapat diedit melalui formulir ini. Data sistem seperti nomor registrasi, status verifikasi/pembayaran, bukti transfer, jadwal, dan berkas pendaftaran ulang dilindungi dan tidak dapat diubah di sini.
+            </div>
+          </div>
+
+          <!-- SECTION 1: DATA SISWA -->
+          <div id="edit-section-student" class="space-y-4">
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-3">
+              <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-address-card text-emerald-600"></i> Identitas Pokok Siswa
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="edit-siswa-jenjang" class="block font-bold text-slate-700 mb-1">Jenjang Pendidikan <span class="text-rose-500">*</span></label>
+                  <select id="edit-siswa-jenjang" name="jenjang" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" required>
+                    <option value="tkit">TKIT (Taman Kanak-kanak)</option>
+                    <option value="sdit">SDIT (Sekolah Dasar)</option>
+                    <option value="smpit">SMPIT (Sekolah Menengah Pertama)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-siswa-jalur" class="block font-bold text-slate-700 mb-1">Jalur Pendaftaran <span class="text-rose-500">*</span></label>
+                  <select id="edit-siswa-jalur" name="jalur" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" required>
+                    <option value="reguler">Reguler</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="edit-siswa-nama" class="block font-bold text-slate-700 mb-1">Nama Lengkap Siswa <span class="text-rose-500">*</span></label>
+                  <input type="text" id="edit-siswa-nama" name="namaSiswa" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Ketik nama lengkap siswa..." required>
+                </div>
+                <div>
+                  <label for="edit-siswa-jk" class="block font-bold text-slate-700 mb-1">Jenis Kelamin <span class="text-rose-500">*</span></label>
+                  <select id="edit-siswa-jk" name="jk" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" required>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-siswa-nik" class="block font-bold text-slate-700 mb-1">NIK Siswa (16 Digit) <span class="text-rose-500">*</span></label>
+                  <input type="text" id="edit-siswa-nik" name="nik" pattern="[0-9]{16}" maxlength="16" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 font-mono" placeholder="16 digit NIK" required>
+                </div>
+                <div>
+                  <label for="edit-siswa-tempat-lahir" class="block font-bold text-slate-700 mb-1">Tempat Lahir <span class="text-rose-500">*</span></label>
+                  <input type="text" id="edit-siswa-tempat-lahir" name="tempatLahir" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Kota/Kab tempat lahir..." required>
+                </div>
+                <div>
+                  <label for="edit-siswa-tanggal-lahir" class="block font-bold text-slate-700 mb-1">Tanggal Lahir <span class="text-rose-500">*</span></label>
+                  <input type="date" id="edit-siswa-tanggal-lahir" name="tanggalLahir" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-3">
+              <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-school text-emerald-600"></i> Asal Sekolah &amp; Kewarganegaraan
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="sm:col-span-2">
+                  <label for="edit-siswa-asal-sekolah" class="block font-bold text-slate-700 mb-1">Asal Sekolah <span class="text-rose-500">*</span></label>
+                  <input type="text" id="edit-siswa-asal-sekolah" name="asalSekolah" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Nama sekolah asal..." required>
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="edit-siswa-alamat-asal-sekolah" class="block font-bold text-slate-700 mb-1">Alamat Asal Sekolah <span class="text-rose-500">*</span></label>
+                  <textarea id="edit-siswa-alamat-asal-sekolah" name="alamatAsalSekolah" rows="2" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Alamat lengkap sekolah asal..." required></textarea>
+                </div>
+                <div>
+                  <label for="edit-siswa-agama" class="block font-bold text-slate-700 mb-1">Agama <span class="text-rose-500">*</span></label>
+                  <input type="text" id="edit-siswa-agama" name="agama" value="Islam" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" required>
+                </div>
+                <div>
+                  <label for="edit-siswa-kewarganegaraan" class="block font-bold text-slate-700 mb-1">Kewarganegaraan <span class="text-rose-500">*</span></label>
+                  <input type="text" id="edit-siswa-kewarganegaraan" name="kewarganegaraan" value="Indonesia" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-3">
+              <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-map-location-dot text-emerald-600"></i> Alamat &amp; Domisili
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="sm:col-span-2">
+                  <label for="edit-siswa-alamat" class="block font-bold text-slate-700 mb-1">Alamat Lengkap <span class="text-rose-500">*</span></label>
+                  <textarea id="edit-siswa-alamat" name="alamat" rows="2" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Jalan, RT/RW, No. Rumah..." required></textarea>
+                </div>
+                <div>
+                  <label for="edit-siswa-provinsi" class="block font-bold text-slate-700 mb-1">Provinsi</label>
+                  <input type="text" id="edit-siswa-provinsi" name="provinsi" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div>
+                  <label for="edit-siswa-kabupaten" class="block font-bold text-slate-700 mb-1">Kabupaten/Kota</label>
+                  <input type="text" id="edit-siswa-kabupaten" name="kabupatenKota" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div>
+                  <label for="edit-siswa-kecamatan" class="block font-bold text-slate-700 mb-1">Kecamatan</label>
+                  <input type="text" id="edit-siswa-kecamatan" name="kecamatan" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div>
+                  <label for="edit-siswa-desa" class="block font-bold text-slate-700 mb-1">Desa/Kelurahan</label>
+                  <input type="text" id="edit-siswa-desa" name="desaKelurahan" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-3">
+              <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-list-check text-emerald-600"></i> Data Tambahan &amp; Kemampuan Siswa
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="edit-siswa-tempat-tinggal" class="block font-bold text-slate-700 mb-1">Tempat Tinggal</label>
+                  <select id="edit-siswa-tempat-tinggal" name="tempatTinggal" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="Bersama orang tua">Bersama orang tua</option>
+                    <option value="Wali">Wali</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-siswa-moda-transportasi" class="block font-bold text-slate-700 mb-1">Moda Transportasi</label>
+                  <select id="edit-siswa-moda-transportasi" name="modaTransportasi" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="Motor pribadi">Motor pribadi</option>
+                    <option value="Mobil pribadi">Mobil pribadi</option>
+                    <option value="Jalan kaki">Jalan kaki</option>
+                    <option value="Angkutan umum">Angkutan umum</option>
+                    <option value="Ojek">Ojek</option>
+                    <option value="Sepeda">Sepeda</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-siswa-anak-ke" class="block font-bold text-slate-700 mb-1">Anak ke Berapa</label>
+                  <input type="number" min="1" id="edit-siswa-anak-ke" name="anakKe" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div>
+                  <label for="edit-siswa-saudara-kandung" class="block font-bold text-slate-700 mb-1">Jumlah Saudara Kandung</label>
+                  <input type="number" min="0" id="edit-siswa-saudara-kandung" name="jumlahSaudaraKandung" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div>
+                  <label for="edit-siswa-tinggi" class="block font-bold text-slate-700 mb-1">Tinggi Badan (cm)</label>
+                  <input type="number" step="0.1" id="edit-siswa-tinggi" name="tinggiBadan" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div>
+                  <label for="edit-siswa-berat" class="block font-bold text-slate-700 mb-1">Berat Badan (kg)</label>
+                  <input type="number" step="0.1" id="edit-siswa-berat" name="beratBadan" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div>
+                  <label for="edit-siswa-hobi" class="block font-bold text-slate-700 mb-1">Hobi</label>
+                  <input type="text" id="edit-siswa-hobi" name="hobi" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div>
+                  <label for="edit-siswa-cita" class="block font-bold text-slate-700 mb-1">Cita-cita</label>
+                  <input type="text" id="edit-siswa-cita" name="citaCita" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div>
+                  <label for="edit-siswa-jarak" class="block font-bold text-slate-700 mb-1">Jarak Rumah ke Sekolah</label>
+                  <select id="edit-siswa-jarak" name="jarakRumahSekolah" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="Kurang dari 1 km">Kurang dari 1 km</option>
+                    <option value="Lebih dari 1 km">Lebih dari 1 km</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-siswa-saudara-sekolah" class="block font-bold text-slate-700 mb-1">Saudara Bersekolah di SIT Bina Insan</label>
+                  <select id="edit-siswa-saudara-sekolah" name="saudaraDiSekolah" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="Tidak">Tidak</option>
+                    <option value="Ya">Ya</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="edit-siswa-hafalan" class="block font-bold text-slate-700 mb-1">Riwayat Hafalan Al-Qur'an</label>
+                  <input type="text" id="edit-siswa-hafalan" name="hafalan" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Contoh: Juz 30, Surat-surat Pendek, dll.">
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="edit-siswa-prestasi" class="block font-bold text-slate-700 mb-1">Prestasi yang Pernah Diraih</label>
+                  <input type="text" id="edit-siswa-prestasi" name="prestasi" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Contoh: Juara 1 Lomba Tahfizh (ketik - jika belum ada)">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: DATA ORANG TUA & WALI -->
+          <div id="edit-section-parent" class="space-y-4" style="display: none;">
+            <!-- DATA AYAH -->
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-3">
+              <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-user-tie text-emerald-600"></i> Data Ayah Kandung
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="sm:col-span-2">
+                  <label for="edit-ayah-nama" class="block font-bold text-slate-700 mb-1">Nama Lengkap Ayah <span class="text-rose-500">*</span></label>
+                  <input type="text" id="edit-ayah-nama" name="namaAyah" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" required>
+                </div>
+                <div>
+                  <label for="edit-ayah-nik" class="block font-bold text-slate-700 mb-1">NIK Ayah</label>
+                  <input type="text" id="edit-ayah-nik" name="nikAyah" pattern="[0-9]{16}" maxlength="16" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 font-mono" placeholder="16 digit NIK">
+                </div>
+                <div>
+                  <label for="edit-ayah-status-hidup" class="block font-bold text-slate-700 mb-1">Status Hidup</label>
+                  <select id="edit-ayah-status-hidup" name="statusHidupAyah" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="Hidup">Hidup</option>
+                    <option value="Wafat">Wafat</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-ayah-tahun-lahir" class="block font-bold text-slate-700 mb-1">Tahun Lahir</label>
+                  <input type="number" min="1900" max="2026" id="edit-ayah-tahun-lahir" name="tahunLahirAyah" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="YYYY">
+                </div>
+                <div>
+                  <label for="edit-ayah-pendidikan" class="block font-bold text-slate-700 mb-1">Pendidikan Terakhir</label>
+                  <select id="edit-ayah-pendidikan" name="pendidikanAyah" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="">Pilih pendidikan</option>
+                    <option value="SD/MI/sederajat">SD/MI/sederajat</option>
+                    <option value="SMP/MTs/sederajat">SMP/MTs/sederajat</option>
+                    <option value="SMA/MA/SMK/sederajat">SMA/MA/SMK/sederajat</option>
+                    <option value="Diploma I (D1)">Diploma I (D1)</option>
+                    <option value="Diploma II (D2)">Diploma II (D2)</option>
+                    <option value="Diploma III (D3)">Diploma III (D3)</option>
+                    <option value="Diploma IV (D4)/Sarjana Terapan">Diploma IV (D4)/Sarjana Terapan</option>
+                    <option value="Sarjana (S1)">Sarjana (S1)</option>
+                    <option value="Profesi">Profesi</option>
+                    <option value="Magister (S2)">Magister (S2)</option>
+                    <option value="Spesialis">Spesialis</option>
+                    <option value="Doktor (S3)/PhD">Doktor (S3)/PhD</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-ayah-pekerjaan" class="block font-bold text-slate-700 mb-1">Pekerjaan</label>
+                  <select id="edit-ayah-pekerjaan" name="pekerjaanAyah" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="">Pilih pekerjaan</option>
+                    <option value="PNS/ASN">PNS/ASN</option>
+                    <option value="TNI">TNI</option>
+                    <option value="Polri">Polri</option>
+                    <option value="Karyawan BUMN/BUMD">Karyawan BUMN/BUMD</option>
+                    <option value="Karyawan swasta">Karyawan swasta</option>
+                    <option value="Wiraswasta">Wiraswasta</option>
+                    <option value="Pedagang">Pedagang</option>
+                    <option value="Petani/Pekebun">Petani/Pekebun</option>
+                    <option value="Guru/Dosen">Guru/Dosen</option>
+                    <option value="Tenaga kesehatan">Tenaga kesehatan</option>
+                    <option value="Pengemudi/Ojek">Pengemudi/Ojek</option>
+                    <option value="Pekerja lepas">Pekerja lepas</option>
+                    <option value="Pensiunan">Pensiunan</option>
+                    <option value="Tidak bekerja">Tidak bekerja</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-ayah-penghasilan" class="block font-bold text-slate-700 mb-1">Penghasilan per Bulan</label>
+                  <select id="edit-ayah-penghasilan" name="penghasilanAyah" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="">Pilih penghasilan</option>
+                    <option value="Tidak berpenghasilan">Tidak berpenghasilan</option>
+                    <option value="Rp500.000 - Rp2.000.000">Rp500.000 - Rp2.000.000</option>
+                    <option value="Rp2.000.000 - Rp5.000.000">Rp2.000.000 - Rp5.000.000</option>
+                    <option value=">Rp5.000.000">&gt;Rp5.000.000</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="edit-ayah-wa" class="block font-bold text-slate-700 mb-1">Nomor WhatsApp / Telepon Ayah <span class="text-rose-500">*</span></label>
+                  <input type="tel" id="edit-ayah-wa" name="waAyah" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 font-mono" placeholder="08xxxxxxxxxx" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- DATA IBU -->
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-3">
+              <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-person-dress text-emerald-600"></i> Data Ibu Kandung
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="sm:col-span-2">
+                  <label for="edit-ibu-nama" class="block font-bold text-slate-700 mb-1">Nama Lengkap Ibu <span class="text-rose-500">*</span></label>
+                  <input type="text" id="edit-ibu-nama" name="namaIbu" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" required>
+                </div>
+                <div>
+                  <label for="edit-ibu-nik" class="block font-bold text-slate-700 mb-1">NIK Ibu</label>
+                  <input type="text" id="edit-ibu-nik" name="nikIbu" pattern="[0-9]{16}" maxlength="16" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 font-mono" placeholder="16 digit NIK">
+                </div>
+                <div>
+                  <label for="edit-ibu-status-hidup" class="block font-bold text-slate-700 mb-1">Status Hidup</label>
+                  <select id="edit-ibu-status-hidup" name="statusHidupIbu" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="Hidup">Hidup</option>
+                    <option value="Wafat">Wafat</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-ibu-tahun-lahir" class="block font-bold text-slate-700 mb-1">Tahun Lahir</label>
+                  <input type="number" min="1900" max="2026" id="edit-ibu-tahun-lahir" name="tahunLahirIbu" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="YYYY">
+                </div>
+                <div>
+                  <label for="edit-ibu-pendidikan" class="block font-bold text-slate-700 mb-1">Pendidikan Terakhir</label>
+                  <select id="edit-ibu-pendidikan" name="pendidikanIbu" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="">Pilih pendidikan</option>
+                    <option value="SD/MI/sederajat">SD/MI/sederajat</option>
+                    <option value="SMP/MTs/sederajat">SMP/MTs/sederajat</option>
+                    <option value="SMA/MA/SMK/sederajat">SMA/MA/SMK/sederajat</option>
+                    <option value="Diploma I (D1)">Diploma I (D1)</option>
+                    <option value="Diploma II (D2)">Diploma II (D2)</option>
+                    <option value="Diploma III (D3)">Diploma III (D3)</option>
+                    <option value="Diploma IV (D4)/Sarjana Terapan">Diploma IV (D4)/Sarjana Terapan</option>
+                    <option value="Sarjana (S1)">Sarjana (S1)</option>
+                    <option value="Profesi">Profesi</option>
+                    <option value="Magister (S2)">Magister (S2)</option>
+                    <option value="Spesialis">Spesialis</option>
+                    <option value="Doktor (S3)/PhD">Doktor (S3)/PhD</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-ibu-pekerjaan" class="block font-bold text-slate-700 mb-1">Pekerjaan</label>
+                  <select id="edit-ibu-pekerjaan" name="pekerjaanIbu" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="">Pilih pekerjaan</option>
+                    <option value="Ibu rumah tangga">Ibu rumah tangga</option>
+                    <option value="PNS/ASN">PNS/ASN</option>
+                    <option value="TNI">TNI</option>
+                    <option value="Polri">Polri</option>
+                    <option value="Karyawan BUMN/BUMD">Karyawan BUMN/BUMD</option>
+                    <option value="Karyawan swasta">Karyawan swasta</option>
+                    <option value="Wiraswasta">Wiraswasta</option>
+                    <option value="Pedagang">Pedagang</option>
+                    <option value="Petani/Pekebun">Petani/Pekebun</option>
+                    <option value="Guru/Dosen">Guru/Dosen</option>
+                    <option value="Tenaga kesehatan">Tenaga kesehatan</option>
+                    <option value="Pengemudi/Ojek">Pengemudi/Ojek</option>
+                    <option value="Pekerja lepas">Pekerja lepas</option>
+                    <option value="Pensiunan">Pensiunan</option>
+                    <option value="Tidak bekerja">Tidak bekerja</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-ibu-penghasilan" class="block font-bold text-slate-700 mb-1">Penghasilan per Bulan</label>
+                  <select id="edit-ibu-penghasilan" name="penghasilanIbu" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="">Pilih penghasilan</option>
+                    <option value="Tidak berpenghasilan">Tidak berpenghasilan</option>
+                    <option value="Rp500.000 - Rp2.000.000">Rp500.000 - Rp2.000.000</option>
+                    <option value="Rp2.000.000 - Rp5.000.000">Rp2.000.000 - Rp5.000.000</option>
+                    <option value=">Rp5.000.000">&gt;Rp5.000.000</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="edit-ibu-telepon" class="block font-bold text-slate-700 mb-1">Nomor WhatsApp / Telepon Ibu</label>
+                  <input type="tel" id="edit-ibu-telepon" name="teleponIbu" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 font-mono" placeholder="08xxxxxxxxxx">
+                </div>
+              </div>
+            </div>
+
+            <!-- DATA WALI -->
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                  <i class="fa-solid fa-user-shield text-emerald-600"></i> Data Wali (Opsional)
+                </h4>
+                <div class="flex items-center gap-3">
+                  <span class="text-xs font-medium text-slate-600">Memiliki Wali?</span>
+                  <select id="edit-wali-status" name="memilikiWali" class="text-xs rounded-lg border-slate-200 py-1 px-2.5 font-bold" onchange="window.toggleEditGuardian(this.value === 'Ya')">
+                    <option value="Tidak">Tidak</option>
+                    <option value="Ya">Ya</option>
+                  </select>
+                </div>
+              </div>
+              <div id="edit-wali-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3" style="display: none;">
+                <div class="sm:col-span-2">
+                  <label for="edit-wali-nama" class="block font-bold text-slate-700 mb-1">Nama Lengkap Wali</label>
+                  <input type="text" id="edit-wali-nama" name="namaWali" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div>
+                  <label for="edit-wali-nik" class="block font-bold text-slate-700 mb-1">NIK Wali</label>
+                  <input type="text" id="edit-wali-nik" name="nikWali" pattern="[0-9]{16}" maxlength="16" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 font-mono" placeholder="16 digit NIK">
+                </div>
+                <div>
+                  <label for="edit-wali-status-hidup" class="block font-bold text-slate-700 mb-1">Status Hidup</label>
+                  <select id="edit-wali-status-hidup" name="statusHidupWali" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="Hidup">Hidup</option>
+                    <option value="Wafat">Wafat</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-wali-tahun-lahir" class="block font-bold text-slate-700 mb-1">Tahun Lahir</label>
+                  <input type="number" min="1900" max="2026" id="edit-wali-tahun-lahir" name="tahunLahirWali" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500" placeholder="YYYY">
+                </div>
+                <div>
+                  <label for="edit-wali-pendidikan" class="block font-bold text-slate-700 mb-1">Pendidikan Terakhir</label>
+                  <select id="edit-wali-pendidikan" name="pendidikanWali" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="">Pilih pendidikan</option>
+                    <option value="SD/MI/sederajat">SD/MI/sederajat</option>
+                    <option value="SMP/MTs/sederajat">SMP/MTs/sederajat</option>
+                    <option value="SMA/MA/SMK/sederajat">SMA/MA/SMK/sederajat</option>
+                    <option value="Diploma I (D1)">Diploma I (D1)</option>
+                    <option value="Diploma II (D2)">Diploma II (D2)</option>
+                    <option value="Diploma III (D3)">Diploma III (D3)</option>
+                    <option value="Diploma IV (D4)/Sarjana Terapan">Diploma IV (D4)/Sarjana Terapan</option>
+                    <option value="Sarjana (S1)">Sarjana (S1)</option>
+                    <option value="Profesi">Profesi</option>
+                    <option value="Magister (S2)">Magister (S2)</option>
+                    <option value="Spesialis">Spesialis</option>
+                    <option value="Doktor (S3)/PhD">Doktor (S3)/PhD</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-wali-pekerjaan" class="block font-bold text-slate-700 mb-1">Pekerjaan</label>
+                  <select id="edit-wali-pekerjaan" name="pekerjaanWali" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="">Pilih pekerjaan</option>
+                    <option value="PNS/ASN">PNS/ASN</option>
+                    <option value="TNI">TNI</option>
+                    <option value="Polri">Polri</option>
+                    <option value="Karyawan BUMN/BUMD">Karyawan BUMN/BUMD</option>
+                    <option value="Karyawan swasta">Karyawan swasta</option>
+                    <option value="Wiraswasta">Wiraswasta</option>
+                    <option value="Pedagang">Pedagang</option>
+                    <option value="Petani/Pekebun">Petani/Pekebun</option>
+                    <option value="Guru/Dosen">Guru/Dosen</option>
+                    <option value="Tenaga kesehatan">Tenaga kesehatan</option>
+                    <option value="Pengemudi/Ojek">Pengemudi/Ojek</option>
+                    <option value="Pekerja lepas">Pekerja lepas</option>
+                    <option value="Pensiunan">Pensiunan</option>
+                    <option value="Tidak bekerja">Tidak bekerja</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="edit-wali-penghasilan" class="block font-bold text-slate-700 mb-1">Penghasilan per Bulan</label>
+                  <select id="edit-wali-penghasilan" name="penghasilanWali" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500">
+                    <option value="">Pilih penghasilan</option>
+                    <option value="Tidak berpenghasilan">Tidak berpenghasilan</option>
+                    <option value="Rp500.000 - Rp2.000.000">Rp500.000 - Rp2.000.000</option>
+                    <option value="Rp2.000.000 - Rp5.000.000">Rp2.000.000 - Rp5.000.000</option>
+                    <option value=">Rp5.000.000">&gt;Rp5.000.000</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="edit-wali-telepon" class="block font-bold text-slate-700 mb-1">Nomor WhatsApp / Telepon Wali</label>
+                  <input type="tel" id="edit-wali-telepon" name="teleponWali" class="w-full text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 font-mono" placeholder="08xxxxxxxxxx">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-5 py-3.5 bg-slate-50 border-t border-slate-100 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-2.5">
+          <div id="edit-applicant-feedback" class="text-xs font-semibold text-slate-500"></div>
+          <div class="flex items-center justify-end gap-2">
+            <button type="button" class="adm-modal-close px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition text-center" onclick="document.getElementById('modal-edit-applicant').classList.remove('open')">Batal</button>
+            <button type="submit" id="btn-save-edit-applicant" class="px-5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition text-center flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Simpan Perubahan Data</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div class="adm-toast" id="admin-toast"></div>
 
@@ -1480,6 +1974,6 @@
   <script src="js/data.js?v=20260923_dbsync2"></script>
   <script src="js/parent-fields.js?v=20260924_schooladdress1"></script>
   <script src="js/student-export.js?v=20260925_hafalanprestasi1"></script>
-  <script src="js/admin.js?v=20260925_hafalanprestasi1"></script>
+  <script src="js/admin.js?v=20260925_editapplicant1"></script>
 </body>
 </html>

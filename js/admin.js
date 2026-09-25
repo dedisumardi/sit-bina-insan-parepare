@@ -76,6 +76,7 @@
   // Modals
   const applicantModal = document.getElementById('modal-applicant-detail');
   const articleModal = document.getElementById('modal-article-editor');
+  const editApplicantModal = document.getElementById('modal-edit-applicant');
   const toastEl = document.getElementById('admin-toast');
 
   // =========================================================================
@@ -456,9 +457,14 @@
           ${renderStatusBadge(item.status)}
         </td>
         <td class="py-4 px-6 whitespace-nowrap text-center">
-          <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail Siswa">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
-          </button>
+          <div class="inline-flex items-center justify-center gap-1.5">
+            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail Siswa">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/></svg>
+            </button>
+            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors" onclick="window.editApplicant('${item.regNumber}')" title="Edit Data Siswa &amp; Orang Tua">
+              <i class="ph ph-pencil-simple text-sm"></i>
+            </button>
+          </div>
         </td>
       </tr>
     `).join('');
@@ -979,7 +985,7 @@
         <button type="button" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Lihat Detail">
           <i class="ph ph-eye text-base"></i>
         </button>
-        <button type="button" class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors border border-transparent hover:border-amber-200" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Ubah Data">
+        <button type="button" class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors border border-transparent hover:border-amber-200" onclick="window.editApplicant('${item.regNumber}')" title="Edit Data Siswa &amp; Orang Tua">
           <i class="ph ph-pencil-simple text-base"></i>
         </button>
         <button type="button" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200" onclick="window.printApplicantCard('${item.regNumber}')" title="Cetak Kartu Tanda Peserta">
@@ -1798,6 +1804,255 @@
       window.open(cert, '_blank');
     }
   };
+
+  // =========================================================================
+  // View 2.5: Edit Data Calon Siswa & Orang Tua/Wali (Khusus Data Ini)
+  // =========================================================================
+  let currentEditingRegNumber = null;
+
+  window.switchEditApplicantTab = function (tab) {
+    const studentTab = document.getElementById('tab-edit-student');
+    const parentTab = document.getElementById('tab-edit-parent');
+    const studentSec = document.getElementById('edit-section-student');
+    const parentSec = document.getElementById('edit-section-parent');
+
+    if (!studentTab || !parentTab || !studentSec || !parentSec) return;
+
+    if (tab === 'student') {
+      studentSec.style.display = 'block';
+      parentSec.style.display = 'none';
+      studentTab.className = 'py-2.5 px-4 text-xs font-bold border-b-2 border-emerald-600 text-emerald-800 transition flex items-center gap-1.5 cursor-pointer';
+      parentTab.className = 'py-2.5 px-4 text-xs font-semibold text-slate-500 hover:text-slate-800 border-b-2 border-transparent transition flex items-center gap-1.5 cursor-pointer';
+    } else {
+      studentSec.style.display = 'none';
+      parentSec.style.display = 'block';
+      parentTab.className = 'py-2.5 px-4 text-xs font-bold border-b-2 border-emerald-600 text-emerald-800 transition flex items-center gap-1.5 cursor-pointer';
+      studentTab.className = 'py-2.5 px-4 text-xs font-semibold text-slate-500 hover:text-slate-800 border-b-2 border-transparent transition flex items-center gap-1.5 cursor-pointer';
+    }
+  };
+
+  window.toggleEditGuardian = function (hasGuardian) {
+    const container = document.getElementById('edit-wali-container');
+    if (container) {
+      container.style.display = hasGuardian ? 'grid' : 'none';
+    }
+  };
+
+  window.editApplicant = async function (regNumber) {
+    if (!regNumber) return;
+    const item = spmbList.find(s => s.regNumber === regNumber || s.waAyah === regNumber);
+    if (!item) {
+      showToast('Data calon siswa tidak ditemukan.', true);
+      return;
+    }
+
+    currentEditingRegNumber = item.regNumber;
+
+    try {
+      const res = await apiRequest(`api/spmb.php?reg_number=${encodeURIComponent(item.regNumber)}`);
+      if (res && res.data) {
+        Object.assign(item, res.data);
+      }
+    } catch (_) {
+      // Menggunakan data di cache jika offline atau ada kendala koneksi
+    }
+
+    const regLabel = document.getElementById('edit-app-reg');
+    if (regLabel) regLabel.textContent = item.regNumber;
+
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.value = val !== undefined && val !== null ? val : '';
+    };
+
+    let tempatLahir = item.tempatLahir || '';
+    let tanggalLahir = item.tanggalLahir || '';
+    if ((!tempatLahir || !tanggalLahir) && item.ttl && item.ttl.includes(',')) {
+      const parts = item.ttl.split(',');
+      if (!tempatLahir) tempatLahir = parts[0].trim();
+      if (!tanggalLahir) tanggalLahir = parts.slice(1).join(',').trim();
+    }
+
+    // Populate Data Siswa
+    setVal('edit-siswa-jenjang', (item.jenjang || 'sdit').toLowerCase());
+    setVal('edit-siswa-jalur', item.jalur || 'reguler');
+    setVal('edit-siswa-nama', item.namaSiswa || '');
+    setVal('edit-siswa-jk', item.jk || 'Laki-laki');
+    setVal('edit-siswa-nik', item.nik && !item.nik.startsWith('WA-') ? item.nik : '');
+    setVal('edit-siswa-tempat-lahir', tempatLahir);
+    setVal('edit-siswa-tanggal-lahir', tanggalLahir);
+    setVal('edit-siswa-asal-sekolah', item.asalSekolah && item.asalSekolah !== '-' ? item.asalSekolah : '');
+    setVal('edit-siswa-alamat-asal-sekolah', item.alamatAsalSekolah && item.alamatAsalSekolah !== '-' ? item.alamatAsalSekolah : '');
+    setVal('edit-siswa-agama', item.agama || 'Islam');
+    setVal('edit-siswa-kewarganegaraan', item.kewarganegaraan || 'Indonesia');
+    setVal('edit-siswa-alamat', item.alamat && item.alamat !== '-' ? item.alamat : '');
+    setVal('edit-siswa-provinsi', item.provinsi || '');
+    setVal('edit-siswa-kabupaten', item.kabupatenKota || '');
+    setVal('edit-siswa-kecamatan', item.kecamatan || '');
+    setVal('edit-siswa-desa', item.desaKelurahan || '');
+    setVal('edit-siswa-tempat-tinggal', item.tempatTinggal || 'Bersama orang tua');
+    setVal('edit-siswa-moda-transportasi', item.modaTransportasi || 'Motor pribadi');
+    setVal('edit-siswa-anak-ke', item.anakKe || '');
+    setVal('edit-siswa-saudara-kandung', item.jumlahSaudaraKandung !== undefined ? item.jumlahSaudaraKandung : '');
+    setVal('edit-siswa-tinggi', item.tinggiBadan || '');
+    setVal('edit-siswa-berat', item.beratBadan || '');
+    setVal('edit-siswa-hobi', item.hobi || '');
+    setVal('edit-siswa-cita', item.citaCita || '');
+    setVal('edit-siswa-jarak', item.jarakRumahSekolah || 'Kurang dari 1 km');
+    setVal('edit-siswa-saudara-sekolah', item.saudaraDiSekolah || 'Tidak');
+    setVal('edit-siswa-hafalan', item.hafalan && item.hafalan !== '-' ? item.hafalan : '');
+    setVal('edit-siswa-prestasi', item.prestasi && item.prestasi !== '-' ? item.prestasi : '');
+
+    // Populate Data Orang Tua - Ayah
+    setVal('edit-ayah-nama', item.namaAyah && item.namaAyah !== '-' ? item.namaAyah : '');
+    setVal('edit-ayah-nik', item.nikAyah || '');
+    setVal('edit-ayah-status-hidup', item.statusHidupAyah || 'Hidup');
+    setVal('edit-ayah-tahun-lahir', item.tahunLahirAyah || '');
+    setVal('edit-ayah-pendidikan', item.pendidikanAyah || '');
+    setVal('edit-ayah-pekerjaan', item.pekerjaanAyah && item.pekerjaanAyah !== '-' ? item.pekerjaanAyah : '');
+    setVal('edit-ayah-penghasilan', item.penghasilanAyah || '');
+    setVal('edit-ayah-wa', item.waAyah || item.teleponAyah || '');
+
+    // Populate Data Orang Tua - Ibu
+    setVal('edit-ibu-nama', item.namaIbu && item.namaIbu !== '-' ? item.namaIbu : '');
+    setVal('edit-ibu-nik', item.nikIbu || '');
+    setVal('edit-ibu-status-hidup', item.statusHidupIbu || 'Hidup');
+    setVal('edit-ibu-tahun-lahir', item.tahunLahirIbu || '');
+    setVal('edit-ibu-pendidikan', item.pendidikanIbu || '');
+    setVal('edit-ibu-pekerjaan', item.pekerjaanIbu && item.pekerjaanIbu !== '-' ? item.pekerjaanIbu : '');
+    setVal('edit-ibu-penghasilan', item.penghasilanIbu || '');
+    setVal('edit-ibu-telepon', item.teleponIbu || '');
+
+    // Populate Data Orang Tua - Wali
+    const hasWali = item.memilikiWali === 'Ya';
+    setVal('edit-wali-status', hasWali ? 'Ya' : 'Tidak');
+    setVal('edit-wali-nama', item.namaWali || '');
+    setVal('edit-wali-nik', item.nikWali || '');
+    setVal('edit-wali-status-hidup', item.statusHidupWali || 'Hidup');
+    setVal('edit-wali-tahun-lahir', item.tahunLahirWali || '');
+    setVal('edit-wali-pendidikan', item.pendidikanWali || '');
+    setVal('edit-wali-pekerjaan', item.pekerjaanWali || '');
+    setVal('edit-wali-penghasilan', item.penghasilanWali || '');
+    setVal('edit-wali-telepon', item.teleponWali || '');
+
+    window.toggleEditGuardian(hasWali);
+    window.switchEditApplicantTab('student');
+
+    const feedback = document.getElementById('edit-applicant-feedback');
+    if (feedback) feedback.textContent = '';
+
+    if (applicantModal) applicantModal.classList.remove('open');
+    if (editApplicantModal) editApplicantModal.classList.add('open');
+  };
+
+  function initEditApplicantForm() {
+    const form = document.getElementById('form-edit-applicant');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentEditingRegNumber) return;
+
+      const item = spmbList.find(s => s.regNumber === currentEditingRegNumber);
+      if (!item) return;
+
+      const feedback = document.getElementById('edit-applicant-feedback');
+      const submitBtn = document.getElementById('btn-save-edit-applicant');
+
+      const formData = new FormData(form);
+      const studentFields = [
+        'jenjang', 'jalur', 'namaSiswa', 'jk', 'nik', 'tempatLahir', 'tanggalLahir',
+        'asalSekolah', 'alamatAsalSekolah', 'agama', 'kewarganegaraan', 'alamat',
+        'provinsi', 'kabupatenKota', 'kecamatan', 'desaKelurahan',
+        'tempatTinggal', 'modaTransportasi', 'anakKe', 'jumlahSaudaraKandung',
+        'tinggiBadan', 'beratBadan', 'hobi', 'citaCita', 'jarakRumahSekolah',
+        'saudaraDiSekolah', 'hafalan', 'prestasi'
+      ];
+
+      const parentFieldsList = [
+        'namaAyah', 'nikAyah', 'statusHidupAyah', 'tahunLahirAyah', 'pendidikanAyah',
+        'pekerjaanAyah', 'penghasilanAyah', 'waAyah',
+        'namaIbu', 'nikIbu', 'statusHidupIbu', 'tahunLahirIbu', 'pendidikanIbu',
+        'pekerjaanIbu', 'penghasilanIbu', 'teleponIbu',
+        'memilikiWali', 'namaWali', 'nikWali', 'statusHidupWali', 'tahunLahirWali',
+        'pendidikanWali', 'pekerjaanWali', 'penghasilanWali', 'teleponWali'
+      ];
+
+      // Payload strictly includes ONLY student and parent data
+      const payload = {
+        regNumber: currentEditingRegNumber
+      };
+
+      for (const field of studentFields) {
+        const val = formData.get(field);
+        if (val !== null) payload[field] = String(val).trim();
+      }
+
+      for (const field of parentFieldsList) {
+        const val = formData.get(field);
+        if (val !== null) payload[field] = String(val).trim();
+      }
+
+      if (payload.waAyah) {
+        payload.teleponAyah = payload.waAyah;
+      }
+      if (payload.tempatLahir && payload.tanggalLahir) {
+        payload.ttl = `${payload.tempatLahir}, ${payload.tanggalLahir}`;
+      }
+
+      if (!payload.namaSiswa) {
+        if (feedback) feedback.textContent = 'Nama lengkap siswa wajib diisi.';
+        window.switchEditApplicantTab('student');
+        return;
+      }
+      if (!payload.namaAyah) {
+        if (feedback) feedback.textContent = 'Nama lengkap ayah wajib diisi.';
+        window.switchEditApplicantTab('parent');
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Menyimpan...</span>';
+      }
+      if (feedback) feedback.textContent = 'Menyimpan data siswa dan orang tua...';
+
+      try {
+        const res = await apiRequest('api/spmb.php', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const updated = res.data || payload;
+        Object.assign(item, updated, payload);
+
+        cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
+
+        if (typeof broadcastRealtime === 'function') {
+          broadcastRealtime('spmb_updated', spmbList);
+        }
+
+        renderSpmbTable();
+        renderDashboard();
+        renderWaliTable();
+
+        if (editApplicantModal) {
+          editApplicantModal.classList.remove('open');
+        }
+
+        showToast('Data calon siswa dan orang tua berhasil diperbarui!');
+      } catch (err) {
+        if (feedback) feedback.textContent = err.message || 'Gagal menyimpan perubahan data.';
+        showToast(err.message || 'Gagal menyimpan perubahan data.', true);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Simpan Perubahan Data</span>';
+        }
+      }
+    });
+  }
 
   // Setujui (Approve) Pembayaran Rp 150.000 & Generate Kode Pendaftaran Siswa Resmi
   window.approvePayment = async function (regNumber) {
@@ -2704,10 +2959,11 @@
       btn.addEventListener('click', () => {
         applicantModal?.classList.remove('open');
         articleModal?.classList.remove('open');
+        editApplicantModal?.classList.remove('open');
       });
     });
 
-    [applicantModal, articleModal].forEach(modal => {
+    [applicantModal, articleModal, editApplicantModal].forEach(modal => {
       modal?.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('open');
       });
@@ -2726,6 +2982,7 @@
     initSpmbControls();
     initArticleEditor();
     initSettingsForm();
+    initEditApplicantForm();
     initModals();
     refreshAllViews();
   }
