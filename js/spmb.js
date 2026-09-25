@@ -1422,11 +1422,62 @@
       if (number === step) indicator?.setAttribute?.('aria-current', 'step');
       else indicator?.removeAttribute?.('aria-current');
     }
+    const progressLine = document.getElementById('stepper-progress-line');
+    if (progressLine && progressLine.style) {
+      const widths = ['7%', '22%', '38%', '54%', '70%', '86%', '100%'];
+      progressLine.style.width = widths[Math.min(Math.max(step - 1, 0), 6)];
+    }
+    if (typeof document.querySelector === 'function') {
+      const badge1 = document.querySelector('#flow-step-1 .step-label-badge');
+      if (badge1) badge1.textContent = approved ? 'Lunas' : proof ? 'Dibayar' : 'Perlu Bayar';
+      const badge2 = document.querySelector('#flow-step-2 .step-label-badge');
+      if (badge2) badge2.textContent = approved ? 'Terverifikasi' : proof ? 'Verifikasi' : 'Menunggu';
+      const badge3 = document.querySelector('#flow-step-3 .step-label-badge');
+      if (badge3) badge3.textContent = record?.biodataUpdatedAt ? 'Lengkap' : (step === 3 ? 'Sedang Diisi' : 'Menunggu');
+      const badge4 = document.querySelector('#flow-step-4 .step-label-badge');
+      if (badge4) badge4.textContent = record?.parentDataUpdatedAt ? 'Lengkap' : (step === 4 ? 'Sedang Diisi' : 'Menunggu');
+      const badge5 = document.querySelector('#flow-step-5 .step-label-badge');
+      if (badge5) badge5.textContent = step > 5 ? 'Selesai' : (step === 5 ? 'Jadwal Ditentukan' : 'Tahap 5');
+      const badge6 = document.querySelector('#flow-step-6 .step-label-badge');
+      if (badge6) badge6.textContent = step > 6 || (record?.status && record.status.includes('Lulus')) ? 'Lulus' : (step === 6 ? 'Pengumuman' : 'Jadwal Ditentukan');
+      const badge7 = document.querySelector('#flow-step-7 .step-label-badge');
+      if (badge7) badge7.textContent = (record?.berkasKk && record?.berkasAkta) ? 'Selesai' : (step === 7 ? 'Daftar Ulang' : 'Tahap Akhir');
+    }
     document.getElementById('portal-current-title').textContent = registrationSteps[step - 1][0];
     document.getElementById('portal-current-description').textContent = registrationSteps[step - 1][1];
     document.getElementById('portal-step-back').disabled = step === 1;
     document.getElementById('portal-step-next').disabled = step >= 6 || (step === 1 && !approved && !proof) || (step === 2 && !approved);
   }
+
+  // Navigasi langsung dengan klik tahapan pada Stepper
+  window.jumpToRegistrationStep = function (targetStep) {
+    if (!registrationNavigation || !registrationNavigation.regNumber) return;
+    const current = registrationNavigation.step;
+    if (targetStep === current) return;
+    if (current === 3 || current === 4) {
+      const form = current === 3 ? document.getElementById('portal-student-bio-form') : document.getElementById('portal-parent-bio-form');
+      const saved = current === 3 ? registrationNavigation.studentSaved : registrationNavigation.parentsSaved;
+      const dirty = current === 3 ? form?.dataset.dirty === '1' : window.ParentBiodata?.hasUnsavedChanges();
+      if (!saved || dirty) {
+        alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum berpindah langkah.');
+        return;
+      }
+    }
+    const approved = registrationNavigation.approved;
+    if (targetStep >= 3 && !approved) {
+      alert('Langkah ini dapat diakses setelah pembayaran Anda diverifikasi oleh Admin.');
+      return;
+    }
+    if (targetStep === 4 && !registrationNavigation.studentSaved) {
+      alert('Lengkapi dan simpan Biodata Siswa terlebih dahulu.');
+      return;
+    }
+    const suffix = [':start', ':payment', '', ':parents', ':schedule', ':results', ':reregistration'][targetStep - 1];
+    try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, registrationNavigation.regNumber + suffix); } catch (_) {}
+    renderParentPortal();
+    if (targetStep === 5 || targetStep === 6 || targetStep === 7) refreshParentFromDatabase();
+    document.getElementById('portal-step-navigation')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   window.openResultsStage = function () {
     const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim();
