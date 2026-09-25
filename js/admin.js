@@ -473,9 +473,22 @@
   let spmbFilterStatus = 'all';
   let spmbSearchQuery = '';
   const spmbSelectedRows = new Set();
+  let spmbCurrentPage = 1;
+  let spmbPageSize = 25;
 
   let waliFilterStatus = 'all';
   let waliSearchQuery = '';
+
+  function formatDaftarDate(str) {
+    if (!str || str === '-') return '-';
+    if (str.includes(',')) return str.split(',')[0].trim();
+    return str;
+  }
+
+  function formatDaftarTime(str) {
+    if (!str || str === '-' || !str.includes(',')) return '';
+    return str.split(',').slice(1).join(',').trim();
+  }
 
   function getStudentWave(s) {
     if (!s) return 'wave1';
@@ -606,19 +619,19 @@
     const activeDesc = document.getElementById('spmb-active-tab-desc');
 
     if (subTab === 'siswa') {
-      tabBtnSiswa?.classList.remove('text-slate-600', 'hover:bg-slate-100');
-      tabBtnSiswa?.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
-      tabBtnWali?.classList.remove('bg-emerald-600', 'text-white', 'shadow-sm');
-      tabBtnWali?.classList.add('text-slate-600', 'hover:bg-slate-100');
+      tabBtnSiswa?.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
+      tabBtnSiswa?.classList.add('bg-slate-900', 'text-white', 'shadow-sm');
+      tabBtnWali?.classList.remove('bg-slate-900', 'text-white', 'shadow-sm');
+      tabBtnWali?.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
 
       if (viewSiswa) viewSiswa.style.display = 'block';
       if (viewWali) viewWali.style.display = 'none';
       if (activeDesc) activeDesc.innerHTML = '<span>🎓 Menampilkan berkas calon siswa terverifikasi</span>';
     } else {
-      tabBtnWali?.classList.remove('text-slate-600', 'hover:bg-slate-100');
-      tabBtnWali?.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
-      tabBtnSiswa?.classList.remove('bg-emerald-600', 'text-white', 'shadow-sm');
-      tabBtnSiswa?.classList.add('text-slate-600', 'hover:bg-slate-100');
+      tabBtnWali?.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
+      tabBtnWali?.classList.add('bg-slate-900', 'text-white', 'shadow-sm');
+      tabBtnSiswa?.classList.remove('bg-slate-900', 'text-white', 'shadow-sm');
+      tabBtnSiswa?.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
 
       if (viewSiswa) viewSiswa.style.display = 'none';
       if (viewWali) viewWali.style.display = 'block';
@@ -632,14 +645,29 @@
     const studentList = spmbList.filter(isStudentApplicant);
     const parentList = spmbList;
     const pendingProofs = spmbList.filter(s => s.buktiPembayaran && !(s.status || '').toLowerCase().includes('terverifikasi')).length;
+    const verifiedCount = studentList.filter(s => (s.status || '').toLowerCase().includes('terverifikasi')).length;
+    const passedCount = studentList.filter(s => (s.status || '').toLowerCase().includes('lulus') || (s.status || '').toLowerCase().includes('diterima')).length;
+    const pendingActionCount = pendingProofs > 0 ? pendingProofs : studentList.filter(s => !(s.status || '').toLowerCase().includes('terverifikasi') && !(s.status || '').toLowerCase().includes('lulus')).length;
 
     const badgeSiswa = document.getElementById('badge-tab-siswa-count');
     if (badgeSiswa) badgeSiswa.textContent = studentList.length;
 
     const badgeWali = document.getElementById('badge-tab-wali-count');
     if (badgeWali) {
-      badgeWali.textContent = pendingProofs > 0 ? `${parentList.length} (${pendingProofs} baru)` : parentList.length;
+      badgeWali.textContent = pendingProofs > 0 ? `${pendingProofs} baru` : parentList.length;
     }
+
+    const kpiTotal = document.getElementById('spmb-kpi-total');
+    if (kpiTotal) kpiTotal.textContent = studentList.length;
+
+    const kpiVerified = document.getElementById('spmb-kpi-verified');
+    if (kpiVerified) kpiVerified.textContent = verifiedCount;
+
+    const kpiPassed = document.getElementById('spmb-kpi-passed');
+    if (kpiPassed) kpiPassed.textContent = passedCount;
+
+    const kpiPending = document.getElementById('spmb-kpi-pending');
+    if (kpiPending) kpiPending.textContent = pendingActionCount;
 
     const sideSiswa = document.getElementById('sidebar-spmb-count');
     if (sideSiswa) sideSiswa.textContent = studentList.length;
@@ -654,80 +682,179 @@
     renderWaliTable();
   }
 
+  function renderPaginationControls(totalItems, currentPage, pageSize) {
+    const nav = document.getElementById('spmb-pagination-nav');
+    if (!nav) return;
+    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+    if (totalItems === 0 || totalPages <= 1) {
+      nav.innerHTML = `
+        <button type="button" class="px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg cursor-not-allowed inline-flex items-center gap-1.5" disabled>
+          <i class="fa-solid fa-chevron-left text-[10px]"></i>
+          <span>Sebelumnya</span>
+        </button>
+        <button type="button" class="px-3 py-1.5 text-xs font-bold text-white bg-blue-700 rounded-lg shadow-2xs">1</button>
+        <button type="button" class="px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg cursor-not-allowed inline-flex items-center gap-1.5" disabled>
+          <span>Selanjutnya</span>
+          <i class="fa-solid fa-chevron-right text-[10px]"></i>
+        </button>
+      `;
+      return;
+    }
+
+    let buttonsHtml = '';
+    // Tombol Sebelumnya
+    if (currentPage > 1) {
+      buttonsHtml += `
+        <button type="button" onclick="window.changeSpmbPage(${currentPage - 1})" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg transition-colors inline-flex items-center gap-1.5">
+          <i class="fa-solid fa-chevron-left text-[10px]"></i>
+          <span>Sebelumnya</span>
+        </button>
+      `;
+    } else {
+      buttonsHtml += `
+        <button type="button" class="px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg cursor-not-allowed inline-flex items-center gap-1.5" disabled>
+          <i class="fa-solid fa-chevron-left text-[10px]"></i>
+          <span>Sebelumnya</span>
+        </button>
+      `;
+    }
+
+    // Nomor Halaman
+    for (let p = 1; p <= totalPages; p++) {
+      if (p === 1 || p === totalPages || (p >= currentPage - 1 && p <= currentPage + 1)) {
+        if (p === currentPage) {
+          buttonsHtml += `<button type="button" class="px-3 py-1.5 text-xs font-bold text-white bg-blue-700 rounded-lg shadow-2xs">${p}</button>`;
+        } else {
+          buttonsHtml += `<button type="button" onclick="window.changeSpmbPage(${p})" class="px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors">${p}</button>`;
+        }
+      } else if (p === currentPage - 2 || p === currentPage + 2) {
+        buttonsHtml += `<span class="px-1 text-slate-400">...</span>`;
+      }
+    }
+
+    // Tombol Selanjutnya
+    if (currentPage < totalPages) {
+      buttonsHtml += `
+        <button type="button" onclick="window.changeSpmbPage(${currentPage + 1})" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg transition-colors inline-flex items-center gap-1.5">
+          <span>Selanjutnya</span>
+          <i class="fa-solid fa-chevron-right text-[10px]"></i>
+        </button>
+      `;
+    } else {
+      buttonsHtml += `
+        <button type="button" class="px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg cursor-not-allowed inline-flex items-center gap-1.5" disabled>
+          <span>Selanjutnya</span>
+          <i class="fa-solid fa-chevron-right text-[10px]"></i>
+        </button>
+      `;
+    }
+
+    nav.innerHTML = buttonsHtml;
+  }
+
+  window.changeSpmbPage = function(p) {
+    spmbCurrentPage = p;
+    renderStudentsTable();
+  };
+
   // 1. Render Tabel Data Calon Siswa
   function renderStudentsTable() {
     const tableBody = document.getElementById('spmb-table-body');
     if (!tableBody) return;
 
     const students = getFilteredStudents();
-
     const countEl = document.getElementById('spmb-filter-count');
-    if (countEl) countEl.textContent = `Menampilkan ${students.length} dari ${spmbList.filter(isStudentApplicant).length} calon siswa`;
+    const totalEl = document.getElementById('spmb-pagination-total');
+    if (totalEl) totalEl.textContent = students.length;
 
     if (students.length === 0) {
+      if (countEl) countEl.textContent = 'Menampilkan 0 calon siswa';
       tableBody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada data calon siswa yang cocok dengan filter.</td></tr>`;
       updateSelectAllCheckbox([]);
       updateBulkActionBar();
+      renderPaginationControls(0, 1, spmbPageSize);
       return;
     }
 
-    tableBody.innerHTML = students.map((item, index) => {
+    const totalPages = Math.max(1, Math.ceil(students.length / spmbPageSize));
+    if (spmbCurrentPage > totalPages) spmbCurrentPage = totalPages;
+    if (spmbCurrentPage < 1) spmbCurrentPage = 1;
+
+    const startIndex = (spmbCurrentPage - 1) * spmbPageSize;
+    const paginatedStudents = students.slice(startIndex, startIndex + spmbPageSize);
+
+    if (countEl) {
+      countEl.textContent = `Menampilkan ${startIndex + 1}-${Math.min(startIndex + spmbPageSize, students.length)} dari ${students.length} calon siswa terdaftar di sistem`;
+    }
+
+    tableBody.innerHTML = paginatedStudents.map((item, index) => {
       const isApproved = (item.status || '').toLowerCase().includes('terverifikasi');
       const hasData = Boolean(item.biodataUpdatedAt && item.parentDataUpdatedAt);
-      const hasPassed = item.status === 'Lulus Seleksi Observasi & Diterima';
+      const hasPassed = (item.status || '').includes('Lulus') || (item.status || '').includes('Diterima');
       const hasSched = Boolean(item.jadwalTes || (item.jadwalObservasi && !item.jadwalObservasi.toLowerCase().includes('menunggu') && item.jadwalObservasi !== '-'));
       const isSelected = spmbSelectedRows.has(item.regNumber);
+      const rowNum = startIndex + index + 1;
+      const dateVal = formatDaftarDate(item.tanggalDaftar || item.createdAt);
+      const timeVal = formatDaftarTime(item.tanggalDaftar || item.createdAt);
+
       return `
-      <tr class="hover:bg-slate-50/80 transition duration-150 ${isSelected ? 'bg-emerald-50/60' : ''}" data-reg="${escapeHtml(item.regNumber)}">
-        <td class="py-4 px-4 text-center">
-          <input type="checkbox" class="spmb-row-checkbox w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" data-reg="${escapeHtml(item.regNumber)}" ${isSelected ? 'checked' : ''}>
+      <tr class="hover:bg-slate-50/90 transition-colors ${isSelected ? 'bg-blue-50/60' : ''}" data-reg="${escapeHtml(item.regNumber)}">
+        <td class="py-4 pl-6 pr-3 text-center">
+          <input type="checkbox" class="spmb-row-checkbox rounded border-slate-300 text-blue-600 focus:ring-blue-500 h-4 w-4 cursor-pointer" data-reg="${escapeHtml(item.regNumber)}" ${isSelected ? 'checked' : ''}>
         </td>
-        <td class="py-4 px-4 text-center text-xs font-semibold text-slate-500">
-          ${index + 1}
+        <td class="py-4 px-3 text-center font-medium text-slate-600">
+          ${rowNum}
         </td>
-        <td class="py-4 px-6 whitespace-nowrap font-mono text-xs font-bold ${isApproved ? 'text-emerald-700' : 'text-slate-700'}">
-          ${escapeHtml(item.regNumber)}
+        <td class="py-4 px-3">
+          <span class="font-mono text-slate-700 font-semibold bg-slate-100 px-2 py-1 rounded border border-slate-200 inline-block text-[11px]">${escapeHtml(item.regNumber)}</span>
         </td>
-        <td class="py-4 px-6 whitespace-nowrap">
-          <div class="font-bold text-slate-900">${escapeHtml(item.namaSiswa || '-')}</div>
-          <span class="text-xs text-slate-400 font-mono">NIK: ${escapeHtml(item.nik || '-')}</span>
+        <td class="py-4 px-4">
+          <div class="font-bold text-slate-900 text-sm">${escapeHtml(item.namaSiswa || '-')}</div>
+          <div class="text-[11px] text-slate-500 font-mono mt-0.5 flex items-center gap-1">
+            <i class="fa-regular fa-id-card text-slate-400"></i>
+            <span>NIK: ${escapeHtml(item.nik || '-')}</span>
+          </div>
         </td>
-        <td class="py-4 px-4 whitespace-nowrap text-center">
+        <td class="py-4 px-3 text-center">
           ${renderJenjangBadge(item.jenjang)}
         </td>
-        <td class="py-4 px-4 whitespace-nowrap">
-          <div class="font-bold text-xs text-slate-700 uppercase tracking-wide">${escapeHtml(item.jalur ? item.jalur.toUpperCase() : 'REGULER')}</div>
-          <div class="mt-0.5">
-            <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 inline-block">${escapeHtml(getStudentWaveName(item))}</span>
+        <td class="py-4 px-3">
+          <div class="font-bold text-slate-800 text-[11px] uppercase tracking-wide">${escapeHtml(item.jalur ? item.jalur.toUpperCase() : 'REGULER')}</div>
+          <div class="mt-1">
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-blue-100/70 text-blue-800 border border-blue-200">${escapeHtml(getStudentWaveName(item))}</span>
           </div>
         </td>
-        <td class="py-4 px-6 whitespace-nowrap">
-          <div class="font-medium text-slate-800 text-xs">${escapeHtml(item.namaAyah || '-')}</div>
-          <a href="https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent('Assalamu\'alaikum Bapak/Ibu wali dari ' + item.namaSiswa + ', kami dari Panitia SPMB SIT Bina Insan Parepare ingin mengonfirmasi pendaftaran ' + item.regNumber + '.')}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 mt-1" title="Kirim WhatsApp ke Orang Tua">
-            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.573 1.761.854 2.806.854 3.18 0 5.767-2.587 5.768-5.766.001-3.182-2.585-5.769-5.768-5.769zm10.024 5.828c0 5.549-4.512 10.063-10.063 10.063-1.745 0-3.385-.45-4.821-1.242l-5.171 1.357 1.381-5.042c-.878-1.488-1.389-3.23-1.389-5.136 0-5.551 4.514-10.063 10.063-10.063 5.551 0 10.063 4.512 10.063 10.063z"/></svg>
-            <span>${escapeHtml(item.waAyah || '-')}</span>
+        <td class="py-4 px-3">
+          <div class="font-semibold text-slate-800 text-xs">${escapeHtml(item.namaAyah || '-')}</div>
+          <a class="inline-flex items-center gap-1.5 text-emerald-700 hover:text-emerald-800 font-medium text-xs mt-1 group" href="https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent('Assalamu\'alaikum Bapak/Ibu wali dari ' + item.namaSiswa + ', kami dari Panitia SPMB SIT Bina Insan Parepare ingin mengonfirmasi pendaftaran ' + item.regNumber + '.')}" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-whatsapp text-emerald-600 text-sm group-hover:scale-110 transition-transform"></i>
+            <span class="font-mono">${escapeHtml(item.waAyah || '-')}</span>
           </a>
         </td>
-        <td class="py-4 px-6 whitespace-nowrap text-xs text-slate-600">
-          <span class="font-medium text-slate-800">${escapeHtml(item.tanggalDaftar || '-')}</span>
+        <td class="py-4 px-3 text-slate-600">
+          <div class="font-medium text-slate-800 text-xs">${escapeHtml(dateVal)}</div>
+          ${timeVal ? `<div class="text-[11px] text-slate-500 font-mono">${escapeHtml(timeVal)}</div>` : ''}
         </td>
-        <td class="py-4 px-6 whitespace-nowrap">
+        <td class="py-4 px-4">
           <div class="flex flex-col items-start gap-1">
             ${renderStatusBadge(item.status)}
-            ${hasSched ? `<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200" title="${escapeHtml(item.jadwalTes || item.jadwalObservasi)}">🗓️ Jadwal Ditetapkan</span>` : hasData ? `<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">⏳ Menunggu Jadwal</span>` : ''}
+            ${hasSched ? `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-sky-50 text-sky-800 border border-sky-200" title="${escapeHtml(item.jadwalTes || item.jadwalObservasi)}"><i class="fa-regular fa-calendar-check text-sky-600"></i><span>Jadwal Ditetapkan</span></span>` : hasData ? `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200"><i class="fa-solid fa-clock text-amber-600"></i><span>Menunggu Jadwal</span></span>` : ''}
           </div>
         </td>
-        <td class="py-4 px-6 whitespace-nowrap text-center">
-          <div class="flex items-center justify-center gap-1.5">
-            <button type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.passApplicant(this.dataset.regNumber, this)" ${hasPassed || !hasData ? 'disabled' : ''} title="${hasPassed ? 'Siswa sudah dinyatakan lulus' : !hasData ? 'Lengkapi biodata siswa dan orang tua/wali terlebih dahulu' : 'Tetapkan lulus tes dan wawancara'}">${hasPassed ? '✓ Lulus' : 'Luluskan'}</button>
-            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 border border-transparent hover:border-emerald-200 transition-colors" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail & Verifikasi Berkas">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+        <td class="py-4 px-5 text-center whitespace-nowrap">
+          <div class="inline-flex items-center justify-center gap-1.5">
+            <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.passApplicant(this.dataset.regNumber, this)" ${hasPassed || !hasData ? 'disabled' : ''} title="${hasPassed ? 'Siswa sudah dinyatakan lulus' : !hasData ? 'Lengkapi biodata siswa dan orang tua/wali terlebih dahulu' : 'Tetapkan lulus tes dan wawancara'}">
+              <i class="fa-regular fa-circle-check text-xs"></i>
+              <span>${hasPassed ? 'Lulus' : 'Luluskan'}</span>
             </button>
-            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-700 hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-colors" onclick="window.printApplicantCard('${item.regNumber}')" title="Cetak Kartu Tanda Peserta">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24-1.047-.37-2.14-.37-3.26 0-5.523 4.477-10 10-10 1.12 0 2.213.13 3.26.37m-3.26 19.63c-1.047.24-2.14.37-3.26.37-5.523 0-10-4.477-10-10 0-1.12.13-2.213.37-3.26M6.75 6.75h10.5a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25H6.75a2.25 2.25 0 01-2.25-2.25v-7.5a2.25 2.25 0 012.25-2.25z" /></svg>
+            <button type="button" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail & Verifikasi Berkas">
+              <i class="fa-regular fa-eye text-sm"></i>
             </button>
-            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus Data Siswa">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+            <button type="button" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200" onclick="window.printApplicantCard('${item.regNumber}')" title="Cetak Kartu Tanda Peserta">
+              <i class="fa-solid fa-print text-sm"></i>
+            </button>
+            <button type="button" class="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus Data Siswa">
+              <i class="fa-solid fa-trash text-sm"></i>
             </button>
           </div>
         </td>
@@ -735,8 +862,9 @@
       `;
     }).join('');
 
-    updateSelectAllCheckbox(students);
+    updateSelectAllCheckbox(paginatedStudents);
     updateBulkActionBar();
+    renderPaginationControls(students.length, spmbCurrentPage, spmbPageSize);
   }
 
   // 2. Render Tabel Akun Orang Tua & Pembayaran
@@ -859,22 +987,42 @@
 
     filterJenjang?.addEventListener('change', (e) => {
       spmbFilterJenjang = e.target.value;
+      spmbCurrentPage = 1;
       renderStudentsTable();
     });
 
     filterGelombang?.addEventListener('change', (e) => {
       spmbFilterGelombang = e.target.value;
+      spmbCurrentPage = 1;
       renderStudentsTable();
     });
 
     filterStatus?.addEventListener('change', (e) => {
       spmbFilterStatus = e.target.value;
+      spmbCurrentPage = 1;
       renderStudentsTable();
     });
 
     searchInput?.addEventListener('input', (e) => {
       spmbSearchQuery = e.target.value;
+      spmbCurrentPage = 1;
       renderStudentsTable();
+    });
+
+    const pageSizeSelect = document.getElementById('spmb-page-size');
+    pageSizeSelect?.addEventListener('change', (e) => {
+      spmbPageSize = parseInt(e.target.value, 10) || 25;
+      spmbCurrentPage = 1;
+      renderStudentsTable();
+    });
+
+    const refreshBtn = document.getElementById('spmb-refresh-btn');
+    refreshBtn?.addEventListener('click', async () => {
+      showToast('Memuat ulang data SPMB...');
+      if (typeof loadAdminData === 'function') {
+        await loadAdminData();
+      }
+      showToast('Data SPMB berhasil diperbarui.');
     });
 
     exportBtn?.addEventListener('click', exportSpmbToCsv);
@@ -2046,29 +2194,32 @@
   function renderJenjangBadge(jenjang) {
     const j = (jenjang || '').toLowerCase();
     if (j === 'tkit') {
-      return `<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">TKIT</span>`;
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">TKIT</span>`;
     }
     if (j === 'smpit') {
-      return `<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">SMPIT</span>`;
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">SMPIT</span>`;
     }
-    return `<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">SDIT</span>`;
+    if (j === 'smait') {
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-violet-50 text-violet-700 border border-violet-200">SMAIT</span>`;
+    }
+    return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">SDIT</span>`;
   }
 
   function renderStatusBadge(status) {
     const s = (status || '').toLowerCase();
     if (s.includes('lulus') || s.includes('diterima')) {
-      return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200"><svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>${escapeHtml(status)}</span></span>`;
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-800 border border-blue-200/80"><i class="fa-regular fa-circle-check text-blue-600"></i><span>${escapeHtml(status)}</span></span>`;
     }
-    if (s.includes('terverifikasi') || s.includes('jadwal')) {
-      return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200"><svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>${escapeHtml(status)}</span></span>`;
+    if (s.includes('terverifikasi') || s.includes('lengkap')) {
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200"><i class="fa-regular fa-circle-check text-emerald-600"></i><span>${escapeHtml(status)}</span></span>`;
     }
-    if (s.includes('menunggu') || s.includes('pembayaran')) {
-      return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200"><svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>${escapeHtml(status)}</span></span>`;
+    if (s.includes('menunggu') || s.includes('pembayaran') || s.includes('jadwal')) {
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200"><i class="fa-solid fa-hourglass-half text-amber-600"></i><span>${escapeHtml(status)}</span></span>`;
     }
-    if (s.includes('tidak') || s.includes('tolak')) {
-      return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>${escapeHtml(status)}</span></span>`;
+    if (s.includes('tidak') || s.includes('tolak') || s.includes('belum')) {
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200"><i class="fa-regular fa-circle-xmark text-rose-500"></i><span>${escapeHtml(status)}</span></span>`;
     }
-    return `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200"><span>${escapeHtml(status)}</span></span>`;
+    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200"><span>${escapeHtml(status)}</span></span>`;
   }
 
   function formatWa(num) {

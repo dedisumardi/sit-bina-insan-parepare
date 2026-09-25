@@ -16,6 +16,10 @@
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   
+  <!-- Font Awesome & Phosphor Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
   <!-- Tailwind CSS v3 with Plugins -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script>
@@ -571,162 +575,277 @@
       <!-- =====================================================================
            PANEL 2: KELOLA SPMB (DATA CALON SISWA & AKUN ORANG TUA TERPISAH)
            ===================================================================== -->
+      <!-- =====================================================================
+           PANEL 2: KELOLA SPMB (DATA CALON SISWA & AKUN ORANG TUA TERPISAH)
+           ===================================================================== -->
       <section class="admin-panel space-y-6" id="panel-spmb">
-        <!-- Sub-Tabs Switcher -->
-        <div class="bg-white p-2 sm:p-2.5 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <div class="flex items-center gap-2">
-            <button type="button" id="tab-btn-siswa" onclick="window.switchSpmbSubTab('siswa')" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 text-white shadow-sm transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" /></svg>
-              <span>🎓 Data Calon Siswa</span>
-              <span id="badge-tab-siswa-count" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-white/20 text-white">0</span>
-            </button>
-            <button type="button" id="tab-btn-wali" onclick="window.switchSpmbSubTab('wali')" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
-              <span>👥 Akun Orang Tua &amp; Pembayaran</span>
-              <span id="badge-tab-wali-count" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200">0</span>
-            </button>
-          </div>
-          <div class="text-xs text-slate-500 font-medium px-2 flex items-center gap-1.5" id="spmb-active-tab-desc">
-            <span>🎓 Menampilkan berkas calon siswa terverifikasi</span>
-          </div>
-        </div>
-
-        <!-- VIEW TAB 1: DATA CALON SISWA -->
-        <div id="spmb-view-siswa" class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden">
-          <div class="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <!-- BEGIN: QuickStatsOverview -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4" data-purpose="kpi-cards">
+          <!-- Card 1: Total Pendaftar -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs flex items-center justify-between">
             <div>
-              <h2 class="text-base font-bold text-slate-900 tracking-tight">Daftar Calon Siswa Baru (SPMB Online)</h2>
-              <div id="spmb-filter-count" class="text-xs text-slate-500 mt-0.5">Memuat data siswa...</div>
+              <p class="text-xs font-medium text-slate-500">Total Pendaftar</p>
+              <h3 class="text-2xl font-bold text-slate-900 mt-1"><span id="spmb-kpi-total">0</span> <span class="text-xs font-normal text-slate-500">siswa</span></h3>
             </div>
-            <div class="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
-              <!-- Filter Jenjang -->
-              <select id="spmb-filter-jenjang" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50 flex-1 sm:flex-none min-w-[130px]">
-                <option value="all">Semua Jenjang</option>
-                <option value="tkit">TKIT Saja</option>
-                <option value="sdit">SDIT Saja</option>
-                <option value="smpit">SMPIT Saja</option>
-              </select>
-
-              <!-- Filter Gelombang -->
-              <select id="spmb-filter-gelombang" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50 flex-1 sm:flex-none min-w-[135px]">
-                <option value="all">Semua Gelombang</option>
-                <option value="wave1">Gelombang 1</option>
-                <option value="wave2">Gelombang 2</option>
-                <option value="wave3">Gelombang 3</option>
-              </select>
-
-              <!-- Filter Status -->
-              <select id="spmb-filter-status" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50 flex-1 sm:flex-none min-w-[130px]">
-                <option value="all">Semua Status Pendaftaran</option>
-                <option value="menunggu_jadwal">⏳ Menunggu Input Jadwal</option>
-                <option value="jadwal_ditetapkan">🗓️ Jadwal Ditetapkan</option>
-                <option value="terverifikasi">Terverifikasi</option>
-                <option value="lulus">Lulus Seleksi</option>
-                <option value="observasi">Observasi</option>
-              </select>
-
-              <!-- Search -->
-              <input type="search" id="spmb-search-input" class="text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 w-full sm:w-48 lg:w-64" placeholder="Cari nama siswa, No. Reg, NIK...">
-
-              <!-- Export CSV Button -->
-              <button type="button" id="spmb-export-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition duration-150">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
-                <span>Unduh Data Siswa Lengkap (Excel)</span>
-              </button>
+            <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-user-group"></i>
             </div>
           </div>
-
-          <!-- Bulk Action Bar -->
-          <div id="spmb-bulk-actions" class="px-4 sm:px-6 py-2.5 bg-emerald-50 border-b border-emerald-100 flex flex-wrap items-center justify-between gap-3 text-xs" style="display: none;">
-            <div class="flex items-center gap-2">
-              <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-emerald-600 text-white font-bold text-[11px]" id="spmb-selected-count">0</span>
-              <span class="font-bold text-emerald-950">Calon Siswa Dipilih</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <button type="button" id="spmb-bulk-pass-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition">
-                ✓ Luluskan Terpilih
-              </button>
-              <button type="button" id="spmb-bulk-delete-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold text-rose-700 bg-rose-100 hover:bg-rose-200 border border-rose-200 shadow-sm transition">
-                🗑️ Hapus Terpilih
-              </button>
-              <button type="button" id="spmb-bulk-clear-btn" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200/60 transition">
-                Batal Pilih
-              </button>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse min-w-[960px]">
-              <thead>
-                <tr class="border-b border-slate-100 bg-slate-50/75 text-[11px] uppercase tracking-wider font-bold text-slate-500">
-                  <th class="py-3.5 px-4 text-center w-10">
-                    <input type="checkbox" id="spmb-select-all" class="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" title="Pilih Semua Calon Siswa">
-                  </th>
-                  <th class="py-3.5 px-4 text-center w-12 font-bold text-slate-500">No.</th>
-                  <th class="py-3.5 px-6">No. Registrasi</th>
-                  <th class="py-3.5 px-6">Nama Siswa &amp; NIK</th>
-                  <th class="py-3.5 px-4 text-center">Jenjang</th>
-                  <th class="py-3.5 px-4">Jalur</th>
-                  <th class="py-3.5 px-6">Orang Tua &amp; WhatsApp</th>
-                  <th class="py-3.5 px-6">Waktu Daftar</th>
-                  <th class="py-3.5 px-6">Status Berkas</th>
-                  <th class="py-3.5 px-6 text-center">Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="spmb-table-body" class="divide-y divide-slate-100 text-sm">
-                <!-- Dynamically populated via js/admin.js -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- VIEW TAB 2: AKUN ORANG TUA / WALI & PEMBAYARAN -->
-        <div id="spmb-view-wali" class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden" style="display: none;">
-          <div class="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <!-- Card 2: Berkas Terverifikasi -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs flex items-center justify-between">
             <div>
-              <h2 class="text-base font-bold text-slate-900 tracking-tight">Akun Orang Tua / Wali &amp; Bukti Pembayaran Form (Rp 150.000)</h2>
-              <div id="wali-filter-count" class="text-xs text-slate-500 mt-0.5">Memuat data akun orang tua...</div>
+              <p class="text-xs font-medium text-slate-500">Terverifikasi</p>
+              <h3 class="text-2xl font-bold text-emerald-600 mt-1"><span id="spmb-kpi-verified">0</span> <span class="text-xs font-normal text-slate-500">siswa</span></h3>
             </div>
-            <div class="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
-              <!-- Filter Pembayaran -->
-              <select id="wali-filter-status" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50 flex-1 sm:flex-none min-w-[140px]">
-                <option value="all">Semua Status Bayar</option>
-                <option value="pending_proof">💳 Bukti Diupload (Menunggu Approval)</option>
-                <option value="unpaid">🔴 Belum Bayar / Belum Upload</option>
-                <option value="approved">✓ Pembayaran Disetujui (Lunas)</option>
-              </select>
+            <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-file-circle-check"></i>
+            </div>
+          </div>
+          <!-- Card 3: Lulus Observasi -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs flex items-center justify-between">
+            <div>
+              <p class="text-xs font-medium text-slate-500">Lulus Seleksi</p>
+              <h3 class="text-2xl font-bold text-indigo-600 mt-1"><span id="spmb-kpi-passed">0</span> <span class="text-xs font-normal text-slate-500">siswa</span></h3>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-award"></i>
+            </div>
+          </div>
+          <!-- Card 4: Menunggu Berkas/Pembayaran -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs flex items-center justify-between">
+            <div>
+              <p class="text-xs font-medium text-slate-500">Perlu Tindakan</p>
+              <h3 class="text-2xl font-bold text-amber-600 mt-1"><span id="spmb-kpi-pending">0</span> <span class="text-xs font-normal text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-full font-semibold">baru</span></h3>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+          </div>
+        </section>
+        <!-- END: QuickStatsOverview -->
 
-              <!-- Search Wali -->
-              <input type="search" id="wali-search-input" class="text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-emerald-500 focus:border-emerald-500 w-full sm:w-48 lg:w-64" placeholder="Cari nama orang tua, WhatsApp...">
-
-              <!-- Export CSV Wali -->
-              <button type="button" id="wali-export-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition duration-150">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
-                <span>Export Akun Wali</span>
+        <!-- BEGIN: PrimaryCardContainer -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" data-purpose="spmb-data-management-card">
+          <!-- BEGIN: TabNavigationHeader -->
+          <div class="px-6 pt-5 pb-0 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+              <!-- Active Tab: Data Calon Siswa -->
+              <button type="button" id="tab-btn-siswa" onclick="window.switchSpmbSubTab('siswa')" class="flex items-center space-x-2 px-4 py-2.5 bg-slate-900 text-white rounded-xl font-semibold text-sm shadow-sm transition-all">
+                <i class="fa-solid fa-graduation-cap text-sm"></i>
+                <span>Data Calon Siswa</span>
+                <span id="badge-tab-siswa-count" class="ml-1 px-2 py-0.5 text-xs bg-slate-700 text-white rounded-full font-bold">0</span>
+              </button>
+              <!-- Inactive Tab: Akun Orang Tua & Pembayaran -->
+              <button type="button" id="tab-btn-wali" onclick="window.switchSpmbSubTab('wali')" class="flex items-center space-x-2 px-4 py-2.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl font-medium text-sm transition-colors">
+                <i class="fa-solid fa-users text-sm text-slate-400"></i>
+                <span>Akun Orang Tua &amp; Pembayaran</span>
+                <span id="badge-tab-wali-count" class="ml-1 px-2 py-0.5 text-xs bg-amber-100 text-amber-800 rounded-full font-bold border border-amber-200">0</span>
               </button>
             </div>
+            <div class="flex items-center space-x-2 text-xs text-slate-500 mb-2 sm:mb-0">
+              <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sinkronisasi Real-Time</span>
+            </div>
           </div>
+          <!-- END: TabNavigationHeader -->
 
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse min-w-[760px]">
-              <thead>
-                <tr class="border-b border-slate-100 bg-slate-50/75 text-[11px] uppercase tracking-wider font-bold text-slate-500">
-                  <th class="py-3.5 px-6">ID / Kode Registrasi</th>
-                  <th class="py-3.5 px-6">Nama Orang Tua / Wali</th>
-                  <th class="py-3.5 px-6">Nomor WhatsApp</th>
-                  <th class="py-3.5 px-6">Biaya Formulir</th>
-                  <th class="py-3.5 px-6">Bukti Transfer</th>
-                  <th class="py-3.5 px-6">Status Pembayaran</th>
-                  <th class="py-3.5 px-6">Waktu Daftar</th>
-                  <th class="py-3.5 px-6 text-center">Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="wali-table-body" class="divide-y divide-slate-100 text-sm">
-                <!-- Dynamically populated via js/admin.js -->
-              </tbody>
-            </table>
+          <!-- VIEW TAB 1: DATA CALON SISWA -->
+          <div id="spmb-view-siswa">
+            <!-- BEGIN: PageTitleAndFiltersBar -->
+            <div class="p-6 pb-4 space-y-4">
+              <!-- Header Title & Subtitle + Primary Actions -->
+              <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div>
+                  <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Daftar Calon Siswa Baru (SPMB Online)</h1>
+                  <p id="spmb-filter-count" class="text-xs sm:text-sm text-slate-500 mt-0.5">Memuat data calon siswa...</p>
+                </div>
+                <!-- Action Buttons Group -->
+                <div class="flex items-center flex-wrap gap-2.5">
+                  <button type="button" id="spmb-refresh-btn" onclick="window.loadAdminData && window.loadAdminData()" class="px-3.5 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors inline-flex items-center gap-2 border border-slate-200">
+                    <i class="fa-solid fa-arrow-rotate-right"></i>
+                    <span>Refresh</span>
+                  </button>
+                  <button type="button" id="spmb-export-btn" class="px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-900 rounded-lg transition-all shadow-sm shadow-blue-700/30 inline-flex items-center gap-2">
+                    <i class="fa-solid fa-file-excel text-emerald-400 text-sm"></i>
+                    <span>Unduh Data Siswa Lengkap (Excel)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Filters Form Row -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-3 pt-2">
+                <!-- Dropdown Jenjang -->
+                <div class="md:col-span-2">
+                  <label class="sr-only" for="spmb-filter-jenjang">Jenjang Pendidikan</label>
+                  <div class="relative">
+                    <select class="w-full text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer" id="spmb-filter-jenjang">
+                      <option value="all">Semua Jenjang</option>
+                      <option value="tkit">TKIT</option>
+                      <option value="sdit">SDIT</option>
+                      <option value="smpit">SMPIT</option>
+                      <option value="smait">SMAIT</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                      <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dropdown Gelombang -->
+                <div class="md:col-span-2">
+                  <label class="sr-only" for="spmb-filter-gelombang">Gelombang Pendaftaran</label>
+                  <div class="relative">
+                    <select class="w-full text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer" id="spmb-filter-gelombang">
+                      <option value="all">Semua Gelombang</option>
+                      <option value="wave1">Gelombang 1</option>
+                      <option value="wave2">Gelombang 2</option>
+                      <option value="wave3">Gelombang 3</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                      <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dropdown Status Pendaftaran -->
+                <div class="md:col-span-3">
+                  <label class="sr-only" for="spmb-filter-status">Status Pendaftaran</label>
+                  <div class="relative">
+                    <select class="w-full text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer" id="spmb-filter-status">
+                      <option value="all">Semua Status Pendaftaran</option>
+                      <option value="menunggu_jadwal">Menunggu Verifikasi / Jadwal</option>
+                      <option value="jadwal_ditetapkan">Jadwal Ditetapkan</option>
+                      <option value="terverifikasi">Berkas Lengkap &amp; Terverifikasi</option>
+                      <option value="lulus">Lulus Seleksi Observasi &amp; Diterima</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                      <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Search Input Field -->
+                <div class="md:col-span-5">
+                  <label class="sr-only" for="spmb-search-input">Cari Siswa</label>
+                  <div class="relative">
+                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                      <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </div>
+                    <input class="w-full text-xs font-normal text-slate-800 placeholder-slate-400 bg-white border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" id="spmb-search-input" placeholder="Cari nama siswa, No. Reg, NIK, No. HP..." type="text">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- END: PageTitleAndFiltersBar -->
+
+            <!-- Bulk Action Bar -->
+            <div id="spmb-bulk-actions" class="px-6 py-2.5 bg-emerald-50 border-y border-emerald-100 flex flex-wrap items-center justify-between gap-3 text-xs" style="display: none;">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-emerald-600 text-white font-bold text-[11px]" id="spmb-selected-count">0</span>
+                <span class="font-bold text-emerald-950">Calon Siswa Dipilih</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" id="spmb-bulk-pass-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition">
+                  ✓ Luluskan Terpilih
+                </button>
+                <button type="button" id="spmb-bulk-delete-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold text-rose-700 bg-rose-100 hover:bg-rose-200 border border-rose-200 shadow-sm transition">
+                  🗑️ Hapus Terpilih
+                </button>
+                <button type="button" id="spmb-bulk-clear-btn" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200/60 transition">
+                  Batal Pilih
+                </button>
+              </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="border-t border-slate-200 overflow-x-auto w-full">
+              <table class="w-full min-w-[1240px] text-left border-collapse text-xs">
+                <thead class="bg-slate-50/80 text-slate-500 font-bold uppercase tracking-wider text-[11px] border-b border-slate-200">
+                  <tr>
+                    <th class="py-3.5 pl-6 pr-3 w-10 text-center shrink-0" scope="col">
+                      <input class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 h-4 w-4 cursor-pointer" id="spmb-select-all" title="Pilih Semua" type="checkbox">
+                    </th>
+                    <th class="py-3.5 px-3 w-12 text-center shrink-0 font-bold" scope="col">No.</th>
+                    <th class="py-3.5 px-3 min-w-[145px]" scope="col">No. Registrasi</th>
+                    <th class="py-3.5 px-4 min-w-[210px]" scope="col">Nama Siswa &amp; NIK</th>
+                    <th class="py-3.5 px-3 text-center min-w-[90px]" scope="col">Jenjang</th>
+                    <th class="py-3.5 px-3 min-w-[125px]" scope="col">Jalur</th>
+                    <th class="py-3.5 px-3 min-w-[185px]" scope="col">Orang Tua &amp; WhatsApp</th>
+                    <th class="py-3.5 px-3 min-w-[145px]" scope="col">Waktu Daftar</th>
+                    <th class="py-3.5 px-4 min-w-[225px]" scope="col">Status Berkas &amp; Seleksi</th>
+                    <th class="text-center py-3.5 px-5 min-w-[200px] font-bold text-slate-600 uppercase tracking-wider text-[11px]" scope="col">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="spmb-table-body" class="divide-y divide-slate-100 bg-white">
+                  <!-- Dynamically populated via js/admin.js -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- BEGIN: PaginationFooter -->
+            <div id="spmb-pagination-container" class="px-6 py-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+              <div class="flex items-center space-x-3">
+                <span class="font-medium">Menampilkan</span>
+                <select id="spmb-page-size" class="form-select text-xs font-medium border-slate-300 rounded-lg py-1 px-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                  <option value="10">10</option>
+                  <option value="25" selected>25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                <span class="font-medium">baris dari total <strong id="spmb-pagination-total" class="text-slate-900 font-bold">0</strong> data calon siswa</span>
+              </div>
+              <div class="flex items-center space-x-1.5" id="spmb-pagination-nav">
+                <!-- Pagination buttons generated in js/admin.js -->
+              </div>
+            </div>
+            <!-- END: PaginationFooter -->
           </div>
+          <!-- END: VIEW TAB 1 -->
+
+          <!-- VIEW TAB 2: AKUN ORANG TUA / WALI & PEMBAYARAN -->
+          <div id="spmb-view-wali" style="display: none;">
+            <div class="p-6 pb-4 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+              <div>
+                <h2 class="text-base font-bold text-slate-900 tracking-tight">Akun Orang Tua / Wali &amp; Bukti Pembayaran Form (Rp 150.000)</h2>
+                <div id="wali-filter-count" class="text-xs text-slate-500 mt-0.5">Memuat data akun orang tua...</div>
+              </div>
+              <div class="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
+                <select id="wali-filter-status" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-blue-500 focus:border-blue-500 bg-slate-50 flex-1 sm:flex-none min-w-[140px]">
+                  <option value="all">Semua Status Bayar</option>
+                  <option value="pending_proof">💳 Bukti Diupload (Menunggu Approval)</option>
+                  <option value="unpaid">🔴 Belum Bayar / Belum Upload</option>
+                  <option value="approved">✓ Pembayaran Disetujui (Lunas)</option>
+                </select>
+                <input type="search" id="wali-search-input" class="text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-blue-500 focus:border-blue-500 w-full sm:w-48 lg:w-64" placeholder="Cari nama orang tua, WhatsApp...">
+                <button type="button" id="wali-export-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-blue-700 hover:bg-blue-800 shadow-sm transition duration-150">
+                  <i class="fa-solid fa-file-excel text-emerald-400 text-sm"></i>
+                  <span>Export Akun Wali</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse min-w-[760px]">
+                <thead>
+                  <tr class="border-b border-slate-100 bg-slate-50/75 text-[11px] uppercase tracking-wider font-bold text-slate-500">
+                    <th class="py-3.5 px-6">ID / Kode Registrasi</th>
+                    <th class="py-3.5 px-6">Nama Orang Tua / Wali</th>
+                    <th class="py-3.5 px-6">Nomor WhatsApp</th>
+                    <th class="py-3.5 px-6">Biaya Formulir</th>
+                    <th class="py-3.5 px-6">Bukti Transfer</th>
+                    <th class="py-3.5 px-6">Status Pembayaran</th>
+                    <th class="py-3.5 px-6">Waktu Daftar</th>
+                    <th class="py-3.5 px-6 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="wali-table-body" class="divide-y divide-slate-100 text-sm">
+                  <!-- Dynamically populated via js/admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- END: VIEW TAB 2 -->
         </div>
+        <!-- END: PrimaryCardContainer -->
       </section>
 
       <!-- =====================================================================
