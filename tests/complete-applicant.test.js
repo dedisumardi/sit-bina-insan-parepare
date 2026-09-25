@@ -112,3 +112,73 @@ test('window.completeApplicant confirms, updates status and shows thank you mess
   await context.window.completeApplicant('SPMB-123', {});
   assert.equal(calls, 1);
 });
+
+test('renderParentPortal shows only completed card and hides stepper and forms when applicant is selesai', () => {
+  const spmbJs = fs.readFileSync('js/spmb.js', 'utf8');
+  const start = spmbJs.indexOf('  function renderParentPortal() {');
+  const end = spmbJs.indexOf('  // Handle Proof File Input Selection', start);
+  const fnCode = spmbJs.slice(start, end);
+
+  const elements = {};
+  function getEl(id) {
+    if (!elements[id]) {
+      elements[id] = {
+        style: { display: 'none' },
+        dataset: {},
+        textContent: '',
+        classList: { add() {}, remove() {}, toggle() {} },
+        setAttribute() {},
+        removeAttribute() {}
+      };
+    }
+    return elements[id];
+  }
+
+  const queryElements = {};
+  function querySel(sel) {
+    if (!queryElements[sel]) {
+      queryElements[sel] = {
+        style: { display: 'none' },
+        dataset: {}
+      };
+    }
+    return queryElements[sel];
+  }
+
+  const session = { nama: 'Ayah Fulan', wa: '08123456789' };
+  const finishedStudent = {
+    regNumber: 'SPMB-2026-999',
+    namaAyah: 'Ayah Fulan',
+    waAyah: '08123456789',
+    namaSiswa: 'Fulan bin Fulan',
+    status: 'Lulus Seleksi Observasi & Diterima (Pendaftaran Selesai)',
+    berkasKk: 'kk.png',
+    berkasAkta: 'akta.png'
+  };
+
+  const context = {
+    PARENT_SESSION_KEY: 'session',
+    STORAGE_KEY: 'students',
+    localStorage: {
+      getItem(key) {
+        if (key === 'session') return JSON.stringify(session);
+        if (key === 'students') return JSON.stringify([finishedStudent]);
+        return null;
+      }
+    },
+    document: {
+      getElementById: getEl,
+      querySelector: querySel
+    }
+  };
+
+  vm.runInNewContext(`${fnCode}\nrenderParentPortal();`, context);
+
+  assert.equal(getEl('portal-spmb-completed-card').style.display, 'block', 'completed card must be displayed');
+  assert.equal(querySel('[data-purpose="registration-stepper"]').style.display, 'none', 'stepper must be hidden');
+  assert.equal(getEl('portal-step-navigation').style.display, 'none', 'step navigation must be hidden');
+  assert.equal(getEl('portal-state-reregistration').style.display, 'none', 'reregistration form must be hidden');
+  assert.equal(getEl('portal-state-results').style.display, 'none', 'results state must be hidden');
+  assert.equal(getEl('portal-state-biodata').style.display, 'none', 'biodata state must be hidden');
+});
+

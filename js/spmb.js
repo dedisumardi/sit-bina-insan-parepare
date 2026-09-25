@@ -1444,6 +1444,17 @@
   };
 
   function updateRegistrationNavigation(record, approved, proof) {
+    const isFinished = Boolean(record?.status && record.status.toLowerCase().includes('selesai'));
+    const completedCard = document.getElementById('portal-spmb-completed-card');
+    const stepperCard = document.querySelector?.('[data-purpose="registration-stepper"]');
+    const stepNav = document.getElementById('portal-step-navigation');
+    if (isFinished) {
+      if (completedCard) completedCard.style.display = 'block';
+      if (stepperCard) stepperCard.style.display = 'none';
+      if (stepNav) stepNav.style.display = 'none';
+      return;
+    }
+
     let view = '';
     try { view = sessionStorage.getItem(PARENT_BIODATA_VIEW_KEY) || ''; } catch (_) {}
     const summary = document.getElementById('portal-state-payment-summary');
@@ -1661,6 +1672,30 @@
     const hasProof = !!record.buktiPembayaran;
     document.querySelector('.portal-header-bar').dataset.paymentState = isApproved ? 'approved' : hasProof ? 'pending' : 'unpaid';
     document.getElementById('portal-account-reference').textContent = record.regNumber?.startsWith('SPMB-') ? record.regNumber : 'Pendaftaran SPMB';
+
+    const isFinished = Boolean(record.status && record.status.toLowerCase().includes('selesai'));
+    const completedCard = document.getElementById('portal-spmb-completed-card');
+    const stepperCard = document.querySelector('[data-purpose="registration-stepper"]');
+    const stepNav = document.getElementById('portal-step-navigation');
+
+    if (isFinished) {
+      if (completedCard) completedCard.style.display = 'block';
+      if (stepperCard) stepperCard.style.display = 'none';
+      if (stepNav) stepNav.style.display = 'none';
+      ['unpaid', 'pending', 'approved', 'biodata', 'parents', 'schedule', 'results', 'reregistration', 'payment-summary'].forEach(id => {
+        const el = document.getElementById('portal-state-' + id);
+        if (el) el.style.display = 'none';
+      });
+      if (badgeStatus) {
+        badgeStatus.textContent = 'Alur Pendaftaran Selesai (Resmi Diterima)';
+        badgeStatus.className = 'portal-payment-badge badge-approved';
+      }
+      return;
+    } else {
+      if (completedCard) completedCard.style.display = 'none';
+      if (stepperCard) stepperCard.style.display = 'block';
+      if (stepNav) stepNav.style.display = 'flex';
+    }
 
     if (isApproved) {
       // STATE 2 APPROVED / STATE 3 BIODATA / STATE 4 PARENTS / STATE 5 SCHEDULE
