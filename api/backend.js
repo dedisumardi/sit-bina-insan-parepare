@@ -246,7 +246,13 @@ async function handler(req, res) {
           }
         }
         const approval = admin && (input.newRegNumber || input.new_reg_number);
-        const result = await db.query(`UPDATE sipintu_applicants SET data=data || $1::jsonb,
+        const result = await db.query(`UPDATE sipintu_applicants SET data=
+          CASE 
+            WHEN (data->>'status' ILIKE '%lulus%' OR data->>'status' ILIKE '%diterima%') 
+                 AND ($1::jsonb->>'status' ILIKE '%terverifikasi%')
+            THEN (data || ($1::jsonb - 'status'))
+            ELSE (data || $1::jsonb)
+          END,
           reg_number=CASE WHEN $2::boolean AND reg_number LIKE 'PENDING-%' THEN 'SPMB-' || to_char(now(),'YYYY') || '-' || lpad(id::text,6,'0') ELSE reg_number END
           WHERE id=(SELECT id FROM sipintu_applicants WHERE ($3::text IS NULL OR reg_number=$3) AND ($4::text IS NULL OR wa=$4) ORDER BY id DESC LIMIT 1) RETURNING *`, [JSON.stringify(patch), Boolean(approval), reg || null, wa ? phone(wa) : null]);
         if (!result.rowCount) fail(404, 'Pendaftaran tidak ditemukan.');

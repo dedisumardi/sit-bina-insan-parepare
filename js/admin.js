@@ -517,6 +517,25 @@
     return settings.wave1Name || 'Gelombang 1';
   }
 
+  function isPaymentApproved(item) {
+    if (!item) return false;
+    const s = (item.status || '').toLowerCase();
+    if (s.includes('lulus') || s.includes('diterima')) return true;
+    if (s.includes('cadangan')) return true;
+    if (s.includes('terverifikasi')) return true;
+    if (s.includes('disetujui')) return true;
+    if (s.includes('jadwal') || s.includes('biodata')) return true;
+    if (item.regNumber && !String(item.regNumber).startsWith('PENDING-') && String(item.regNumber).startsWith('SPMB-')) return true;
+    if (item.statusPembayaran && String(item.statusPembayaran).toLowerCase() === 'lunas') return true;
+    return false;
+  }
+
+  function isApplicantPassed(item) {
+    if (!item) return false;
+    const s = (item.status || '').toLowerCase();
+    return s.includes('lulus') || s.includes('diterima');
+  }
+
   function getFilteredStudents() {
     let students = spmbList.filter(isStudentApplicant);
 
@@ -644,10 +663,10 @@
   function updateSpmbCounts() {
     const studentList = spmbList.filter(isStudentApplicant);
     const parentList = spmbList;
-    const pendingProofs = spmbList.filter(s => s.buktiPembayaran && !(s.status || '').toLowerCase().includes('terverifikasi')).length;
-    const verifiedCount = studentList.filter(s => (s.status || '').toLowerCase().includes('terverifikasi')).length;
-    const passedCount = studentList.filter(s => (s.status || '').toLowerCase().includes('lulus') || (s.status || '').toLowerCase().includes('diterima')).length;
-    const pendingActionCount = pendingProofs > 0 ? pendingProofs : studentList.filter(s => !(s.status || '').toLowerCase().includes('terverifikasi') && !(s.status || '').toLowerCase().includes('lulus')).length;
+    const pendingProofs = spmbList.filter(s => s.buktiPembayaran && !isPaymentApproved(s)).length;
+    const verifiedCount = studentList.filter(s => isPaymentApproved(s)).length;
+    const passedCount = studentList.filter(s => isApplicantPassed(s)).length;
+    const pendingActionCount = pendingProofs > 0 ? pendingProofs : studentList.filter(s => !isPaymentApproved(s) && !isApplicantPassed(s)).length;
 
     const badgeSiswa = document.getElementById('badge-tab-siswa-count');
     if (badgeSiswa) badgeSiswa.textContent = studentList.length;
@@ -1029,11 +1048,11 @@
     // Filter Wali Status
     if (waliFilterStatus !== 'all') {
       if (waliFilterStatus === 'pending_proof') {
-        parents = parents.filter(s => s.buktiPembayaran && !(s.status || '').toLowerCase().includes('terverifikasi'));
+        parents = parents.filter(s => s.buktiPembayaran && !isPaymentApproved(s));
       } else if (waliFilterStatus === 'unpaid') {
-        parents = parents.filter(s => !s.buktiPembayaran && !(s.status || '').toLowerCase().includes('terverifikasi'));
+        parents = parents.filter(s => !s.buktiPembayaran && !isPaymentApproved(s));
       } else if (waliFilterStatus === 'approved') {
-        parents = parents.filter(s => (s.status || '').toLowerCase().includes('terverifikasi') || (s.regNumber && !s.regNumber.startsWith('PENDING-')));
+        parents = parents.filter(s => isPaymentApproved(s));
       }
     }
 
@@ -1056,11 +1075,14 @@
     }
 
     tableBody.innerHTML = parents.map(item => {
-      const isApproved = (item.status || '').toLowerCase().includes('terverifikasi') || (item.regNumber && !item.regNumber.startsWith('PENDING-'));
+      const isApproved = isPaymentApproved(item);
+      const isPassed = isApplicantPassed(item);
       const hasProof = !!item.buktiPembayaran;
 
       let statusBadge = '';
-      if (isApproved) {
+      if (isPassed) {
+        statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300">🎓 Lulus &amp; Lunas</span>`;
+      } else if (isApproved) {
         statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">✓ Lunas &amp; Disetujui</span>`;
       } else if (hasProof) {
         statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 animate-pulse">💳 Bukti Diupload</span>`;
@@ -1117,7 +1139,7 @@
             ` : `
               <span class="text-xs text-emerald-600 font-bold flex items-center gap-1 px-2 py-1 bg-emerald-50 rounded border border-emerald-200">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                Disetujui
+                ${isPassed ? 'Lulus' : 'Disetujui'}
               </span>
             `}
             <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus Akun Pendaftar">
@@ -1333,7 +1355,7 @@
     ];
 
     const rows = spmbList.map(s => {
-      const isApproved = (s.status || '').toLowerCase().includes('terverifikasi');
+      const isApproved = isPaymentApproved(s);
       return [
         s.regNumber,
         `"${(s.namaAyah || s.namaSiswa || '').replace(/"/g, '""')}"`,
@@ -1432,7 +1454,7 @@
     const approveDirectBox = document.getElementById('modal-app-approve-direct-box');
     const approveDirectBtn = document.getElementById('modal-app-approve-btn');
 
-    const isApproved = (item.status || '').toLowerCase().includes('terverifikasi');
+    const isApproved = isPaymentApproved(item);
     const hasProof = !!item.buktiPembayaran;
 
     if (proofStatusEl) {
@@ -1534,7 +1556,7 @@
       imgEl.src = item.buktiPembayaran || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150"><rect width="200" height="150" fill="%23f1f5f9"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2394a3b8" font-size="12">Belum ada foto bukti</text></svg>';
     }
 
-    const isApproved = (item.status || '').toLowerCase().includes('terverifikasi');
+    const isApproved = isPaymentApproved(item);
     if (approveBtn) {
       if (isApproved) {
         approveBtn.style.display = 'none';
@@ -1578,6 +1600,16 @@
     const item = spmbList.find(s => s.regNumber === regNumber || s.waAyah === regNumber);
     if (!item) {
       alert('Data pendaftar tidak ditemukan.');
+      return;
+    }
+
+    if (isApplicantPassed(item)) {
+      alert(`Calon siswa ${item.namaSiswa || item.namaAyah} (${item.regNumber}) sudah lulus seleksi dan status pembayarannya telah lunas.\nPersetujuan pembayaran tidak perlu diulang kembali agar status kelulusan tidak berubah.`);
+      return;
+    }
+
+    if (isPaymentApproved(item) && item.regNumber && item.regNumber.startsWith('SPMB-')) {
+      alert(`Pembayaran pendaftaran untuk ${item.namaAyah || item.namaSiswa} (${item.regNumber}) sudah berstatus Lunas / Disetujui.`);
       return;
     }
 

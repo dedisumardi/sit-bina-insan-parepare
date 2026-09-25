@@ -251,8 +251,20 @@ switch ($method) {
         }
 
         if (isset($input['status']) && !empty($input['status'])) {
-            $fields[] = "`status` = ?";
-            $params[] = trim($input['status']);
+            $newStatus = trim($input['status']);
+            // Proteksi: jangan kembalikan status ke pembayaran terverifikasi jika pendaftar sudah lulus seleksi / diterima
+            $stmtCur = $pdo->prepare(!empty($regNumber) ? "SELECT `status` FROM `spmb_applicants` WHERE `reg_number` = ? LIMIT 1" : "SELECT `status` FROM `spmb_applicants` WHERE `wa_ayah` = ? LIMIT 1");
+            $stmtCur->execute([!empty($regNumber) ? $regNumber : $targetWa]);
+            $curRow = $stmtCur->fetch();
+            $curStatus = strtolower($curRow['status'] ?? '');
+            $isPassed = (strpos($curStatus, 'lulus') !== false || strpos($curStatus, 'diterima') !== false);
+
+            if ($isPassed && strpos(strtolower($newStatus), 'terverifikasi') !== false) {
+                // Pertahankan status kelulusan, jangan overwrite
+            } else {
+                $fields[] = "`status` = ?";
+                $params[] = $newStatus;
+            }
         }
 
         if (isset($input['buktiPembayaran']) || isset($input['bukti_pembayaran'])) {
