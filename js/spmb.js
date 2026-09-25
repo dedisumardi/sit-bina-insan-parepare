@@ -570,7 +570,7 @@
       } else {
         resultWrap.innerHTML = `
           <div class="check-not-found">
-            <div style="font-size:2.5rem; margin-bottom:0.5rem;">🔍</div>
+            <div style="font-size:2.5rem; margin-bottom:0.5rem; color:var(--neutral-400);"><i class="fa-solid fa-magnifying-glass"></i></div>
             <h4 style="font-weight:800; color:var(--neutral-900); margin-bottom:0.4rem;">Data Tidak Ditemukan</h4>
             <p style="color:var(--neutral-600); font-size:0.9rem; max-width:480px; margin-inline:auto;">
               Nomor Registrasi atau NIK <strong>"${escapeHtml(query)}"</strong> belum terdaftar dalam sistem SPMB SIT Bina Insan Parepare.
@@ -1715,7 +1715,7 @@
           if (titleEl) titleEl.textContent = 'Pengisian Biodata Selesai! Menunggu Jadwal Tes & Wawancara';
           if (subtitleEl) subtitleEl.textContent = 'Alhamdulillah, data calon siswa dan data orang tua/wali telah berhasil disimpan lengkap di database resmi SIT Bina Insan Parepare. Tahap berikutnya adalah menunggu admin menetapkan tanggal jadwal tes calon murid baru & wawancara.';
           if (statusPill) {
-            statusPill.textContent = '⏳ Menunggu Input Admin';
+            statusPill.innerHTML = '<i class="fa-solid fa-clock mr-1"></i> Menunggu Input Admin';
             statusPill.style.color = '#b45309';
           }
           if (waitingView) waitingView.style.display = 'block';
@@ -2003,7 +2003,7 @@
       const viewBtn = document.getElementById('portal-rereg-kk-view-btn');
       if (previewBox && content) {
         if (file.type === 'application/pdf') {
-          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;">📄 Dokumen PDF: ${file.name}</div><div style="font-size:0.75rem; color:#64748b;">(${(file.size / 1024).toFixed(1)} KB)</div>`;
+          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;"><i class="fa-solid fa-file-pdf" style="color:#dc2626; margin-right:0.35rem;"></i>Dokumen PDF: ${file.name}</div><div style="font-size:0.75rem; color:#64748b;">(${(file.size / 1024).toFixed(1)} KB)</div>`;
         } else {
           content.innerHTML = `<img src="${currentKkBase64}" alt="Pratinjau KK" style="max-height:120px; max-width:100%; border-radius:8px; border:1px solid #cbd5e1; margin:0 auto; display:block;">`;
         }
@@ -2033,7 +2033,7 @@
       const viewBtn = document.getElementById('portal-rereg-akta-view-btn');
       if (previewBox && content) {
         if (file.type === 'application/pdf') {
-          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;">📄 Dokumen PDF: ${file.name}</div><div style="font-size:0.75rem; color:#64748b;">(${(file.size / 1024).toFixed(1)} KB)</div>`;
+          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;"><i class="fa-solid fa-file-pdf" style="color:#dc2626; margin-right:0.35rem;"></i>Dokumen PDF: ${file.name}</div><div style="font-size:0.75rem; color:#64748b;">(${(file.size / 1024).toFixed(1)} KB)</div>`;
         } else {
           content.innerHTML = `<img src="${currentAktaBase64}" alt="Pratinjau Akta" style="max-height:120px; max-width:100%; border-radius:8px; border:1px solid #cbd5e1; margin:0 auto; display:block;">`;
         }
@@ -2093,7 +2093,7 @@
       const viewBtn = document.getElementById('portal-rereg-kk-view-btn');
       if (previewBox && content) {
         if (record.berkasKk.startsWith('data:application/pdf')) {
-          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;">📄 Dokumen PDF Kartu Keluarga Tersimpan</div>`;
+          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;"><i class="fa-solid fa-file-pdf" style="color:#dc2626; margin-right:0.35rem;"></i>Dokumen PDF Kartu Keluarga Tersimpan</div>`;
         } else {
           content.innerHTML = `<img src="${record.berkasKk}" alt="Kartu Keluarga" style="max-height:120px; max-width:100%; border-radius:8px; border:1px solid #cbd5e1; margin:0 auto; display:block;">`;
         }
@@ -2109,7 +2109,7 @@
       const viewBtn = document.getElementById('portal-rereg-akta-view-btn');
       if (previewBox && content) {
         if (record.berkasAkta.startsWith('data:application/pdf')) {
-          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;">📄 Dokumen PDF Akta Kelahiran Tersimpan</div>`;
+          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;"><i class="fa-solid fa-file-pdf" style="color:#dc2626; margin-right:0.35rem;"></i>Dokumen PDF Akta Kelahiran Tersimpan</div>`;
         } else {
           content.innerHTML = `<img src="${record.berkasAkta}" alt="Akta Kelahiran" style="max-height:120px; max-width:100%; border-radius:8px; border:1px solid #cbd5e1; margin:0 auto; display:block;">`;
         }
@@ -2121,7 +2121,7 @@
     const hasBoth = Boolean(record.berkasKk && record.berkasAkta);
     if (hasBoth) {
       if (statusPill) {
-        statusPill.textContent = '✓ Berkas Lengkap';
+        statusPill.innerHTML = '<i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> Berkas Lengkap';
         statusPill.style.color = '#15803d';
       }
       if (savedCard) savedCard.style.display = 'block';
@@ -2138,7 +2138,7 @@
       }
     } else {
       if (statusPill) {
-        statusPill.textContent = '⏳ Menunggu Berkas';
+        statusPill.innerHTML = '<i class="fa-solid fa-clock mr-1 text-amber-600"></i> Menunggu Berkas';
         statusPill.style.color = '#b45309';
       }
       if (savedCard) savedCard.style.display = 'none';

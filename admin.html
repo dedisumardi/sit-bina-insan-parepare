@@ -746,11 +746,11 @@
                 <span class="font-bold text-emerald-950">Calon Siswa Dipilih</span>
               </div>
               <div class="flex items-center gap-2">
-                <button type="button" id="spmb-bulk-pass-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition">
-                  ✓ Luluskan Terpilih
+                <button type="button" id="spmb-bulk-pass-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition inline-flex items-center gap-1.5">
+                  <i class="fa-solid fa-check"></i> Luluskan Terpilih
                 </button>
-                <button type="button" id="spmb-bulk-delete-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold text-rose-700 bg-rose-100 hover:bg-rose-200 border border-rose-200 shadow-sm transition">
-                  🗑️ Hapus Terpilih
+                <button type="button" id="spmb-bulk-delete-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold text-rose-700 bg-rose-100 hover:bg-rose-200 border border-rose-200 shadow-sm transition inline-flex items-center gap-1.5">
+                  <i class="fa-solid fa-trash-can"></i> Hapus Terpilih
                 </button>
                 <button type="button" id="spmb-bulk-clear-btn" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200/60 transition">
                   Batal Pilih
@@ -814,9 +814,9 @@
               <div class="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
                 <select id="wali-filter-status" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-blue-500 focus:border-blue-500 bg-slate-50 flex-1 sm:flex-none min-w-[140px]">
                   <option value="all">Semua Status Bayar</option>
-                  <option value="pending_proof">💳 Bukti Diupload (Menunggu Approval)</option>
-                  <option value="unpaid">🔴 Belum Bayar / Belum Upload</option>
-                  <option value="approved">✓ Pembayaran Disetujui (Lunas)</option>
+                  <option value="pending_proof">Bukti Diupload (Menunggu Approval)</option>
+                  <option value="unpaid">Belum Bayar / Belum Upload</option>
+                  <option value="approved">Pembayaran Disetujui (Lunas)</option>
                 </select>
                 <input type="search" id="wali-search-input" class="text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-blue-500 focus:border-blue-500 w-full sm:w-48 lg:w-64" placeholder="Cari nama orang tua, WhatsApp...">
                 <button type="button" id="wali-export-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-blue-700 hover:bg-blue-800 shadow-sm transition duration-150">
@@ -924,19 +924,19 @@
                 <div>
                   <label for="set-active-wave-select" class="block text-xs font-bold text-slate-700 mb-1.5">Gelombang yang Sedang Aktif</label>
                   <select id="set-active-wave-select" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-semibold py-2.5 px-3.5 bg-white">
-                    <option value="wave1">🟢 Gelombang 1 (Aktif Buka)</option>
-                    <option value="wave2">🟢 Gelombang 2 (Aktif Buka)</option>
-                    <option value="wave3">🟢 Gelombang 3 (Aktif Buka)</option>
-                    <option value="closed">🔴 Tutup Semua Gelombang Sementara</option>
+                    <option value="wave1">Gelombang 1 (Aktif Buka)</option>
+                    <option value="wave2">Gelombang 2 (Aktif Buka)</option>
+                    <option value="wave3">Gelombang 3 (Aktif Buka)</option>
+                    <option value="closed">Tutup Semua Gelombang Sementara</option>
                   </select>
                   <p class="text-[11px] text-slate-400 mt-1">Menentukan pill yang disorot 'Sedang Buka'.</p>
                 </div>
                 <div>
                   <label for="set-wave-status" class="block text-xs font-bold text-slate-700 mb-1.5">Status Pendaftaran Global</label>
                   <select id="set-wave-status" class="w-full rounded-xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm font-semibold py-2.5 px-3.5 bg-white">
-                    <option value="open">🟢 Pendaftaran Dibuka (Online Aktif)</option>
-                    <option value="upcoming">🟡 Segera Dibuka</option>
-                    <option value="closed">🔴 Pendaftaran Ditutup Sementara</option>
+                    <option value="open">Pendaftaran Dibuka (Online Aktif)</option>
+                    <option value="upcoming">Segera Dibuka</option>
+                    <option value="closed">Pendaftaran Ditutup Sementara</option>
                   </select>
                   <p class="text-[11px] text-slate-400 mt-1">Status sistem SPMB publik.</p>
                 </div>
@@ -1001,7 +1001,7 @@
                     </div>
                     <div class="pt-2 border-t border-slate-100">
                       <button type="button" id="btn-toggle-wave-2" onclick="window.activateWaveQuick('wave2')" class="w-full py-2 px-3 rounded-lg text-xs font-bold bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5 transition cursor-pointer">
-                        ▶ Aktifkan Gelombang 2
+                        <i class="fa-solid fa-play text-[10px]"></i> Aktifkan Gelombang 2
                       </button>
                     </div>
                   </div>
@@ -1029,7 +1029,7 @@
                     </div>
                     <div class="pt-2 border-t border-slate-100">
                       <button type="button" id="btn-toggle-wave-3" onclick="window.activateWaveQuick('wave3')" class="w-full py-2 px-3 rounded-lg text-xs font-bold bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5 transition cursor-pointer">
-                        ▶ Aktifkan Gelombang 3
+                        <i class="fa-solid fa-play text-[10px]"></i> Aktifkan Gelombang 3
                       </button>
                     </div>
                   </div>
@@ -1268,7 +1268,7 @@
             <div id="modal-app-sertifikat-container" class="mt-2 pt-2 border-t border-amber-200/80" style="display:none;">
               <span class="text-[10px] font-bold uppercase text-amber-800 block mb-1">Berkas Sertifikat / Piagam:</span>
               <button type="button" id="modal-app-sertifikat-btn" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 transition">
-                <span>🏆</span> <span>Lihat Sertifikat Prestasi</span>
+                <i class="fa-solid fa-award text-amber-600"></i> <span>Lihat Sertifikat Prestasi</span>
               </button>
             </div>
           </div>
@@ -1278,7 +1278,7 @@
         <div class="p-3.5 bg-amber-50/70 rounded-xl border border-amber-200">
           <div class="flex items-center justify-between mb-2">
             <span class="text-amber-800 font-bold uppercase text-[11px] flex items-center gap-1.5">
-              <span>💳</span> Bukti Pembayaran Pendaftaran (Rp 150.000)
+              <i class="fa-solid fa-credit-card text-amber-700"></i> Bukti Pembayaran Pendaftaran (Rp 150.000)
             </span>
             <span id="modal-app-bayar-status" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Menunggu</span>
           </div>
@@ -1297,7 +1297,7 @@
         <div id="modal-app-rereg-box" class="p-3.5 bg-blue-50/70 rounded-xl border border-blue-200" style="display:none;">
           <div class="flex items-center justify-between mb-2">
             <span class="text-blue-900 font-bold uppercase text-[11px] flex items-center gap-1.5">
-              <span>📋</span> Berkas Pendaftaran Ulang Siswa
+              <i class="fa-solid fa-file-circle-check text-blue-700"></i> Berkas Pendaftaran Ulang Siswa
             </span>
             <span id="modal-app-rereg-status" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">Tahap Daftar Ulang</span>
           </div>

@@ -146,8 +146,8 @@
         </div>
         <div class="news-card-body">
           <div class="news-meta">
-            <span>📅 ${article.date}</span>
-            <span>⏱️ ${article.readTime}</span>
+            <span><i class="fa-solid fa-calendar-days mr-1"></i>${article.date}</span>
+            <span><i class="fa-solid fa-clock mr-1"></i>${article.readTime}</span>
           </div>
           <h3 class="news-card-title">${escapeHtml(article.title)}</h3>
           <p class="news-card-excerpt">${escapeHtml(article.excerpt)}</p>
@@ -204,8 +204,8 @@
         </div>
         <div class="news-card-body">
           <div class="news-meta">
-            <span>📅 ${article.date}</span>
-            <span>👤 ${article.author}</span>
+            <span><i class="fa-solid fa-calendar-days mr-1"></i>${article.date}</span>
+            <span><i class="fa-solid fa-user mr-1"></i>${article.author}</span>
           </div>
           <h3 class="news-card-title">${escapeHtml(article.title)}</h3>
           <p class="news-card-excerpt">${escapeHtml(article.excerpt)}</p>

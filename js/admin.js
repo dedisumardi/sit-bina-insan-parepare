@@ -34,7 +34,7 @@
         showToast('Pendaftar SPMB baru masuk secara real-time!');
       } else if (msg.type === 'spmb_proof_uploaded') {
         syncFromDatabase(true);
-        showToast('💳 Bukti pembayaran baru diunggah oleh calon wali siswa!');
+        showToast('Bukti pembayaran baru diunggah oleh calon wali siswa!');
       }
     };
   } catch (e) {
@@ -645,7 +645,7 @@
 
       if (viewSiswa) viewSiswa.style.display = 'block';
       if (viewWali) viewWali.style.display = 'none';
-      if (activeDesc) activeDesc.innerHTML = '<span>🎓 Menampilkan berkas calon siswa terverifikasi</span>';
+      if (activeDesc) activeDesc.innerHTML = '<span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-graduation-cap text-indigo-500"></i> Menampilkan berkas calon siswa terverifikasi</span>';
     } else {
       tabBtnWali?.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
       tabBtnWali?.classList.add('bg-slate-900', 'text-white', 'shadow-sm');
@@ -654,7 +654,7 @@
 
       if (viewSiswa) viewSiswa.style.display = 'none';
       if (viewWali) viewWali.style.display = 'block';
-      if (activeDesc) activeDesc.innerHTML = '<span>👥 Menampilkan akun pendaftar orang tua &amp; verifikasi transfer Rp 150.000</span>';
+      if (activeDesc) activeDesc.innerHTML = '<span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-users text-blue-500"></i> Menampilkan akun pendaftar orang tua &amp; verifikasi transfer Rp 150.000</span>';
     }
 
     renderSpmbTable();
@@ -1112,13 +1112,13 @@
 
       let statusBadge = '';
       if (isPassed) {
-        statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300">🎓 Lulus &amp; Lunas</span>`;
+        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300"><i class="fa-solid fa-graduation-cap text-amber-600"></i> Lulus &amp; Lunas</span>`;
       } else if (isApproved) {
-        statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">✓ Lunas &amp; Disetujui</span>`;
+        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200"><i class="fa-solid fa-circle-check text-emerald-600"></i> Lunas &amp; Disetujui</span>`;
       } else if (hasProof) {
-        statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 animate-pulse">💳 Bukti Diupload</span>`;
+        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 animate-pulse"><i class="fa-solid fa-credit-card text-amber-700"></i> Bukti Diupload</span>`;
       } else {
-        statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">🔴 Menunggu Bayar</span>`;
+        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200"><i class="fa-solid fa-clock text-rose-500"></i> Menunggu Bayar</span>`;
       }
 
       let proofThumb = '';
@@ -1490,10 +1490,10 @@
 
     if (proofStatusEl) {
       if (isApproved) {
-        proofStatusEl.textContent = '✓ Lunas (Rp 150.000)';
+        proofStatusEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Lunas (Rp 150.000)';
         proofStatusEl.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
       } else if (hasProof) {
-        proofStatusEl.textContent = '💳 Bukti Diupload';
+        proofStatusEl.innerHTML = '<i class="fa-solid fa-credit-card text-amber-700 mr-1"></i> Bukti Diupload';
         proofStatusEl.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800';
       } else {
         proofStatusEl.textContent = 'Menunggu Bukti Transfer';
@@ -1588,9 +1588,9 @@
         if (kkContainer) {
           if (item.berkasKk) {
             kkContainer.innerHTML = `
-              <span class="text-xs font-semibold text-emerald-700 flex items-center gap-1">✓ Terunggah</span>
-              <button type="button" class="px-2.5 py-1 rounded-md text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition" onclick="window.viewApplicantDoc('${item.regNumber}', 'kk')">
-                👁️ Lihat KK
+              <span class="text-xs font-semibold text-emerald-700 flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600"></i> Terunggah</span>
+              <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition" onclick="window.viewApplicantDoc('${item.regNumber}', 'kk')">
+                <i class="fa-solid fa-eye"></i> Lihat KK
               </button>
             `;
           } else {
@@ -1601,9 +1601,9 @@
         if (aktaContainer) {
           if (item.berkasAkta) {
             aktaContainer.innerHTML = `
-              <span class="text-xs font-semibold text-emerald-700 flex items-center gap-1">✓ Terunggah</span>
-              <button type="button" class="px-2.5 py-1 rounded-md text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition" onclick="window.viewApplicantDoc('${item.regNumber}', 'akta')">
-                👁️ Lihat Akta
+              <span class="text-xs font-semibold text-emerald-700 flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600"></i> Terunggah</span>
+              <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition" onclick="window.viewApplicantDoc('${item.regNumber}', 'akta')">
+                <i class="fa-solid fa-eye"></i> Lihat Akta
               </button>
             `;
           } else {
@@ -2087,7 +2087,7 @@
         badge.textContent = 'Sedang Aktif';
         if (btn) {
           btn.className = 'w-full py-2 px-3 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-sm flex items-center justify-center gap-1.5 cursor-default';
-          btn.innerHTML = '✓ Sedang Aktif (Buka)';
+          btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Sedang Aktif (Buka)';
         }
       } else {
         card.className = 'p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm space-y-3 transition-all opacity-85 hover:opacity-100';
@@ -2095,7 +2095,7 @@
         badge.textContent = 'Standby';
         if (btn) {
           btn.className = 'w-full py-2 px-3 rounded-lg text-xs font-bold bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 shadow-sm flex items-center justify-center gap-1.5 transition cursor-pointer';
-          btn.innerHTML = `▶ Aktifkan ${label}`;
+          btn.innerHTML = `<i class="fa-solid fa-play text-[10px]"></i> Aktifkan ${label}`;
         }
       }
     });
@@ -2433,9 +2433,9 @@
       if (dbTpText) dbTpText.textContent = `Tahun Pelajaran ${academicYear}`;
 
       if (isQuick) {
-        showToast(`✅ ${activeDisplayName} berhasil diaktifkan & tersimpan di Database!`);
+        showToast(`${activeDisplayName} berhasil diaktifkan & tersimpan di Database!`);
       } else {
-        showToast('✅ Seluruh data pengaturan SPMB & sekolah berhasil disimpan ke Database!');
+        showToast('Seluruh data pengaturan SPMB & sekolah berhasil disimpan ke Database!');
       }
     }
 
