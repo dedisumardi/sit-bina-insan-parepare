@@ -1049,6 +1049,12 @@
               window.closeSpmbModal();
               window.location.hash = '#spmb';
               renderParentPortal();
+            } else if (existing) {
+              const parentData = { nama: existing.namaAyah || 'Orang Tua Siswa', wa: existing.waAyah || rawWa };
+              localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
+              window.closeSpmbModal();
+              window.location.hash = '#spmb';
+              renderParentPortal();
             } else {
               if (errEl) {
                 errEl.innerHTML = `Nomor WhatsApp <strong>${rawWa}</strong> belum terdaftar. Silakan klik tab <strong>Daftar Baru</strong> untuk memulai pendaftaran.`;
@@ -1057,7 +1063,13 @@
             }
           })
           .catch(() => {
-            if (errEl) {
+            if (existing) {
+              const parentData = { nama: existing.namaAyah || 'Orang Tua Siswa', wa: existing.waAyah || rawWa };
+              localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
+              window.closeSpmbModal();
+              window.location.hash = '#spmb';
+              renderParentPortal();
+            } else if (errEl) {
               errEl.innerHTML = `Nomor WhatsApp <strong>${rawWa}</strong> belum terdaftar. Silakan pilih tab <strong>Daftar Baru</strong>.`;
               errEl.style.display = 'block';
             }
@@ -2476,9 +2488,27 @@
         </div>
       `;
       document.getElementById('quick-open-parent-portal')?.addEventListener('click', () => {
-        cacheSetItem(PARENT_SESSION_KEY, JSON.stringify({ nama: found.namaAyah || '', wa: found.waAyah || '' }));
-        renderParentPortal();
-        refreshParentFromDatabase();
+        const rawSession = localStorage.getItem(PARENT_SESSION_KEY);
+        let session = null;
+        try { session = JSON.parse(rawSession); } catch (_) {}
+
+        const cleanSessionWa = (session?.wa || '').replace(/\D/g, '');
+        const cleanFoundWa = (found.waAyah || '').replace(/\D/g, '');
+        const isCurrentSession = Boolean(cleanSessionWa && cleanFoundWa && (cleanSessionWa === cleanFoundWa || cleanSessionWa.endsWith(cleanFoundWa.slice(-9)) || cleanFoundWa.endsWith(cleanSessionWa.slice(-9))));
+
+        if (isCurrentSession) {
+          window.location.hash = '#spmb';
+          renderParentPortal();
+          refreshParentFromDatabase();
+        } else {
+          // Jika belum login atau sudah logout, wajibkan login kembali menggunakan nomor WhatsApp
+          localStorage.removeItem(PARENT_SESSION_KEY);
+          window.openSpmbModal('login');
+          const subtitleEl = document.getElementById('spmb-modal-subtitle');
+          if (subtitleEl && found.regNumber) {
+            subtitleEl.innerHTML = `Masukkan Nomor WhatsApp orang tua untuk mengakses portal <strong>${escapeHtml(found.regNumber)}</strong>`;
+          }
+        }
       });
     } else {
       resBox.innerHTML = `
