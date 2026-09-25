@@ -1217,17 +1217,88 @@
     if (submit) submit.textContent = 'Isi Data Selanjutnya';
   }
 
-  window.submitStudentBiodata = async function (event) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    if (!form.reportValidity()) return;
+  window.switchBiodataSubstep = function (target) {
+    const studentSec = document.getElementById('portal-section-student-bio');
+    const parentSec = document.getElementById('portal-state-parents');
+    const tabStudent = document.getElementById('tab-substep-student');
+    const tabParent = document.getElementById('tab-substep-parent');
+    const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim() ||
+      document.getElementById('portal-sched-reg')?.textContent?.trim();
+
+    if (target === 'parent') {
+      if (studentSec) studentSec.style.display = 'none';
+      if (parentSec) parentSec.style.display = 'block';
+      if (tabStudent) {
+        tabStudent.classList.remove('active');
+        tabStudent.setAttribute('aria-selected', 'false');
+      }
+      if (tabParent) {
+        tabParent.classList.add('active');
+        tabParent.setAttribute('aria-selected', 'true');
+      }
+      if (regNumber) {
+        try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + ':parents'); } catch (_) {}
+      }
+    } else {
+      if (studentSec) studentSec.style.display = 'block';
+      if (parentSec) parentSec.style.display = 'none';
+      if (tabStudent) {
+        tabStudent.classList.add('active');
+        tabStudent.setAttribute('aria-selected', 'true');
+      }
+      if (tabParent) {
+        tabParent.classList.remove('active');
+        tabParent.setAttribute('aria-selected', 'false');
+      }
+      if (regNumber) {
+        try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber); } catch (_) {}
+      }
+    }
+    requestAnimationFrame(() => {
+      document.getElementById('portal-state-biodata')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  window.nextToParentData = async function () {
+    const form = document.getElementById('portal-student-bio-form');
+    if (form && !form.reportValidity()) return;
+
+    let records = [];
+    let session = null;
+    try {
+      records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      session = JSON.parse(localStorage.getItem(PARENT_SESSION_KEY) || 'null');
+    } catch (_) {}
+    const cleanWa = String(session?.wa || '').replace(/\D/g, '');
+    const record = Array.isArray(records) ? records.find(item => {
+      const itemWa = String(item.waAyah || '').replace(/\D/g, '');
+      return itemWa === cleanWa || (cleanWa.length >= 9 && itemWa.endsWith(cleanWa.slice(-9)));
+    }) : null;
+
+    const isStudentSaved = Boolean(record?.biodataUpdatedAt);
+    const isDirty = form?.dataset.dirty === '1';
+
+    if (!isStudentSaved || isDirty) {
+      await window.submitStudentBiodata({ preventDefault: () => {}, currentTarget: form }, true);
+    } else {
+      window.switchBiodataSubstep('parent');
+    }
+  };
+
+  window.submitStudentBiodata = async function (event, advanceToParent = false) {
+    if (event?.preventDefault) event.preventDefault();
+    const form = event?.currentTarget || document.getElementById('portal-student-bio-form');
+    if (form && !form.reportValidity()) return false;
     const status = document.getElementById('portal-bio-status');
     const submit = document.getElementById('portal-bio-submit');
+    const nextBtn = document.getElementById('portal-bio-next-btn');
     let session;
     if (!window.StudentRegions?.isComplete()) {
-      status.textContent = 'Pilih provinsi, kabupaten/kota, kecamatan, dan desa/kelurahan terlebih dahulu.';
-      status.className = 'portal-bio-status is-error';
-      return;
+      if (status) {
+        status.textContent = 'Pilih provinsi, kabupaten/kota, kecamatan, dan desa/kelurahan terlebih dahulu.';
+        status.className = 'portal-bio-status is-error';
+      }
+      return false;
     }
     let records;
     try {
@@ -1244,7 +1315,7 @@
         status.textContent = 'Kode pendaftaran resmi belum tersedia. Tunggu persetujuan admin.';
         status.className = 'portal-bio-status is-error';
       }
-      return;
+      return false;
     }
     const value = id => document.getElementById(id)?.value.trim() || '';
     const payload = {
@@ -1264,9 +1335,10 @@
     };
     for (const field of ["tempatTinggal","modaTransportasi","anakKe","tinggiBadan","beratBadan","hobi","citaCita","jumlahSaudaraKandung","jarakRumahSekolah","saudaraDiSekolah"]) {
       payload[field] = document.getElementById('bio-' + field)?.value.trim()
-        ?? form.querySelector('input[name="bio-' + field + '"]:checked')?.value ?? '';
+        ?? form?.querySelector('input[name="bio-' + field + '"]:checked')?.value ?? '';
     }
     if (submit) submit.disabled = true;
+    if (nextBtn) nextBtn.disabled = true;
     if (status) {
       status.textContent = 'Menyimpan biodata ke database...';
       status.className = 'portal-bio-status';
@@ -1280,23 +1352,26 @@
       const index = records.findIndex(item => item.id === result.data.id || item.regNumber === result.data.regNumber);
       if (index === -1) records.unshift(result.data); else records[index] = result.data;
       cacheSetItem(STORAGE_KEY, JSON.stringify(records));
-      form.dataset.dirty = '0';
+      if (form) form.dataset.dirty = '0';
       populateStudentBioForm(result.data);
       if (status) {
         status.textContent = '✓ Biodata siswa berhasil disimpan ke database.';
         status.className = 'portal-bio-status is-success';
       }
       renderParentPortal();
-      requestAnimationFrame(() => {
-        document.getElementById('portal-state-parents')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
+      if (advanceToParent) {
+        window.switchBiodataSubstep('parent');
+      }
+      return true;
     } catch (error) {
       if (status) {
         status.textContent = error.message || 'Biodata gagal disimpan. Silakan coba kembali.';
         status.className = 'portal-bio-status is-error';
       }
+      return false;
     } finally {
       if (submit) submit.disabled = false;
+      if (nextBtn) nextBtn.disabled = false;
     }
   };
 
@@ -1306,9 +1381,7 @@
     if (!regNumber) return;
     try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber); } catch (_) {}
     renderParentPortal();
-    requestAnimationFrame(() => {
-      document.getElementById('portal-state-biodata')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    window.switchBiodataSubstep('student');
   };
 
   window.openParentBiodata = function () {
@@ -1317,9 +1390,7 @@
     if (!regNumber) return;
     try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + ':parents'); } catch (_) {}
     renderParentPortal();
-    requestAnimationFrame(() => {
-      document.getElementById('portal-state-parents')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    window.switchBiodataSubstep('parent');
   };
 
   window.openScheduleStage = function (passedReg) {
@@ -1648,7 +1719,28 @@
       statePending.style.display = 'none';
       stateApproved.style.display = (biodataViewOpen || scheduleViewOpen || resultsViewOpen || reregistrationViewOpen) ? 'none' : 'block';
       if (stateBiodata) stateBiodata.style.display = biodataViewOpen ? 'block' : 'none';
-      if (stateParents) stateParents.style.display = 'block';
+      const studentSec = document.getElementById('portal-section-student-bio');
+      const tabStudent = document.getElementById('tab-substep-student');
+      const tabParent = document.getElementById('tab-substep-parent');
+      if (biodataViewOpen) {
+        if (parentsViewOpen) {
+          if (studentSec) studentSec.style.display = 'none';
+          if (stateParents) stateParents.style.display = 'block';
+          tabStudent?.classList.remove('active');
+          tabStudent?.setAttribute('aria-selected', 'false');
+          tabParent?.classList.add('active');
+          tabParent?.setAttribute('aria-selected', 'true');
+        } else {
+          if (studentSec) studentSec.style.display = 'block';
+          if (stateParents) stateParents.style.display = 'none';
+          tabStudent?.classList.add('active');
+          tabStudent?.setAttribute('aria-selected', 'true');
+          tabParent?.classList.remove('active');
+          tabParent?.setAttribute('aria-selected', 'false');
+        }
+        tabStudent?.classList.toggle('is-complete', Boolean(record.biodataUpdatedAt));
+        tabParent?.classList.toggle('is-complete', Boolean(record.parentDataUpdatedAt));
+      }
       if (stateSchedule) stateSchedule.style.display = scheduleViewOpen ? 'block' : 'none';
       if (stateResults) {
         stateResults.style.display = resultsViewOpen ? 'block' : 'none';

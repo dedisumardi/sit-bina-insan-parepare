@@ -2120,20 +2120,39 @@
               <span aria-hidden="true">←</span> Kembali ke Konfirmasi Pembayaran
             </button>
 
-            <div class="portal-bio-heading" style="margin-bottom: 2rem;">
+            <div class="portal-bio-heading" style="margin-bottom: 1.5rem;">
               <h3 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 0.35rem;">
                 Langkah 3: Biodata Siswa dan Orang Tua/Wali
               </h3>
               <p style="color: #64748b; font-size: 0.9rem; line-height: 1.6;">
-                Lengkapi <strong>Bagian 1 (Biodata Calon Siswa)</strong> dan <strong>Bagian 2 (Data Orang Tua dan Wali)</strong> di bawah ini sesuai Kartu Keluarga dan dokumen resmi. Data akan tersimpan langsung ke database resmi sekolah.
+                Lengkapi <strong>Bagian 1 (Biodata Calon Siswa)</strong> kemudian lanjutkan ke <strong>Bagian 2 (Data Orang Tua dan Wali)</strong>.
               </p>
             </div>
 
+            <!-- TABS SUB-LANGKAH 3 -->
+            <div class="bio-substep-tabs" role="tablist" aria-label="Tahap Pengisian Biodata">
+              <button type="button" id="tab-substep-student" class="bio-substep-btn active" role="tab" aria-selected="true" onclick="window.switchBiodataSubstep('student')">
+                <span class="substep-num">1</span>
+                <span>Biodata Calon Siswa</span>
+                <i class="fa-solid fa-circle-check substep-check" aria-hidden="true"></i>
+              </button>
+              <button type="button" id="tab-substep-parent" class="bio-substep-btn" role="tab" aria-selected="false" onclick="window.switchBiodataSubstep('parent')">
+                <span class="substep-num">2</span>
+                <span>Data Orang Tua &amp; Wali</span>
+                <i class="fa-solid fa-circle-check substep-check" aria-hidden="true"></i>
+              </button>
+            </div>
+
             <!-- BAGIAN 1: BIODATA CALON SISWA -->
-            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 1.25rem; padding: 1.75rem; margin-bottom: 2.25rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
-              <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1rem; padding-bottom: 0.65rem; border-bottom: 2px solid #e2e8f0;">
-                <span style="background: #059669; color: #ffffff; font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.65rem; border-radius: 9999px; letter-spacing: 0.05em;">BAGIAN 1</span>
-                <h4 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0;">Biodata Calon Siswa</h4>
+            <div id="portal-section-student-bio" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 1.25rem; padding: 1.75rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.65rem; margin-bottom: 1rem; padding-bottom: 0.65rem; border-bottom: 2px solid #e2e8f0; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.65rem;">
+                  <span style="background: #059669; color: #ffffff; font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.65rem; border-radius: 9999px; letter-spacing: 0.05em;">BAGIAN 1</span>
+                  <h4 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0;">Biodata Calon Siswa</h4>
+                </div>
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.nextToParentData()" style="font-size: 0.8rem; font-weight: 700; padding: 0.35rem 0.75rem;">
+                  Lanjut ke Data Orang Tua <span aria-hidden="true">→</span>
+                </button>
               </div>
               <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1.5rem;">
                 Isi data calon siswa sesuai Kartu Keluarga dan dokumen resmi.
@@ -2281,18 +2300,28 @@
                   </fieldset>
                 </div>
 
-                <div class="portal-bio-actions">
+                <div class="portal-bio-actions" style="display: flex; gap: 0.75rem; justify-content: flex-end; align-items: center; flex-wrap: wrap;">
                   <div id="portal-bio-status" class="portal-bio-status" aria-live="polite">Pastikan seluruh data wajib sudah benar.</div>
-                  <button type="submit" id="portal-bio-submit" class="btn btn-primary">Simpan Data Siswa</button>
+                  <button type="submit" id="portal-bio-submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan Data Siswa
+                  </button>
+                  <button type="button" id="portal-bio-next-btn" class="btn btn-success" onclick="window.nextToParentData()" style="display: inline-flex; align-items: center; gap: 0.4rem; background: #059669; color: #fff; font-weight: 700; border: none; padding: 0.65rem 1.25rem; border-radius: 0.5rem; cursor: pointer;">
+                    Isi Data Selanjutnya (Data Orang Tua) <span aria-hidden="true">→</span>
+                  </button>
                 </div>
               </form>
             </div>
 
             <!-- BAGIAN 2: DATA ORANG TUA DAN WALI -->
-            <div id="portal-state-parents" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 1.25rem; padding: 1.75rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
-              <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1rem; padding-bottom: 0.65rem; border-bottom: 2px solid #e2e8f0;">
-                <span style="background: #059669; color: #ffffff; font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.65rem; border-radius: 9999px; letter-spacing: 0.05em;">BAGIAN 2</span>
-                <h4 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0;">Data Orang Tua dan Wali</h4>
+            <div id="portal-state-parents" style="display: none; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 1.25rem; padding: 1.75rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.65rem; margin-bottom: 1rem; padding-bottom: 0.65rem; border-bottom: 2px solid #e2e8f0; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.65rem;">
+                  <span style="background: #059669; color: #ffffff; font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.65rem; border-radius: 9999px; letter-spacing: 0.05em;">BAGIAN 2</span>
+                  <h4 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0;">Data Orang Tua dan Wali</h4>
+                </div>
+                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="window.switchBiodataSubstep('student')" style="font-size: 0.8rem; font-weight: 700; padding: 0.35rem 0.75rem;">
+                  <span aria-hidden="true">←</span> Kembali ke Data Siswa
+                </button>
               </div>
               <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1.5rem;">
                 Semua isian ayah dan ibu wajib diisi. Pilih Ya pada bagian wali untuk melengkapi data wali.
@@ -2300,9 +2329,14 @@
 
               <form id="portal-parent-data-form" class="portal-bio-form">
                 <div id="portal-parent-fields"></div>
-                <div class="portal-bio-actions">
+                <div class="portal-bio-actions" style="display: flex; gap: 0.75rem; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-outline-secondary" onclick="window.switchBiodataSubstep('student')">
+                    <span aria-hidden="true">←</span> Kembali ke Data Siswa
+                  </button>
                   <div id="portal-parent-data-status" class="portal-bio-status" aria-live="polite">Semua isian wajib dilengkapi.</div>
-                  <button type="submit" id="portal-parent-data-submit" class="btn btn-primary">Simpan Data Orang Tua dan Wali</button>
+                  <button type="submit" id="portal-parent-data-submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan Data Orang Tua dan Wali
+                  </button>
                 </div>
               </form>
             </div>

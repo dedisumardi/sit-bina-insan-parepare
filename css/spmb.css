@@ -1849,6 +1849,78 @@ ol.portal-flow-steps.portal-flow-seven:not(.portal-flow-six) {
 .portal-bio-status.is-success { color: #047857; }
 .portal-bio-status.is-error { color: #b91c1c; }
 
+/* Sub-step Tabs inside Langkah 3 */
+.bio-substep-tabs {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1.25rem auto 1.5rem;
+  max-width: 820px;
+  background: #f1f5f9;
+  padding: 0.35rem;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+}
+
+.bio-substep-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bio-substep-btn:hover {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.bio-substep-btn.active {
+  background: #ffffff;
+  color: #047857;
+  font-weight: 750;
+  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.08);
+}
+
+.bio-substep-btn .substep-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 800;
+  transition: all 0.2s ease;
+}
+
+.bio-substep-btn.active .substep-num {
+  background: #059669;
+  color: #ffffff;
+}
+
+.bio-substep-btn .substep-check {
+  display: none;
+  color: #059669;
+  font-size: 0.85rem;
+  margin-left: 0.25rem;
+}
+
+.bio-substep-btn.is-complete .substep-check {
+  display: inline-block;
+}
+
 @media (max-width: 640px) {
   .portal-approved-actions { align-items: stretch; flex-direction: column; }
   .portal-approved-actions .btn { width: 100%; }
