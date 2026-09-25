@@ -1803,14 +1803,15 @@
             </div>
           </div>
 
-          <!-- Portal 6-Step Flow Indicator -->
-          <div class="portal-flow-steps portal-flow-six" aria-label="Tahapan pendaftaran">
+          <!-- Portal 7-Step Flow Indicator -->
+          <div class="portal-flow-steps portal-flow-seven" aria-label="Tahapan pendaftaran">
             <div class="portal-flow-step" id="flow-step-1"><div class="num-circle">1</div><div><span class="flow-step-label">Langkah 1</span>Pembayaran</div></div>
             <div class="portal-flow-step" id="flow-step-2"><div class="num-circle">2</div><div><span class="flow-step-label">Langkah 2</span>Verifikasi Pembayaran</div></div>
             <div class="portal-flow-step" id="flow-step-3"><div class="num-circle">3</div><div><span class="flow-step-label">Langkah 3</span>Biodata Siswa</div></div>
             <div class="portal-flow-step" id="flow-step-4"><div class="num-circle">4</div><div><span class="flow-step-label">Langkah 4</span>Orang Tua &amp; Wali</div></div>
             <div class="portal-flow-step" id="flow-step-5"><div class="num-circle">5</div><div><span class="flow-step-label">Langkah 5</span>Jadwal Tes &amp; Wawancara</div></div>
             <div class="portal-flow-step" id="flow-step-6"><div class="num-circle">6</div><div><span class="flow-step-label">Langkah 6</span>Pengumuman Hasil</div></div>
+            <div class="portal-flow-step" id="flow-step-7"><div class="num-circle">7</div><div><span class="flow-step-label">Langkah 7</span>Daftar Ulang</div></div>
           </div>
 
           <div id="portal-step-navigation" class="portal-step-navigation">
@@ -2323,7 +2324,135 @@
                 </div>
                 <h3 id="portal-results-title">Menunggu Pengumuman</h3>
                 <p id="portal-results-message" class="portal-schedule-subheading" style="margin-top:1rem;">Hasil tes dan wawancara belum diumumkan oleh panitia.</p>
+                <div id="portal-results-reregister-action" style="display:none; margin-top:1.5rem; padding-top:1.25rem; border-top:1px dashed #86efac; text-align:center;">
+                  <button type="button" class="btn btn-primary" onclick="window.openReRegistrationStage()" style="padding:0.85rem 2rem; font-weight:800; font-size:1rem; border-radius:var(--radius-lg); box-shadow:0 4px 14px rgba(22, 163, 74, 0.35);">
+                    📝 Lanjut ke Pendaftaran Ulang (Upload KK &amp; Akte) →
+                  </button>
+                </div>
               </div>
+            </section>
+          </div>
+
+          <!-- STATE 7: PENDAFTARAN ULANG (UPLOAD BERKAS KK & AKTA KELAHIRAN SISWA) -->
+          <div id="portal-state-reregistration" class="portal-schedule-page" style="display:none;">
+            <div class="portal-nav-bar">
+              <button type="button" class="portal-bio-back" onclick="window.openResultsStage()">← Kembali ke Pengumuman Hasil</button>
+            </div>
+            <section class="portal-schedule-card" aria-labelledby="portal-rereg-heading">
+              <span class="badge-tag" style="background:#dcfce7; color:#15803d; font-weight:800; font-size:0.85rem;">
+                LANGKAH 7: PENDAFTARAN ULANG SISWA BARU
+              </span>
+              <h2 id="portal-rereg-heading" class="portal-schedule-heading">
+                Pendaftaran Ulang &amp; Unggah Berkas Persyaratan
+              </h2>
+              <p class="portal-schedule-subheading">
+                Selamat atas kelulusan ananda! Silakan lengkapi proses pendaftaran ulang dengan mengunggah berkas resmi <strong>Kartu Keluarga (KK)</strong> dan <strong>Akta Kelahiran Siswa</strong>.
+              </p>
+
+              <div class="portal-sched-meta-strip">
+                <div class="portal-sched-meta-item"><span class="meta-label">No. Registrasi</span><span id="portal-rereg-reg" class="meta-value">-</span></div>
+                <div class="portal-sched-meta-item"><span class="meta-label">Nama Calon Siswa</span><span id="portal-rereg-name" class="meta-value">-</span></div>
+                <div class="portal-sched-meta-item"><span class="meta-label">Jenjang</span><span id="portal-rereg-level" class="meta-value">-</span></div>
+                <div class="portal-sched-meta-item"><span class="meta-label">Status Daftar Ulang</span><span id="portal-rereg-status-pill" class="meta-value" style="color:#b45309;">⏳ Menunggu Berkas</span></div>
+              </div>
+
+              <!-- Re-registration Status Card when already uploaded -->
+              <div id="portal-rereg-saved-card" style="display:none; background:#f0fdf4; border:2px solid #86efac; border-radius:var(--radius-xl); padding:1.5rem; margin-bottom:1.5rem; text-align:center;">
+                <div style="font-size:2.2rem; margin-bottom:0.5rem;">🎉</div>
+                <h3 style="font-size:1.25rem; font-weight:800; color:#14532d; margin-bottom:0.5rem;">Alhamdulillah, Berkas Pendaftaran Ulang Lengkap!</h3>
+                <p style="color:#166534; font-size:0.9rem; max-width:600px; margin:0 auto 0.75rem;">
+                  Berkas Kartu Keluarga (KK) dan Akta Kelahiran siswa telah tersimpan di database panitia SPMB.
+                </p>
+                <div id="portal-rereg-saved-time" style="font-size:0.8rem; color:#15803d; font-weight:700;"></div>
+              </div>
+
+              <!-- Upload Form Grid -->
+              <form id="portal-rereg-form" onsubmit="event.preventDefault(); window.submitReRegistration();" style="max-width:840px; margin:0 auto;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-bottom:1.75rem;">
+                  
+                  <!-- Box 1: Kartu Keluarga (KK) -->
+                  <div style="background:#ffffff; border:1.5px solid var(--neutral-200); border-radius:var(--radius-xl); padding:1.5rem; display:flex; flex-direction:column; justify-content:space-between;">
+                    <div>
+                      <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                        <span style="font-size:1.35rem;">👨‍👩‍👧‍👦</span>
+                        <h3 style="font-size:1.05rem; font-weight:800; color:var(--neutral-900); margin:0;">Kartu Keluarga (KK)</h3>
+                        <span style="color:#dc2626; font-weight:800;">*</span>
+                      </div>
+                      <p style="font-size:0.825rem; color:var(--neutral-500); margin-bottom:1rem; line-height:1.5;">
+                        Unggah foto atau scan KK yang memuat nama calon siswa. Format: JPG, PNG, WEBP, atau PDF (Maks. 2,5 MB).
+                      </p>
+
+                      <div class="portal-dropzone" id="portal-rereg-kk-dropzone" onclick="document.getElementById('portal-rereg-kk-file').click()" style="padding:1.5rem 1rem; text-align:center; cursor:pointer;">
+                        <input type="file" id="portal-rereg-kk-file" accept="image/png, image/jpeg, image/jpg, image/webp, application/pdf" onchange="window.handleKkFileSelect(event)" style="display:none;">
+                        <div style="font-size:2rem; margin-bottom:0.25rem;">📄</div>
+                        <div style="font-size:0.9rem; font-weight:700; color:var(--primary-800);">Pilih File Kartu Keluarga</div>
+                        <div style="font-size:0.75rem; color:var(--neutral-400); margin-top:0.25rem;">Klik untuk telusuri file</div>
+                      </div>
+
+                      <div id="portal-rereg-kk-preview-box" style="display:none; margin-top:1rem; padding:0.75rem; background:var(--neutral-50); border:1px solid var(--neutral-200); border-radius:var(--radius-lg); text-align:center;">
+                        <div id="portal-rereg-kk-preview-content" style="margin-bottom:0.5rem;"></div>
+                        <div style="display:flex; gap:0.5rem; justify-content:center; align-items:center; flex-wrap:wrap;">
+                          <button type="button" class="btn btn-outline-primary btn-sm" onclick="document.getElementById('portal-rereg-kk-file').click()" style="font-size:0.75rem; padding:0.35rem 0.75rem;">
+                            Ganti Berkas KK
+                          </button>
+                          <button type="button" id="portal-rereg-kk-view-btn" class="btn btn-sm" onclick="window.viewCurrentKk()" style="display:none; font-size:0.75rem; padding:0.35rem 0.75rem; background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe;">
+                            👁️ Lihat
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Box 2: Akta Kelahiran Siswa -->
+                  <div style="background:#ffffff; border:1.5px solid var(--neutral-200); border-radius:var(--radius-xl); padding:1.5rem; display:flex; flex-direction:column; justify-content:space-between;">
+                    <div>
+                      <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                        <span style="font-size:1.35rem;">📜</span>
+                        <h3 style="font-size:1.05rem; font-weight:800; color:var(--neutral-900); margin:0;">Akta Kelahiran Siswa</h3>
+                        <span style="color:#dc2626; font-weight:800;">*</span>
+                      </div>
+                      <p style="font-size:0.825rem; color:var(--neutral-500); margin-bottom:1rem; line-height:1.5;">
+                        Unggah foto atau scan Akta Kelahiran resmi calon siswa. Format: JPG, PNG, WEBP, atau PDF (Maks. 2,5 MB).
+                      </p>
+
+                      <div class="portal-dropzone" id="portal-rereg-akta-dropzone" onclick="document.getElementById('portal-rereg-akta-file').click()" style="padding:1.5rem 1rem; text-align:center; cursor:pointer;">
+                        <input type="file" id="portal-rereg-akta-file" accept="image/png, image/jpeg, image/jpg, image/webp, application/pdf" onchange="window.handleAktaFileSelect(event)" style="display:none;">
+                        <div style="font-size:2rem; margin-bottom:0.25rem;">📄</div>
+                        <div style="font-size:0.9rem; font-weight:700; color:var(--primary-800);">Pilih File Akta Kelahiran</div>
+                        <div style="font-size:0.75rem; color:var(--neutral-400); margin-top:0.25rem;">Klik untuk telusuri file</div>
+                      </div>
+
+                      <div id="portal-rereg-akta-preview-box" style="display:none; margin-top:1rem; padding:0.75rem; background:var(--neutral-50); border:1px solid var(--neutral-200); border-radius:var(--radius-lg); text-align:center;">
+                        <div id="portal-rereg-akta-preview-content" style="margin-bottom:0.5rem;"></div>
+                        <div style="display:flex; gap:0.5rem; justify-content:center; align-items:center; flex-wrap:wrap;">
+                          <button type="button" class="btn btn-outline-primary btn-sm" onclick="document.getElementById('portal-rereg-akta-file').click()" style="font-size:0.75rem; padding:0.35rem 0.75rem;">
+                            Ganti Berkas Akta
+                          </button>
+                          <button type="button" id="portal-rereg-akta-view-btn" class="btn btn-sm" onclick="window.viewCurrentAkta()" style="display:none; font-size:0.75rem; padding:0.35rem 0.75rem; background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe;">
+                            👁️ Lihat
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Submit Action & Status -->
+                <div style="text-align:center; padding:1.25rem; background:var(--neutral-50); border-radius:var(--radius-xl); border:1px solid var(--neutral-200);">
+                  <div id="portal-rereg-status" style="font-size:0.875rem; font-weight:600; color:var(--neutral-600); margin-bottom:0.75rem;" aria-live="polite">
+                    Kedua berkas (Kartu Keluarga dan Akta Kelahiran) wajib diunggah untuk menyelesaikan pendaftaran ulang.
+                  </div>
+                  <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+                    <button type="submit" id="btn-submit-reregistration" class="btn btn-primary" style="padding:0.75rem 2rem; font-weight:800; font-size:0.95rem; border-radius:var(--radius-lg); box-shadow:0 4px 14px rgba(22, 163, 74, 0.35);">
+                      ✓ Simpan &amp; Kirim Berkas Daftar Ulang
+                    </button>
+                    <a id="portal-rereg-wa-btn" href="https://wa.me/6285190610569" target="_blank" rel="noopener" class="btn btn-accent" style="padding:0.75rem 1.5rem; font-weight:800; font-size:0.95rem; border-radius:var(--radius-lg);">
+                      💬 Konfirmasi ke WhatsApp Panitia
+                    </a>
+                  </div>
+                </div>
+              </form>
             </section>
           </div>
         </div>

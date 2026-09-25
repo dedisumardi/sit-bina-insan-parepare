@@ -1292,6 +1292,31 @@
           </div>
         </div>
 
+        <!-- Berkas Pendaftaran Ulang Siswa (KK & Akta Kelahiran) -->
+        <div id="modal-app-rereg-box" class="p-3.5 bg-blue-50/70 rounded-xl border border-blue-200" style="display:none;">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-blue-900 font-bold uppercase text-[11px] flex items-center gap-1.5">
+              <span>📋</span> Berkas Pendaftaran Ulang Siswa
+            </span>
+            <span id="modal-app-rereg-status" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">Tahap Daftar Ulang</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="p-2.5 bg-white rounded-lg border border-blue-100">
+              <span class="text-slate-500 block text-[10px] font-bold uppercase mb-1">Kartu Keluarga (KK)</span>
+              <div id="modal-app-kk-container" class="flex items-center justify-between">
+                <span class="text-slate-400 italic text-xs">Belum diunggah</span>
+              </div>
+            </div>
+            <div class="p-2.5 bg-white rounded-lg border border-blue-100">
+              <span class="text-slate-500 block text-[10px] font-bold uppercase mb-1">Akta Kelahiran Siswa</span>
+              <div id="modal-app-akta-container" class="flex items-center justify-between">
+                <span class="text-slate-400 italic text-xs">Belum diunggah</span>
+              </div>
+            </div>
+          </div>
+          <div id="modal-app-rereg-time" class="mt-2 text-[10px] text-blue-700 italic text-right" style="display:none;"></div>
+        </div>
+
         <!-- Status Pendaftaran Calon Siswa -->
         <div class="p-3.5 bg-slate-100 rounded-xl border border-slate-200 space-y-2.5">
           <div class="flex items-center justify-between">

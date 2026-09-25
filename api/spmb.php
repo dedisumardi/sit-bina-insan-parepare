@@ -18,6 +18,15 @@ try {
 try {
     $pdo->exec("ALTER TABLE `spmb_applicants` ADD COLUMN `nominal_pembayaran` INT NULL DEFAULT 150000 AFTER `status`");
 } catch (Exception $e) {}
+try {
+    $pdo->exec("ALTER TABLE `spmb_applicants` ADD COLUMN `berkas_kk` LONGTEXT NULL AFTER `status`");
+} catch (Exception $e) {}
+try {
+    $pdo->exec("ALTER TABLE `spmb_applicants` ADD COLUMN `berkas_akta` LONGTEXT NULL AFTER `status`");
+} catch (Exception $e) {}
+try {
+    $pdo->exec("ALTER TABLE `spmb_applicants` ADD COLUMN `daftar_ulang_at` VARCHAR(100) NULL AFTER `status`");
+} catch (Exception $e) {}
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -272,6 +281,24 @@ switch ($method) {
             $params[] = $input['buktiPembayaran'] ?? $input['bukti_pembayaran'];
         }
 
+        if (isset($input['berkasKk']) || isset($input['berkas_kk'])) {
+            $fields[] = "`berkas_kk` = ?";
+            $params[] = $input['berkasKk'] ?? $input['berkas_kk'];
+        }
+
+        if (isset($input['berkasAkta']) || isset($input['berkas_akta'])) {
+            $fields[] = "`berkas_akta` = ?";
+            $params[] = $input['berkasAkta'] ?? $input['berkas_akta'];
+        }
+
+        if (isset($input['daftarUlangAt']) || isset($input['daftar_ulang_at'])) {
+            $fields[] = "`daftar_ulang_at` = ?";
+            $params[] = $input['daftarUlangAt'] ?? $input['daftar_ulang_at'];
+        } elseif (isset($input['berkasKk']) || isset($input['berkas_kk']) || isset($input['berkasAkta']) || isset($input['berkas_akta'])) {
+            $fields[] = "`daftar_ulang_at` = ?";
+            $params[] = date('c');
+        }
+
         if (isset($input['nominalPembayaran']) || isset($input['nominal_pembayaran'])) {
             $nominalPembayaran = (int)($input['nominalPembayaran'] ?? $input['nominal_pembayaran']);
             if ($nominalPembayaran < 0) {
@@ -380,6 +407,9 @@ function formatApplicantOutput($row) {
         'tanggalDaftar'     => $row['tanggal_daftar'] ?? '',
         'status'            => $row['status'] ?? 'Menunggu Pembayaran Uang Pendaftaran (Rp 150.000)',
         'buktiPembayaran'   => $row['bukti_pembayaran'] ?? '',
+        'berkasKk'          => $row['berkas_kk'] ?? '',
+        'berkasAkta'        => $row['berkas_akta'] ?? '',
+        'daftarUlangAt'     => $row['daftar_ulang_at'] ?? '',
         'nominalPembayaran' => (int)($row['nominal_pembayaran'] ?? 150000),
         'jadwalObservasi'   => $row['jadwal_observasi'] ?? '-',
         'createdAt'         => $row['created_at'] ?? ''

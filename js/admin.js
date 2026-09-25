@@ -1524,6 +1524,79 @@
       }
     }
 
+    // Berkas Pendaftaran Ulang (KK & Akta Kelahiran)
+    const reregBox = document.getElementById('modal-app-rereg-box');
+    const kkContainer = document.getElementById('modal-app-kk-container');
+    const aktaContainer = document.getElementById('modal-app-akta-container');
+    const reregStatus = document.getElementById('modal-app-rereg-status');
+    const reregTime = document.getElementById('modal-app-rereg-time');
+
+    const isGraduated = isApplicantPassed(item);
+    const hasReregDocs = Boolean(item.berkasKk || item.berkasAkta);
+
+    if (reregBox) {
+      if (isGraduated || hasReregDocs) {
+        reregBox.style.display = 'block';
+        if (item.berkasKk && item.berkasAkta) {
+          if (reregStatus) {
+            reregStatus.textContent = '✓ Berkas Lengkap';
+            reregStatus.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+          }
+        } else if (hasReregDocs) {
+          if (reregStatus) {
+            reregStatus.textContent = 'Sebagian Berkas';
+            reregStatus.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
+          }
+        } else {
+          if (reregStatus) {
+            reregStatus.textContent = 'Belum Daftar Ulang';
+            reregStatus.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700';
+          }
+        }
+
+        if (kkContainer) {
+          if (item.berkasKk) {
+            kkContainer.innerHTML = `
+              <span class="text-xs font-semibold text-emerald-700 flex items-center gap-1">✓ Terunggah</span>
+              <button type="button" class="px-2.5 py-1 rounded-md text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition" onclick="window.viewApplicantDoc('${item.regNumber}', 'kk')">
+                👁️ Lihat KK
+              </button>
+            `;
+          } else {
+            kkContainer.innerHTML = `<span class="text-slate-400 italic text-xs">Belum diunggah</span>`;
+          }
+        }
+
+        if (aktaContainer) {
+          if (item.berkasAkta) {
+            aktaContainer.innerHTML = `
+              <span class="text-xs font-semibold text-emerald-700 flex items-center gap-1">✓ Terunggah</span>
+              <button type="button" class="px-2.5 py-1 rounded-md text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition" onclick="window.viewApplicantDoc('${item.regNumber}', 'akta')">
+                👁️ Lihat Akta
+              </button>
+            `;
+          } else {
+            aktaContainer.innerHTML = `<span class="text-slate-400 italic text-xs">Belum diunggah</span>`;
+          }
+        }
+
+        if (reregTime) {
+          if (item.daftarUlangAt) {
+            try {
+              reregTime.textContent = `Waktu Unggah: ${new Date(item.daftarUlangAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}`;
+              reregTime.style.display = 'block';
+            } catch (_) {
+              reregTime.style.display = 'none';
+            }
+          } else {
+            reregTime.style.display = 'none';
+          }
+        }
+      } else {
+        reregBox.style.display = 'none';
+      }
+    }
+
     // Direct WhatsApp Button in modal
     const waModalBtn = document.getElementById('modal-app-wa-btn');
     if (waModalBtn) {
@@ -1531,6 +1604,33 @@
     }
 
     applicantModal.classList.add('open');
+  };
+
+  // Lihat Berkas KK / Akta Pendaftaran Ulang Siswa
+  window.viewApplicantDoc = function (regNumber, docType) {
+    const item = spmbList.find(s => s.regNumber === regNumber || s.waAyah === regNumber);
+    if (!item) return;
+    const docData = docType === 'kk' ? item.berkasKk : item.berkasAkta;
+    if (!docData) {
+      alert(`Berkas ${docType === 'kk' ? 'Kartu Keluarga' : 'Akta Kelahiran'} belum diunggah.`);
+      return;
+    }
+    if (docData.startsWith('data:')) {
+      try {
+        const parts = docData.split(',');
+        const mime = parts[0].match(/:(.*?);/)?.[1] || 'application/octet-stream';
+        const binary = atob(parts[1]);
+        const array = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
+        const blob = new Blob([array], { type: mime });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      } catch (_) {
+        window.open(docData, '_blank');
+      }
+    } else {
+      window.open(docData, '_blank');
+    }
   };
 
   // Modal Lihat Bukti Transfer

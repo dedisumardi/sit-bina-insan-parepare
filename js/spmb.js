@@ -1358,13 +1358,14 @@
     ['Biodata Calon Siswa', 'Lengkapi biodata dan klik Simpan Data Siswa. Setelah tersimpan, klik Lanjutkan.'],
     ['Data Orang Tua dan Wali', 'Lengkapi data ayah, ibu, dan wali bila ada, lalu klik Simpan Data Orang Tua dan Wali sebelum Lanjutkan.'],
     ['Jadwal Tes & Wawancara', 'Periksa jadwal terbaru dan cetak kartu peserta sebelum hadir.'],
-    ['Pengumuman Hasil Tes & Wawancara', 'Lihat hasil resmi yang ditetapkan panitia. Ini adalah langkah terakhir.']
+    ['Pengumuman Hasil Tes & Wawancara', 'Lihat hasil resmi yang ditetapkan panitia.'],
+    ['Pendaftaran Ulang Siswa Baru', 'Unggah berkas resmi Kartu Keluarga (KK) dan Akta Kelahiran Calon Siswa untuk menyelesaikan proses pendaftaran.']
   ];
   let registrationNavigation = { step: 1, regNumber: '', approved: false, proof: false };
 
   window.navigateRegistration = function (direction) {
     const { step, regNumber, approved, proof } = registrationNavigation;
-    if (![1, -1].includes(direction) || (step === 1 && direction < 0) || (step === 6 && direction > 0)) return;
+    if (![1, -1].includes(direction) || (step === 1 && direction < 0) || (step === 6 && direction > 0) || (step === 7 && direction > 0)) return;
     if (document.getElementById('portal-bio-submit')?.disabled || document.getElementById('portal-parent-data-submit')?.disabled) return;
     if (direction > 0 && step === 1 && !approved && !proof) {
       alert('Unggah dan kirim bukti pembayaran terlebih dahulu.'); return;
@@ -1383,10 +1384,10 @@
       }
     }
     const target = step + direction;
-    const suffix = [':start', ':payment', '', ':parents', ':schedule', ':results'][target - 1];
+    const suffix = [':start', ':payment', '', ':parents', ':schedule', ':results', ':reregistration'][target - 1];
     try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + suffix); } catch (_) {}
     renderParentPortal();
-    if (target === 5 || target === 6) refreshParentFromDatabase();
+    if (target === 5 || target === 6 || target === 7) refreshParentFromDatabase();
     document.getElementById('portal-step-navigation')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
@@ -1396,13 +1397,14 @@
     const summary = document.getElementById('portal-state-payment-summary');
     summary.style.display = 'none';
     let step = approved ? 2 : proof ? 2 : 1;
-    for (const [id, number] of [['biodata', 3], ['parents', 4], ['schedule', 5], ['results', 6]]) {
+    for (const [id, number] of [['biodata', 3], ['parents', 4], ['schedule', 5], ['results', 6], ['reregistration', 7]]) {
       if (document.getElementById('portal-state-' + id)?.style.display === 'block') step = number;
     }
     if (view === record.regNumber + ':start') {
       step = 1;
-      ['pending', 'approved', 'biodata', 'parents', 'schedule', 'results'].forEach(id => {
-        document.getElementById('portal-state-' + id).style.display = 'none';
+      ['pending', 'approved', 'biodata', 'parents', 'schedule', 'results', 'reregistration'].forEach(id => {
+        const el = document.getElementById('portal-state-' + id);
+        if (el) el.style.display = 'none';
       });
       document.getElementById('portal-state-unpaid').style.display = approved || proof ? 'none' : 'block';
       if (approved || proof) {
@@ -1414,8 +1416,8 @@
       }
     }
     registrationNavigation = { step, regNumber: record.regNumber, approved, proof, studentSaved: Boolean(record.biodataUpdatedAt), parentsSaved: Boolean(record.parentDataUpdatedAt) };
-    document.getElementById('portal-current-step').textContent = 'LANGKAH ' + step + ' DARI 6';
-    for (let number = 1; number <= 6; number++) {
+    document.getElementById('portal-current-step').textContent = step <= 6 ? 'LANGKAH ' + step + ' DARI 6' : 'LANGKAH 7 DARI 7';
+    for (let number = 1; number <= 7; number++) {
       const indicator = document.getElementById('flow-step-' + number);
       if (number === step) indicator?.setAttribute?.('aria-current', 'step');
       else indicator?.removeAttribute?.('aria-current');
@@ -1423,7 +1425,7 @@
     document.getElementById('portal-current-title').textContent = registrationSteps[step - 1][0];
     document.getElementById('portal-current-description').textContent = registrationSteps[step - 1][1];
     document.getElementById('portal-step-back').disabled = step === 1;
-    document.getElementById('portal-step-next').disabled = step === 6 || (step === 1 && !approved && !proof) || (step === 2 && !approved);
+    document.getElementById('portal-step-next').disabled = step >= 6 || (step === 1 && !approved && !proof) || (step === 2 && !approved);
   }
 
   window.openResultsStage = function () {
@@ -1434,6 +1436,19 @@
     refreshParentFromDatabase();
     requestAnimationFrame(() => {
       document.getElementById('portal-state-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  window.openReRegistrationStage = function () {
+    const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim() ||
+                      document.getElementById('portal-results-reg')?.textContent?.trim() ||
+                      document.getElementById('portal-sched-reg')?.textContent?.trim();
+    if (!regNumber) return;
+    try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + ':reregistration'); } catch (_) {}
+    renderParentPortal();
+    refreshParentFromDatabase();
+    requestAnimationFrame(() => {
+      document.getElementById('portal-state-reregistration')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   };
 
@@ -1502,6 +1517,8 @@
     const stateParents = document.getElementById('portal-state-parents');
     const stateSchedule = document.getElementById('portal-state-schedule');
     const stateResults = document.getElementById('portal-state-results');
+    const stateReregistration = document.getElementById('portal-state-reregistration');
+    if (stateReregistration) stateReregistration.style.display = 'none';
     if (stateResults) stateResults.style.display = 'none';
     if (stateParents) stateParents.style.display = 'none';
     if (stateSchedule) stateSchedule.style.display = 'none';
@@ -1538,10 +1555,13 @@
       let parentsViewOpen = false;
       let scheduleViewOpen = false;
       let resultsViewOpen = false;
+      let reregistrationViewOpen = false;
       try {
         const view = sessionStorage.getItem(PARENT_BIODATA_VIEW_KEY);
         if (view === record.regNumber + ':payment') {
           // Show the saved payment summary without restarting registration or charging again.
+        } else if (view === record.regNumber + ':reregistration' && biodataComplete && parentsComplete) {
+          reregistrationViewOpen = true;
         } else if (view === record.regNumber + ':results' && biodataComplete && parentsComplete) {
           resultsViewOpen = true;
         } else if (view === record.regNumber + ':schedule') {
@@ -1557,7 +1577,7 @@
 
       stateUnpaid.style.display = 'none';
       statePending.style.display = 'none';
-      stateApproved.style.display = (biodataViewOpen || parentsViewOpen || scheduleViewOpen || resultsViewOpen) ? 'none' : 'block';
+      stateApproved.style.display = (biodataViewOpen || parentsViewOpen || scheduleViewOpen || resultsViewOpen || reregistrationViewOpen) ? 'none' : 'block';
       if (stateBiodata) stateBiodata.style.display = biodataViewOpen ? 'block' : 'none';
       if (stateParents) stateParents.style.display = parentsViewOpen ? 'block' : 'none';
       if (stateSchedule) stateSchedule.style.display = scheduleViewOpen ? 'block' : 'none';
@@ -1572,6 +1592,16 @@
         document.getElementById('portal-results-level').textContent = (record.jenjang || '-').toUpperCase();
         document.getElementById('portal-results-title').textContent = announcement.title;
         document.getElementById('portal-results-message').textContent = announcement.message;
+        const reregAction = document.getElementById('portal-results-reregister-action');
+        if (reregAction) {
+          reregAction.style.display = hasPassed ? 'block' : 'none';
+        }
+      }
+      if (stateReregistration) {
+        stateReregistration.style.display = reregistrationViewOpen ? 'block' : 'none';
+        if (reregistrationViewOpen) {
+          populateReRegistrationForm(record);
+        }
       }
 
       window.ParentBiodata?.populate(record);
@@ -1654,7 +1684,15 @@
         }
       }
 
-      badgeStatus.textContent = hasSchedule ? 'Jadwal Tes & Wawancara Ditetapkan' : (biodataComplete && parentsComplete) ? 'Biodata Lengkap (Menunggu Jadwal)' : 'Pembayaran Terverifikasi & Diterima';
+      const isPassed = record.status === 'Lulus Seleksi Observasi & Diterima';
+      const hasRereg = Boolean(record.berkasKk && record.berkasAkta);
+      if (hasRereg) {
+        badgeStatus.textContent = 'Pendaftaran Ulang Selesai (Berkas Terkirim)';
+      } else if (isPassed) {
+        badgeStatus.textContent = 'Lulus Seleksi — Menunggu Pendaftaran Ulang';
+      } else {
+        badgeStatus.textContent = hasSchedule ? 'Jadwal Tes & Wawancara Ditetapkan' : (biodataComplete && parentsComplete) ? 'Biodata Lengkap (Menunggu Jadwal)' : 'Pembayaran Terverifikasi & Diterima';
+      }
 
       step1?.classList.add('done');
       step1?.classList.remove('active');
@@ -1679,6 +1717,31 @@
         step4?.classList.add('active');
       }
 
+      const step5 = document.getElementById('flow-step-5');
+      const step6 = document.getElementById('flow-step-6');
+      const step7 = document.getElementById('flow-step-7');
+      step5?.classList.remove('active', 'done', 'current-success');
+      step6?.classList.remove('active', 'done', 'current-success');
+      step7?.classList.remove('active', 'done', 'current-success');
+
+      if (isPassed || resultsViewOpen || reregistrationViewOpen) {
+        step5?.classList.add('done');
+      } else if (scheduleViewOpen) {
+        step5?.classList.add('current-success');
+      }
+
+      if (hasRereg || reregistrationViewOpen) {
+        step6?.classList.add('done');
+      } else if (resultsViewOpen) {
+        step6?.classList.add('current-success');
+      }
+
+      if (hasRereg) {
+        step7?.classList.add('done');
+      } else if (reregistrationViewOpen) {
+        step7?.classList.add('current-success');
+      }
+
       if (flowLine1) flowLine1.style.background = '#22c55e';
       if (flowLine2) flowLine2.style.background = '#22c55e';
       if (flowLine3) flowLine3.style.background = (biodataComplete && parentsComplete) ? '#22c55e' : 'var(--neutral-200)';
@@ -1690,6 +1753,8 @@
       if (stateBiodata) stateBiodata.style.display = 'none';
       if (stateParents) stateParents.style.display = 'none';
       if (stateSchedule) stateSchedule.style.display = 'none';
+      if (stateResults) stateResults.style.display = 'none';
+      if (stateReregistration) stateReregistration.style.display = 'none';
 
       const proofImg = document.getElementById('portal-pending-proof-img');
       if (proofImg) proofImg.src = record.buktiPembayaran;
@@ -1706,6 +1771,9 @@
       step2?.classList.add('active');
       step3?.classList.remove('active', 'done', 'current-success');
       step4?.classList.remove('active', 'done', 'current-success');
+      document.getElementById('flow-step-5')?.classList.remove('active', 'done', 'current-success');
+      document.getElementById('flow-step-6')?.classList.remove('active', 'done', 'current-success');
+      document.getElementById('flow-step-7')?.classList.remove('active', 'done', 'current-success');
       if (flowLine1) flowLine1.style.background = '#22c55e';
       if (flowLine2) flowLine2.style.background = 'var(--neutral-200)';
       if (flowLine3) flowLine3.style.background = 'var(--neutral-200)';
@@ -1717,6 +1785,8 @@
       if (stateBiodata) stateBiodata.style.display = 'none';
       if (stateParents) stateParents.style.display = 'none';
       if (stateSchedule) stateSchedule.style.display = 'none';
+      if (stateResults) stateResults.style.display = 'none';
+      if (stateReregistration) stateReregistration.style.display = 'none';
 
       badgeStatus.textContent = 'Menunggu Pembayaran (Rp 150.000)';
 
@@ -1725,6 +1795,9 @@
       step2?.classList.remove('active', 'done');
       step3?.classList.remove('active', 'done', 'current-success');
       step4?.classList.remove('active', 'done', 'current-success');
+      document.getElementById('flow-step-5')?.classList.remove('active', 'done', 'current-success');
+      document.getElementById('flow-step-6')?.classList.remove('active', 'done', 'current-success');
+      document.getElementById('flow-step-7')?.classList.remove('active', 'done', 'current-success');
       if (flowLine1) flowLine1.style.background = 'var(--neutral-200)';
       if (flowLine2) flowLine2.style.background = 'var(--neutral-200)';
       if (flowLine3) flowLine3.style.background = 'var(--neutral-200)';
@@ -1853,6 +1926,258 @@
       stateUnpaid.style.display = 'block';
       statePending.style.display = 'none';
       stateUnpaid.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Re-registration State (Upload Kartu Keluarga & Akta Kelahiran Siswa)
+  let currentKkBase64 = null;
+  let currentAktaBase64 = null;
+
+  window.handleKkFileSelect = function (e) {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (!file) return;
+    if (!file.type.match('image.*') && file.type !== 'application/pdf') {
+      alert('Mohon pilih file gambar (JPG, PNG, WEBP) atau PDF untuk Kartu Keluarga.');
+      return;
+    }
+    if (file.size > 2.5 * 1024 * 1024) {
+      alert('Ukuran file Kartu Keluarga terlalu besar (maksimal 2,5 MB).');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      currentKkBase64 = event.target.result;
+      const previewBox = document.getElementById('portal-rereg-kk-preview-box');
+      const content = document.getElementById('portal-rereg-kk-preview-content');
+      const viewBtn = document.getElementById('portal-rereg-kk-view-btn');
+      if (previewBox && content) {
+        if (file.type === 'application/pdf') {
+          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;">📄 Dokumen PDF: ${file.name}</div><div style="font-size:0.75rem; color:#64748b;">(${(file.size / 1024).toFixed(1)} KB)</div>`;
+        } else {
+          content.innerHTML = `<img src="${currentKkBase64}" alt="Pratinjau KK" style="max-height:120px; max-width:100%; border-radius:8px; border:1px solid #cbd5e1; margin:0 auto; display:block;">`;
+        }
+        previewBox.style.display = 'block';
+        if (viewBtn) viewBtn.style.display = 'inline-block';
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.handleAktaFileSelect = function (e) {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (!file) return;
+    if (!file.type.match('image.*') && file.type !== 'application/pdf') {
+      alert('Mohon pilih file gambar (JPG, PNG, WEBP) atau PDF untuk Akta Kelahiran.');
+      return;
+    }
+    if (file.size > 2.5 * 1024 * 1024) {
+      alert('Ukuran file Akta Kelahiran terlalu besar (maksimal 2,5 MB).');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      currentAktaBase64 = event.target.result;
+      const previewBox = document.getElementById('portal-rereg-akta-preview-box');
+      const content = document.getElementById('portal-rereg-akta-preview-content');
+      const viewBtn = document.getElementById('portal-rereg-akta-view-btn');
+      if (previewBox && content) {
+        if (file.type === 'application/pdf') {
+          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;">📄 Dokumen PDF: ${file.name}</div><div style="font-size:0.75rem; color:#64748b;">(${(file.size / 1024).toFixed(1)} KB)</div>`;
+        } else {
+          content.innerHTML = `<img src="${currentAktaBase64}" alt="Pratinjau Akta" style="max-height:120px; max-width:100%; border-radius:8px; border:1px solid #cbd5e1; margin:0 auto; display:block;">`;
+        }
+        previewBox.style.display = 'block';
+        if (viewBtn) viewBtn.style.display = 'inline-block';
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  function openDataInWindow(dataUri, title) {
+    if (!dataUri) return;
+    if (dataUri.startsWith('data:')) {
+      try {
+        const parts = dataUri.split(',');
+        const mime = parts[0].match(/:(.*?);/)?.[1] || 'application/octet-stream';
+        const binary = atob(parts[1]);
+        const array = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
+        const blob = new Blob([array], { type: mime });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      } catch (_) {
+        window.open(dataUri, '_blank');
+      }
+    } else {
+      window.open(dataUri, '_blank');
+    }
+  }
+
+  window.viewCurrentKk = function () {
+    openDataInWindow(currentKkBase64, 'Kartu Keluarga');
+  };
+
+  window.viewCurrentAkta = function () {
+    openDataInWindow(currentAktaBase64, 'Akta Kelahiran');
+  };
+
+  function populateReRegistrationForm(record) {
+    const regEl = document.getElementById('portal-rereg-reg');
+    const nameEl = document.getElementById('portal-rereg-name');
+    const levelEl = document.getElementById('portal-rereg-level');
+    const statusPill = document.getElementById('portal-rereg-status-pill');
+    const savedCard = document.getElementById('portal-rereg-saved-card');
+    const savedTime = document.getElementById('portal-rereg-saved-time');
+    const statusText = document.getElementById('portal-rereg-status');
+    const waBtn = document.getElementById('portal-rereg-wa-btn');
+
+    if (regEl) regEl.textContent = record.regNumber || '-';
+    if (nameEl) nameEl.textContent = record.namaSiswa || 'Calon Siswa';
+    if (levelEl) levelEl.textContent = (record.jenjang || 'SDIT').toUpperCase();
+
+    if (record.berkasKk) {
+      currentKkBase64 = record.berkasKk;
+      const previewBox = document.getElementById('portal-rereg-kk-preview-box');
+      const content = document.getElementById('portal-rereg-kk-preview-content');
+      const viewBtn = document.getElementById('portal-rereg-kk-view-btn');
+      if (previewBox && content) {
+        if (record.berkasKk.startsWith('data:application/pdf')) {
+          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;">📄 Dokumen PDF Kartu Keluarga Tersimpan</div>`;
+        } else {
+          content.innerHTML = `<img src="${record.berkasKk}" alt="Kartu Keluarga" style="max-height:120px; max-width:100%; border-radius:8px; border:1px solid #cbd5e1; margin:0 auto; display:block;">`;
+        }
+        previewBox.style.display = 'block';
+        if (viewBtn) viewBtn.style.display = 'inline-block';
+      }
+    }
+
+    if (record.berkasAkta) {
+      currentAktaBase64 = record.berkasAkta;
+      const previewBox = document.getElementById('portal-rereg-akta-preview-box');
+      const content = document.getElementById('portal-rereg-akta-preview-content');
+      const viewBtn = document.getElementById('portal-rereg-akta-view-btn');
+      if (previewBox && content) {
+        if (record.berkasAkta.startsWith('data:application/pdf')) {
+          content.innerHTML = `<div style="font-weight:700; color:#1e40af; font-size:0.85rem;">📄 Dokumen PDF Akta Kelahiran Tersimpan</div>`;
+        } else {
+          content.innerHTML = `<img src="${record.berkasAkta}" alt="Akta Kelahiran" style="max-height:120px; max-width:100%; border-radius:8px; border:1px solid #cbd5e1; margin:0 auto; display:block;">`;
+        }
+        previewBox.style.display = 'block';
+        if (viewBtn) viewBtn.style.display = 'inline-block';
+      }
+    }
+
+    const hasBoth = Boolean(record.berkasKk && record.berkasAkta);
+    if (hasBoth) {
+      if (statusPill) {
+        statusPill.textContent = '✓ Berkas Lengkap';
+        statusPill.style.color = '#15803d';
+      }
+      if (savedCard) savedCard.style.display = 'block';
+      if (savedTime && record.daftarUlangAt) {
+        try {
+          savedTime.textContent = `Waktu Pengunggahan Berkas: ${new Date(record.daftarUlangAt).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })}`;
+        } catch (_) {
+          savedTime.textContent = 'Berkas tersimpan di database';
+        }
+      }
+      if (statusText) {
+        statusText.textContent = '✓ Berkas Kartu Keluarga & Akta Kelahiran sudah lengkap dan tersimpan. Anda dapat memperbarui jika ada perbaikan.';
+        statusText.style.color = '#15803d';
+      }
+    } else {
+      if (statusPill) {
+        statusPill.textContent = '⏳ Menunggu Berkas';
+        statusPill.style.color = '#b45309';
+      }
+      if (savedCard) savedCard.style.display = 'none';
+      if (statusText) {
+        statusText.textContent = 'Kedua berkas (Kartu Keluarga dan Akta Kelahiran) wajib diunggah untuk menyelesaikan pendaftaran ulang.';
+        statusText.style.color = 'var(--neutral-600)';
+      }
+    }
+
+    if (waBtn) {
+      waBtn.href = `https://wa.me/6285190610569?text=${encodeURIComponent(`Assalamu'alaikum Admin SPMB SIT Bina Insan Parepare, saya orang tua dari ananda ${record.namaSiswa || ''} (${record.regNumber || ''}), mengonfirmasi pendaftaran ulang dan pengunggahan berkas KK serta Akta Kelahiran. Mohon dicek. Terima kasih.`)}`;
+    }
+  }
+
+  window.submitReRegistration = async function () {
+    if (!currentKkBase64) {
+      alert('Silakan pilih dan unggah berkas Kartu Keluarga (KK) terlebih dahulu.');
+      return;
+    }
+    if (!currentAktaBase64) {
+      alert('Silakan pilih dan unggah berkas Akta Kelahiran Calon Siswa terlebih dahulu.');
+      return;
+    }
+
+    const rawSession = localStorage.getItem(PARENT_SESSION_KEY);
+    if (!rawSession) {
+      alert('Sesi pendaftaran tidak ditemukan. Silakan login kembali.');
+      return;
+    }
+    const session = JSON.parse(rawSession);
+    const cleanWa = (session.wa || '').replace(/[^0-9]/g, '');
+
+    let records = [];
+    try {
+      records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch (_) {
+      records = [];
+    }
+
+    let record = records.find(r => {
+      const rw = (r.waAyah || '').replace(/[^0-9]/g, '');
+      return rw === cleanWa || (cleanWa.length >= 9 && rw.endsWith(cleanWa.slice(-9)));
+    });
+
+    if (!record) {
+      alert('Data pendaftaran tidak ditemukan. Silakan muat ulang halaman.');
+      return;
+    }
+
+    const submitBtn = document.getElementById('btn-submit-reregistration');
+    const originalText = submitBtn ? submitBtn.textContent : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Menyimpan Berkas...';
+    }
+
+    const nowIso = new Date().toISOString();
+    record.berkasKk = currentKkBase64;
+    record.berkasAkta = currentAktaBase64;
+    record.daftarUlangAt = nowIso;
+
+    try {
+      const response = await fetch('api/spmb.php', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reg_number: record.regNumber,
+          wa_ayah: session.wa,
+          berkas_kk: currentKkBase64,
+          berkas_akta: currentAktaBase64,
+          daftar_ulang_at: nowIso
+        })
+      });
+      const result = await response.json();
+      if (!response.ok || !result || !result.success || !result.data) {
+        throw new Error(result?.message || 'Gagal menyimpan berkas pendaftaran ulang.');
+      }
+      Object.assign(record, result.data);
+      cacheSetItem(STORAGE_KEY, JSON.stringify(records));
+      alert('Alhamdulillah! Berkas pendaftaran ulang (Kartu Keluarga dan Akta Kelahiran) berhasil dikirim dan tersimpan di database resmi.');
+      renderParentPortal();
+    } catch (error) {
+      cacheSetItem(STORAGE_KEY, JSON.stringify(records));
+      alert(`Berkas tersimpan di sesi lokal. Catatan sinkronisasi server: ${error.message}`);
+      renderParentPortal();
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
     }
   };
 

@@ -27,7 +27,7 @@ function row(record) {
   return { ...record.data, id: record.id, ...(record.reg_number ? { regNumber: record.reg_number } : {}), createdAt: record.created_at };
 }
 function requireAdmin(admin) { if (!admin) fail(401, 'Silakan masuk sebagai admin.'); }
-const biodata = ['jenjang','jalur','namaSiswa','nik','ttl','tempatLahir','tanggalLahir','jk','asalSekolah','alamat','desaKelurahan','kecamatan','kabupatenKota','provinsi','agama','kewarganegaraan','namaAyah','pekerjaanAyah','waAyah','namaIbu','pekerjaanIbu','email','hafalan','prestasi','sertifikatPrestasi','gelombang'];
+const biodata = ['jenjang','jalur','namaSiswa','nik','ttl','tempatLahir','tanggalLahir','jk','asalSekolah','alamat','desaKelurahan','kecamatan','kabupatenKota','provinsi','agama','kewarganegaraan','namaAyah','pekerjaanAyah','waAyah','namaIbu','pekerjaanIbu','email','hafalan','prestasi','sertifikatPrestasi','gelombang','berkasKk','berkasAkta','daftarUlangAt'];
 const articleFields = ['title','category','categoryClass','author','date','readTime','image','excerpt','content'];
 const studentExtraFields = ["tempatTinggal","modaTransportasi","anakKe","tinggiBadan","beratBadan","hobi","citaCita","jumlahSaudaraKandung","jarakRumahSekolah","saudaraDiSekolah"];
 biodata.push(...studentExtraFields);
@@ -223,8 +223,12 @@ async function handler(req, res) {
       }
       if (method === 'PUT') {
         const proof = input.buktiPembayaran ?? input.bukti_pembayaran;
-        if (!admin && proof === undefined) requireAdmin(admin);
+        const berkasKk = input.berkasKk ?? input.berkas_kk;
+        const berkasAkta = input.berkasAkta ?? input.berkas_akta;
+        if (!admin && proof === undefined && berkasKk === undefined && berkasAkta === undefined) requireAdmin(admin);
         if (proof !== undefined && (typeof proof !== 'string' || !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(proof) || proof.length > 3500000)) fail(400, 'Bukti harus JPG, PNG, atau WebP maksimal 2,5 MB.');
+        if (berkasKk !== undefined && (typeof berkasKk !== 'string' || (!/^data:(image\/(jpeg|png|webp)|application\/pdf);base64,[A-Za-z0-9+/=]+$/.test(berkasKk) && !/^https?:\/\//.test(berkasKk)) || berkasKk.length > 4000000)) fail(400, 'Berkas Kartu Keluarga (KK) harus berupa gambar atau PDF maksimal 2,5 MB.');
+        if (berkasAkta !== undefined && (typeof berkasAkta !== 'string' || (!/^data:(image\/(jpeg|png|webp)|application\/pdf);base64,[A-Za-z0-9+/=]+$/.test(berkasAkta) && !/^https?:\/\//.test(berkasAkta)) || berkasAkta.length > 4000000)) fail(400, 'Berkas Akta Kelahiran harus berupa gambar atau PDF maksimal 2,5 MB.');
         const reg = input.regNumber || input.reg_number;
         const wa = input.waAyah || input.wa_ayah;
         if (!reg && !wa) fail(400, 'Nomor pendaftaran wajib diisi.');
@@ -232,6 +236,13 @@ async function handler(req, res) {
         const db = database();
         const patch = {};
         if (proof !== undefined) Object.assign(patch, { buktiPembayaran: proof, status: 'Menunggu Verifikasi Pembayaran oleh Admin' });
+        if (berkasKk !== undefined) patch.berkasKk = berkasKk;
+        if (berkasAkta !== undefined) patch.berkasAkta = berkasAkta;
+        if (input.daftarUlangAt !== undefined || input.daftar_ulang_at !== undefined) {
+          patch.daftarUlangAt = input.daftarUlangAt || input.daftar_ulang_at;
+        } else if (berkasKk !== undefined || berkasAkta !== undefined) {
+          patch.daftarUlangAt = new Date().toISOString();
+        }
         if (admin) {
           Object.assign(patch, pick(input, ['status']));
           for (const key of ['jadwalObservasi', 'jadwalTes', 'jadwalWawancara', 'lokasiTes', 'catatanJadwal']) {
