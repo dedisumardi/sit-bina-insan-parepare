@@ -757,6 +757,180 @@
     renderStudentsTable();
   };
 
+  function renderStudentJalurColumn(item) {
+    const isPrestasi = (item.jalur || '').toLowerCase().includes('prestasi') || Boolean(item.riwayatTahfidz) || Boolean(item.riwayatPrestasi);
+    const jalurLabel = isPrestasi ? 'PRESTASI' : (item.jalur ? item.jalur.toUpperCase() : 'REGULER');
+    let subBadge = '';
+    if (isPrestasi) {
+      const prestasiText = item.riwayatTahfidz || item.riwayatPrestasi || 'Tahfidz 3 Juz';
+      subBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-100/70 text-emerald-800 border border-emerald-200">${escapeHtml(prestasiText)}</span>`;
+    } else {
+      subBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-blue-100/70 text-brand-800 border border-blue-200">${escapeHtml(getStudentWaveName(item))}</span>`;
+    }
+    return `
+      <div class="font-bold text-slate-800 text-[11px] uppercase tracking-wide">${jalurLabel}</div>
+      <div class="mt-1">${subBadge}</div>
+    `;
+  }
+
+  function renderStudentStatusColumn(item) {
+    const s = (item.status || '').toLowerCase();
+    const hasData = Boolean(item.biodataUpdatedAt && item.parentDataUpdatedAt);
+    const hasSched = Boolean(item.jadwalTes || (item.jadwalObservasi && !item.jadwalObservasi.toLowerCase().includes('menunggu') && item.jadwalObservasi !== '-'));
+    const isPassed = s.includes('lulus') || s.includes('diterima');
+    const isApproved = s.includes('terverifikasi') || s.includes('lengkap');
+
+    // 1. Lulus Seleksi Observasi & Diterima (Row 1)
+    if (isPassed) {
+      return `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-800 border border-blue-200/80">
+          <i class="fa-regular fa-circle-check text-blue-600"></i>
+          <span>Lulus Seleksi Observasi &amp; Diterima</span>
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-sky-50 text-sky-800 border border-sky-200">
+          <i class="fa-regular fa-calendar-check text-sky-600"></i>
+          <span>Jadwal Ditetapkan</span>
+        </span>
+      `;
+    }
+
+    // 2. Berkas Lengkap & Terverifikasi (Row 2)
+    if (isApproved) {
+      return `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+          <i class="fa-regular fa-circle-check text-emerald-600"></i>
+          <span>Berkas Lengkap &amp; Terverifikasi</span>
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-purple-50 text-purple-800 border border-purple-200">
+          <i class="fa-solid fa-clock-rotate-left text-purple-600"></i>
+          <span>Menunggu Tes Wawancara</span>
+        </span>
+      `;
+    }
+
+    // 3. Menunggu Verifikasi Berkas (Row 3)
+    if (s.includes('menunggu') || (!hasData && !hasSched)) {
+      return `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+          <i class="fa-solid fa-hourglass-half text-amber-600"></i>
+          <span>Menunggu Verifikasi Berkas</span>
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+          <i class="fa-solid fa-paperclip text-slate-400"></i>
+          <span>Bukti Transfer Diunggah</span>
+        </span>
+      `;
+    }
+
+    // 4. Jadwal Observasi Ditetapkan & Biaya Lunas (Row 4)
+    if (hasSched || s.includes('jadwal') || s.includes('observasi')) {
+      let schedLabel = item.jadwalObservasi || item.jadwalTes || 'Jadwal Observasi: 30 Sep';
+      if (!schedLabel.toLowerCase().includes('jadwal') && !schedLabel.toLowerCase().includes('observasi')) {
+        schedLabel = 'Jadwal Observasi: ' + schedLabel;
+      }
+      return `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-sky-50 text-sky-800 border border-sky-200">
+          <i class="fa-regular fa-calendar-days text-sky-600"></i>
+          <span>${escapeHtml(schedLabel)}</span>
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <i class="fa-solid fa-check text-emerald-600"></i>
+          <span>Biaya Pendaftaran Lunas</span>
+        </span>
+      `;
+    }
+
+    // 5. Belum Lulus / Ditolak
+    if (s.includes('tidak') || s.includes('tolak') || s.includes('belum')) {
+      return `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+          <i class="fa-regular fa-circle-xmark text-rose-500"></i>
+          <span>Belum Lulus</span>
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+          <i class="fa-solid fa-circle-info text-slate-400"></i>
+          <span>Seleksi Selesai</span>
+        </span>
+      `;
+    }
+
+    // Fallback default
+    return `
+      ${renderStatusBadge(item.status)}
+      ${hasSched ? `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-sky-50 text-sky-800 border border-sky-200"><i class="fa-regular fa-calendar-check text-sky-600"></i><span>Jadwal Ditetapkan</span></span>` : ''}
+    `;
+  }
+
+  function renderStudentActionButtons(item) {
+    const s = (item.status || '').toLowerCase();
+    const hasData = Boolean(item.biodataUpdatedAt && item.parentDataUpdatedAt);
+    const hasPassed = s.includes('lulus') || s.includes('diterima');
+    const isApproved = s.includes('terverifikasi') || s.includes('lengkap');
+    const hasSched = Boolean(item.jadwalTes || (item.jadwalObservasi && !item.jadwalObservasi.toLowerCase().includes('menunggu') && item.jadwalObservasi !== '-'));
+
+    let primaryBtn = '';
+
+    // Row 1: Green "Lulus"
+    if (hasPassed) {
+      primaryBtn = `
+        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Siswa Lulus Seleksi">
+          <i class="ph ph-check-circle text-sm"></i>
+          <span>Lulus</span>
+        </button>
+      `;
+    } else if (hasSched && hasData && isApproved) {
+      // Ready to graduate
+      primaryBtn = `
+        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.passApplicant(this.dataset.regNumber, this)" title="Luluskan Calon Siswa">
+          <i class="ph ph-check-circle text-sm"></i>
+          <span>Lulus</span>
+        </button>
+      `;
+    } else if (isApproved) {
+      // Row 2: Blue "Verifikasi"
+      primaryBtn = `
+        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors shadow-2xs" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Verifikasi Berkas">
+          <i class="ph ph-check text-sm"></i>
+          <span>Verifikasi</span>
+        </button>
+      `;
+    } else if (hasSched || s.includes('jadwal') || s.includes('observasi')) {
+      // Row 4: Indigo "Atur Jadwal"
+      primaryBtn = `
+        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors shadow-2xs" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Atur Jadwal Observasi">
+          <i class="ph ph-calendar-plus text-sm"></i>
+          <span>Atur Jadwal</span>
+        </button>
+      `;
+    } else {
+      // Row 3: Amber "Cek Berkas"
+      primaryBtn = `
+        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors shadow-2xs" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Periksa Berkas Pendaftaran">
+          <i class="ph ph-file-search text-sm"></i>
+          <span>Cek Berkas</span>
+        </button>
+      `;
+    }
+
+    return `
+      <div class="inline-flex items-center justify-center gap-1.5">
+        ${primaryBtn}
+        <button type="button" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Lihat Detail">
+          <i class="ph ph-eye text-base"></i>
+        </button>
+        <button type="button" class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors border border-transparent hover:border-amber-200" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Ubah Data">
+          <i class="ph ph-pencil-simple text-base"></i>
+        </button>
+        <button type="button" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200" onclick="window.printApplicantCard('${item.regNumber}')" title="Cetak Kartu Tanda Peserta">
+          <i class="fa-solid fa-print text-sm"></i>
+        </button>
+        <button type="button" class="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus">
+          <i class="ph ph-trash text-base"></i>
+        </button>
+      </div>
+    `;
+  }
+
   // 1. Render Tabel Data Calon Siswa
   function renderStudentsTable() {
     const tableBody = document.getElementById('spmb-table-body');
@@ -788,10 +962,6 @@
     }
 
     tableBody.innerHTML = paginatedStudents.map((item, index) => {
-      const isApproved = (item.status || '').toLowerCase().includes('terverifikasi');
-      const hasData = Boolean(item.biodataUpdatedAt && item.parentDataUpdatedAt);
-      const hasPassed = (item.status || '').includes('Lulus') || (item.status || '').includes('Diterima');
-      const hasSched = Boolean(item.jadwalTes || (item.jadwalObservasi && !item.jadwalObservasi.toLowerCase().includes('menunggu') && item.jadwalObservasi !== '-'));
       const isSelected = spmbSelectedRows.has(item.regNumber);
       const rowNum = startIndex + index + 1;
       const dateVal = formatDaftarDate(item.tanggalDaftar || item.createdAt);
@@ -819,10 +989,7 @@
           ${renderJenjangBadge(item.jenjang)}
         </td>
         <td class="py-4 px-3">
-          <div class="font-bold text-slate-800 text-[11px] uppercase tracking-wide">${escapeHtml(item.jalur ? item.jalur.toUpperCase() : 'REGULER')}</div>
-          <div class="mt-1">
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-blue-100/70 text-blue-800 border border-blue-200">${escapeHtml(getStudentWaveName(item))}</span>
-          </div>
+          ${renderStudentJalurColumn(item)}
         </td>
         <td class="py-4 px-3">
           <div class="font-semibold text-slate-800 text-xs">${escapeHtml(item.namaAyah || '-')}</div>
@@ -837,26 +1004,11 @@
         </td>
         <td class="py-4 px-4">
           <div class="flex flex-col items-start gap-1">
-            ${renderStatusBadge(item.status)}
-            ${hasSched ? `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-sky-50 text-sky-800 border border-sky-200" title="${escapeHtml(item.jadwalTes || item.jadwalObservasi)}"><i class="fa-regular fa-calendar-check text-sky-600"></i><span>Jadwal Ditetapkan</span></span>` : hasData ? `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200"><i class="fa-solid fa-clock text-amber-600"></i><span>Menunggu Jadwal</span></span>` : ''}
+            ${renderStudentStatusColumn(item)}
           </div>
         </td>
         <td class="py-4 px-5 text-center whitespace-nowrap">
-          <div class="inline-flex items-center justify-center gap-1.5">
-            <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.passApplicant(this.dataset.regNumber, this)" ${hasPassed || !hasData ? 'disabled' : ''} title="${hasPassed ? 'Siswa sudah dinyatakan lulus' : !hasData ? 'Lengkapi biodata siswa dan orang tua/wali terlebih dahulu' : 'Tetapkan lulus tes dan wawancara'}">
-              <i class="fa-regular fa-circle-check text-xs"></i>
-              <span>${hasPassed ? 'Lulus' : 'Luluskan'}</span>
-            </button>
-            <button type="button" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail & Verifikasi Berkas">
-              <i class="fa-regular fa-eye text-sm"></i>
-            </button>
-            <button type="button" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200" onclick="window.printApplicantCard('${item.regNumber}')" title="Cetak Kartu Tanda Peserta">
-              <i class="fa-solid fa-print text-sm"></i>
-            </button>
-            <button type="button" class="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus Data Siswa">
-              <i class="fa-solid fa-trash text-sm"></i>
-            </button>
-          </div>
+          ${renderStudentActionButtons(item)}
         </td>
       </tr>
       `;
