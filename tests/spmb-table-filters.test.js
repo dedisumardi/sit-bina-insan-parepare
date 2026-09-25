@@ -17,4 +17,7 @@ test('admin.js contains wave detection, wave filtering, and select-all handling'
   assert.ok(adminJs.includes('spmbSelectedRows'), 'spmbSelectedRows set exists');
   assert.ok(adminJs.includes('spmb-row-checkbox'), 'row checkbox class rendered');
   assert.ok(adminJs.includes('spmb-select-all'), 'select all checkbox handled');
+  assert.ok(adminJs.includes('let waliFilterStatus'), 'waliFilterStatus declared');
+  assert.ok(adminJs.includes('let waliSearchQuery'), 'waliSearchQuery declared');
 });
+

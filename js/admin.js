@@ -474,6 +474,9 @@
   let spmbSearchQuery = '';
   const spmbSelectedRows = new Set();
 
+  let waliFilterStatus = 'all';
+  let waliSearchQuery = '';
+
   function getStudentWave(s) {
     if (!s) return 'wave1';
     const val = (s.gelombang || s.wave || s.waveKey || '').toLowerCase();
