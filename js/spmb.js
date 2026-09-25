@@ -1468,6 +1468,10 @@
         if (image) {
           image.src = record.buktiPembayaran || '';
           image.style.display = proof ? 'block' : 'none';
+          if (proof) {
+            image.style.marginLeft = 'auto';
+            image.style.marginRight = 'auto';
+          }
         }
       }
     }

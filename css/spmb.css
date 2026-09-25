@@ -969,6 +969,16 @@
   margin-bottom: 2rem;
 }
 
+#portal-state-payment-summary {
+  text-align: center;
+}
+
+#portal-payment-summary-proof {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .spmb-step-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));

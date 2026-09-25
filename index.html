@@ -1957,11 +1957,15 @@
             <h3 id="portal-current-title">Pembayaran Pendaftaran</h3>
             <p id="portal-current-description"></p>
           </div>
-          <div id="portal-state-payment-summary" class="spmb-card-highlight" style="display:none;">
-            <h3>Bukti Pembayaran Pendaftaran</h3>
-            <p id="portal-payment-summary-status"></p>
-            <p>Data pembayaran sudah tersimpan. Anda tidak perlu membayar ulang.</p>
-            <img id="portal-payment-summary-proof" alt="Bukti pembayaran pendaftaran" style="display:none; max-width:100%; max-height:420px; object-fit:contain;">
+          <div id="portal-state-payment-summary" class="spmb-card-highlight" style="display:none; text-align: center;">
+            <div style="max-width: 680px; margin: 0 auto; text-align: center;">
+              <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--neutral-900); margin-bottom: 0.5rem;">Bukti Pembayaran Pendaftaran</h3>
+              <p id="portal-payment-summary-status" style="font-weight: 700; color: #166534; margin-bottom: 0.35rem;"></p>
+              <p style="color: var(--neutral-600); font-size: 0.95rem; margin-bottom: 1.25rem;">Data pembayaran sudah tersimpan. Anda tidak perlu membayar ulang.</p>
+              <div style="display: flex; justify-content: center; align-items: center; margin: 1.25rem auto 0; text-align: center;">
+                <img id="portal-payment-summary-proof" alt="Bukti pembayaran pendaftaran" style="display:none; max-width:100%; max-height:450px; object-fit:contain; margin: 0 auto; border-radius: 12px; border: 1px solid var(--neutral-200); box-shadow: var(--shadow-sm);">
+              </div>
+            </div>
           </div>
           <!-- STATE 1: BELUM BAYAR / BELUM UPLOAD BUKTI -->
           <div id="portal-state-unpaid" class="spmb-card-highlight">
