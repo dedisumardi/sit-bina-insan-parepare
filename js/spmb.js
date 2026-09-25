@@ -1214,7 +1214,7 @@
       status.textContent = complete ? '✓ Biodata siswa sudah tersimpan di database.' : 'Pastikan seluruh data wajib sudah benar.';
       status.className = `portal-bio-status${complete ? ' is-success' : ''}`;
     }
-    if (submit) submit.textContent = 'Isi Data Selanjutnya';
+    if (submit) submit.innerHTML = 'Isi Data Selanjutnya <span aria-hidden="true">→</span>';
   }
 
   window.switchBiodataSubstep = function (target) {
@@ -1259,39 +1259,12 @@
     });
   };
 
-  window.nextToParentData = async function () {
-    const form = document.getElementById('portal-student-bio-form');
-    if (form && !form.reportValidity()) return;
-
-    let records = [];
-    let session = null;
-    try {
-      records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      session = JSON.parse(localStorage.getItem(PARENT_SESSION_KEY) || 'null');
-    } catch (_) {}
-    const cleanWa = String(session?.wa || '').replace(/\D/g, '');
-    const record = Array.isArray(records) ? records.find(item => {
-      const itemWa = String(item.waAyah || '').replace(/\D/g, '');
-      return itemWa === cleanWa || (cleanWa.length >= 9 && itemWa.endsWith(cleanWa.slice(-9)));
-    }) : null;
-
-    const isStudentSaved = Boolean(record?.biodataUpdatedAt);
-    const isDirty = form?.dataset.dirty === '1';
-
-    if (!isStudentSaved || isDirty) {
-      await window.submitStudentBiodata({ preventDefault: () => {}, currentTarget: form }, true);
-    } else {
-      window.switchBiodataSubstep('parent');
-    }
-  };
-
-  window.submitStudentBiodata = async function (event, advanceToParent = false) {
+  window.submitStudentBiodata = async function (event) {
     if (event?.preventDefault) event.preventDefault();
     const form = event?.currentTarget || document.getElementById('portal-student-bio-form');
     if (form && !form.reportValidity()) return false;
     const status = document.getElementById('portal-bio-status');
     const submit = document.getElementById('portal-bio-submit');
-    const nextBtn = document.getElementById('portal-bio-next-btn');
     let session;
     if (!window.StudentRegions?.isComplete()) {
       if (status) {
@@ -1338,7 +1311,6 @@
         ?? form?.querySelector('input[name="bio-' + field + '"]:checked')?.value ?? '';
     }
     if (submit) submit.disabled = true;
-    if (nextBtn) nextBtn.disabled = true;
     if (status) {
       status.textContent = 'Menyimpan biodata ke database...';
       status.className = 'portal-bio-status';
@@ -1359,9 +1331,7 @@
         status.className = 'portal-bio-status is-success';
       }
       renderParentPortal();
-      if (advanceToParent) {
-        window.switchBiodataSubstep('parent');
-      }
+      window.switchBiodataSubstep('parent');
       return true;
     } catch (error) {
       if (status) {
@@ -1371,9 +1341,10 @@
       return false;
     } finally {
       if (submit) submit.disabled = false;
-      if (nextBtn) nextBtn.disabled = false;
     }
   };
+
+  window.nextToParentData = window.submitStudentBiodata;
 
   window.openStudentBiodata = function () {
     const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim() ||
