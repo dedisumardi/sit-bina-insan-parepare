@@ -65,6 +65,9 @@ test('admin action button turns to Selesai only when student is graduated and re
 
   const btnCompleted = fn(studentCompleted);
   assert.ok(btnCompleted.includes('<span>Selesai</span>'), 'Completed student must have Selesai button');
+  assert.ok(btnCompleted.includes('disabled="disabled"'), 'Completed student Selesai button must be disabled');
+  assert.ok(!btnCompleted.includes('window.completeApplicant'), 'Completed student Selesai button must not have completeApplicant click handler');
+  assert.ok(btnCompleted.includes('cursor-not-allowed'), 'Completed student Selesai button must have cursor-not-allowed style');
 });
 
 test('window.completeApplicant confirms, updates status and shows thank you message', async () => {
@@ -116,9 +119,11 @@ test('window.completeApplicant confirms, updates status and shows thank you mess
   assert.ok(student.status.includes('Selesai'));
   assert.ok(alerts.some(msg => msg.includes('Selamat & terima kasih telah memilih sekolah kami untuk pendidikan anak anda, jazakallahu khairan')));
 
-  // 3. Already finished -> direct message without re-request
-  await context.window.completeApplicant('SPMB-123', {});
+  // 3. Already finished -> direct return without re-request and disabled
+  const finishedBtn = { disabled: false, classList: { add() {} } };
+  await context.window.completeApplicant('SPMB-123', finishedBtn);
   assert.equal(calls, 1);
+  assert.equal(finishedBtn.disabled, true);
 });
 
 test('renderParentPortal shows only completed card and hides stepper and forms when applicant is selesai', () => {

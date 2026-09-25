@@ -925,18 +925,22 @@
 
     // Jika sudah lulus dan sudah mendaftar ulang (upload KK dan Akta): tombol jadi "Selesai"
     if (hasPassed && hasRereg) {
-      const btnClass = isCompleted
-        ? 'bg-emerald-600 text-white hover:bg-emerald-700 border-emerald-600'
-        : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200';
-      const btnTitle = isCompleted
-        ? 'Alur Pendaftaran SPMB Telah Selesai'
-        : 'Selesaikan Alur Pendaftaran SPMB';
-      primaryBtn = `
-        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold ${btnClass} border transition-colors shadow-2xs" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.completeApplicant(this.dataset.regNumber, this)" title="${btnTitle}">
-          <i class="ph ph-check-circle text-sm"></i>
-          <span>Selesai</span>
-        </button>
-      `;
+      if (isCompleted) {
+        // Alur pendaftaran sudah selesai: tombol dinonaktifkan (tidak bisa digunakan/diklik lagi)
+        primaryBtn = `
+          <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white cursor-not-allowed opacity-75 border border-emerald-600 shadow-none" disabled="disabled" title="Seluruh alur pendaftaran SPMB telah selesai (sudah tidak dapat digunakan/diklik lagi)">
+            <i class="ph ph-check-circle text-sm"></i>
+            <span>Selesai</span>
+          </button>
+        `;
+      } else {
+        primaryBtn = `
+          <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs cursor-pointer" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.completeApplicant(this.dataset.regNumber, this)" title="Selesaikan Alur Pendaftaran SPMB">
+            <i class="ph ph-check-circle text-sm"></i>
+            <span>Selesai</span>
+          </button>
+        `;
+      }
     } else if (hasPassed) {
       // Row 1: Green "Lulus"
       primaryBtn = `
@@ -1682,18 +1686,20 @@
               if (completeDesc) completeDesc.textContent = 'Alur pendaftaran telah selesai:';
               if (completeBtn) {
                 completeBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Alur Pendaftaran Selesai';
-                completeBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300';
-                completeBtn.onclick = function () {
-                  window.completeApplicant(item.regNumber);
-                };
+                completeBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 cursor-not-allowed opacity-75';
+                completeBtn.disabled = true;
+                completeBtn.onclick = null;
+                completeBtn.setAttribute('title', 'Alur pendaftaran SPMB telah selesai (sudah tidak dapat digunakan/diklik lagi)');
               }
             } else {
               if (completeDesc) completeDesc.textContent = 'Berkas KK & Akta lengkap:';
               if (completeBtn) {
+                completeBtn.disabled = false;
+                completeBtn.removeAttribute('title');
                 completeBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Selesaikan Alur Pendaftaran';
-                completeBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition';
+                completeBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition cursor-pointer';
                 completeBtn.onclick = function () {
-                  window.completeApplicant(item.regNumber);
+                  window.completeApplicant(item.regNumber, completeBtn);
                   applicantModal.classList.remove('open');
                 };
               }
@@ -2193,9 +2199,15 @@
     const completedStatus = 'Lulus Seleksi Observasi & Diterima (Pendaftaran Selesai)';
     const thankYouMessage = 'Selamat & terima kasih telah memilih sekolah kami untuk pendidikan anak anda, jazakallahu khairan';
 
-    // Jika alur pendaftaran sudah berstatus selesai, tampilkan pesan langsung
+    // Jika alur pendaftaran sudah berstatus selesai, tombol tidak bisa digunakan/diklik lagi
     if (item.status === completedStatus || (item.status || '').toLowerCase().includes('selesai')) {
-      alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${item.namaSiswa || regNumber} (${regNumber}) telah resmi selesai/berakhir.`);
+      if (button) {
+        button.disabled = true;
+        button.onclick = null;
+        if (button.classList && typeof button.classList.add === 'function') {
+          button.classList.add('cursor-not-allowed', 'opacity-75');
+        }
+      }
       return;
     }
 
@@ -2234,7 +2246,17 @@
       showToast(thankYouMessage);
     } finally {
       completingApplicants.delete(regNumber);
-      if (button) button.disabled = false;
+      if (button) {
+        if (item && (item.status === completedStatus || (item.status || '').toLowerCase().includes('selesai'))) {
+          button.disabled = true;
+          button.onclick = null;
+          if (button.classList && typeof button.classList.add === 'function') {
+            button.classList.add('cursor-not-allowed', 'opacity-75');
+          }
+        } else {
+          button.disabled = false;
+        }
+      }
     }
   };
 
