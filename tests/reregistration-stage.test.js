@@ -5,8 +5,8 @@ const vm = require('node:vm');
 
 test('reregistration stage elements are present in index.html and admin.html', () => {
   const indexHtml = fs.readFileSync('index.html', 'utf8');
-  assert.ok(indexHtml.includes('id="flow-step-7"'), 'index.html must have flow-step-7');
-  assert.ok(indexHtml.includes('portal-flow-seven'), 'index.html must have portal-flow-seven class');
+  assert.ok(indexHtml.includes('id="flow-step-6"'), 'index.html must have flow-step-6');
+  assert.ok(indexHtml.includes('portal-flow-six'), 'index.html must have portal-flow-six class');
   assert.ok(indexHtml.includes('id="portal-results-reregister-action"'), 'index.html must have reregister action in results stage');
   assert.ok(indexHtml.includes('id="portal-state-reregistration"'), 'index.html must have portal-state-reregistration section');
   assert.ok(indexHtml.includes('id="portal-rereg-kk-file"'), 'index.html must have KK file input');
@@ -47,7 +47,7 @@ test('openReRegistrationStage writes reregistration view and refreshes parent po
   assert.equal(refreshes, 1);
 });
 
-test('step 7 sets navigation title, description and step 7 text', () => {
+test('step 6 sets navigation title, description and step 6 text', () => {
   const source = fs.readFileSync('js/spmb.js', 'utf8');
   const code = source.slice(source.indexOf('  const registrationSteps ='), source.indexOf('  window.openResultsStage ='));
   const nodes = {};
@@ -72,6 +72,6 @@ test('step 7 sets navigation title, description and step 7 text', () => {
   vm.createContext(context);
   vm.runInContext(code, context);
   context.updateRegistrationNavigation({ regNumber: 'SPMB-1' }, true, true);
-  assert.equal(nodes['portal-current-step'].textContent, 'LANGKAH 7 DARI 7');
+  assert.equal(nodes['portal-current-step'].textContent, 'LANGKAH 6 DARI 6');
   assert.equal(nodes['portal-current-title'].textContent, 'Pendaftaran Ulang Siswa Baru');
 });

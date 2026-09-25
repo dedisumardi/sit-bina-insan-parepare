@@ -1287,6 +1287,9 @@
         status.className = 'portal-bio-status is-success';
       }
       renderParentPortal();
+      requestAnimationFrame(() => {
+        document.getElementById('portal-state-parents')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     } catch (error) {
       if (status) {
         status.textContent = error.message || 'Biodata gagal disimpan. Silakan coba kembali.';
@@ -1355,8 +1358,7 @@
   const registrationSteps = [
     ['Pembayaran Pendaftaran', 'Bayar biaya pendaftaran dan unggah bukti pembayaran.'],
     ['Verifikasi Pembayaran', 'Tunggu persetujuan panitia dan penerbitan kode pendaftaran sebelum melanjutkan.'],
-    ['Biodata Calon Siswa', 'Lengkapi biodata dan klik Simpan Data Siswa. Setelah tersimpan, klik Lanjutkan.'],
-    ['Data Orang Tua dan Wali', 'Lengkapi data ayah, ibu, dan wali bila ada, lalu klik Simpan Data Orang Tua dan Wali sebelum Lanjutkan.'],
+    ['Biodata Siswa dan Orang Tua/Wali', 'Lengkapi biodata calon siswa serta data orang tua dan wali, lalu simpan data sebelum melanjutkan.'],
     ['Jadwal Tes & Wawancara', 'Periksa jadwal terbaru dan cetak kartu peserta sebelum hadir.'],
     ['Pengumuman Hasil Tes & Wawancara', 'Lihat hasil resmi yang ditetapkan panitia.'],
     ['Pendaftaran Ulang Siswa Baru', 'Unggah berkas resmi Kartu Keluarga (KK) dan Akta Kelahiran Calon Siswa untuk menyelesaikan proses pendaftaran.']
@@ -1365,7 +1367,7 @@
 
   window.navigateRegistration = function (direction) {
     const { step, regNumber, approved, proof } = registrationNavigation;
-    if (![1, -1].includes(direction) || (step === 1 && direction < 0) || (step === 6 && direction > 0) || (step === 7 && direction > 0)) return;
+    if (![1, -1].includes(direction) || (step === 1 && direction < 0) || (step === 6 && direction > 0)) return;
     if (document.getElementById('portal-bio-submit')?.disabled || document.getElementById('portal-parent-data-submit')?.disabled) return;
     if (direction > 0 && step === 1 && !approved && !proof) {
       alert('Unggah dan kirim bukti pembayaran terlebih dahulu.'); return;
@@ -1373,21 +1375,29 @@
     if (direction > 0 && step === 2 && !approved) {
       alert('Silakan tunggu pembayaran disetujui oleh panitia.'); return;
     }
-    if (direction > 0 && (step === 3 || step === 4)) {
-      const form = document.getElementById(step === 3 ? 'portal-student-bio-form' : 'portal-parent-data-form');
-      if (form && !form.reportValidity()) return;
-      const saved = step === 3 ? registrationNavigation.studentSaved : registrationNavigation.parentsSaved;
-      const dirty = step === 3 ? form?.dataset.dirty === '1' : window.ParentBiodata?.hasUnsavedChanges();
-      if (!saved || dirty) {
+    if (direction > 0 && step === 3) {
+      const studentForm = document.getElementById('portal-student-bio-form');
+      const parentForm = document.getElementById('portal-parent-data-form');
+      if (studentForm && !studentForm.reportValidity()) return;
+      if (parentForm && !parentForm.reportValidity()) return;
+      const studentSaved = registrationNavigation.studentSaved;
+      const studentDirty = studentForm?.dataset.dirty === '1';
+      if (!studentSaved || studentDirty) {
+        alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum melanjutkan.');
+        return;
+      }
+      const parentsSaved = registrationNavigation.parentsSaved;
+      const parentsDirty = window.ParentBiodata?.hasUnsavedChanges();
+      if (!parentsSaved || parentsDirty) {
         alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum melanjutkan.');
         return;
       }
     }
     const target = step + direction;
-    const suffix = [':start', ':payment', '', ':parents', ':schedule', ':results', ':reregistration'][target - 1];
+    const suffix = [':start', ':payment', '', ':schedule', ':results', ':reregistration'][target - 1];
     try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + suffix); } catch (_) {}
     renderParentPortal();
-    if (target === 5 || target === 6 || target === 7) refreshParentFromDatabase();
+    if (target === 4 || target === 5 || target === 6) refreshParentFromDatabase();
     document.getElementById('portal-step-navigation')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
@@ -1395,9 +1405,9 @@
     let view = '';
     try { view = sessionStorage.getItem(PARENT_BIODATA_VIEW_KEY) || ''; } catch (_) {}
     const summary = document.getElementById('portal-state-payment-summary');
-    summary.style.display = 'none';
+    if (summary) summary.style.display = 'none';
     let step = approved ? 2 : proof ? 2 : 1;
-    for (const [id, number] of [['biodata', 3], ['parents', 4], ['schedule', 5], ['results', 6], ['reregistration', 7]]) {
+    for (const [id, number] of [['biodata', 3], ['parents', 3], ['schedule', 4], ['results', 5], ['reregistration', 6]]) {
       if (document.getElementById('portal-state-' + id)?.style.display === 'block') step = number;
     }
     if (view === record.regNumber + ':start') {
@@ -1406,26 +1416,31 @@
         const el = document.getElementById('portal-state-' + id);
         if (el) el.style.display = 'none';
       });
-      document.getElementById('portal-state-unpaid').style.display = approved || proof ? 'none' : 'block';
+      const unpaidEl = document.getElementById('portal-state-unpaid');
+      if (unpaidEl) unpaidEl.style.display = approved || proof ? 'none' : 'block';
       if (approved || proof) {
-        summary.style.display = 'block';
-        document.getElementById('portal-payment-summary-status').textContent = approved ? 'Pembayaran telah disetujui.' : 'Bukti pembayaran sudah dikirim dan menunggu verifikasi.';
+        if (summary) summary.style.display = 'block';
+        const statusEl = document.getElementById('portal-payment-summary-status');
+        if (statusEl) statusEl.textContent = approved ? 'Pembayaran telah disetujui.' : 'Bukti pembayaran sudah dikirim dan menunggu verifikasi.';
         const image = document.getElementById('portal-payment-summary-proof');
-        image.src = record.buktiPembayaran || '';
-        image.style.display = proof ? 'block' : 'none';
+        if (image) {
+          image.src = record.buktiPembayaran || '';
+          image.style.display = proof ? 'block' : 'none';
+        }
       }
     }
     registrationNavigation = { step, regNumber: record.regNumber, approved, proof, studentSaved: Boolean(record.biodataUpdatedAt), parentsSaved: Boolean(record.parentDataUpdatedAt) };
-    document.getElementById('portal-current-step').textContent = step <= 6 ? 'LANGKAH ' + step + ' DARI 6' : 'LANGKAH 7 DARI 7';
-    for (let number = 1; number <= 7; number++) {
+    const stepEl = document.getElementById('portal-current-step');
+    if (stepEl) stepEl.textContent = 'LANGKAH ' + step + ' DARI 6';
+    for (let number = 1; number <= 6; number++) {
       const indicator = document.getElementById('flow-step-' + number);
       if (number === step) indicator?.setAttribute?.('aria-current', 'step');
       else indicator?.removeAttribute?.('aria-current');
     }
     const progressLine = document.getElementById('stepper-progress-line');
     if (progressLine && progressLine.style) {
-      const widths = ['7%', '22%', '38%', '54%', '70%', '86%', '100%'];
-      progressLine.style.width = widths[Math.min(Math.max(step - 1, 0), 6)];
+      const widths = ['8%', '26%', '46%', '66%', '84%', '100%'];
+      progressLine.style.width = widths[Math.min(Math.max(step - 1, 0), 5)];
     }
     if (typeof document.querySelector === 'function') {
       const badge1 = document.querySelector('#flow-step-1 .step-label-badge');
@@ -1433,20 +1448,22 @@
       const badge2 = document.querySelector('#flow-step-2 .step-label-badge');
       if (badge2) badge2.textContent = approved ? 'Terverifikasi' : proof ? 'Verifikasi' : 'Menunggu';
       const badge3 = document.querySelector('#flow-step-3 .step-label-badge');
-      if (badge3) badge3.textContent = record?.biodataUpdatedAt ? 'Lengkap' : (step === 3 ? 'Sedang Diisi' : 'Menunggu');
+      if (badge3) badge3.textContent = (record?.biodataUpdatedAt && record?.parentDataUpdatedAt) ? 'Lengkap' : (step === 3 ? 'Sedang Diisi' : 'Menunggu');
       const badge4 = document.querySelector('#flow-step-4 .step-label-badge');
-      if (badge4) badge4.textContent = record?.parentDataUpdatedAt ? 'Lengkap' : (step === 4 ? 'Sedang Diisi' : 'Menunggu');
+      if (badge4) badge4.textContent = step > 4 ? 'Selesai' : (step === 4 ? 'Jadwal Ditentukan' : 'Tahap 4');
       const badge5 = document.querySelector('#flow-step-5 .step-label-badge');
-      if (badge5) badge5.textContent = step > 5 ? 'Selesai' : (step === 5 ? 'Jadwal Ditentukan' : 'Tahap 5');
+      if (badge5) badge5.textContent = step > 5 || (record?.status && record.status.includes('Lulus')) ? 'Lulus' : (step === 5 ? 'Pengumuman' : 'Jadwal Ditentukan');
       const badge6 = document.querySelector('#flow-step-6 .step-label-badge');
-      if (badge6) badge6.textContent = step > 6 || (record?.status && record.status.includes('Lulus')) ? 'Lulus' : (step === 6 ? 'Pengumuman' : 'Jadwal Ditentukan');
-      const badge7 = document.querySelector('#flow-step-7 .step-label-badge');
-      if (badge7) badge7.textContent = (record?.berkasKk && record?.berkasAkta) ? 'Selesai' : (step === 7 ? 'Daftar Ulang' : 'Tahap Akhir');
+      if (badge6) badge6.textContent = (record?.berkasKk && record?.berkasAkta) ? 'Selesai' : (step === 6 ? 'Daftar Ulang' : 'Tahap Akhir');
     }
-    document.getElementById('portal-current-title').textContent = registrationSteps[step - 1][0];
-    document.getElementById('portal-current-description').textContent = registrationSteps[step - 1][1];
-    document.getElementById('portal-step-back').disabled = step === 1;
-    document.getElementById('portal-step-next').disabled = step >= 6 || (step === 1 && !approved && !proof) || (step === 2 && !approved);
+    const titleEl = document.getElementById('portal-current-title');
+    if (titleEl) titleEl.textContent = registrationSteps[step - 1][0];
+    const descEl = document.getElementById('portal-current-description');
+    if (descEl) descEl.textContent = registrationSteps[step - 1][1];
+    const backBtn = document.getElementById('portal-step-back');
+    if (backBtn) backBtn.disabled = step === 1;
+    const nextBtn = document.getElementById('portal-step-next');
+    if (nextBtn) nextBtn.disabled = step >= 6 || (step === 1 && !approved && !proof) || (step === 2 && !approved);
   }
 
   // Navigasi langsung dengan klik tahapan pada Stepper
@@ -1454,11 +1471,13 @@
     if (!registrationNavigation || !registrationNavigation.regNumber) return;
     const current = registrationNavigation.step;
     if (targetStep === current) return;
-    if (current === 3 || current === 4) {
-      const form = current === 3 ? document.getElementById('portal-student-bio-form') : document.getElementById('portal-parent-bio-form');
-      const saved = current === 3 ? registrationNavigation.studentSaved : registrationNavigation.parentsSaved;
-      const dirty = current === 3 ? form?.dataset.dirty === '1' : window.ParentBiodata?.hasUnsavedChanges();
-      if (!saved || dirty) {
+    if (current === 3) {
+      const studentForm = document.getElementById('portal-student-bio-form');
+      const studentSaved = registrationNavigation.studentSaved;
+      const studentDirty = studentForm?.dataset.dirty === '1';
+      const parentsSaved = registrationNavigation.parentsSaved;
+      const parentsDirty = window.ParentBiodata?.hasUnsavedChanges();
+      if (!studentSaved || studentDirty || !parentsSaved || parentsDirty) {
         alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum berpindah langkah.');
         return;
       }
@@ -1468,14 +1487,14 @@
       alert('Langkah ini dapat diakses setelah pembayaran Anda diverifikasi oleh Admin.');
       return;
     }
-    if (targetStep === 4 && !registrationNavigation.studentSaved) {
-      alert('Lengkapi dan simpan Biodata Siswa terlebih dahulu.');
+    if (targetStep >= 4 && (!registrationNavigation.studentSaved || !registrationNavigation.parentsSaved)) {
+      alert('Lengkapi dan simpan Biodata Siswa dan Orang Tua/Wali terlebih dahulu.');
       return;
     }
-    const suffix = [':start', ':payment', '', ':parents', ':schedule', ':results', ':reregistration'][targetStep - 1];
+    const suffix = [':start', ':payment', '', ':schedule', ':results', ':reregistration'][targetStep - 1];
     try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, registrationNavigation.regNumber + suffix); } catch (_) {}
     renderParentPortal();
-    if (targetStep === 5 || targetStep === 6 || targetStep === 7) refreshParentFromDatabase();
+    if (targetStep === 4 || targetStep === 5 || targetStep === 6) refreshParentFromDatabase();
     document.getElementById('portal-step-navigation')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
@@ -1617,10 +1636,9 @@
           resultsViewOpen = true;
         } else if (view === record.regNumber + ':schedule') {
           scheduleViewOpen = true;
-        } else if (view === record.regNumber + ':parents' && Boolean(record.biodataUpdatedAt)) {
-          parentsViewOpen = true;
-        } else if (view === record.regNumber) {
+        } else if (view === record.regNumber + ':parents' || view === record.regNumber) {
           biodataViewOpen = true;
+          if (view === record.regNumber + ':parents') parentsViewOpen = true;
         } else if (biodataComplete && parentsComplete) {
           scheduleViewOpen = true;
         }
@@ -1628,9 +1646,9 @@
 
       stateUnpaid.style.display = 'none';
       statePending.style.display = 'none';
-      stateApproved.style.display = (biodataViewOpen || parentsViewOpen || scheduleViewOpen || resultsViewOpen || reregistrationViewOpen) ? 'none' : 'block';
+      stateApproved.style.display = (biodataViewOpen || scheduleViewOpen || resultsViewOpen || reregistrationViewOpen) ? 'none' : 'block';
       if (stateBiodata) stateBiodata.style.display = biodataViewOpen ? 'block' : 'none';
-      if (stateParents) stateParents.style.display = parentsViewOpen ? 'block' : 'none';
+      if (stateParents) stateParents.style.display = 'block';
       if (stateSchedule) stateSchedule.style.display = scheduleViewOpen ? 'block' : 'none';
       if (stateResults) {
         stateResults.style.display = resultsViewOpen ? 'block' : 'none';
@@ -1760,7 +1778,7 @@
       }
 
       step4?.classList.remove('active', 'done', 'current-success');
-      if (hasSchedule) {
+      if (hasSchedule || isPassed || resultsViewOpen || reregistrationViewOpen) {
         step4?.classList.add('done');
       } else if (scheduleViewOpen) {
         step4?.classList.add('current-success');
@@ -1770,27 +1788,23 @@
 
       const step5 = document.getElementById('flow-step-5');
       const step6 = document.getElementById('flow-step-6');
-      const step7 = document.getElementById('flow-step-7');
       step5?.classList.remove('active', 'done', 'current-success');
       step6?.classList.remove('active', 'done', 'current-success');
-      step7?.classList.remove('active', 'done', 'current-success');
 
-      if (isPassed || resultsViewOpen || reregistrationViewOpen) {
+      if (isPassed || hasRereg || reregistrationViewOpen) {
         step5?.classList.add('done');
-      } else if (scheduleViewOpen) {
-        step5?.classList.add('current-success');
-      }
-
-      if (hasRereg || reregistrationViewOpen) {
-        step6?.classList.add('done');
       } else if (resultsViewOpen) {
-        step6?.classList.add('current-success');
+        step5?.classList.add('current-success');
+      } else if (hasSchedule) {
+        step5?.classList.add('active');
       }
 
       if (hasRereg) {
-        step7?.classList.add('done');
+        step6?.classList.add('done');
       } else if (reregistrationViewOpen) {
-        step7?.classList.add('current-success');
+        step6?.classList.add('current-success');
+      } else if (isPassed) {
+        step6?.classList.add('active');
       }
 
       if (flowLine1) flowLine1.style.background = '#22c55e';
@@ -1824,7 +1838,6 @@
       step4?.classList.remove('active', 'done', 'current-success');
       document.getElementById('flow-step-5')?.classList.remove('active', 'done', 'current-success');
       document.getElementById('flow-step-6')?.classList.remove('active', 'done', 'current-success');
-      document.getElementById('flow-step-7')?.classList.remove('active', 'done', 'current-success');
       if (flowLine1) flowLine1.style.background = '#22c55e';
       if (flowLine2) flowLine2.style.background = 'var(--neutral-200)';
       if (flowLine3) flowLine3.style.background = 'var(--neutral-200)';
@@ -1848,7 +1861,6 @@
       step4?.classList.remove('active', 'done', 'current-success');
       document.getElementById('flow-step-5')?.classList.remove('active', 'done', 'current-success');
       document.getElementById('flow-step-6')?.classList.remove('active', 'done', 'current-success');
-      document.getElementById('flow-step-7')?.classList.remove('active', 'done', 'current-success');
       if (flowLine1) flowLine1.style.background = 'var(--neutral-200)';
       if (flowLine2) flowLine2.style.background = 'var(--neutral-200)';
       if (flowLine3) flowLine3.style.background = 'var(--neutral-200)';

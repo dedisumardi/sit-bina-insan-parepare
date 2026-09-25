@@ -1857,13 +1857,13 @@
             </div>
             <!-- Scrollable Horizontal Stepper Track -->
             <div class="p-6 sm:p-8 overflow-x-auto custom-scrollbar stepper-track-body">
-              <div class="min-w-[940px] relative pb-2 pt-1 stepper-track-inner">
+              <div class="min-w-[860px] relative pb-2 pt-1 stepper-track-inner">
                 <!-- Stepper Track Base Lines -->
                 <div aria-hidden="true" class="step-track-line bg-slate-200"></div>
                 <!-- Completed Line Progress -->
-                <div aria-hidden="true" id="stepper-progress-line" class="step-track-line bg-emerald-600 transition-all duration-500" style="width: 38%;"></div>
-                <!-- Stepper Steps Grid (7 Columns) -->
-                <ol class="portal-flow-steps portal-flow-seven relative z-10 grid grid-cols-7 gap-3 text-center" aria-label="Tahapan pendaftaran">
+                <div aria-hidden="true" id="stepper-progress-line" class="step-track-line bg-emerald-600 transition-all duration-500" style="width: 46%;"></div>
+                <!-- Stepper Steps Grid (6 Columns) -->
+                <ol class="portal-flow-steps portal-flow-six portal-flow-seven relative z-10 grid grid-cols-6 gap-3 text-center" aria-label="Tahapan pendaftaran">
                   <!-- Step 1: Pembayaran -->
                   <li class="portal-flow-step group flex flex-col items-center cursor-pointer" id="flow-step-1" data-step="1" onclick="window.jumpToRegistrationStep(1)" title="Langkah 1: Pembayaran">
                     <div class="step-active-bg absolute -inset-x-2 -top-3 -bottom-3 rounded-2xl bg-emerald-50/70 border border-emerald-300 shadow-sm -z-10"></div>
@@ -1890,8 +1890,8 @@
                       <span class="step-label-badge inline-block mt-1 text-[10px] font-medium text-slate-500">Menunggu</span>
                     </div>
                   </li>
-                  <!-- Step 3: Biodata Siswa -->
-                  <li class="portal-flow-step relative flex flex-col items-center cursor-pointer" id="flow-step-3" data-step="3" onclick="window.jumpToRegistrationStep(3)" title="Langkah 3: Biodata Siswa">
+                  <!-- Step 3: Biodata Siswa dan Orang Tua/Wali -->
+                  <li class="portal-flow-step relative flex flex-col items-center cursor-pointer" id="flow-step-3" data-step="3" onclick="window.jumpToRegistrationStep(3)" title="Langkah 3: Biodata Siswa dan Orang Tua/Wali">
                     <div class="step-active-bg absolute -inset-x-2 -top-3 -bottom-3 rounded-2xl bg-emerald-50/70 border border-emerald-300 shadow-sm -z-10"></div>
                     <div class="step-circle w-10 h-10 rounded-full bg-slate-100 border-2 border-slate-300 text-slate-500 flex items-center justify-center font-bold text-sm ring-4 ring-white group-hover:scale-105 transition-transform">
                       <span class="step-num">3</span>
@@ -1899,12 +1899,12 @@
                     </div>
                     <div class="mt-3.5 px-1">
                       <span class="step-label-num block text-[11px] font-bold text-slate-500 tracking-wider uppercase mb-0.5">LANGKAH 3</span>
-                      <span class="step-label-title text-xs sm:text-sm font-semibold text-slate-800 leading-tight block">Biodata Siswa</span>
+                      <span class="step-label-title text-xs sm:text-sm font-semibold text-slate-800 leading-tight block">Biodata Siswa &amp; Orang Tua/Wali</span>
                       <span class="step-label-badge inline-block mt-1 text-[10px] font-medium text-slate-500">Menunggu</span>
                     </div>
                   </li>
-                  <!-- Step 4: Orang Tua & Wali -->
-                  <li class="portal-flow-step flex flex-col items-center opacity-85 hover:opacity-100 transition-opacity cursor-pointer" id="flow-step-4" data-step="4" onclick="window.jumpToRegistrationStep(4)" title="Langkah 4: Orang Tua & Wali">
+                  <!-- Step 4: Jadwal Tes & Wawancara -->
+                  <li class="portal-flow-step flex flex-col items-center opacity-75 hover:opacity-100 transition-opacity cursor-pointer" id="flow-step-4" data-step="4" onclick="window.jumpToRegistrationStep(4)" title="Langkah 4: Jadwal Tes & Wawancara">
                     <div class="step-active-bg absolute -inset-x-2 -top-3 -bottom-3 rounded-2xl bg-emerald-50/70 border border-emerald-300 shadow-sm -z-10"></div>
                     <div class="step-circle w-10 h-10 rounded-full bg-slate-100 border-2 border-slate-300 text-slate-500 flex items-center justify-center font-bold text-sm ring-4 ring-white group-hover:scale-105 transition-transform">
                       <span class="step-num">4</span>
@@ -1912,12 +1912,12 @@
                     </div>
                     <div class="mt-3.5 px-1">
                       <span class="step-label-num block text-[11px] font-bold text-slate-500 tracking-wider uppercase mb-0.5">LANGKAH 4</span>
-                      <span class="step-label-title text-xs sm:text-sm font-semibold text-slate-800 leading-tight block">Orang Tua &amp; Wali</span>
-                      <span class="step-label-badge inline-block mt-1 text-[10px] text-slate-500 font-medium">Menunggu</span>
+                      <span class="step-label-title text-xs sm:text-sm font-semibold text-slate-800 leading-tight block">Jadwal Tes &amp; Wawancara</span>
+                      <span class="step-label-badge inline-block mt-1 text-[10px] text-slate-500 font-medium">Tahap 4</span>
                     </div>
                   </li>
-                  <!-- Step 5: Jadwal Tes & Wawancara -->
-                  <li class="portal-flow-step flex flex-col items-center opacity-75 hover:opacity-100 transition-opacity cursor-pointer" id="flow-step-5" data-step="5" onclick="window.jumpToRegistrationStep(5)" title="Langkah 5: Jadwal Tes & Wawancara">
+                  <!-- Step 5: Pengumuman Hasil -->
+                  <li class="portal-flow-step flex flex-col items-center opacity-75 hover:opacity-100 transition-opacity cursor-pointer" id="flow-step-5" data-step="5" onclick="window.jumpToRegistrationStep(5)" title="Langkah 5: Pengumuman Hasil">
                     <div class="step-active-bg absolute -inset-x-2 -top-3 -bottom-3 rounded-2xl bg-emerald-50/70 border border-emerald-300 shadow-sm -z-10"></div>
                     <div class="step-circle w-10 h-10 rounded-full bg-slate-100 border-2 border-slate-300 text-slate-500 flex items-center justify-center font-bold text-sm ring-4 ring-white group-hover:scale-105 transition-transform">
                       <span class="step-num">5</span>
@@ -1925,32 +1925,19 @@
                     </div>
                     <div class="mt-3.5 px-1">
                       <span class="step-label-num block text-[11px] font-bold text-slate-500 tracking-wider uppercase mb-0.5">LANGKAH 5</span>
-                      <span class="step-label-title text-xs sm:text-sm font-semibold text-slate-800 leading-tight block">Jadwal Tes &amp; Wawancara</span>
-                      <span class="step-label-badge inline-block mt-1 text-[10px] text-slate-500 font-medium">Tahap 5</span>
+                      <span class="step-label-title text-xs sm:text-sm font-semibold text-slate-800 leading-tight block">Pengumuman Hasil</span>
+                      <span class="step-label-badge inline-block mt-1 text-[10px] text-slate-500 font-medium">Jadwal Ditentukan</span>
                     </div>
                   </li>
-                  <!-- Step 6: Pengumuman Hasil -->
-                  <li class="portal-flow-step flex flex-col items-center opacity-75 hover:opacity-100 transition-opacity cursor-pointer" id="flow-step-6" data-step="6" onclick="window.jumpToRegistrationStep(6)" title="Langkah 6: Pengumuman Hasil">
+                  <!-- Step 6: Daftar Ulang -->
+                  <li class="portal-flow-step flex flex-col items-center opacity-75 hover:opacity-100 transition-opacity cursor-pointer" id="flow-step-6" data-step="6" onclick="window.jumpToRegistrationStep(6)" title="Langkah 6: Daftar Ulang">
                     <div class="step-active-bg absolute -inset-x-2 -top-3 -bottom-3 rounded-2xl bg-emerald-50/70 border border-emerald-300 shadow-sm -z-10"></div>
-                    <div class="step-circle w-10 h-10 rounded-full bg-slate-100 border-2 border-slate-300 text-slate-500 flex items-center justify-center font-bold text-sm ring-4 ring-white group-hover:scale-105 transition-transform">
+                    <div class="step-circle w-10 h-10 rounded-full bg-slate-100 border-2 border-dashed border-slate-300 text-slate-500 flex items-center justify-center font-bold text-sm ring-4 ring-white group-hover:scale-105 transition-transform">
                       <span class="step-num">6</span>
                       <svg class="step-check w-5 h-5 text-white stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4.5 12.75l6 6 9-13.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                     </div>
                     <div class="mt-3.5 px-1">
                       <span class="step-label-num block text-[11px] font-bold text-slate-500 tracking-wider uppercase mb-0.5">LANGKAH 6</span>
-                      <span class="step-label-title text-xs sm:text-sm font-semibold text-slate-800 leading-tight block">Pengumuman Hasil</span>
-                      <span class="step-label-badge inline-block mt-1 text-[10px] text-slate-500 font-medium">Jadwal Ditentukan</span>
-                    </div>
-                  </li>
-                  <!-- Step 7: Daftar Ulang -->
-                  <li class="portal-flow-step flex flex-col items-center opacity-75 hover:opacity-100 transition-opacity cursor-pointer" id="flow-step-7" data-step="7" onclick="window.jumpToRegistrationStep(7)" title="Langkah 7: Daftar Ulang">
-                    <div class="step-active-bg absolute -inset-x-2 -top-3 -bottom-3 rounded-2xl bg-emerald-50/70 border border-emerald-300 shadow-sm -z-10"></div>
-                    <div class="step-circle w-10 h-10 rounded-full bg-slate-100 border-2 border-dashed border-slate-300 text-slate-500 flex items-center justify-center font-bold text-sm ring-4 ring-white group-hover:scale-105 transition-transform">
-                      <span class="step-num">7</span>
-                      <svg class="step-check w-5 h-5 text-white stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4.5 12.75l6 6 9-13.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                    </div>
-                    <div class="mt-3.5 px-1">
-                      <span class="step-label-num block text-[11px] font-bold text-slate-500 tracking-wider uppercase mb-0.5">LANGKAH 7</span>
                       <span class="step-label-title text-xs sm:text-sm font-semibold text-slate-800 leading-tight block">Daftar Ulang</span>
                       <span class="step-label-badge inline-block mt-1 text-[10px] text-slate-500 font-medium">Tahap Akhir</span>
                     </div>
@@ -2127,187 +2114,207 @@
             </div>
           </div>
 
-          <!-- STATE 4: FORM BIODATA LANGKAH 3 (TERPISAH DARI KONFIRMASI PEMBAYARAN) -->
+          <!-- STATE 3: FORM BIODATA SISWA DAN ORANG TUA/WALI (LANGKAH 3) -->
           <div id="portal-state-biodata" class="portal-biodata-page" style="display: none;">
             <button type="button" class="portal-bio-back" onclick="window.backToPaymentApproval()">
               <span aria-hidden="true">←</span> Kembali ke Konfirmasi Pembayaran
             </button>
-            <form id="portal-student-bio-form" class="portal-bio-form" onsubmit="window.submitStudentBiodata(event)">
-              <div class="portal-bio-heading">
-                <h3>Lengkapi Biodata Calon Siswa</h3>
-                <p>Isi data sesuai Kartu Keluarga dan dokumen resmi. Data akan tersimpan langsung ke database sekolah.</p>
-              </div>
 
-              <div class="portal-bio-grid">
-                <div class="form-group">
-                  <label class="form-label" for="bio-jenjang">Jenjang Pendidikan <span class="required">*</span></label>
-                  <select id="bio-jenjang" class="form-control" required>
-                    <option value="">Pilih jenjang pendidikan</option><option value="tkit">TKIT</option><option value="sdit">SDIT</option><option value="smpit">SMPIT</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-jalur">Jalur Pendaftaran <span class="required">*</span></label>
-                  <select id="bio-jalur" class="form-control" required>
-                    <option value="reguler">Reguler</option>
-                  </select>
-                </div>
-                <div class="form-group portal-bio-full">
-                  <label class="form-label" for="bio-nama">Nama Lengkap Siswa <span class="required">*</span></label>
-                  <input id="bio-nama" class="form-control" type="text" minlength="2" maxlength="150" autocomplete="name" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-jk">Jenis Kelamin <span class="required">*</span></label>
-                  <select id="bio-jk" class="form-control" required><option value="">Pilih jenis kelamin</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-nik">NIK Siswa <span class="required">*</span></label>
-                  <input id="bio-nik" class="form-control" type="text" inputmode="numeric" pattern="[0-9]{16}" minlength="16" maxlength="16" placeholder="16 digit NIK" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-tempat-lahir">Tempat Lahir <span class="required">*</span></label>
-                  <input id="bio-tempat-lahir" class="form-control" type="text" maxlength="100" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-tanggal-lahir">Tanggal Lahir <span class="required">*</span></label>
-                  <input id="bio-tanggal-lahir" class="form-control" type="date" required>
-                </div>
-                <div class="form-group portal-bio-full">
-                  <label class="form-label" for="bio-asal-sekolah">Asal Sekolah <span class="required">*</span></label>
-                  <input id="bio-asal-sekolah" class="form-control" type="text" maxlength="200" required>
-                </div>
-                <div class="form-group portal-bio-full">
-                  <label class="form-label" for="bio-alamat-asal-sekolah">Alamat Asal Sekolah <span class="required">*</span></label>
-                  <textarea id="bio-alamat-asal-sekolah" class="form-control" rows="3" maxlength="1000" required></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-agama">Agama <span class="required">*</span></label>
-                  <select id="bio-agama" class="form-control" required><option value="">Pilih agama</option><option value="Islam">Islam</option></select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-kewarganegaraan">Kewarganegaraan <span class="required">*</span></label>
-                  <input id="bio-kewarganegaraan" class="form-control" type="text" maxlength="80" required>
-                </div>
-                <div class="form-group portal-bio-full">
-                  <label class="form-label" for="bio-alamat">Alamat Lengkap <span class="required">*</span></label>
-                  <textarea id="bio-alamat" class="form-control" rows="3" maxlength="1000" required></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-provinsi">Provinsi <span class="required">*</span></label>
-                  <select id="bio-provinsi" class="form-control" required disabled><option value="">Memuat provinsi...</option></select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-kabupaten">Kabupaten/Kota <span class="required">*</span></label>
-                  <select id="bio-kabupaten" class="form-control" required disabled><option value="">Pilih provinsi terlebih dahulu</option></select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-kecamatan">Kecamatan <span class="required">*</span></label>
-                  <select id="bio-kecamatan" class="form-control" required disabled><option value="">Pilih kabupaten/kota terlebih dahulu</option></select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-desa">Desa/Kelurahan <span class="required">*</span></label>
-                  <select id="bio-desa" class="form-control" required disabled><option value="">Pilih kecamatan terlebih dahulu</option></select>
-                </div>
-                <div class="form-group portal-bio-full" id="bio-region-feedback" role="status" hidden>
-                  <span id="bio-region-message"></span>
-                </div>
-              </div>
+            <div class="portal-bio-heading" style="margin-bottom: 2rem;">
+              <h3 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 0.35rem;">
+                Langkah 3: Biodata Siswa dan Orang Tua/Wali
+              </h3>
+              <p style="color: #64748b; font-size: 0.9rem; line-height: 1.6;">
+                Lengkapi <strong>Bagian 1 (Biodata Calon Siswa)</strong> dan <strong>Bagian 2 (Data Orang Tua dan Wali)</strong> di bawah ini sesuai Kartu Keluarga dan dokumen resmi. Data akan tersimpan langsung ke database resmi sekolah.
+              </p>
+            </div>
 
-              <div class="portal-bio-grid">
-                <div class="form-group">
-                  <label class="form-label" for="bio-tempatTinggal">Tempat Tinggal <span class="required">*</span></label>
-                  <select id="bio-tempatTinggal" class="form-control" required><option value="">Pilih tempat tinggal</option><option value="Bersama orang tua">Bersama orang tua</option><option value="Wali">Wali</option><option value="Lainnya">Lainnya</option></select>
+            <!-- BAGIAN 1: BIODATA CALON SISWA -->
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 1.25rem; padding: 1.75rem; margin-bottom: 2.25rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
+              <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1rem; padding-bottom: 0.65rem; border-bottom: 2px solid #e2e8f0;">
+                <span style="background: #059669; color: #ffffff; font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.65rem; border-radius: 9999px; letter-spacing: 0.05em;">BAGIAN 1</span>
+                <h4 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0;">Biodata Calon Siswa</h4>
+              </div>
+              <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1.5rem;">
+                Isi data calon siswa sesuai Kartu Keluarga dan dokumen resmi.
+              </p>
+
+              <form id="portal-student-bio-form" class="portal-bio-form" onsubmit="window.submitStudentBiodata(event)">
+                <div class="portal-bio-grid">
+                  <div class="form-group">
+                    <label class="form-label" for="bio-jenjang">Jenjang Pendidikan <span class="required">*</span></label>
+                    <select id="bio-jenjang" class="form-control" required>
+                      <option value="">Pilih jenjang pendidikan</option><option value="tkit">TKIT</option><option value="sdit">SDIT</option><option value="smpit">SMPIT</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-jalur">Jalur Pendaftaran <span class="required">*</span></label>
+                    <select id="bio-jalur" class="form-control" required>
+                      <option value="reguler">Reguler</option>
+                    </select>
+                  </div>
+                  <div class="form-group portal-bio-full">
+                    <label class="form-label" for="bio-nama">Nama Lengkap Siswa <span class="required">*</span></label>
+                    <input id="bio-nama" class="form-control" type="text" minlength="2" maxlength="150" autocomplete="name" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-jk">Jenis Kelamin <span class="required">*</span></label>
+                    <select id="bio-jk" class="form-control" required><option value="">Pilih jenis kelamin</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-nik">NIK Siswa <span class="required">*</span></label>
+                    <input id="bio-nik" class="form-control" type="text" inputmode="numeric" pattern="[0-9]{16}" minlength="16" maxlength="16" placeholder="16 digit NIK" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-tempat-lahir">Tempat Lahir <span class="required">*</span></label>
+                    <input id="bio-tempat-lahir" class="form-control" type="text" maxlength="100" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-tanggal-lahir">Tanggal Lahir <span class="required">*</span></label>
+                    <input id="bio-tanggal-lahir" class="form-control" type="date" required>
+                  </div>
+                  <div class="form-group portal-bio-full">
+                    <label class="form-label" for="bio-asal-sekolah">Asal Sekolah <span class="required">*</span></label>
+                    <input id="bio-asal-sekolah" class="form-control" type="text" maxlength="200" required>
+                  </div>
+                  <div class="form-group portal-bio-full">
+                    <label class="form-label" for="bio-alamat-asal-sekolah">Alamat Asal Sekolah <span class="required">*</span></label>
+                    <textarea id="bio-alamat-asal-sekolah" class="form-control" rows="3" maxlength="1000" required></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-agama">Agama <span class="required">*</span></label>
+                    <select id="bio-agama" class="form-control" required><option value="">Pilih agama</option><option value="Islam">Islam</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-kewarganegaraan">Kewarganegaraan <span class="required">*</span></label>
+                    <input id="bio-kewarganegaraan" class="form-control" type="text" maxlength="80" required>
+                  </div>
+                  <div class="form-group portal-bio-full">
+                    <label class="form-label" for="bio-alamat">Alamat Lengkap <span class="required">*</span></label>
+                    <textarea id="bio-alamat" class="form-control" rows="3" maxlength="1000" required></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-provinsi">Provinsi <span class="required">*</span></label>
+                    <select id="bio-provinsi" class="form-control" required disabled><option value="">Memuat provinsi...</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-kabupaten">Kabupaten/Kota <span class="required">*</span></label>
+                    <select id="bio-kabupaten" class="form-control" required disabled><option value="">Pilih provinsi terlebih dahulu</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-kecamatan">Kecamatan <span class="required">*</span></label>
+                    <select id="bio-kecamatan" class="form-control" required disabled><option value="">Pilih kabupaten/kota terlebih dahulu</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-desa">Desa/Kelurahan <span class="required">*</span></label>
+                    <select id="bio-desa" class="form-control" required disabled><option value="">Pilih kecamatan terlebih dahulu</option></select>
+                  </div>
+                  <div class="form-group portal-bio-full" id="bio-region-feedback" role="status" hidden>
+                    <span id="bio-region-message"></span>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-modaTransportasi">Moda Transportasi <span class="required">*</span></label>
-                  <select id="bio-modaTransportasi" class="form-control" required><option value="">Pilih moda transportasi</option><option value="Jalan kaki">Jalan kaki</option><option value="Angkutan umum">Angkutan umum</option><option value="Ojek">Ojek</option><option value="Sepeda">Sepeda</option><option value="Motor pribadi">Motor pribadi</option><option value="Mobil pribadi">Mobil pribadi</option><option value="Lainnya">Lainnya</option></select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-anakKe">Anak ke Berapa <span class="required">*</span></label>
-                  <input id="bio-anakKe" class="form-control" type="number" min="1" step="1" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-tinggiBadan">Tinggi Badan (cm) <span class="required">*</span></label>
-                  <input id="bio-tinggiBadan" class="form-control" type="number" min="1" step="0.1" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-beratBadan">Berat Badan (kg) <span class="required">*</span></label>
-                  <input id="bio-beratBadan" class="form-control" type="number" min="1" step="0.1" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-hobi">Hobi <span class="required">*</span></label>
-                  <input id="bio-hobi" class="form-control" type="text" maxlength="200" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-citaCita">Cita-cita <span class="required">*</span></label>
-                  <input id="bio-citaCita" class="form-control" type="text" maxlength="200" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="bio-jumlahSaudaraKandung">Jumlah Saudara Kandung <span class="required">*</span></label>
-                  <input id="bio-jumlahSaudaraKandung" class="form-control" type="number" min="0" step="1" required>
-                </div>
-                <div class="form-group portal-bio-full">
-                  <label class="form-label" for="bio-hafalan">Riwayat Hafalan Al-Qur'an <span class="required">*</span></label>
-                  <input id="bio-hafalan" class="form-control" type="text" maxlength="255" placeholder="Contoh: Juz 30, Surat-surat Pendek, atau Belum ada" required>
-                </div>
-                <div class="form-group portal-bio-full">
-                  <label class="form-label" for="bio-prestasi">Prestasi yang Pernah Diraih <span class="text-xs text-slate-500 font-normal" style="font-weight: normal; font-size: 0.8rem; color: #64748b;">(Isi jika ada, atau ketik '-' jika belum ada)</span></label>
-                  <input id="bio-prestasi" class="form-control" type="text" maxlength="255" placeholder="Contoh: Juara 1 Lomba Mewarnai Tingkat Kota (atau ketik - jika belum ada)">
-                </div>
-                <div class="form-group portal-bio-full" id="group-bio-sertifikat" style="display: none;">
-                  <label class="form-label" for="bio-sertifikat">Upload Sertifikat / Piagam Prestasi <span class="text-xs text-slate-500 font-normal" style="font-weight: normal; font-size: 0.8rem; color: #64748b;">(Opsional: format JPG, PNG, WEBP, atau PDF, maks. 2,5 MB)</span></label>
-                  <input id="bio-sertifikat" class="form-control" type="file" accept="image/jpeg,image/png,image/webp,application/pdf">
-                  <input type="hidden" id="bio-sertifikat-data">
-                  <div id="bio-sertifikat-preview-box" style="display: none; margin-top: 0.6rem; padding: 0.75rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;">
-                      <div id="bio-sertifikat-info" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 600; color: #1e293b;">
-                        <i class="fa-solid fa-file-pdf" style="color:#dc2626; font-size:1.1rem;"></i> <span id="bio-sertifikat-name">Sertifikat terlampir</span>
-                      </div>
-                      <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <a id="bio-sertifikat-link" href="#" class="btn btn-outline-primary btn-sm" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">Lihat Berkas</a>
-                        <button type="button" id="bio-sertifikat-remove" class="btn btn-sm" style="padding: 0.25rem 0.6rem; font-size: 0.75rem; color: #dc2626; border: 1px solid #fca5a5; background: #fff;">Hapus</button>
+
+                <div class="portal-bio-grid">
+                  <div class="form-group">
+                    <label class="form-label" for="bio-tempatTinggal">Tempat Tinggal <span class="required">*</span></label>
+                    <select id="bio-tempatTinggal" class="form-control" required><option value="">Pilih tempat tinggal</option><option value="Bersama orang tua">Bersama orang tua</option><option value="Wali">Wali</option><option value="Lainnya">Lainnya</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-modaTransportasi">Moda Transportasi <span class="required">*</span></label>
+                    <select id="bio-modaTransportasi" class="form-control" required><option value="">Pilih moda transportasi</option><option value="Jalan kaki">Jalan kaki</option><option value="Angkutan umum">Angkutan umum</option><option value="Ojek">Ojek</option><option value="Sepeda">Sepeda</option><option value="Motor pribadi">Motor pribadi</option><option value="Mobil pribadi">Mobil pribadi</option><option value="Lainnya">Lainnya</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-anakKe">Anak ke Berapa <span class="required">*</span></label>
+                    <input id="bio-anakKe" class="form-control" type="number" min="1" step="1" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-tinggiBadan">Tinggi Badan (cm) <span class="required">*</span></label>
+                    <input id="bio-tinggiBadan" class="form-control" type="number" min="1" step="0.1" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-beratBadan">Berat Badan (kg) <span class="required">*</span></label>
+                    <input id="bio-beratBadan" class="form-control" type="number" min="1" step="0.1" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-hobi">Hobi <span class="required">*</span></label>
+                    <input id="bio-hobi" class="form-control" type="text" maxlength="200" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-citaCita">Cita-cita <span class="required">*</span></label>
+                    <input id="bio-citaCita" class="form-control" type="text" maxlength="200" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="bio-jumlahSaudaraKandung">Jumlah Saudara Kandung <span class="required">*</span></label>
+                    <input id="bio-jumlahSaudaraKandung" class="form-control" type="number" min="0" step="1" required>
+                  </div>
+                  <div class="form-group portal-bio-full">
+                    <label class="form-label" for="bio-hafalan">Riwayat Hafalan Al-Qur'an <span class="required">*</span></label>
+                    <input id="bio-hafalan" class="form-control" type="text" maxlength="255" placeholder="Contoh: Juz 30, Surat-surat Pendek, atau Belum ada" required>
+                  </div>
+                  <div class="form-group portal-bio-full">
+                    <label class="form-label" for="bio-prestasi">Prestasi yang Pernah Diraih <span class="text-xs text-slate-500 font-normal" style="font-weight: normal; font-size: 0.8rem; color: #64748b;">(Isi jika ada, atau ketik '-' jika belum ada)</span></label>
+                    <input id="bio-prestasi" class="form-control" type="text" maxlength="255" placeholder="Contoh: Juara 1 Lomba Mewarnai Tingkat Kota (atau ketik - jika belum ada)">
+                  </div>
+                  <div class="form-group portal-bio-full" id="group-bio-sertifikat" style="display: none;">
+                    <label class="form-label" for="bio-sertifikat">Upload Sertifikat / Piagam Prestasi <span class="text-xs text-slate-500 font-normal" style="font-weight: normal; font-size: 0.8rem; color: #64748b;">(Opsional: format JPG, PNG, WEBP, atau PDF, maks. 2,5 MB)</span></label>
+                    <input id="bio-sertifikat" class="form-control" type="file" accept="image/jpeg,image/png,image/webp,application/pdf">
+                    <input type="hidden" id="bio-sertifikat-data">
+                    <div id="bio-sertifikat-preview-box" style="display: none; margin-top: 0.6rem; padding: 0.75rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                      <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;">
+                        <div id="bio-sertifikat-info" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 600; color: #1e293b;">
+                          <i class="fa-solid fa-file-pdf" style="color:#dc2626; font-size:1.1rem;"></i> <span id="bio-sertifikat-name">Sertifikat terlampir</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                          <a id="bio-sertifikat-link" href="#" class="btn btn-outline-primary btn-sm" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">Lihat Berkas</a>
+                          <button type="button" id="bio-sertifikat-remove" class="btn btn-sm" style="padding: 0.25rem 0.6rem; font-size: 0.75rem; color: #dc2626; border: 1px solid #fca5a5; background: #fff;">Hapus</button>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <fieldset class="form-group portal-bio-full" style="border:0; padding:0;">
+                    <legend class="form-label">Jarak Rumah ke Sekolah <span class="required">*</span></legend>
+                    <div style="display:flex; flex-wrap:wrap; gap:1.5rem;"><label><input type="radio" name="bio-jarakRumahSekolah" value="Kurang dari 1 km" required> Kurang dari 1 km</label><label><input type="radio" name="bio-jarakRumahSekolah" value="Lebih dari 1 km" required> Lebih dari 1 km</label></div>
+                  </fieldset>
+                  <fieldset class="form-group portal-bio-full" style="border:0; padding:0;">
+                    <legend class="form-label">Apakah memiliki saudara kandung yang bersekolah di SIT Bina Insan Parepare? <span class="required">*</span></legend>
+                    <div style="display:flex; flex-wrap:wrap; gap:1.5rem;"><label><input type="radio" name="bio-saudaraDiSekolah" value="Ya" required> Ya</label><label><input type="radio" name="bio-saudaraDiSekolah" value="Tidak" required> Tidak</label></div>
+                  </fieldset>
                 </div>
-                <fieldset class="form-group portal-bio-full" style="border:0; padding:0;">
-                  <legend class="form-label">Jarak Rumah ke Sekolah <span class="required">*</span></legend>
-                  <div style="display:flex; flex-wrap:wrap; gap:1.5rem;"><label><input type="radio" name="bio-jarakRumahSekolah" value="Kurang dari 1 km" required> Kurang dari 1 km</label><label><input type="radio" name="bio-jarakRumahSekolah" value="Lebih dari 1 km" required> Lebih dari 1 km</label></div>
-                </fieldset>
-                <fieldset class="form-group portal-bio-full" style="border:0; padding:0;">
-                  <legend class="form-label">Apakah memiliki saudara kandung yang bersekolah di SIT Bina Insan Parepare? <span class="required">*</span></legend>
-                  <div style="display:flex; flex-wrap:wrap; gap:1.5rem;"><label><input type="radio" name="bio-saudaraDiSekolah" value="Ya" required> Ya</label><label><input type="radio" name="bio-saudaraDiSekolah" value="Tidak" required> Tidak</label></div>
-                </fieldset>
-              </div>
 
-              <div class="portal-bio-actions">
-                <div id="portal-bio-status" class="portal-bio-status" aria-live="polite">Pastikan seluruh data wajib sudah benar.</div>
-                <button type="submit" id="portal-bio-submit" class="btn btn-primary">Simpan Data Siswa</button>
+                <div class="portal-bio-actions">
+                  <div id="portal-bio-status" class="portal-bio-status" aria-live="polite">Pastikan seluruh data wajib sudah benar.</div>
+                  <button type="submit" id="portal-bio-submit" class="btn btn-primary">Simpan Data Siswa</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- BAGIAN 2: DATA ORANG TUA DAN WALI -->
+            <div id="portal-state-parents" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 1.25rem; padding: 1.75rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
+              <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1rem; padding-bottom: 0.65rem; border-bottom: 2px solid #e2e8f0;">
+                <span style="background: #059669; color: #ffffff; font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.65rem; border-radius: 9999px; letter-spacing: 0.05em;">BAGIAN 2</span>
+                <h4 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0;">Data Orang Tua dan Wali</h4>
               </div>
-            </form>
+              <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1.5rem;">
+                Semua isian ayah dan ibu wajib diisi. Pilih Ya pada bagian wali untuk melengkapi data wali.
+              </p>
+
+              <form id="portal-parent-data-form" class="portal-bio-form">
+                <div id="portal-parent-fields"></div>
+                <div class="portal-bio-actions">
+                  <div id="portal-parent-data-status" class="portal-bio-status" aria-live="polite">Semua isian wajib dilengkapi.</div>
+                  <button type="submit" id="portal-parent-data-submit" class="btn btn-primary">Simpan Data Orang Tua dan Wali</button>
+                </div>
+              </form>
+            </div>
 
           </div>
 
-          <div id="portal-state-parents" class="portal-biodata-page" style="display:none;">
-            <button type="button" class="portal-bio-back" onclick="window.openStudentBiodata()">← Kembali ke Biodata Siswa</button>
-            <form id="portal-parent-data-form" class="portal-bio-form">
-              <div class="portal-bio-heading">
-                <h3>Lengkapi Data Orang Tua dan Wali</h3>
-                <p>Semua isian ayah dan ibu wajib diisi. Pilih Ya pada bagian wali untuk melengkapi data wali.</p>
-              </div>
-              <div id="portal-parent-fields"></div>
-              <div class="portal-bio-actions">
-                <div id="portal-parent-data-status" class="portal-bio-status" aria-live="polite">Semua isian wajib dilengkapi.</div>
-                <button type="submit" id="portal-parent-data-submit" class="btn btn-primary">Simpan Data Orang Tua dan Wali</button>
-              </div>
-            </form>
-          </div>
-
-          <!-- STATE 5: TAHAP JADWAL TES & WAWANCARA (MENUNGGU INPUT JADWAL OLEH ADMIN / JADWAL DITETAPKAN) -->
+          <!-- STATE 4: TAHAP JADWAL TES & WAWANCARA (MENUNGGU INPUT JADWAL OLEH ADMIN / JADWAL DITETAPKAN) -->
           <div id="portal-state-schedule" class="portal-schedule-page" style="display:none;">
             <!-- Top Navigation & Actions -->
             <div class="portal-nav-bar">
               <button type="button" class="portal-bio-back" onclick="window.openParentBiodata()">
-                <span aria-hidden="true">←</span> Kembali
+                <span aria-hidden="true">←</span> Kembali ke Biodata Siswa &amp; Orang Tua
               </button>
               <button type="button" class="btn btn-primary btn-sm" onclick="window.openResultsStage()">
                 Lanjutkan <span aria-hidden="true">→</span>
@@ -2317,7 +2324,7 @@
             <div class="portal-schedule-card">
               <!-- Dynamic Status Tag -->
               <span id="portal-schedule-badge" class="badge-tag" style="background:#fef3c7; color:#92400e; font-weight:800; font-size:0.85rem;">
-                LANGKAH 5: MENUNGGU JADWAL TES &amp; WAWANCARA
+                LANGKAH 4: MENUNGGU JADWAL TES &amp; WAWANCARA
               </span>
 
               <h2 id="portal-schedule-title" class="portal-schedule-heading">
@@ -2480,14 +2487,14 @@
             </section>
           </div>
 
-          <!-- STATE 7: PENDAFTARAN ULANG (UPLOAD BERKAS KK & AKTA KELAHIRAN SISWA) -->
+          <!-- STATE 6: PENDAFTARAN ULANG (UPLOAD BERKAS KK & AKTA KELAHIRAN SISWA) -->
           <div id="portal-state-reregistration" class="portal-schedule-page" style="display:none;">
             <div class="portal-nav-bar">
               <button type="button" class="portal-bio-back" onclick="window.openResultsStage()">← Kembali ke Pengumuman Hasil</button>
             </div>
             <section class="portal-schedule-card" aria-labelledby="portal-rereg-heading">
               <span class="badge-tag" style="background:#dcfce7; color:#15803d; font-weight:800; font-size:0.85rem;">
-                LANGKAH 7: PENDAFTARAN ULANG SISWA BARU
+                LANGKAH 6: PENDAFTARAN ULANG SISWA BARU
               </span>
               <h2 id="portal-rereg-heading" class="portal-schedule-heading">
                 Pendaftaran Ulang &amp; Unggah Berkas Persyaratan
