@@ -26,6 +26,15 @@ test('renders requested colors, counts, empty state and replaces old chart', () 
   assert.match(container.innerHTML, /TK, 2026: 1 pendaftar/);
   assert.match(container.innerHTML, /<table/);
   assert.match(container.innerHTML, /height:300px/);
+  assert.equal((container.innerHTML.match(/<svg /g) || []).length, 3);
+  for (const level of chart.series) {
+    const card = container.innerHTML.match(new RegExp(`<section data-chart-level="${level.key}"[\\s\\S]*?</section>`))[0];
+    assert.ok(card.includes(`Pendaftar ${level.label}`));
+    assert.ok(card.includes(`fill="${level.color}"`));
+    for (const other of chart.series.filter(s => s.key !== level.key)) {
+      assert.ok(!card.includes(`fill="${other.color}"`));
+    }
+  }
   assert.doesNotMatch(container.innerHTML, /NaN|Infinity/);
   chart.render(container, []);
   assert.match(container.innerHTML, /Belum ada data/);
