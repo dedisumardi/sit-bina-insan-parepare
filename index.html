@@ -24,7 +24,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/spmb.css?v=20260925_stepper7">
+  <link rel="stylesheet" href="css/spmb.css?v=20260928_stepnav">
   <!-- Font Awesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <!-- Tailwind CSS CDN (with preflight disabled to preserve existing site styles) -->
@@ -1991,13 +1991,26 @@
           <!-- END: StepperCardContainer -->
 
           <div id="portal-step-navigation" class="portal-step-navigation">
-            <div class="portal-nav-bar">
-              <button type="button" id="portal-step-back" class="portal-bio-back" onclick="window.navigateRegistration(-1)">← Kembali</button>
-              <button type="button" id="portal-step-next" class="portal-bio-back" onclick="window.navigateRegistration(1)">Lanjutkan →</button>
+            <div class="portal-step-nav-content">
+              <div class="portal-step-nav-icon">
+                <i id="portal-step-icon" class="fa-solid fa-credit-card"></i>
+              </div>
+              <div class="portal-step-nav-text">
+                <div class="portal-step-badge-row">
+                  <span id="portal-current-step" class="portal-step-badge">LANGKAH 1 DARI 6</span>
+                </div>
+                <h3 id="portal-current-title" class="portal-step-nav-title">Pembayaran Pendaftaran</h3>
+                <p id="portal-current-description" class="portal-step-nav-desc">Bayar biaya pendaftaran dan unggah bukti pembayaran.</p>
+              </div>
             </div>
-            <span id="portal-current-step" class="badge-tag">LANGKAH 1 DARI 6</span>
-            <h3 id="portal-current-title">Pembayaran Pendaftaran</h3>
-            <p id="portal-current-description"></p>
+            <div class="portal-step-nav-actions portal-nav-bar">
+              <button type="button" id="portal-step-back" class="btn-step-nav btn-step-back" onclick="window.navigateRegistration(-1)">
+                <i class="fa-solid fa-arrow-left"></i> <span>Kembali</span>
+              </button>
+              <button type="button" id="portal-step-next" class="btn-step-nav btn-step-next" onclick="window.navigateRegistration(1)">
+                <span>Lanjutkan</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
           </div>
           <div id="portal-state-payment-summary" class="spmb-card-highlight" style="display:none; text-align: center;">
             <div style="max-width: 680px; margin: 0 auto; text-align: center;">
@@ -2914,7 +2927,7 @@
   <script src="js/regions.js?v=20260924_regions2"></script>
   <script src="js/parent-fields.js?v=20260924_schooladdress1"></script>
   <script src="js/parents.js?v=20260925_separatesave1"></script>
-  <script src="js/spmb.js?v=20260925_hafalanprestasi1"></script>
+  <script src="js/spmb.js?v=20260928_stepnav"></script>
   <script src="js/app.js?v=20260923_dbsync3"></script>
 </body>
 </html>

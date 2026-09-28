@@ -1529,6 +1529,18 @@
     if (titleEl) titleEl.textContent = registrationSteps[step - 1][0];
     const descEl = document.getElementById('portal-current-description');
     if (descEl) descEl.textContent = registrationSteps[step - 1][1];
+    const stepIcon = document.getElementById('portal-step-icon');
+    if (stepIcon) {
+      const icons = [
+        'fa-solid fa-credit-card',
+        'fa-solid fa-clock-rotate-left',
+        'fa-solid fa-user-pen',
+        'fa-solid fa-calendar-check',
+        'fa-solid fa-bullhorn',
+        'fa-solid fa-id-card'
+      ];
+      stepIcon.className = icons[step - 1] || 'fa-solid fa-list-check';
+    }
     const backBtn = document.getElementById('portal-step-back');
     if (backBtn) backBtn.disabled = step === 1;
     const nextBtn = document.getElementById('portal-step-next');
