@@ -1851,14 +1851,14 @@
         if (hasSchedule) {
           if (badgeEl) {
             badgeEl.textContent = 'JADWAL RESMI TELAH DITETAPKAN';
-            badgeEl.style.background = '#dcfce7';
-            badgeEl.style.color = '#15803d';
+            badgeEl.style.background = 'var(--primary-100)';
+            badgeEl.style.color = 'var(--primary-700)';
           }
           if (titleEl) titleEl.textContent = 'Jadwal Tes Calon Murid Baru & Wawancara Ditetapkan';
           if (subtitleEl) subtitleEl.textContent = `Alhamdulillah, Panitia SPMB SIT Bina Insan Parepare telah menetapkan jadwal seleksi calon murid baru dan wawancara orang tua untuk ananda ${record.namaSiswa || ''}.`;
           if (statusPill) {
             statusPill.textContent = '✓ Jadwal Ditetapkan';
-            statusPill.style.color = '#15803d';
+            statusPill.style.color = 'var(--primary-700)';
           }
           if (waitingView) waitingView.style.display = 'none';
           if (confirmedView) confirmedView.style.display = 'block';
@@ -1961,9 +1961,9 @@
         step6?.classList.add('active');
       }
 
-      if (flowLine1) flowLine1.style.background = '#22c55e';
-      if (flowLine2) flowLine2.style.background = '#22c55e';
-      if (flowLine3) flowLine3.style.background = (biodataComplete && parentsComplete) ? '#22c55e' : 'var(--neutral-200)';
+      if (flowLine1) flowLine1.style.background = 'var(--primary-500)';
+      if (flowLine2) flowLine2.style.background = 'var(--primary-500)';
+      if (flowLine3) flowLine3.style.background = (biodataComplete && parentsComplete) ? 'var(--primary-500)' : 'var(--neutral-200)';
     } else if (hasProof) {
       // STATE 2: PENDING APPROVAL
       stateUnpaid.style.display = 'none';
@@ -1992,7 +1992,7 @@
       step4?.classList.remove('active', 'done', 'current-success');
       document.getElementById('flow-step-5')?.classList.remove('active', 'done', 'current-success');
       document.getElementById('flow-step-6')?.classList.remove('active', 'done', 'current-success');
-      if (flowLine1) flowLine1.style.background = '#22c55e';
+      if (flowLine1) flowLine1.style.background = 'var(--primary-500)';
       if (flowLine2) flowLine2.style.background = 'var(--neutral-200)';
       if (flowLine3) flowLine3.style.background = 'var(--neutral-200)';
     } else {
@@ -2293,18 +2293,18 @@
 
     if (isFinished) {
       if (statusPill) {
-        statusPill.innerHTML = '<i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> Pendaftaran Selesai';
-        statusPill.style.color = '#15803d';
+        statusPill.innerHTML = '<i class="fa-solid fa-circle-check mr-1 text-brand-600"></i> Pendaftaran Selesai';
+        statusPill.style.color = 'var(--primary-700)';
       }
       if (savedCard) savedCard.style.display = 'none';
       if (statusText) {
-        statusText.innerHTML = '<strong style="color:#15803d;">✓ Seluruh alur pendaftaran SPMB telah selesai.</strong> Selamat &amp; terima kasih telah memilih sekolah kami untuk pendidikan anak anda, jazakallahu khairan.';
-        statusText.style.color = '#15803d';
+        statusText.innerHTML = '<strong style="color:var(--primary-700);">✓ Seluruh alur pendaftaran SPMB telah selesai.</strong> Selamat &amp; terima kasih telah memilih sekolah kami untuk pendidikan anak anda, jazakallahu khairan.';
+        statusText.style.color = 'var(--primary-700)';
       }
     } else if (hasBoth) {
       if (statusPill) {
-        statusPill.innerHTML = '<i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> Berkas Lengkap';
-        statusPill.style.color = '#15803d';
+        statusPill.innerHTML = '<i class="fa-solid fa-circle-check mr-1 text-brand-600"></i> Berkas Lengkap';
+        statusPill.style.color = 'var(--primary-700)';
       }
       if (savedCard) savedCard.style.display = 'block';
       if (savedTime && record.daftarUlangAt) {
@@ -2316,7 +2316,7 @@
       }
       if (statusText) {
         statusText.textContent = '✓ Berkas Kartu Keluarga & Akta Kelahiran sudah lengkap dan tersimpan. Anda dapat memperbarui jika ada perbaikan.';
-        statusText.style.color = '#15803d';
+        statusText.style.color = 'var(--primary-700)';
       }
     } else {
       if (statusPill) {
