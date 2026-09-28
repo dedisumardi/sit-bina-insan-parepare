@@ -22,8 +22,6 @@
       a: 'Pendaftaran terdiri dari enam tahap: (1) pendaftaran akun dan pembayaran, (2) verifikasi pembayaran dan penerbitan nomor registrasi oleh admin, (3) pengisian biodata siswa serta orang tua/wali, (4) jadwal tes observasi dan wawancara, (5) pengumuman hasil seleksi, dan (6) daftar ulang dengan unggah Kartu Keluarga dan Akta Kelahiran. Daftar ulang hanya dapat dibuka setelah admin menyatakan siswa lulus dan diterima.' },
     { q: 'Jalur pendaftaran apa yang tersedia?',
       a: 'Formulir pendaftaran saat ini menggunakan jalur Reguler untuk TKIT, SDIT, dan SMPIT. Informasi beasiswa atau potongan biaya harus dikonfirmasi kepada panitia; jangan menganggapnya sebagai jalur pendaftaran tambahan.' },
-    { q: 'Berapa infaq formulir masing-masing jenjang?',
-      a: ['tkit', 'sdit', 'smpit'].map(key => `${key.toUpperCase()}: ${settings[key + 'Fee'] || 'belum ditetapkan'}`).join('; ') + '. Nominal ini mengikuti pengaturan SPMB. Ikuti nominal tagihan dan instruksi pembayaran yang ditampilkan pada akun portal Anda.' },
     { q: 'Bagaimana melihat jadwal dan mencetak kartu peserta?',
       a: 'Masuk ke portal menggunakan nomor WhatsApp terdaftar. Setelah pembayaran disetujui, lengkapi dan simpan biodata siswa serta orang tua/wali. Buka langkah Jadwal Tes Observasi & Wawancara untuk melihat jadwal sesuai jenjang yang ditetapkan admin. Gunakan tombol cetak kartu peserta dan jadwal tes untuk mencetak satu lembar A4 atau menyimpannya sebagai PDF.' },
     { q: 'Bagaimana menghubungi panitia SPMB?',
