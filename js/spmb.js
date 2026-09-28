@@ -965,6 +965,10 @@
 
   // Set Modal Mode (Register vs Login)
   window.setSpmbModalMode = function (mode) {
+    if (mode === 'register' && window.SchoolData?.settings && !window.RegistrationPolicy.isOpen(window.SchoolData.settings)) {
+      alert(window.RegistrationPolicy.message(window.SchoolData.settings));
+      mode = 'login';
+    }
     spmbModalMode = mode;
     const tabReg = document.getElementById('tab-modal-register');
     const tabLog = document.getElementById('tab-modal-login');
@@ -1001,6 +1005,17 @@
     e.preventDefault();
     const errEl = document.getElementById('spmb-modal-error');
     const nama = document.getElementById('spmb-input-nama')?.value.trim() || '';
+    if (spmbModalMode === 'register') {
+      try {
+        const response = await fetch('api/settings.php', { cache: 'no-store' });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error('Status pendaftaran belum dapat diperiksa. Silakan coba lagi.');
+        if (!window.RegistrationPolicy.isOpen(result.data)) throw new Error(window.RegistrationPolicy.message(result.data));
+      } catch (error) {
+        if (errEl) { errEl.textContent = error.message; errEl.style.display = 'block'; }
+        return;
+      }
+    }
     const rawWa = document.getElementById('spmb-input-wa')?.value.trim() || '';
     const cleanWa = rawWa.replace(/[^0-9]/g, '');
 

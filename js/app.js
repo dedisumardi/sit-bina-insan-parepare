@@ -528,6 +528,13 @@
       : waveStatus === 'upcoming' ? 'Segera Dibuka' : 'Pendaftaran Dibuka (Online Aktif)';
     const homeStatus = document.getElementById('home-registration-status');
     if (homeStatus) homeStatus.textContent = registrationStatusLabel;
+    const registrationOpen = window.RegistrationPolicy.isOpen(settings);
+    document.querySelectorAll('button[onclick*="openSpmbModal(\'register\')"]').forEach(button => {
+      button.disabled = !registrationOpen;
+      button.title = registrationOpen ? 'Daftar SPMB' : window.RegistrationPolicy.message(settings);
+      button.style.opacity = registrationOpen ? '' : '0.6';
+      button.style.cursor = registrationOpen ? '' : 'not-allowed';
+    });
 
     // 2. Active Wave Notice in Topbar
     const topbarWave = document.getElementById('home-topbar-wave');

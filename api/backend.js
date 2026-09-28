@@ -2,6 +2,7 @@ const { randomBytes, createHash } = require('node:crypto');
 const { database } = require('../lib/database');
 const { isAdmin, verifyPassword, createSession, logout } = require('../lib/session');
 const parentFields = require('../js/parent-fields');
+const registrationPolicy = require('../js/registration-policy');
 
 function fail(status, message) { throw Object.assign(new Error(message), { status }); }
 function phone(value) {
@@ -206,6 +207,10 @@ async function handler(req, res) {
         let result;
         try {
           await client.query('BEGIN');
+          const registrationSettings = await client.query('SELECT data FROM sipintu_settings WHERE id=1 FOR SHARE');
+          if (!registrationPolicy.isOpen(registrationSettings.rows[0]?.data)) {
+            fail(403, registrationPolicy.message(registrationSettings.rows[0]?.data));
+          }
           await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [wa]);
           // Promote the parent's preliminary row, keeping its payment and admin decisions.
           if (complete) {

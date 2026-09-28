@@ -7,7 +7,7 @@ test('homepage and timeline retain the global status for open, upcoming and clos
   const source = fs.readFileSync('js/app.js', 'utf8');
   const code = source.slice(source.indexOf('    // Keep the global registration state'), source.indexOf('    // 6. Bank Account'));
   const nodes = {};
-  const context = { document: { getElementById: id => nodes[id] ||= {} }, settings: { waveNotice: 'Pendaftaran sedang berlangsung!' },
+  const context = { window: { RegistrationPolicy: require('../js/registration-policy') }, document: { querySelectorAll: () => [], getElementById: id => nodes[id] ||= {} }, settings: { waveNotice: 'Pendaftaran sedang berlangsung!' },
     activeWave: 'wave1', academicYear: '2026/2027', activeDisplayName: 'Gelombang 1',
     w1Name: 'Gelombang 1', w2Name: 'Gelombang 2', w3Name: 'Gelombang 3',
     w1Promo: '', w2Promo: '', w3Promo: '', w1Dates: '', w2Dates: '', w3Dates: '', escapeHtml: String };
