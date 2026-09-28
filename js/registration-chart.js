@@ -53,8 +53,8 @@
       container.innerHTML = '<p style="padding:40px 16px;text-align:center;color:#64748b">Belum ada data pendaftar per tahun untuk ditampilkan.</p>' + note;
       return;
     }
-    const width = Math.max(640, rows.length * 130 + 80), height = 220;
-    const left = 55, top = 25, bottom = 165, plotHeight = bottom - top;
+    const width = Math.max(640, rows.length * 130 + 80), height = 300;
+    const left = 55, top = 25, bottom = 245, plotHeight = bottom - top;
     const max = Math.max(1, ...rows.flatMap(row => series.map(s => row[s.key])));
     const interval = Math.max(1, Math.ceil(max / 5));
     const ceiling = Math.ceil(max / interval) * interval;
@@ -74,7 +74,7 @@
       });
       svg += `<text x="${center}" y="${bottom + 25}" text-anchor="middle" fill="#334155" font-size="13" font-weight="600">${row.year}</text>`;
     });
-    svg += `<text x="${width / 2}" y="210" text-anchor="middle" fill="#64748b" font-size="12">Tahun Pendaftaran</text></svg>`;
+    svg += `<text x="${width / 2}" y="290" text-anchor="middle" fill="#64748b" font-size="12">Tahun Pendaftaran</text></svg>`;
     container.innerHTML = `<div style="overflow-x:auto" tabindex="0" aria-label="Grafik pendaftar, geser untuk melihat semua tahun">${svg}</div>${note}<details style="margin-top:12px;color:#475569;font-size:13px"><summary style="cursor:pointer">Lihat rincian angka per tahun</summary><div style="overflow-x:auto"><table style="width:100%;text-align:left;margin-top:12px;border-collapse:collapse"><caption style="text-align:left;margin-bottom:8px">Jumlah pendaftar siswa berdasarkan tanggal pendaftaran</caption><thead><tr>${['Tahun', 'TK', 'SD', 'SMP', 'Total'].map(label => `<th scope="col" style="padding:8px;border-bottom:1px solid #e2e8f0">${label}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr><th scope="row" style="padding:8px">${row.year}</th>${[row.tkit, row.sdit, row.smpit, row.tkit + row.sdit + row.smpit].map(value => `<td style="padding:8px">${value}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>`;
   }
   const chart = { aggregate, dateYear, series, render };
