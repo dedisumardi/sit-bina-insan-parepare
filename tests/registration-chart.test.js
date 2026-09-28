@@ -25,6 +25,7 @@ test('renders requested colors, counts, empty state and replaces old chart', () 
   for (const color of ['#9333ea', '#16a34a', '#2563eb']) assert.ok(container.innerHTML.includes(color));
   assert.match(container.innerHTML, /TK, 2026: 1 pendaftar/);
   assert.match(container.innerHTML, /<table/);
+  assert.match(container.innerHTML, /height:220px/);
   assert.doesNotMatch(container.innerHTML, /NaN|Infinity/);
   chart.render(container, []);
   assert.match(container.innerHTML, /Belum ada data/);
