@@ -264,9 +264,14 @@
     const container = document.getElementById('faq-container');
     if (!container || !window.SchoolData) return;
 
-    container.innerHTML = window.SchoolData.spmbFaqs.map((faq, index) => `
-      <div class="faq-item ${index === 0 ? 'open' : ''}">
-        <button type="button" class="faq-question" aria-expanded="${index === 0 ? 'true' : 'false'}">
+    const faqs = window.SchoolFaqs.build(window.SchoolData, window.SchoolData.settings || {});
+    const signature = JSON.stringify(faqs);
+    if (container.dataset.faqSignature === signature) return;
+    container.dataset.faqSignature = signature;
+    const openQuestion = container.querySelector('.faq-item.open .faq-question span')?.textContent;
+    container.innerHTML = faqs.map((faq, index) => `
+      <div class="faq-item ${(openQuestion ? faq.q === openQuestion : index === 0) ? 'open' : ''}">
+        <button type="button" class="faq-question" aria-expanded="${openQuestion ? faq.q === openQuestion : index === 0}">
           <span>${escapeHtml(faq.q)}</span>
           <div class="faq-icon-toggle">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
@@ -426,6 +431,7 @@
     }
     if (!settings) return;
     if (window.SchoolData) window.SchoolData.settings = settings;
+    renderFaqs();
 
     // 0. Academic Year & Wave Variables
     const academicYear = settings.academicYear || '2026/2027';
