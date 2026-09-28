@@ -1,7 +1,6 @@
 (function (root) {
   'use strict';
   function build(school = {}, settings = {}) {
-    const levels = school.levels || {};
     const status = settings.waveStatus === 'open' && ['wave1', 'wave2', 'wave3'].includes(settings.activeWave)
       ? 'Pendaftaran dibuka. Anda dapat mendaftar pada gelombang yang aktif.'
       : settings.waveStatus === 'upcoming' ? 'Pendaftaran segera dibuka; pendaftaran baru belum tersedia.'
@@ -11,13 +10,6 @@
       q: 'Kapan periode pendaftaran SPMB SIT Bina Insan dibuka?',
       a: `${status} ${settings.academicYear ? 'Tahun pelajaran ' + settings.academicYear + '. ' : ''}${periods} Akun yang sudah terdaftar tetap dapat masuk ke portal untuk melihat progres pendaftaran.`
     }];
-    for (const key of ['tkit', 'sdit', 'smpit']) {
-      const level = levels[key];
-      if (!level) continue;
-      const programs = (level.keyPrograms || []).map(p => p.title.replace(/^\d+\.\s*/, '')).join('; ');
-      faqs.push({ q: `Apa program pendidikan di ${level.name}?`,
-        a: `${level.description || ''}${programs ? ' Program utama: ' + programs + '.' : ''}` });
-    }
     faqs.push({ q: 'Bagaimana tahapan pendaftaran TKIT, SDIT, dan SMPIT?',
       a: 'Pendaftaran terdiri dari enam tahap: (1) pendaftaran akun dan pembayaran, (2) verifikasi pembayaran dan penerbitan nomor registrasi oleh admin, (3) pengisian biodata siswa serta orang tua/wali, (4) jadwal tes observasi dan wawancara, (5) pengumuman hasil seleksi, dan (6) daftar ulang dengan unggah Kartu Keluarga dan Akta Kelahiran. Daftar ulang hanya dapat dibuka setelah admin menyatakan siswa lulus dan diterima.' },
     { q: 'Jalur pendaftaran apa yang tersedia?',
