@@ -79,7 +79,6 @@ const SchoolData = {
         "Perpustakaan Sekolah",
         "Ruang Usaha Kesehatan Sekolah (UKS)",
         "Lapangan dan Sarana Aktivitas Olahraga",
-        "Ruang Rapat dan Koordinasi Sekolah",
         "Fasilitas Sanitasi dan Toilet"
       ],
       spmbFee: "Rp 200.000",
