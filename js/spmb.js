@@ -1503,6 +1503,10 @@
     if (stepEl) stepEl.textContent = 'LANGKAH ' + step + ' DARI 6';
     for (let number = 1; number <= 6; number++) {
       const indicator = document.getElementById('flow-step-' + number);
+      // Visual progress follows the open step, not a globally configured test date.
+      indicator?.classList?.remove('active', 'done', 'current-success');
+      if (number < step) indicator?.classList?.add('done');
+      else if (number === step) indicator?.classList?.add('active');
       if (number === step) indicator?.setAttribute?.('aria-current', 'step');
       else indicator?.removeAttribute?.('aria-current');
     }
@@ -1521,9 +1525,13 @@
       const badge4 = document.querySelector('#flow-step-4 .step-label-badge');
       if (badge4) badge4.textContent = step > 4 ? 'Selesai' : (step === 4 ? 'Jadwal Ditentukan' : 'Tahap 4');
       const badge5 = document.querySelector('#flow-step-5 .step-label-badge');
-      if (badge5) badge5.textContent = step > 5 || (record?.status && record.status.includes('Lulus')) ? 'Lulus' : (step === 5 ? 'Pengumuman' : 'Jadwal Ditentukan');
+      if (badge5) badge5.textContent = step > 5 || (record?.status && record.status.includes('Lulus')) ? 'Lulus' : (step === 5 ? 'Pengumuman' : 'Menunggu');
       const badge6 = document.querySelector('#flow-step-6 .step-label-badge');
       if (badge6) badge6.textContent = (record?.status && record.status.includes('Selesai')) ? 'Selesai' : ((record?.berkasKk && record?.berkasAkta) ? 'Berkas Lengkap' : (step === 6 ? 'Daftar Ulang' : 'Tahap Akhir'));
+      for (let number = step + 1; number <= 6; number++) {
+        const badge = document.querySelector('#flow-step-' + number + ' .step-label-badge');
+        if (badge) badge.textContent = 'Belum';
+      }
     }
     const titleEl = document.getElementById('portal-current-title');
     if (titleEl) titleEl.textContent = registrationSteps[step - 1][0];
