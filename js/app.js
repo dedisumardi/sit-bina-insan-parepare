@@ -522,11 +522,20 @@
       }
     }
 
+    // Keep the global registration state visible even when no wave is open.
+    const registrationStatusLabel = waveStatus === 'closed'
+      ? 'Pendaftaran Ditutup Sementara'
+      : waveStatus === 'upcoming' ? 'Segera Dibuka' : 'Pendaftaran Dibuka (Online Aktif)';
+    const homeStatus = document.getElementById('home-registration-status');
+    if (homeStatus) homeStatus.textContent = registrationStatusLabel;
+
     // 2. Active Wave Notice in Topbar
     const topbarWave = document.getElementById('home-topbar-wave');
     if (topbarWave) {
       if (waveStatus === 'closed') {
-        topbarWave.textContent = settings.waveNotice || 'Pendaftaran SPMB Ditutup Sementara';
+        topbarWave.textContent = 'Pendaftaran SPMB Ditutup Sementara';
+      } else if (waveStatus === 'upcoming') {
+        topbarWave.textContent = 'Pendaftaran SPMB Segera Dibuka';
       } else if (settings.waveNotice) {
         topbarWave.textContent = settings.waveNotice;
       } else {
@@ -541,6 +550,8 @@
     if (heroWaveTitle) {
       if (waveStatus === 'closed') {
         heroWaveTitle.textContent = 'Pendaftaran SPMB Ditutup Sementara';
+      } else if (waveStatus === 'upcoming') {
+        heroWaveTitle.textContent = 'Pendaftaran SPMB Segera Dibuka';
       } else {
         const curPromo = activeWave === 'wave1' ? w1Promo : (activeWave === 'wave2' ? w2Promo : w3Promo);
         const promoSuffix = curPromo ? ` (${curPromo})` : '';
@@ -591,7 +602,7 @@
           `;
         }).join('');
       } else {
-        timelineWrap.innerHTML = '';
+        timelineWrap.innerHTML = `<div class="wave-pill active" role="status"><span><strong>${escapeHtml(registrationStatusLabel)}</strong> • TP ${escapeHtml(academicYear)}</span></div>`;
       }
     }
 
