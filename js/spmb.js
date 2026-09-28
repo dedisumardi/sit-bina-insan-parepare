@@ -1419,6 +1419,16 @@
   ];
   let registrationNavigation = { step: 1, regNumber: '', approved: false, proof: false };
 
+  function canAccessReRegistration(record) {
+    return record?.status === 'Lulus Seleksi Observasi & Diterima';
+  }
+
+  function checkReRegistrationAccess() {
+    if (registrationNavigation.canReregister) return true;
+    alert('Daftar ulang baru dapat dibuka setelah admin mengumumkan Anda lulus dan diterima.');
+    return false;
+  }
+
   window.navigateRegistration = function (direction) {
     const { step, regNumber, approved, proof } = registrationNavigation;
     if (![1, -1].includes(direction) || (step === 1 && direction < 0) || (step === 6 && direction > 0)) return;
@@ -1448,6 +1458,7 @@
       }
     }
     const target = step + direction;
+    if (target === 6 && !checkReRegistrationAccess()) return;
     const suffix = [':start', ':payment', '', ':schedule', ':results', ':reregistration'][target - 1];
     try { sessionStorage.setItem(PARENT_BIODATA_VIEW_KEY, regNumber + suffix); } catch (_) {}
     renderParentPortal();
@@ -1498,7 +1509,10 @@
         }
       }
     }
-    registrationNavigation = { step, regNumber: record.regNumber, approved, proof, studentSaved: Boolean(record.biodataUpdatedAt), parentsSaved: Boolean(record.parentDataUpdatedAt) };
+    registrationNavigation = { step, regNumber: record.regNumber, approved, proof, studentSaved: Boolean(record.biodataUpdatedAt), parentsSaved: Boolean(record.parentDataUpdatedAt), canReregister: canAccessReRegistration(record) };
+    const finalStep = document.getElementById('flow-step-6');
+    finalStep?.setAttribute?.('aria-disabled', String(!registrationNavigation.canReregister));
+    if (finalStep) finalStep.title = registrationNavigation.canReregister ? 'Langkah 6: Daftar Ulang' : 'Menunggu pengumuman lulus dari admin';
     const stepEl = document.getElementById('portal-current-step');
     if (stepEl) stepEl.textContent = 'LANGKAH ' + step + ' DARI 6';
     for (let number = 1; number <= 6; number++) {
@@ -1552,11 +1566,12 @@
     const backBtn = document.getElementById('portal-step-back');
     if (backBtn) backBtn.disabled = step === 1;
     const nextBtn = document.getElementById('portal-step-next');
-    if (nextBtn) nextBtn.disabled = step >= 6 || (step === 1 && !approved && !proof) || (step === 2 && !approved);
+    if (nextBtn) nextBtn.disabled = step >= 6 || (step === 5 && !registrationNavigation.canReregister) || (step === 1 && !approved && !proof) || (step === 2 && !approved);
   }
 
   // Navigasi langsung dengan klik tahapan pada Stepper
   window.jumpToRegistrationStep = function (targetStep) {
+    if (targetStep === 6 && !checkReRegistrationAccess()) return;
     if (!registrationNavigation || !registrationNavigation.regNumber) return;
     const current = registrationNavigation.step;
     if (targetStep === current) return;
@@ -1599,6 +1614,7 @@
   };
 
   window.openReRegistrationStage = function () {
+    if (!checkReRegistrationAccess()) return;
     const regNumber = document.getElementById('portal-approved-code')?.textContent?.trim() ||
                       document.getElementById('portal-results-reg')?.textContent?.trim() ||
                       document.getElementById('portal-sched-reg')?.textContent?.trim();
@@ -1744,7 +1760,8 @@
         if (view === record.regNumber + ':payment') {
           // Show the saved payment summary without restarting registration or charging again.
         } else if (view === record.regNumber + ':reregistration' && biodataComplete && parentsComplete) {
-          reregistrationViewOpen = true;
+          reregistrationViewOpen = canAccessReRegistration(record);
+          resultsViewOpen = !reregistrationViewOpen;
         } else if (view === record.regNumber + ':results' && biodataComplete && parentsComplete) {
           resultsViewOpen = true;
         } else if (view === record.regNumber + ':schedule') {
@@ -2354,6 +2371,10 @@
     }
 
     const submitBtn = document.getElementById('btn-submit-reregistration');
+    if (!canAccessReRegistration(record)) {
+      alert('Tunggu pengumuman lulus dari admin sebelum melakukan daftar ulang.');
+      return;
+    }
     const originalText = submitBtn ? submitBtn.textContent : '';
     if (submitBtn) {
       submitBtn.disabled = true;
