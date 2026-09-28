@@ -532,6 +532,19 @@
         <!-- END: MetricSummaryCards -->
 
         <!-- BEGIN: TableSection -->
+        <section class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden" style="margin-bottom:24px" aria-labelledby="registration-chart-title">
+          <div class="px-6 py-5 border-b border-slate-100">
+            <h2 id="registration-chart-title" class="text-base font-bold text-slate-900">Perkembangan Pendaftar Siswa Baru per Tahun</h2>
+            <p class="text-xs text-slate-500 mt-1">Jumlah siswa yang mendaftar berdasarkan tahun kalender pendaftaran, bukan tahun ajaran.</p>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:16px;font-size:13px;font-weight:600" aria-label="Warna jenjang">
+              <span style="color:#9333ea">● TK</span>
+              <span style="color:#16a34a">● SD</span>
+              <span style="color:#2563eb">● SMP</span>
+            </div>
+          </div>
+          <div id="dashboard-registration-chart" class="px-6 py-5" aria-live="polite"></div>
+        </section>
+
         <section class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden" data-purpose="recent-registrations">
           <!-- Table Card Header -->
           <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -1977,6 +1990,7 @@
   <script src="js/data.js?v=20260923_dbsync2"></script>
   <script src="js/parent-fields.js?v=20260924_schooladdress1"></script>
   <script src="js/student-export.js?v=20260928_biodataonly"></script>
-  <script src="js/admin.js?v=20260925_completedisabled1"></script>
+  <script src="js/registration-chart.js?v=20260928_yearly1"></script>
+  <script src="js/admin.js?v=20260928_yearly1"></script>
 </body>
 </html>

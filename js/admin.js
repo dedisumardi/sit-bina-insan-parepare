@@ -401,6 +401,7 @@
   // =========================================================================
   function renderDashboard() {
     const studentList = spmbList.filter(isStudentApplicant);
+    window.RegistrationChart?.render(document.getElementById('dashboard-registration-chart'), studentList);
     const parentList = spmbList;
     const totalCount = studentList.length;
     const tkitCount = studentList.filter(s => s.jenjang === 'tkit').length;
