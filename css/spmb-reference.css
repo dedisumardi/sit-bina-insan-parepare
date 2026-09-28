@@ -1,0 +1,12 @@
+/* Scoped adaptation of the supplied Info SPMB design. */
+#spmb-landing-view.spmb-reference-page { background:#f8fafc; color:#1e293b; font-family:'Plus Jakarta Sans',sans-serif; }
+:where(.spmb-reference-page) *, :where(.spmb-reference-page) *::before, :where(.spmb-reference-page) *::after { box-sizing:border-box; border-width:0; border-style:solid; }
+:where(.spmb-reference-page) h1, :where(.spmb-reference-page) h2, :where(.spmb-reference-page) h3, :where(.spmb-reference-page) p { margin:0; }
+.spmb-reference-page .bg-islamic-pattern { background-color:#081736; background-image:radial-gradient(circle at 50% 0%,#1e3a8a 0%,#081736 70%); }
+.spmb-reference-page .glass-search-container { background:rgba(255,255,255,.06); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.12); }
+.spmb-reference-page button, .spmb-reference-page input { font-family:inherit; }
+.spmb-reference-page button:disabled { cursor:not-allowed; opacity:.6; }
+.spmb-reference-page button:disabled:hover { transform:none; }
+.spmb-reference-page .shadow-glow { box-shadow:0 0 25px -5px rgba(59,130,246,.4); }
+.spmb-reference-page .quick-status-login-btn { cursor:pointer; }
+@media(prefers-reduced-motion:reduce) { .spmb-reference-page .animate-ping { animation:none; } }

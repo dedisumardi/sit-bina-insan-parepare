@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/spmb.css?v=20260928_blue1">
+  <link rel="stylesheet" href="css/spmb-reference.css?v=20260928_design1">
   <!-- Font Awesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <!-- Tailwind CSS CDN (with preflight disabled to preserve existing site styles) -->
@@ -1720,107 +1721,193 @@
            SPMB CONTAINER A: INFORMATIVE PUBLIC LANDING VIEW
            (Tampil saat orang tua belum login / membuka info SPMB)
            =================================================================== -->
-      <div id="spmb-landing-view">
-        <!-- SPMB Hero Banner -->
-        <div class="spmb-hero">
-          <div class="container" style="text-align: center;">
-            <div class="spmb-hero-badge">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              PENERIMAAN SISWA BARU (SPMB) <span class="spmb-sync-tp">TP 2026/2027</span>
-            </div>
-            <h1 class="spmb-hero-title" id="spmb-title">Informasi Pendaftaran SPMB Online</h1>
-
-            <form id="form-quick-status-check" class="spmb-quick-search" onsubmit="window.handleQuickStatusCheck(event)">
-              <input type="text" id="quick-check-input" class="form-control" placeholder="Ketik Kode SPMB (contoh: SPMB-2026-001) atau No WA..." aria-label="Kode pendaftaran atau nomor WhatsApp" required>
-              <button type="submit" class="btn btn-primary">Cari Status</button>
-            </form>
-            <div id="quick-check-result" class="spmb-quick-result" aria-live="polite"></div>
-
-            <p class="spmb-hero-desc">
-              Selamat datang di Sistem Penerimaan Siswa Baru SIT Bina Insan Parepare (TKIT, SDIT, SMPIT). Membentuk generasi Qur'ani yang berakhlak mulia, cerdas, dan mandiri. Pendaftaran gelombang baru kini dibuka secara daring.
-            </p>
-
-            <!-- Timeline Gelombang -->
-            <div class="waves-timeline-wrap" id="home-waves-timeline">
-              <div class="wave-pill active">
-                <div class="wave-dot"></div>
-                <span><strong>Gelombang 1 <span class="wave-promo-badge">Diskon Rp500.000</span>:</strong> 1 Januari 2027 s/d 31 Maret 2027 <span class="wave-open-label">(Sedang Buka)</span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Informative Content Section -->
-        <div class="section" style="background-color: var(--neutral-100); padding-top: 2.5rem; padding-bottom: 4rem;">
-          <div class="container spmb-info-section">
-
-            <!-- Card 1: Alur Pendaftaran Baru 6 Langkah Lengkap -->
-            <div class="spmb-card-highlight">
-              <div class="section-title-wrap" style="text-align: left; margin-bottom: 1.5rem;">
-                <span class="badge-tag">PANDUAN ALUR PENDAFTARAN</span>
-                <h2 style="font-size: 1.85rem; font-weight: 800; color: var(--neutral-900); margin: 0.5rem 0 0.25rem;">
-                  Alur Pendaftaran SPMB SIT Bina Insan Parepare
-                </h2>
-                <p style="color: var(--neutral-600); font-size: 0.95rem;">
-                  Ikuti seluruh alur 6 tahapan mudah pendaftaran putra-putri tercinta hingga resmi diterima di sekolah kami:
-                </p>
-              </div>
-
-              <div class="spmb-step-card-grid">
-                <!-- Step 1 -->
-                <div class="spmb-step-card">
-                  <div class="spmb-step-num">1</div>
-                  <h3>Pendaftaran Akun &amp; Pembayaran</h3>
-                  <p>Tekan tombol <strong>Daftar SPMB</strong>, masukkan Nama Orang Tua &amp; Nomor WhatsApp aktif, lalu transfer biaya pendaftaran <strong>Rp 150.000</strong> dan unggah foto bukti transfer di portal.</p>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="spmb-step-card">
-                  <div class="spmb-step-num">2</div>
-                  <h3>Verifikasi Pembayaran &amp; Terbit No. Registrasi</h3>
-                  <p>Panitia SPMB memverifikasi bukti transfer pembayaran. Setelah disetujui, sistem menerbitkan <strong>Nomor Registrasi Siswa</strong> resmi secara otomatis.</p>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="spmb-step-card">
-                  <div class="spmb-step-num">3</div>
-                  <h3>Pengisian Biodata Siswa &amp; Orang Tua/Wali</h3>
-                  <p>Lengkapi formulir online data identitas calon siswa baru dan data orang tua/wali secara menyeluruh, rapi, dan tersimpan aman di database sekolah.</p>
-                </div>
-
-                <!-- Step 4 -->
-                <div class="spmb-step-card">
-                  <div class="spmb-step-num">4</div>
-                  <h3>Jadwal Tes Observasi &amp; Wawancara</h3>
-                  <p>Panitia SPMB menetapkan tanggal, waktu, dan lokasi pelaksanaan observasi/tes calon siswa baru serta sesi wawancara orang tua/wali.</p>
-                </div>
-
-                <!-- Step 5 -->
-                <div class="spmb-step-card">
-                  <div class="spmb-step-num">5</div>
-                  <h3>Pengumuman Hasil Kelulusan</h3>
-                  <p>Pantau hasil pengumuman kelulusan seleksi observasi calon murid baru secara transparan langsung melalui akun portal orang tua.</p>
-                </div>
-
-                <!-- Step 6 -->
-                <div class="spmb-step-card">
-                  <div class="spmb-step-num">6</div>
-                  <h3>Daftar Ulang &amp; Unggah Berkas (Selesai)</h3>
-                  <p>Bagi calon siswa yang dinyatakan lulus, lakukan daftar ulang dengan mengunggah foto/scan <strong>Kartu Keluarga (KK) &amp; Akta Kelahiran</strong> hingga seluruh alur pendaftaran resmi selesai.</p>
-                </div>
-              </div>
-
-
-              <div style="margin-top: 2rem; text-align: center;">
-                <button type="button" class="btn btn-primary btn-lg" onclick="window.openSpmbModal('register')" style="padding: 0.85rem 2.25rem; font-weight: 800; border-radius: var(--radius-full);">
-                  <i class="fa-solid fa-rocket mr-2"></i> Mulai Pendaftaran Sekarang
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
+      <div id="spmb-landing-view" class="spmb-reference-page">
+<!-- BEGIN: HeroSection -->
+<header class="bg-islamic-pattern relative overflow-hidden text-white pt-14 pb-20 px-4 md:px-8 border-b border-blue-900/40">
+<!-- Subtle ambient glow effects -->
+<div class="absolute -top-24 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-blue-500/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="max-w-4xl mx-auto text-center relative z-10">
+<!-- Academic Year Pill Badge -->
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-400/30 bg-blue-500/10 text-blue-200 text-xs sm:text-sm font-semibold tracking-wide mb-6 backdrop-blur-md shadow-sm">
+<i class="fa-regular fa-circle-check text-blue-400"></i>
+<span class="">PENERIMAAN SISWA BARU (SPMB) <span class="spmb-sync-tp">TP 2026/2027</span></span>
+</div>
+<!-- Main Heading -->
+<h1 id="spmb-title" class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+        Informasi Pendaftaran SPMB Online
+      </h1>
+<!-- Search & Check Status Bar Form -->
+<div class="glass-search-container max-w-2xl mx-auto p-2 rounded-2xl shadow-2xl mb-7">
+<form class="flex flex-col sm:flex-row items-center gap-2" id="form-quick-status-check" onsubmit="window.handleQuickStatusCheck(event)">
+<div class="relative w-full flex-grow">
+<span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
+<i class="fa-solid fa-magnifying-glass text-sm"></i>
+</span>
+<input id="quick-check-input" required aria-label="Cari Status Pendaftaran" class="w-full pl-11 pr-4 py-3.5 bg-white text-slate-800 placeholder:text-slate-400 placeholder:font-medium placeholder:text-xs sm:placeholder:text-sm rounded-xl border-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold tracking-wide" placeholder="KETIK KODE SPMB (CONTOH: SPMB-2026-001) ATAU NO WA..." type="text">
+</div>
+<button class="w-full sm:w-auto px-7 py-3.5 bg-blue-600 hover:bg-blue-500 active:scale-[0.98] text-white font-bold text-sm rounded-xl transition-all duration-200 shadow-md hover:shadow-glow flex items-center justify-center gap-2 shrink-0 cursor-pointer" type="submit">
+<span class="">Cari Status</span>
+<i class="fa-solid fa-arrow-right text-xs"></i>
+</button>
+</form>
+</div>
+<div id="quick-check-result" class="spmb-quick-result" aria-live="polite"></div>
+<!-- School Description Narrative -->
+<p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto font-normal mb-8">
+        Selamat datang di Sistem Penerimaan Siswa Baru <span class="text-white font-medium">SIT Bina Insan Parepare (TKIT, SDIT, SMPIT)</span>.
+        Membentuk generasi Qur'ani yang berakhlak mulia, cerdas, dan mandiri. <span id="spmb-registration-narrative">Pendaftaran dilakukan secara daring sesuai jadwal gelombang.</span>
+      </p>
+<!-- Status Indicator Pill -->
+<div id="spmb-reference-status" role="status">
+<div class="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-slate-900/80 border border-slate-700/80 shadow-inner backdrop-blur-sm">
+<span class="flex h-2.5 w-2.5 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+</span>
+<span class="text-xs sm:text-sm font-semibold text-slate-200 tracking-wide">
+          <span id="spmb-registration-label">Memuat status pendaftaran…</span> <span class="text-slate-400 font-normal">• <span class="spmb-sync-tp">TP 2026/2027</span></span>
+</span>
+</div>
+</div>
+</div>
+</header>
+<!-- END: HeroSection -->
+<!-- BEGIN: RegistrationProcessSection -->
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+<!-- Section Title & Subheading -->
+<div class="text-center max-w-3xl mx-auto mb-14">
+<div class="inline-block px-3.5 py-1 bg-blue-50 text-blue-700 rounded-md text-xs font-bold tracking-wider uppercase mb-3 border border-blue-100">
+        PANDUAN ALUR PENDAFTARAN
+      </div>
+<h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">
+        Alur Pendaftaran SPMB SIT Bina Insan Parepare
+      </h2>
+<p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+        Ikuti seluruh alur 6 tahapan mudah pendaftaran putra-putri tercinta hingga resmi diterima di sekolah kami:
+      </p>
+</div>
+<!-- 6 Step Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Step 1 -->
+<div class="group bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-sm hover:shadow-card-hover hover:border-blue-300 transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-5">
+<span class="w-10 h-10 rounded-xl bg-blue-700 text-white font-bold flex items-center justify-center text-base shadow-sm group-hover:bg-blue-600 transition-colors">
+              1
+            </span>
+<span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tahap 01</span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mb-2.5 leading-snug group-hover:text-blue-700 transition-colors">
+            Pendaftaran Akun &amp; Pembayaran
+          </h3>
+<p class="text-sm text-slate-600 leading-relaxed font-normal">
+            Tekan tombol <span class="font-medium text-slate-800">Daftar SPMB</span>, masukkan Nama Orang Tua &amp; Nomor WhatsApp aktif, lalu transfer biaya pendaftaran <strong class="text-slate-900 font-semibold">Rp 150.000</strong> dan unggah foto bukti transfer di portal.
+          </p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="group bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-sm hover:shadow-card-hover hover:border-blue-300 transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-5">
+<span class="w-10 h-10 rounded-xl bg-blue-700 text-white font-bold flex items-center justify-center text-base shadow-sm group-hover:bg-blue-600 transition-colors">
+              2
+            </span>
+<span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tahap 02</span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mb-2.5 leading-snug group-hover:text-blue-700 transition-colors">
+            Verifikasi Pembayaran &amp; Terbit No. Registrasi
+          </h3>
+<p class="text-sm text-slate-600 leading-relaxed font-normal">
+            Panitia SPMB memverifikasi bukti transfer pembayaran. Setelah disetujui, sistem menerbitkan <strong class="text-slate-900 font-semibold">Nomor Registrasi Siswa</strong> resmi secara otomatis.
+          </p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="group bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-sm hover:shadow-card-hover hover:border-blue-300 transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-5">
+<span class="w-10 h-10 rounded-xl bg-blue-700 text-white font-bold flex items-center justify-center text-base shadow-sm group-hover:bg-blue-600 transition-colors">
+              3
+            </span>
+<span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tahap 03</span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mb-2.5 leading-snug group-hover:text-blue-700 transition-colors">
+            Pengisian Biodata Siswa &amp; Orang Tua/Wali
+          </h3>
+<p class="text-sm text-slate-600 leading-relaxed font-normal">
+            Lengkapi formulir online data identitas calon siswa baru dan data orang tua/wali secara menyeluruh, rapi, dan tersimpan aman di database sekolah.
+          </p>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="group bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-sm hover:shadow-card-hover hover:border-blue-300 transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-5">
+<span class="w-10 h-10 rounded-xl bg-blue-700 text-white font-bold flex items-center justify-center text-base shadow-sm group-hover:bg-blue-600 transition-colors">
+              4
+            </span>
+<span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tahap 04</span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mb-2.5 leading-snug group-hover:text-blue-700 transition-colors">
+            Jadwal Tes Observasi &amp; Wawancara
+          </h3>
+<p class="text-sm text-slate-600 leading-relaxed font-normal">
+            Panitia SPMB menetapkan tanggal, waktu, dan lokasi pelaksanaan observasi/tes calon siswa baru serta sesi wawancara orang tua/wali.
+          </p>
+</div>
+</div>
+<!-- Step 5 -->
+<div class="group bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-sm hover:shadow-card-hover hover:border-blue-300 transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-5">
+<span class="w-10 h-10 rounded-xl bg-blue-700 text-white font-bold flex items-center justify-center text-base shadow-sm group-hover:bg-blue-600 transition-colors">
+              5
+            </span>
+<span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tahap 05</span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mb-2.5 leading-snug group-hover:text-blue-700 transition-colors">
+            Pengumuman Hasil Kelulusan
+          </h3>
+<p class="text-sm text-slate-600 leading-relaxed font-normal">
+            Pantau hasil pengumuman kelulusan seleksi observasi calon murid baru secara transparan langsung melalui akun portal orang tua.
+          </p>
+</div>
+</div>
+<!-- Step 6 -->
+<div class="group bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-sm hover:shadow-card-hover hover:border-blue-300 transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-5">
+<span class="w-10 h-10 rounded-xl bg-blue-700 text-white font-bold flex items-center justify-center text-base shadow-sm group-hover:bg-blue-600 transition-colors">
+              6
+            </span>
+<span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tahap 06</span>
+</div>
+<h3 class="text-base font-bold text-slate-900 mb-2.5 leading-snug group-hover:text-blue-700 transition-colors">
+            Daftar Ulang &amp; Unggah Berkas (Selesai)
+          </h3>
+<p class="text-sm text-slate-600 leading-relaxed font-normal">
+            Bagi calon siswa yang dinyatakan lulus, lakukan daftar ulang dengan mengunggah foto/scan <strong class="text-slate-900 font-semibold">Kartu Keluarga (KK) &amp; Akta Kelahiran</strong> hingga seluruh alur pendaftaran resmi selesai.
+          </p>
+</div>
+</div>
+</div>
+<!-- CTA & Action Area -->
+<div class="mt-14 text-center">
+<button class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-600 hover:to-indigo-600 text-white font-bold text-base rounded-full shadow-lg hover:shadow-glow transform transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer" onclick="window.openSpmbModal('register')" type="button">
+<i class="fa-solid fa-rocket text-sm text-blue-200"></i>
+<span class="">Mulai Pendaftaran Sekarang</span>
+</button>
+<!-- Helpesk & Assistance info -->
+<p class="mt-4 text-xs sm:text-sm text-slate-500 font-medium">
+        Butuh bantuan atau panduan lebih lanjut?
+        <a class="text-blue-700 hover:underline font-semibold inline-flex items-center gap-1" href="https://wa.me/6285190610569" target="_blank" rel="noopener noreferrer">
+          Hubungi Helpdesk SPMB SIT Bina Insan
+          <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+</a>
+</p>
+</div>
+</div>
+<!-- END: RegistrationProcessSection -->
       </div>
       <!-- End of Informative Public Landing View -->
     </div>
@@ -2931,6 +3018,6 @@
   <script src="js/parents.js?v=20260925_separatesave1"></script>
   <script src="js/registration-policy.js?v=20260928_gate1"></script>
   <script src="js/spmb.js?v=20260928_gate1"></script>
-  <script src="js/app.js?v=20260928_gate1"></script>
+  <script src="js/app.js?v=20260928_design1"></script>
 </body>
 </html>

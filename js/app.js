@@ -528,6 +528,12 @@
       : waveStatus === 'upcoming' ? 'Segera Dibuka' : 'Pendaftaran Dibuka (Online Aktif)';
     const homeStatus = document.getElementById('home-registration-status');
     if (homeStatus) homeStatus.textContent = registrationStatusLabel;
+    const infoStatus = document.getElementById('spmb-registration-label');
+    if (infoStatus) infoStatus.textContent = registrationStatusLabel;
+    const infoNarrative = document.getElementById('spmb-registration-narrative');
+    if (infoNarrative) infoNarrative.textContent = waveStatus === 'open'
+      ? 'Pendaftaran gelombang baru kini dibuka secara daring.'
+      : 'Pantau informasi pembukaan gelombang pendaftaran berikutnya di halaman ini.';
     const registrationOpen = window.RegistrationPolicy.isOpen(settings);
     document.querySelectorAll('button[onclick*="openSpmbModal(\'register\')"]').forEach(button => {
       button.disabled = !registrationOpen;
