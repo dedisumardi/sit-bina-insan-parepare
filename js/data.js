@@ -185,8 +185,24 @@ const SchoolData = {
           desc: "Membentuk pribadi yang mandiri, disiplin, bertanggung jawab, dan mampu bekerja sama melalui kegiatan kepramukaan dan pembinaan kepemimpinan."
         },
         {
-          title: "Olahraga & Seni",
-          desc: "Mengembangkan bakat, sportivitas, rasa percaya diri, dan kreativitas melalui futsal, bulu tangkis, basket, renang, serta tari."
+          title: "Futsal",
+          desc: "Melatih kerja sama tim, keterampilan bermain futsal, dan sportivitas."
+        },
+        {
+          title: "Bulu Tangkis",
+          desc: "Melatih kelincahan, koordinasi gerak, dan keterampilan bermain bulu tangkis."
+        },
+        {
+          title: "Basket",
+          desc: "Mengembangkan keterampilan bermain basket, kerja sama tim, dan sportivitas."
+        },
+        {
+          title: "Renang",
+          desc: "Melatih keterampilan berenang, kebugaran, dan rasa percaya diri di air."
+        },
+        {
+          title: "Tari",
+          desc: "Mengembangkan kreativitas, keluwesan gerak, dan rasa percaya diri melalui seni tari."
         }
       ],
       spmbFee: "Rp 300.000",
