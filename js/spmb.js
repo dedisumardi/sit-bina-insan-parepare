@@ -140,7 +140,7 @@
     if (step === 1) {
       const jenjangChecked = document.querySelector('input[name="jenjang"]:checked');
       if (!jenjangChecked) {
-        alert('Silakan pilih salah satu jenjang pendidikan (TKIT, SDIT, atau SMPIT).');
+        SiteDialog.alert('Silakan pilih salah satu jenjang pendidikan (TKIT, SDIT, atau SMPIT).');
         return false;
       }
     }
@@ -148,7 +148,7 @@
     if (step === 2) {
       const nik = document.getElementById('siswa_nik').value.trim();
       if (nik.length < 16) {
-        alert('Nomor Induk Kependudukan (NIK) siswa harus 16 digit angka.');
+        SiteDialog.alert('Nomor Induk Kependudukan (NIK) siswa harus 16 digit angka.');
         document.getElementById('siswa_nik').focus();
         return false;
       }
@@ -157,7 +157,7 @@
     if (step === 3) {
       const wa = document.getElementById('ortu_wa').value.trim();
       if (wa.length < 10) {
-        alert('Nomor WhatsApp Ayah/Wali harus valid (minimal 10 digit).');
+        SiteDialog.alert('Nomor WhatsApp Ayah/Wali harus valid (minimal 10 digit).');
         document.getElementById('ortu_wa').focus();
         return false;
       }
@@ -492,7 +492,7 @@
       }
       savedRecord = result.data;
     } catch (error) {
-      alert(`Pendaftaran belum tersimpan. ${error.message}\n\nSilakan periksa koneksi lalu coba kembali.`);
+      SiteDialog.alert(`Pendaftaran belum tersimpan. ${error.message}\n\nSilakan periksa koneksi lalu coba kembali.`);
       return;
     }
 
@@ -747,7 +747,7 @@
 
             // Check if this approval was for the current active parent
             if (msg.data && (msg.data.waAyah === session.wa || msg.data.wa_ayah === session.wa || msg.data.targetWa === session.wa)) {
-              alert(`Alhamdulillah! Pembayaran pendaftaran Anda telah DISETUJUI oleh Admin.\n\nKode Pendaftaran Siswa Resmi Anda: ${msg.data.regNumber || msg.data.newRegNumber || 'Telah Terbit'}`);
+              SiteDialog.alert(`Alhamdulillah! Pembayaran pendaftaran Anda telah DISETUJUI oleh Admin.\n\nKode Pendaftaran Siswa Resmi Anda: ${msg.data.regNumber || msg.data.newRegNumber || 'Telah Terbit'}`);
             }
           } catch (e) {}
         }
@@ -855,12 +855,12 @@
     const file = e.target.files ? e.target.files[0] : null;
     if (!file) return;
     if (!file.type.match('image.*') && file.type !== 'application/pdf') {
-      alert('Mohon pilih file gambar (JPG, PNG, WEBP) atau PDF.');
+      SiteDialog.alert('Mohon pilih file gambar (JPG, PNG, WEBP) atau PDF.');
       e.target.value = '';
       return;
     }
     if (file.size > 2.5 * 1024 * 1024) {
-      alert('Ukuran file sertifikat terlalu besar (maksimal 2,5 MB).');
+      SiteDialog.alert('Ukuran file sertifikat terlalu besar (maksimal 2,5 MB).');
       e.target.value = '';
       return;
     }
@@ -966,7 +966,7 @@
   // Set Modal Mode (Register vs Login)
   window.setSpmbModalMode = function (mode) {
     if (mode === 'register' && window.SchoolData?.settings && !window.RegistrationPolicy.isOpen(window.SchoolData.settings)) {
-      alert(window.RegistrationPolicy.message(window.SchoolData.settings));
+      SiteDialog.alert(window.RegistrationPolicy.message(window.SchoolData.settings));
       mode = 'login';
     }
     spmbModalMode = mode;
@@ -1440,7 +1440,7 @@
 
   function checkReRegistrationAccess() {
     if (registrationNavigation.canReregister) return true;
-    alert('Daftar ulang baru dapat dibuka setelah admin mengumumkan Anda lulus dan diterima.');
+    SiteDialog.alert('Daftar ulang baru dapat dibuka setelah admin mengumumkan Anda lulus dan diterima.');
     return false;
   }
 
@@ -1449,10 +1449,10 @@
     if (![1, -1].includes(direction) || (step === 1 && direction < 0) || (step === 6 && direction > 0)) return;
     if (document.getElementById('portal-bio-submit')?.disabled || document.getElementById('portal-parent-data-submit')?.disabled) return;
     if (direction > 0 && step === 1 && !approved && !proof) {
-      alert('Unggah dan kirim bukti pembayaran terlebih dahulu.'); return;
+      SiteDialog.alert('Unggah dan kirim bukti pembayaran terlebih dahulu.'); return;
     }
     if (direction > 0 && step === 2 && !approved) {
-      alert('Silakan tunggu pembayaran disetujui oleh panitia.'); return;
+      SiteDialog.alert('Silakan tunggu pembayaran disetujui oleh panitia.'); return;
     }
     if (direction > 0 && step === 3) {
       const studentForm = document.getElementById('portal-student-bio-form');
@@ -1462,13 +1462,13 @@
       const studentSaved = registrationNavigation.studentSaved;
       const studentDirty = studentForm?.dataset.dirty === '1';
       if (!studentSaved || studentDirty) {
-        alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum melanjutkan.');
+        SiteDialog.alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum melanjutkan.');
         return;
       }
       const parentsSaved = registrationNavigation.parentsSaved;
       const parentsDirty = window.ParentBiodata?.hasUnsavedChanges();
       if (!parentsSaved || parentsDirty) {
-        alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum melanjutkan.');
+        SiteDialog.alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum melanjutkan.');
         return;
       }
     }
@@ -1597,17 +1597,17 @@
       const parentsSaved = registrationNavigation.parentsSaved;
       const parentsDirty = window.ParentBiodata?.hasUnsavedChanges();
       if (!studentSaved || studentDirty || !parentsSaved || parentsDirty) {
-        alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum berpindah langkah.');
+        SiteDialog.alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum berpindah langkah.');
         return;
       }
     }
     const approved = registrationNavigation.approved;
     if (targetStep >= 3 && !approved) {
-      alert('Langkah ini dapat diakses setelah pembayaran Anda diverifikasi oleh Admin.');
+      SiteDialog.alert('Langkah ini dapat diakses setelah pembayaran Anda diverifikasi oleh Admin.');
       return;
     }
     if (targetStep >= 4 && (!registrationNavigation.studentSaved || !registrationNavigation.parentsSaved)) {
-      alert('Lengkapi dan simpan Biodata Siswa dan Orang Tua/Wali terlebih dahulu.');
+      SiteDialog.alert('Lengkapi dan simpan Biodata Siswa dan Orang Tua/Wali terlebih dahulu.');
       return;
     }
     const suffix = [':start', ':payment', '', ':schedule', ':results', ':reregistration'][targetStep - 1];
@@ -2047,12 +2047,12 @@
 
   function processProofFile(file) {
     if (!file.type.match('image.*')) {
-      alert('Mohon pilih file gambar (JPG, PNG, atau WEBP).');
+      SiteDialog.alert('Mohon pilih file gambar (JPG, PNG, atau WEBP).');
       return;
     }
 
     if (file.size > 2.5 * 1024 * 1024) {
-      alert('Ukuran file terlalu besar (maksimal 2,5MB).');
+      SiteDialog.alert('Ukuran file terlalu besar (maksimal 2,5MB).');
       return;
     }
 
@@ -2073,13 +2073,13 @@
   // Submit Payment Proof to Database
   window.submitPaymentProof = async function () {
     if (!tempProofBase64) {
-      alert('Silakan pilih foto bukti pembayaran terlebih dahulu.');
+      SiteDialog.alert('Silakan pilih foto bukti pembayaran terlebih dahulu.');
       return;
     }
 
     const rawSession = localStorage.getItem(PARENT_SESSION_KEY);
     if (!rawSession) {
-      alert('Sesi pendaftaran tidak ditemukan. Silakan login kembali.');
+      SiteDialog.alert('Sesi pendaftaran tidak ditemukan. Silakan login kembali.');
       return;
     }
 
@@ -2131,7 +2131,7 @@
       Object.assign(record, result.data);
       cacheSetItem(STORAGE_KEY, JSON.stringify(records));
     } catch (error) {
-      alert(`Bukti pembayaran belum tersimpan. ${error.message}\n\nSilakan coba kembali.`);
+      SiteDialog.alert(`Bukti pembayaran belum tersimpan. ${error.message}\n\nSilakan coba kembali.`);
       return;
     }
 
@@ -2146,7 +2146,7 @@
       } catch (e) {}
     }
 
-    alert('Bukti pembayaran berhasil diunggah!\n\nSeluruh data Anda telah tersimpan di sistem dan dapat dikelola oleh admin. Mohon menunggu sampai admin memverifikasi pembayaran Anda.');
+    SiteDialog.alert('Bukti pembayaran berhasil diunggah!\n\nSeluruh data Anda telah tersimpan di sistem dan dapat dikelola oleh admin. Mohon menunggu sampai admin memverifikasi pembayaran Anda.');
     renderParentPortal();
   };
 
@@ -2169,11 +2169,11 @@
     const file = e.target.files ? e.target.files[0] : null;
     if (!file) return;
     if (!file.type.match('image.*') && file.type !== 'application/pdf') {
-      alert('Mohon pilih file gambar (JPG, PNG, WEBP) atau PDF untuk Kartu Keluarga.');
+      SiteDialog.alert('Mohon pilih file gambar (JPG, PNG, WEBP) atau PDF untuk Kartu Keluarga.');
       return;
     }
     if (file.size > 2.5 * 1024 * 1024) {
-      alert('Ukuran file Kartu Keluarga terlalu besar (maksimal 2,5 MB).');
+      SiteDialog.alert('Ukuran file Kartu Keluarga terlalu besar (maksimal 2,5 MB).');
       return;
     }
     const reader = new FileReader();
@@ -2199,11 +2199,11 @@
     const file = e.target.files ? e.target.files[0] : null;
     if (!file) return;
     if (!file.type.match('image.*') && file.type !== 'application/pdf') {
-      alert('Mohon pilih file gambar (JPG, PNG, WEBP) atau PDF untuk Akta Kelahiran.');
+      SiteDialog.alert('Mohon pilih file gambar (JPG, PNG, WEBP) atau PDF untuk Akta Kelahiran.');
       return;
     }
     if (file.size > 2.5 * 1024 * 1024) {
-      alert('Ukuran file Akta Kelahiran terlalu besar (maksimal 2,5 MB).');
+      SiteDialog.alert('Ukuran file Akta Kelahiran terlalu besar (maksimal 2,5 MB).');
       return;
     }
     const reader = new FileReader();
@@ -2352,17 +2352,17 @@
 
   window.submitReRegistration = async function () {
     if (!currentKkBase64) {
-      alert('Silakan pilih dan unggah berkas Kartu Keluarga (KK) terlebih dahulu.');
+      SiteDialog.alert('Silakan pilih dan unggah berkas Kartu Keluarga (KK) terlebih dahulu.');
       return;
     }
     if (!currentAktaBase64) {
-      alert('Silakan pilih dan unggah berkas Akta Kelahiran Calon Siswa terlebih dahulu.');
+      SiteDialog.alert('Silakan pilih dan unggah berkas Akta Kelahiran Calon Siswa terlebih dahulu.');
       return;
     }
 
     const rawSession = localStorage.getItem(PARENT_SESSION_KEY);
     if (!rawSession) {
-      alert('Sesi pendaftaran tidak ditemukan. Silakan login kembali.');
+      SiteDialog.alert('Sesi pendaftaran tidak ditemukan. Silakan login kembali.');
       return;
     }
     const session = JSON.parse(rawSession);
@@ -2381,13 +2381,13 @@
     });
 
     if (!record) {
-      alert('Data pendaftaran tidak ditemukan. Silakan muat ulang halaman.');
+      SiteDialog.alert('Data pendaftaran tidak ditemukan. Silakan muat ulang halaman.');
       return;
     }
 
     const submitBtn = document.getElementById('btn-submit-reregistration');
     if (!canAccessReRegistration(record)) {
-      alert('Tunggu pengumuman lulus dari admin sebelum melakukan daftar ulang.');
+      SiteDialog.alert('Tunggu pengumuman lulus dari admin sebelum melakukan daftar ulang.');
       return;
     }
     const originalText = submitBtn ? submitBtn.textContent : '';
@@ -2419,11 +2419,11 @@
       }
       Object.assign(record, result.data);
       cacheSetItem(STORAGE_KEY, JSON.stringify(records));
-      alert('Alhamdulillah! Berkas pendaftaran ulang (Kartu Keluarga dan Akta Kelahiran) berhasil dikirim dan tersimpan di database resmi.');
+      SiteDialog.alert('Alhamdulillah! Berkas pendaftaran ulang (Kartu Keluarga dan Akta Kelahiran) berhasil dikirim dan tersimpan di database resmi.');
       renderParentPortal();
     } catch (error) {
       cacheSetItem(STORAGE_KEY, JSON.stringify(records));
-      alert(`Berkas tersimpan di sesi lokal. Catatan sinkronisasi server: ${error.message}`);
+      SiteDialog.alert(`Berkas tersimpan di sesi lokal. Catatan sinkronisasi server: ${error.message}`);
       renderParentPortal();
     } finally {
       if (submitBtn) {
@@ -2434,8 +2434,8 @@
   };
 
   // Logout Parent Portal
-  window.logoutParentPortal = function () {
-    if (confirm('Apakah Anda ingin keluar dari Portal SPMB Anda?')) {
+  window.logoutParentPortal = async function () {
+    if (await SiteDialog.confirm('Apakah Anda ingin keluar dari Portal SPMB Anda?')) {
       localStorage.removeItem(PARENT_SESSION_KEY);
       try { sessionStorage.removeItem(PARENT_BIODATA_VIEW_KEY); } catch (_) {}
       renderParentPortal();
@@ -2455,10 +2455,10 @@
     const cleanNum = String(num).replace(/\D/g, '') || '7112345678';
     if (navigator.clipboard) {
       navigator.clipboard.writeText(cleanNum).then(() => {
-        alert('Nomor Rekening (' + cleanNum + ') atas nama Yayasan Bina Insan Parepare berhasil disalin!');
+        SiteDialog.alert('Nomor Rekening (' + cleanNum + ') atas nama Yayasan Bina Insan Parepare berhasil disalin!');
       });
     } else {
-      prompt('Salin nomor rekening:', cleanNum);
+      SiteDialog.copy('Salin nomor rekening:', cleanNum);
     }
   };
 
@@ -2467,7 +2467,7 @@
     const code = document.getElementById('portal-approved-code')?.textContent || '';
     if (code && navigator.clipboard) {
       navigator.clipboard.writeText(code).then(() => {
-        alert('Kode pendaftaran ' + code + ' berhasil disalin!');
+        SiteDialog.alert('Kode pendaftaran ' + code + ' berhasil disalin!');
       });
     }
   };
@@ -2482,7 +2482,7 @@
     const confirmed = document.getElementById('portal-sched-confirmed-view');
     const metadata = document.querySelector('#portal-state-schedule .portal-sched-meta-strip');
     if (scheduleLoadError || !confirmed || confirmed.style.display === 'none' || !metadata) {
-      alert('Jadwal belum tersedia. Pastikan koneksi internet aktif dan jadwal telah ditetapkan.');
+      SiteDialog.alert('Jadwal belum tersedia. Pastikan koneksi internet aktif dan jadwal telah ditetapkan.');
       return;
     }
     document.getElementById('schedule-print-sheet')?.remove();
@@ -2512,7 +2512,7 @@
       window.print();
     } catch (error) {
       cleanup();
-      alert('Tidak dapat membuka cetakan. Silakan coba lagi.');
+      SiteDialog.alert('Tidak dapat membuka cetakan. Silakan coba lagi.');
     }
   };
 

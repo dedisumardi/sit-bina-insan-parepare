@@ -226,7 +226,7 @@
     });
 
     logoutBtn?.addEventListener('click', async () => {
-      if (confirm('Apakah Anda yakin ingin keluar dari sistem admin?')) {
+      if (await SiteDialog.confirm('Apakah Anda yakin ingin keluar dari sistem admin?')) {
         try {
           await apiRequest('api/auth.php', { method: 'DELETE' });
         } catch (error) {
@@ -1335,7 +1335,7 @@
         showToast('Tidak ada calon siswa terpilih yang siap diluluskan (pastikan data lengkap dan belum lulus).', true);
         return;
       }
-      if (!confirm(`Luluskan ${eligible.length} calon siswa yang dipilih? Hasil kelulusan akan langsung diperbarui di portal pengumuman.`)) return;
+      if (!await SiteDialog.confirm(`Luluskan ${eligible.length} calon siswa yang dipilih? Hasil kelulusan akan langsung diperbarui di portal pengumuman.`)) return;
 
       let successCount = 0;
       for (const item of eligible) {
@@ -1361,7 +1361,7 @@
     document.getElementById('spmb-bulk-delete-btn')?.addEventListener('click', async () => {
       if (spmbSelectedRows.size === 0) return;
       const count = spmbSelectedRows.size;
-      if (!confirm(`Apakah Anda yakin ingin menghapus ${count} data calon siswa yang dipilih? Tindakan ini tidak dapat dibatalkan.`)) return;
+      if (!await SiteDialog.confirm(`Apakah Anda yakin ingin menghapus ${count} data calon siswa yang dipilih? Tindakan ini tidak dapat dibatalkan.`)) return;
 
       const regs = Array.from(spmbSelectedRows);
       let successCount = 0;
@@ -1421,7 +1421,7 @@
       setTimeout(() => URL.revokeObjectURL(url), 10000);
       showToast('File Excel data siswa lengkap berhasil diunduh!');
     } catch (error) {
-      alert('Unduhan gagal: ' + (error.message || 'Silakan coba kembali.'));
+      SiteDialog.alert('Unduhan gagal: ' + (error.message || 'Silakan coba kembali.'));
     } finally {
       if (button) button.disabled = false;
     }
@@ -1430,7 +1430,7 @@
   // Export CSV Akun Wali
   function exportWaliToCsv() {
     if (spmbList.length === 0) {
-      alert('Tidak ada data akun orang tua untuk diekspor.');
+      SiteDialog.alert('Tidak ada data akun orang tua untuk diekspor.');
       return;
     }
 
@@ -1729,7 +1729,7 @@
     if (!item) return;
     const docData = docType === 'kk' ? (item.berkasKk || item.berkas_kk) : (item.berkasAkta || item.berkas_akta);
     if (!docData) {
-      alert(`Berkas ${docType === 'kk' ? 'Kartu Keluarga' : 'Akta Kelahiran'} belum diunggah.`);
+      SiteDialog.alert(`Berkas ${docType === 'kk' ? 'Kartu Keluarga' : 'Akta Kelahiran'} belum diunggah.`);
       return;
     }
     if (docData.startsWith('data:')) {
@@ -2065,21 +2065,21 @@
   window.approvePayment = async function (regNumber) {
     const item = spmbList.find(s => s.regNumber === regNumber || s.waAyah === regNumber);
     if (!item) {
-      alert('Data pendaftar tidak ditemukan.');
+      SiteDialog.alert('Data pendaftar tidak ditemukan.');
       return;
     }
 
     if (isApplicantPassed(item)) {
-      alert(`Calon siswa ${item.namaSiswa || item.namaAyah} (${item.regNumber}) sudah lulus seleksi dan status pembayarannya telah lunas.\nPersetujuan pembayaran tidak perlu diulang kembali agar status kelulusan tidak berubah.`);
+      SiteDialog.alert(`Calon siswa ${item.namaSiswa || item.namaAyah} (${item.regNumber}) sudah lulus seleksi dan status pembayarannya telah lunas.\nPersetujuan pembayaran tidak perlu diulang kembali agar status kelulusan tidak berubah.`);
       return;
     }
 
     if (isPaymentApproved(item) && item.regNumber && item.regNumber.startsWith('SPMB-')) {
-      alert(`Pembayaran pendaftaran untuk ${item.namaAyah || item.namaSiswa} (${item.regNumber}) sudah berstatus Lunas / Disetujui.`);
+      SiteDialog.alert(`Pembayaran pendaftaran untuk ${item.namaAyah || item.namaSiswa} (${item.regNumber}) sudah berstatus Lunas / Disetujui.`);
       return;
     }
 
-    if (!confirm(`Konfirmasi setujui pembayaran Rp 150.000 untuk ${item.namaAyah || item.namaSiswa}?\n\nSistem akan otomatis menerbitkan Nomor Registrasi Resmi Siswa Baru.`)) {
+    if (!await SiteDialog.confirm(`Konfirmasi setujui pembayaran Rp 150.000 untuk ${item.namaAyah || item.namaSiswa}?\n\nSistem akan otomatis menerbitkan Nomor Registrasi Resmi Siswa Baru.`)) {
       return;
     }
 
@@ -2143,7 +2143,7 @@
   window.printApplicantCard = function (regNumber) {
     // Open main page and trigger print ticket
     window.open(`index.html#spmb`, '_blank');
-    alert(`Untuk mencetak kartu ${regNumber}, silakan buka menu 'Cek Status Pendaftaran' di tab website yang terbuka dan masukkan nomor registrasi tersebut.`);
+    SiteDialog.alert(`Untuk mencetak kartu ${regNumber}, silakan buka menu 'Cek Status Pendaftaran' di tab website yang terbuka dan masukkan nomor registrasi tersebut.`);
   };
 
   function getApplicantProgressStatus(item, schoolSettings) {
@@ -2169,7 +2169,7 @@
       showToast('Pastikan pembayaran disetujui serta biodata siswa dan orang tua/wali lengkap.', true);
       return;
     }
-    if (!confirm('Luluskan ' + (item.namaSiswa || regNumber) + ' (' + regNumber + ')? Hasil lulus dan diterima akan tampil di halaman pengumuman orang tua.')) return;
+    if (!await SiteDialog.confirm('Luluskan ' + (item.namaSiswa || regNumber) + ' (' + regNumber + ')? Hasil lulus dan diterima akan tampil di halaman pengumuman orang tua.')) return;
     passingApplicants.add(regNumber);
     if (button) button.disabled = true;
     try {
@@ -2215,7 +2215,7 @@
     if (completingApplicants.has(regNumber)) return;
 
     const studentName = item.namaSiswa || regNumber;
-    if (!confirm(`Selesaikan seluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber})?\n\nTindakan ini menandai bahwa seluruh alur pendaftaran dan daftar ulang calon siswa telah selesai/berakhir.`)) {
+    if (!await SiteDialog.confirm(`Selesaikan seluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber})?\n\nTindakan ini menandai bahwa seluruh alur pendaftaran dan daftar ulang calon siswa telah selesai/berakhir.`)) {
       return;
     }
 
@@ -2235,7 +2235,7 @@
       renderDashboard();
       broadcastRealtime('spmb_updated', spmbList);
 
-      alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
+      SiteDialog.alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
       showToast(thankYouMessage);
     } catch (error) {
       item.status = completedStatus;
@@ -2243,7 +2243,7 @@
       renderSpmbTable();
       renderDashboard();
       broadcastRealtime('spmb_updated', spmbList);
-      alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
+      SiteDialog.alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
       showToast(thankYouMessage);
     } finally {
       completingApplicants.delete(regNumber);
@@ -2262,7 +2262,7 @@
   };
 
   window.deleteApplicant = async function (regNumber) {
-    if (confirm(`Apakah Anda yakin ingin menghapus data pendaftar ${regNumber}? Tindakan ini tidak dapat dibatalkan.`)) {
+    if (await SiteDialog.confirm(`Apakah Anda yakin ingin menghapus data pendaftar ${regNumber}? Tindakan ini tidak dapat dibatalkan.`)) {
       try {
         await apiRequest(`api/spmb.php?reg_number=${encodeURIComponent(regNumber)}`, {
           method: 'DELETE'
@@ -2409,7 +2409,7 @@
   };
 
   window.deleteArticle = async function (id) {
-    if (confirm('Apakah Anda yakin ingin menghapus artikel ini dari website?')) {
+    if (await SiteDialog.confirm('Apakah Anda yakin ingin menghapus artikel ini dari website?')) {
       try {
         await apiRequest(`api/articles.php?id=${id}`, {
           method: 'DELETE'
@@ -2888,7 +2888,7 @@
     });
 
     resetBtn?.addEventListener('click', async () => {
-      if (confirm('Atur ulang seluruh pengaturan SPMB dan sekolah ke nilai bawaan? Data pendaftar dan artikel tidak akan dihapus.')) {
+      if (await SiteDialog.confirm('Atur ulang seluruh pengaturan SPMB dan sekolah ke nilai bawaan? Data pendaftar dan artikel tidak akan dihapus.')) {
         try {
           const defaults = getDefaultSettings();
           const result = await apiRequest('api/settings.php', {
