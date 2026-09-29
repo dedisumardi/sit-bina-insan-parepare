@@ -1,0 +1,11 @@
+.building-slider { height: 230px; background: #e2e8f0; }
+.building-slider .building-slide { position: absolute; inset: 0; height: 100%; opacity: 0; transition: opacity .8s ease; }
+.building-slider .building-slide.is-active { opacity: 1; }
+.hero-card-featured:hover .building-slider img { transform: none; }
+.building-caption { position: absolute; top: 10px; left: 10px; padding: 4px 8px; background: #0f172ab3; color: white; font-size: 10px; border-radius: 6px; }
+.building-controls { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; padding: 2px 6px; border-radius: 30px; background: #0f172ab3; }
+.building-controls button { border: 0; background: transparent; color: white; cursor: pointer; width: 32px; height: 32px; display: grid; place-items: center; }
+.building-controls button[data-slide]::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #ffffff70; }
+.building-controls button[aria-pressed="true"]::after { background: white; width: 18px; border-radius: 6px; }
+.building-controls button:focus-visible { outline: 2px solid white; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { .building-slider .building-slide { transition: none; } }
