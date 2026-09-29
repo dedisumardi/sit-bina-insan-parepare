@@ -15,6 +15,9 @@ body :is(h1,h2,h3) { letter-spacing:-.025em; }
 }
 .hero-bg-overlay,.hero-gradient,.hero-pattern { display:none; }
 .news-hero { background-image:radial-gradient(circle at 50% 0%,#1e3a8a 0%,#081736 70%) !important; }
+.news-filter-bridge { background:linear-gradient(to bottom,#081736 0%,#081736 50%,#f8fafc 50%,#f8fafc 100%); }
+.news-filter-bridge .news-filter-bar { margin:0; position:relative; box-shadow:0 6px 20px #0f172a0a; }
+#view-berita .news-content-section { padding-top:2.5rem; }
 .hero-school .hero-bg-overlay { display:block; opacity:.24; pointer-events:none; }
 .hero-heading-highlight { color:#fff; }
 .hero-stat-number,.level-hero-tagline { color:#bfdbfe; }

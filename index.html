@@ -61,7 +61,7 @@
   </script>
   <link rel="stylesheet" href="css/dialogs.css?v=20260929_dialog1">
   <link rel="stylesheet" href="css/forms.css?v=20260929_soft1">
-  <link rel="stylesheet" href="css/site-theme.css?v=20260929_ui3">
+  <link rel="stylesheet" href="css/site-theme.css?v=20260929_ui4">
 </head>
 <body>
 
@@ -1749,9 +1749,9 @@
         </div>
       </div>
 
-      <div class="section" style="background-color: var(--neutral-50);">
+      <div class="news-filter-bridge">
         <div class="container">
-          <!-- Filter & Search Bar -->
+          <!-- Filter straddles the header and content at half its own height. -->
           <div class="news-filter-bar">
             <div class="news-categories">
               <button type="button" class="news-cat-btn active" data-category="Semua">Semua</button>
@@ -1766,6 +1766,11 @@
             </div>
           </div>
 
+        </div>
+      </div>
+
+      <div class="section news-content-section" style="background-color: var(--neutral-50);">
+        <div class="container">
           <!-- News Grid -->
           <div class="news-grid" id="news-portal-grid">
             <!-- Dynamically populated via js/app.js -->
