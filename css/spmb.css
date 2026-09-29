@@ -1960,12 +1960,13 @@ ol.portal-flow-steps.portal-flow-seven:not(.portal-flow-six) {
 }
 
 .portal-preview-img {
+  display: block;
   max-height: 280px;
   max-width: 100%;
   object-fit: contain;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  margin-bottom: 1rem;
+  margin: 0 auto 1rem;
 }
 
 /* Approved State Card */
