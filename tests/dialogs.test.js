@@ -76,6 +76,9 @@ test('all message dialog variants use the favicon only in the heading with text-
   }
 });
 
-test('shared button decoration skips message dialogs', () => {
-  assert.match(fs.readFileSync('js/site-theme.js', 'utf8'), /control\.closest\('\.site-dialog,/);
+test('shared button decoration uses text instead of injecting icons', () => {
+  const source = fs.readFileSync('js/site-theme.js', 'utf8');
+  assert.doesNotMatch(source, /createElement\('i'\)|control\.prepend\(icon\)/);
+  assert.match(source, /button-text-fallback/);
+  assert.match(source, /characterData: true/);
 });

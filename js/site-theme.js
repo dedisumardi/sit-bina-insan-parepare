@@ -1,32 +1,38 @@
 (function () {
   'use strict';
-  // Add matching Font Awesome icons only where the action has no icon already.
-  // Never replace labels/children: listeners, loading labels and accessible names survive.
-  const rules = [
-    [/hapus|delete/i, 'trash-can'], [/batal|tutup/i, 'xmark'],
-    [/kembali/i, 'arrow-left'], [/unduh|download|ekspor|export/i, 'download'],
-    [/cetak/i, 'print'], [/simpan|kirim/i, 'floppy-disk'],
-    [/unggah|upload/i, 'arrow-up-from-bracket'], [/whatsapp|konsultasi|hubungi/i, 'comment-dots'],
-    [/daftar|pendaftaran/i, 'rocket'], [/masuk|login/i, 'arrow-right-to-bracket'],
-    [/keluar|logout/i, 'arrow-right-from-bracket'], [/cari/i, 'magnifying-glass'],
-    [/lanjut|lihat|buka|jelajahi/i, 'arrow-right'], [/ubah|edit/i, 'pen-to-square'],
-    [/setujui|lulus|selesai/i, 'circle-check']
-  ];
+  const icons = 'svg, i, img, .theme-action-icon, .faq-icon-toggle';
+  const symbols = /[\u2190-\u21ff\u2600-\u27bf\u{1f000}-\u{1faff}\uFE0F\u200D\uE000-\uF8FF›«»×]/gu;
   function decorate(root) {
-    const controls = root.querySelectorAll('button, a.btn');
+    const controls = root.querySelectorAll('button, a[class*="btn"], .floating-whatsapp, [role="button"]');
     controls.forEach(control => {
-      if (control.closest('.site-dialog, .building-controls, .spmb-reference-page, #admin-sidebar') || control.matches('[role="tab"],.spmb-modal-tab-btn,.faq-question,.mobile-toggle-btn')) return;
-      const text = control.textContent.trim();
-      if (!text || text.length > 110) return;
-      const match = rules.find(([pattern]) => pattern.test(text));
-      if (!match) return;
-      control.classList.add('theme-action');
-      if (/\bbg-(blue|emerald|indigo)-(600|700)\b/.test(control.className) && !/hapus|delete/i.test(text)) control.classList.add('theme-primary');
-      if (control.querySelector('svg,i,img') || /[←→›✕]/.test(text)) return;
-      const icon = document.createElement('i');
-      icon.className = 'fa-solid fa-' + match[1] + ' theme-action-icon';
-      icon.setAttribute('aria-hidden', 'true');
-      control.prepend(icon);
+      // Preserve nodes and listeners used by controls that update their icons later.
+      control.querySelectorAll(icons).forEach(icon => {
+        icon.classList.add('button-icon-hidden');
+        icon.setAttribute('aria-hidden', 'true');
+      });
+      const walker = document.createTreeWalker(control, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        if (node.parentElement.closest(icons)) continue;
+        const clean = node.nodeValue.replace(symbols, '');
+        if (clean !== node.nodeValue) node.nodeValue = clean;
+      }
+      const visibleText = Array.from(control.childNodes).some(function hasText(child) {
+        if (child.nodeType === Node.TEXT_NODE) return !!child.nodeValue.trim();
+        if (child.nodeType !== Node.ELEMENT_NODE || child.matches(icons)) return false;
+        return Array.from(child.childNodes).some(hasText);
+      });
+      if (!visibleText) {
+        const label = document.createElement('span');
+        label.className = 'button-text-fallback';
+        const hint = control.getAttribute('aria-label') || control.getAttribute('title');
+        label.textContent = /close|tutup/i.test(hint || '') || control.matches('[class*="close"]') ? 'Tutup'
+          : /menu|sidebar/i.test(hint || '') || control.matches('.mobile-toggle-btn') ? 'Menu'
+          : hint || 'Buka';
+        control.append(label);
+        control.classList.add('button-text-only');
+      }
+      if (/\bbg-(blue|emerald|indigo)-(600|700)\b/.test(control.className) && !/hapus|delete/i.test(control.textContent)) control.classList.add('theme-primary');
     });
   }
   document.body.classList.toggle('theme-admin', !!document.getElementById('admin-sidebar'));
@@ -36,5 +42,5 @@
     if (queued) return;
     queued = true;
     requestAnimationFrame(() => { queued = false; decorate(document); });
-  }).observe(document.body, { childList:true, subtree:true });
+  }).observe(document.body, { childList:true, characterData: true, subtree:true });
 })();
