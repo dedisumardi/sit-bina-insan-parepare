@@ -3,7 +3,7 @@
   const icons = 'svg, i, img, .theme-action-icon, .faq-icon-toggle';
   const symbols = /[\u2190-\u21ff\u2600-\u27bf\u{1f000}-\u{1faff}\uFE0F\u200D\uE000-\uF8FF›«»×]/gu;
   function decorate(root) {
-    const controls = root.querySelectorAll('button, a[class*="btn"], .floating-whatsapp, [role="button"]');
+    const controls = root.querySelectorAll('button, a[class*="btn"], a[class*="rounded"], .floating-whatsapp, [role="button"]');
     controls.forEach(control => {
       // Preserve nodes and listeners used by controls that update their icons later.
       control.querySelectorAll(icons).forEach(icon => {

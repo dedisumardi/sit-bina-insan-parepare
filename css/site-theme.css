@@ -55,7 +55,7 @@ body :is(.btn-primary,.btn-accent,.theme-primary,#btn-submit-parent-auth,#admin-
 body :is(.btn-primary,.btn-accent,.theme-primary):not(:disabled):hover { box-shadow:0 6px 20px #2563eb30 !important; transform:translateY(-1px); }
 body :is(.btn-outline-primary,.btn-outline-secondary,.portal-bio-back) { border:1px solid #dbeafe; background:#eff6ff; color:#1d4ed8; border-radius:12px; }
 body .btn-outline-white { background:#ffffff0d; border:1px solid #ffffff30; color:#fff; box-shadow:none; }
-body :is(button, a[class*="btn"], .floating-whatsapp, [role="button"]) :is(svg, i, img, .theme-action-icon, .faq-icon-toggle), .button-icon-hidden { display:none !important; }
+body :is(button, a[class*="btn"], a[class*="rounded"], .floating-whatsapp, [role="button"]) :is(svg, i, img, .theme-action-icon, .faq-icon-toggle), .button-icon-hidden { display:none !important; }
 body .button-text-only { width:auto !important; min-width:44px; height:auto !important; min-height:32px; padding:6px 10px !important; border-radius:8px; }
 body .button-text-fallback { font-family:inherit; font-size:12px; font-weight:600; line-height:1.4; white-space:normal; }
 body :is(button,.btn):focus-visible { outline:3px solid #93c5fd; outline-offset:3px; }
