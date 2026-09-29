@@ -1253,17 +1253,35 @@
 
 /* Infaq & Bank Account Info Card */
 .spmb-bank-card {
-  background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
-  border: 1.5px solid var(--primary-300);
-  border-radius: var(--radius-xl);
-  padding: 1.75rem;
-  margin-top: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  flex-wrap: wrap;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 540px;
+  margin: 1.5rem auto 2rem;
+  padding: clamp(20px, 4vw, 30px);
+  display: grid;
+  gap: 20px;
+  border: 1px solid #ffffff38;
+  border-radius: 24px;
+  color: #fff;
+  text-align: left;
+  background: radial-gradient(ellipse at 110% 0%, #60a5fa66, transparent 58%), radial-gradient(ellipse at 0% 120%, #4338ca88, transparent 65%), linear-gradient(120deg, #081736, #173875 65%, #2459a6);
+  box-shadow: 0 18px 35px -14px #172e6870, inset 0 1px 0 #ffffff35;
 }
+.spmb-bank-card-top, .spmb-bank-card-bottom { display:flex; justify-content:space-between; align-items:center; gap:16px; }
+.spmb-bank-card-top > div, .spmb-bank-card-bottom > div { min-width:0; }
+.spmb-bank-card-top img { object-fit:contain; flex-shrink:0; background:#ffffffed; border-radius:50%; padding:5px; }
+.spmb-bank-card .spmb-bank-caption { display:block; font-size:9px; letter-spacing:.14em; color:#bfdbfe; line-height:1.5; margin-bottom:5px; }
+.spmb-bank-card strong { display:block; font-size:13px; line-height:1.5; color:#fff; overflow-wrap:anywhere; }
+.spmb-bank-card #spmb-bank-name { font-size:16px; }
+.spmb-bank-card #spmb-bank-display { font-family:Consolas, monospace; font-size:clamp(22px, 5vw, 30px); letter-spacing:.09em; line-height:1.4; color:#fff; text-shadow:0 2px 2px #0006; overflow-wrap:anywhere; }
+.spmb-bank-amount { text-align:right; flex-shrink:0; }
+.spmb-bank-card .spmb-bank-amount strong { font-size:17px; }
+.spmb-bank-chip-row { display:flex; align-items:center; gap:16px; color:#dbeafe; }
+.spmb-bank-chip-row i { transform:rotate(90deg); font-size:22px; opacity:.8; }
+.spmb-bank-chip { width:46px; height:34px; border-radius:7px; border:1px solid #d4b76c; background:linear-gradient(90deg, transparent 30%, #8c733c99 31%, transparent 33%, transparent 66%, #8c733c99 67%, transparent 69%), linear-gradient(0deg, transparent 30%, #8c733c99 31%, transparent 34%, transparent 65%, #8c733c99 66%, transparent 69%), linear-gradient(130deg,#fbe8ac,#c6a44d 50%,#f9eab8); box-shadow:inset 0 1px 2px #fff8; }
+.spmb-bank-card .spmb-copy-pill { justify-self:start; border-color:#ffffff40; background:#ffffff14; color:#fff; border-radius:10px; padding:8px 12px; }
+.spmb-bank-card .spmb-copy-pill:hover { background:#ffffff28; }
+@media(max-width:380px) { .spmb-bank-card-bottom { flex-wrap:wrap; } .spmb-bank-amount { text-align:left; } }
 
 .spmb-bank-detail-box {
   display: flex;

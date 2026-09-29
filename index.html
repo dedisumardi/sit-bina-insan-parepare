@@ -24,7 +24,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/spmb.css?v=20260928_blue1">
+  <link rel="stylesheet" href="css/spmb.css?v=20260929_card1">
   <link rel="stylesheet" href="css/spmb-reference.css?v=20260928_design1">
   <!-- Font Awesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -2190,16 +2190,16 @@
             </div>
 
             <!-- Transfer Instruction Box -->
-            <div class="spmb-bank-card" style="margin-bottom: 2rem;">
-              <div class="spmb-bank-detail-box">
-                <div class="spmb-bank-logo-icon"><i class="fa-solid fa-credit-card"></i></div>
-                <div>
-                  <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary-700); text-transform: uppercase;">Bank Tujuan Transfer</div>
-                  <div id="spmb-bank-display" style="font-size: 1.35rem; font-weight: 800; color: var(--primary-900); font-family: monospace;">Bank Syariah Indonesia (BSI) : 711-234-5678</div>
-                  <div style="font-size: 0.9rem; color: var(--primary-800); margin-top: 2px;">
-                    Atas Nama: <strong>Yayasan Bina Insan Parepare</strong> &bull; Jumlah: <strong style="font-size:1.1rem; color:var(--primary-900);">Rp 150.000</strong>
-                  </div>
-                </div>
+            <div class="spmb-bank-card">
+              <div class="spmb-bank-card-top">
+                <div><span class="spmb-bank-caption">BANK TUJUAN TRANSFER</span><strong id="spmb-bank-name">Bank Syariah Indonesia (BSI)</strong></div>
+                <img src="/assets/icons/favicon.png?v=3" alt="SIT Bina Insan" width="42" height="42">
+              </div>
+              <div class="spmb-bank-chip-row" aria-hidden="true"><span class="spmb-bank-chip"></span><i class="fa-solid fa-wifi"></i></div>
+              <div><span class="spmb-bank-caption">NOMOR REKENING</span><div id="spmb-bank-display">711-234-5678</div></div>
+              <div class="spmb-bank-card-bottom">
+                <div><span class="spmb-bank-caption">ATAS NAMA</span><strong id="spmb-bank-holder">Yayasan Bina Insan Parepare</strong></div>
+                <div class="spmb-bank-amount"><span class="spmb-bank-caption">JUMLAH TRANSFER</span><strong>Rp 150.000</strong></div>
               </div>
               <button type="button" id="spmb-btn-copy-bank" class="spmb-copy-pill" onclick="window.copyBankNumber('7112345678')">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -3089,6 +3089,6 @@
   <script src="js/registration-policy.js?v=20260928_gate1"></script>
   <script src="js/spmb.js?v=20260929_dialog1"></script>
   <script src="js/school-faqs.js?v=20260928_faq3"></script>
-  <script src="js/app.js?v=20260929_dialog2"></script>
+  <script src="js/app.js?v=20260929_card1"></script>
 </body>
 </html>

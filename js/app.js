@@ -628,13 +628,20 @@
 
     // 6. Bank Account Transfer Instructions
     if (settings.bankAccount) {
+      const accountText = String(settings.bankAccount);
+      const match = accountText.match(/\d[\d\-]{5,}\d/);
+      const holder = accountText.match(/(?:a\.?\s*n\.?|atas nama)\s*[:.]?\s+(.+)$/i);
+      const bankName = match ? accountText.slice(0, match.index).replace(/(?:no\.?\s*rek(?:ening)?\.?\s*)?[:\s]+$/i, '').trim() : 'Rekening tujuan transfer';
       const bankDisplayEl = document.getElementById('spmb-bank-display');
       if (bankDisplayEl) {
-        bankDisplayEl.textContent = settings.bankAccount;
+        bankDisplayEl.textContent = match ? match[0] : accountText;
       }
+      const bankNameEl = document.getElementById('spmb-bank-name');
+      const bankHolderEl = document.getElementById('spmb-bank-holder');
+      if (bankNameEl) bankNameEl.textContent = bankName || 'Bank tujuan transfer';
+      if (bankHolderEl) bankHolderEl.textContent = holder ? holder[1] : 'Lihat informasi rekening';
       const copyBankBtn = document.getElementById('spmb-btn-copy-bank');
       if (copyBankBtn) {
-        const match = settings.bankAccount.match(/\d[\d\-]{5,}\d/);
         const accNum = match ? match[0].replace(/\D/g, '') : '7112345678';
         copyBankBtn.setAttribute('onclick', `window.copyBankNumber('${accNum}')`);
       }
