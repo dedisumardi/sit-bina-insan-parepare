@@ -541,6 +541,8 @@
     if (homeStatus) homeStatus.textContent = registrationStatusLabel;
     const infoStatus = document.getElementById('spmb-registration-label');
     if (infoStatus) infoStatus.textContent = registrationStatusLabel;
+    const infoStatusBadge = document.getElementById('spmb-reference-status');
+    if (infoStatusBadge) infoStatusBadge.dataset.registrationStatus = waveStatus;
     const infoNarrative = document.getElementById('spmb-registration-narrative');
     if (infoNarrative) infoNarrative.textContent = waveStatus === 'open'
       ? 'Pendaftaran gelombang baru kini dibuka secara daring.'

@@ -9,4 +9,9 @@
 .spmb-reference-page button:disabled:hover { transform:none; }
 .spmb-reference-page .shadow-glow { box-shadow:0 0 25px -5px rgba(59,130,246,.4); }
 .spmb-reference-page .quick-status-login-btn { cursor:pointer; }
+#spmb-reference-status { --registration-dot:#facc15; }
+#spmb-reference-status[data-registration-status="open"] { --registration-dot:#22c55e; }
+#spmb-reference-status[data-registration-status="upcoming"] { --registration-dot:#facc15; }
+#spmb-reference-status[data-registration-status="closed"] { --registration-dot:#ef4444; }
+#spmb-reference-status .registration-status-dot { background-color:var(--registration-dot); transition:background-color .25s ease; }
 @media(prefers-reduced-motion:reduce) { .spmb-reference-page .animate-ping { animation:none; } }
