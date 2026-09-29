@@ -1,0 +1,63 @@
+/* Shared visual language from the Info SPMB reference. */
+:root {
+  --primary-950:#081736; --primary-900:#172e68; --primary-800:#1e3a8a;
+  --primary-700:#1d4ed8; --primary-600:#2563eb;
+  --radius-md:12px; --radius-lg:16px; --radius-xl:20px;
+  --shadow-sm:0 1px 3px #0f172a08;
+  --shadow-md:0 4px 16px #0f172a06;
+  --shadow-emerald:0 4px 14px #2563eb22;
+}
+body { background:#f8fafc; color:#1e293b; font-family:'Plus Jakarta Sans',system-ui,sans-serif; }
+body :is(h1,h2,h3) { letter-spacing:-.025em; }
+.hero-school,.level-hero,.news-hero,.cta-section {
+  background:#081736 !important;
+  background-image:radial-gradient(ellipse at 50% 0%,#1e3a8a 0%,#081736 75%) !important;
+}
+.hero-bg-overlay,.hero-gradient,.hero-pattern { display:none; }
+.hero-heading-highlight { color:#fff; }
+.hero-stat-number,.level-hero-tagline { color:#bfdbfe; }
+.hero-desc,.level-hero-desc { color:#cbd5e1; }
+.hero-stats-grid { background:#ffffff08; border:1px solid #ffffff20; box-shadow:none; }
+.section-title { color:#0f172a; font-weight:800; }
+.section-subtitle { color:#64748b; }
+.section-badge { background:#eff6ff; color:#1d4ed8; border:1px solid #dbeafe; }
+body :is(.pillar-card,.level-card,.program-card,.ekskul-card,.news-card,.testimonial-card,.faq-item,.hero-card-featured,.portal-bio-form,.spmb-form-card) {
+  border:1px solid #e2e8f0;
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 1px 3px #0f172a08;
+}
+body :is(.pillar-card,.level-card,.program-card,.ekskul-card,.news-card):hover { border-color:#bfdbfe; box-shadow:0 8px 24px #1e3a8a0b; transform:translateY(-3px); }
+.pillar-card::before,.ekskul-card::before { background:#2563eb; }
+.level-hero-img-wrap { border-radius:16px; border:1px solid #ffffff30; }
+.header-main { border-bottom:1px solid #e2e8f0; box-shadow:0 1px 3px #0f172a05; }
+.footer-main { background:#081736; }
+/* Consistent button anatomy; semantic danger and disabled states stay intact. */
+body :is(button,.btn,[role="button"]) { font-family:inherit; }
+body :is(.btn,.theme-action,.site-dialog-actions button) {
+  border-radius:12px !important;
+  font-weight:700;
+  gap:8px;
+  transition:background-color .2s,box-shadow .2s,transform .2s;
+}
+body :is(.btn-primary,.btn-accent,.theme-primary,#btn-submit-parent-auth,#admin-login-form button[type="submit"]) {
+  background:linear-gradient(100deg,#1d4ed8,#4338ca) !important;
+  color:#fff !important;
+  border-color:transparent !important;
+  box-shadow:0 4px 12px #2563eb22 !important;
+  border-radius:999px !important;
+}
+body :is(.btn-primary,.btn-accent,.theme-primary):not(:disabled):hover { box-shadow:0 6px 20px #2563eb30 !important; transform:translateY(-1px); }
+body :is(.btn-outline-primary,.btn-outline-secondary,.portal-bio-back) { border:1px solid #dbeafe; background:#eff6ff; color:#1d4ed8; border-radius:12px; }
+body .btn-outline-white { background:#ffffff0d; border:1px solid #ffffff30; color:#fff; box-shadow:none; }
+body :is(button,.btn):focus-visible { outline:3px solid #93c5fd; outline-offset:3px; }
+body :is(button,.btn):disabled { opacity:.5; cursor:not-allowed; transform:none !important; }
+.theme-action-icon { font-size:.9em; width:1em; flex-shrink:0; margin-inline-end:6px; }
+body :is(.btn,.theme-action) > :is(svg,i) { flex-shrink:0; }
+.theme-admin :is([class~="shadow-card"],[class~="shadow-sm"]) { box-shadow:0 1px 3px #0f172a08; }
+.theme-admin :is([class~="bg-white"][class*="rounded"]) { border-color:#e2e8f0; }
+.theme-admin #admin-sidebar { background:#081736; }
+.theme-admin button.theme-action:not(.theme-primary) { border-radius:10px !important; }
+@media(max-width:640px) { body .btn { white-space:normal; } .hero-heading { font-size:2.25rem; } }
+@media(prefers-reduced-motion:reduce) { body :is(.btn,.theme-action) { transition:none; } }
+@media print { .theme-action-icon { display:none; } }
