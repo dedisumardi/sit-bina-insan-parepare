@@ -738,6 +738,7 @@
 
       // When admin approves payment or updates SPMB data
       if (msg.type === 'spmb_payment_approved' || msg.type === 'spmb_updated') {
+        refreshParentFromDatabase();
         const rawSession = localStorage.getItem(PARENT_SESSION_KEY);
         if (rawSession) {
           try {
@@ -761,6 +762,7 @@
   window.addEventListener('storage', function (e) {
     if (e.key === STORAGE_KEY || e.key === PARENT_SESSION_KEY) {
       renderParentPortal();
+      refreshParentFromDatabase();
     }
   });
 
@@ -774,7 +776,8 @@
   function initParentPortalEngine() {
     renderParentPortal();
     refreshParentFromDatabase();
-    setInterval(refreshParentFromDatabase, 30000);
+    setInterval(refreshParentFromDatabase, 5000);
+    document.addEventListener('visibilitychange', refreshParentFromDatabase);
     setInterval(refreshScheduleSettings, 10000);
     window.addEventListener('focus', refreshParentFromDatabase);
     const bioForm = document.getElementById('portal-student-bio-form');
@@ -1052,20 +1055,18 @@
     if (spmbModalMode === 'login') {
       // Try checking database API
       if (window.fetch) {
-        fetch(`api/spmb.php?wa=${encodeURIComponent(rawWa)}`)
-          .then(res => res.json())
+        fetch(`api/spmb.php?wa=${encodeURIComponent(rawWa)}`, { cache: 'no-store' })
+          .then(async res => {
+            const data = await res.json();
+            if (!res.ok && res.status !== 404) throw new Error('Server tidak tersedia');
+            return data;
+          })
           .then(resData => {
             if (resData && resData.success && resData.data) {
               const row = resData.data;
               records.unshift(row);
               cacheSetItem(STORAGE_KEY, JSON.stringify(records));
               const parentData = { nama: row.namaAyah || 'Orang Tua Siswa', wa: row.waAyah || rawWa };
-              localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
-              window.closeSpmbModal();
-              window.location.hash = '#spmb';
-              renderParentPortal();
-            } else if (existing) {
-              const parentData = { nama: existing.namaAyah || 'Orang Tua Siswa', wa: existing.waAyah || rawWa };
               localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
               window.closeSpmbModal();
               window.location.hash = '#spmb';
@@ -1078,19 +1079,14 @@
             }
           })
           .catch(() => {
-            if (existing) {
-              const parentData = { nama: existing.namaAyah || 'Orang Tua Siswa', wa: existing.waAyah || rawWa };
-              localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(parentData));
-              window.closeSpmbModal();
-              window.location.hash = '#spmb';
-              renderParentPortal();
-            } else if (errEl) {
-              errEl.innerHTML = `Nomor WhatsApp <strong>${rawWa}</strong> belum terdaftar. Silakan pilih tab <strong>Daftar Baru</strong>.`;
+            if (errEl) {
+              errEl.textContent = 'Tidak dapat memverifikasi akun ke server. Periksa koneksi dan coba masuk kembali.';
               errEl.style.display = 'block';
             }
           });
         return;
       }
+      return;
     }
 
     // REGISTER MODE: Create or update parent record
@@ -1171,18 +1167,35 @@
     }, 80);
   };
 
+  function revokeParentSession() {
+    localStorage.removeItem(PARENT_SESSION_KEY);
+    localStorage.removeItem(STORAGE_KEY);
+    try { sessionStorage.removeItem(PARENT_BIODATA_VIEW_KEY); } catch (_) {}
+    renderParentPortal();
+    SiteDialog.alert('Akun pendaftaran tidak ditemukan atau telah dihapus oleh admin. Anda telah keluar dari Portal SPMB.');
+  }
+
+  let parentRefreshInFlight = false;
   async function refreshParentFromDatabase() {
     if (document.hidden) return;
-    refreshScheduleSettings();
+    if (parentRefreshInFlight) return;
+    parentRefreshInFlight = true;
     try {
-      const session = JSON.parse(localStorage.getItem(PARENT_SESSION_KEY) || 'null');
+      const sessionSnapshot = localStorage.getItem(PARENT_SESSION_KEY);
+      const session = JSON.parse(sessionSnapshot || 'null');
       if (!session?.wa) return;
       const response = await fetch(`api/spmb.php?wa=${encodeURIComponent(session.wa)}`, { cache: 'no-store' });
       const result = await response.json();
+      if (localStorage.getItem(PARENT_SESSION_KEY) !== sessionSnapshot) return;
+      if (response.status === 404 && result.success === false) {
+        revokeParentSession();
+        return;
+      }
       if (!response.ok || !result.success || !result.data) return;
       cacheSetItem(STORAGE_KEY, JSON.stringify([result.data]));
       renderParentPortal();
     } catch (_) { /* Keep the last confirmed view during a temporary outage. */ }
+    finally { parentRefreshInFlight = false; }
   }
 
   function populateStudentBioForm(record) {
