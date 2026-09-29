@@ -3,7 +3,7 @@
   const icons = 'svg, i, img, .theme-action-icon, .faq-icon-toggle';
   const symbols = /[\u2190-\u21ff\u2600-\u27bf\u{1f000}-\u{1faff}\uFE0F\u200D\uE000-\uF8FF›«»×]/gu;
   function decorate(root) {
-    const controls = root.querySelectorAll('button, a[class*="btn"], a[class*="rounded"], .floating-whatsapp, [role="button"]');
+    const controls = root.querySelectorAll('button, a[class*="btn"], a[class*="rounded"], a[href*="wa.me/"], .floating-whatsapp, [role="button"]');
     controls.forEach(control => {
       // Slider dots retain their compact visual navigation and accessible labels.
       if (control.closest('.building-controls') || control.matches('.mobile-toggle-btn')) return;
@@ -12,6 +12,18 @@
         icon.classList.add('button-icon-hidden');
         icon.setAttribute('aria-hidden', 'true');
       });
+      const destination = (control.getAttribute('href') || '').match(/^https?:\/\/wa\.me\/(\d+)/i);
+      const helpdesk = String(window.SchoolData?.profile?.whatsappHelpdesk || '6285190610569').replace(/\D/g, '');
+      const isHelpdesk = destination && (destination[1] === helpdesk || destination[1] === '6285190610569');
+      const existingWaIcon = control.querySelector('.wa-helpdesk-icon');
+      if (isHelpdesk && !existingWaIcon) {
+        const waIcon = document.createElement('span');
+        waIcon.className = 'fa-brands fa-whatsapp wa-helpdesk-icon';
+        waIcon.setAttribute('aria-hidden', 'true');
+        control.prepend(waIcon);
+      } else if (!isHelpdesk && existingWaIcon) {
+        existingWaIcon.remove();
+      }
       const walker = document.createTreeWalker(control, NodeFilter.SHOW_TEXT);
       let node;
       while ((node = walker.nextNode())) {
@@ -44,5 +56,5 @@
     if (queued) return;
     queued = true;
     requestAnimationFrame(() => { queued = false; decorate(document); });
-  }).observe(document.body, { childList:true, characterData: true, subtree:true });
+  }).observe(document.body, { childList:true, characterData: true, attributes:true, attributeFilter:['href'], subtree:true });
 })();
