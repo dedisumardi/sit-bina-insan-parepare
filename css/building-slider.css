@@ -1,4 +1,4 @@
-.building-slider { height: 230px; background: #e2e8f0; }
+.building-slider { height: clamp(280px, 28vw, 350px); background: #e2e8f0; }
 .building-slider .building-slide { position: absolute; inset: 0; height: 100%; opacity: 0; transition: opacity .8s ease; }
 .building-slider .building-slide.is-active { opacity: 1; }
 .hero-card-featured:hover .building-slider img { transform: none; }
