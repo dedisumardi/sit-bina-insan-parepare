@@ -565,16 +565,19 @@ ul, ol {
 }
 
 .mobile-nav-link {
-  display: flex;
+  display: inline-flex;
+  position: relative;
   align-items: center;
   justify-content: space-between;
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--neutral-800);
   padding: 0.85rem 1rem;
-  border-radius: var(--radius-md);
-  transition: background-color var(--trans-fast);
+  border-radius: 0;
+  transition: color .3s ease;
 }
+.mobile-nav-link::after { content:''; position:absolute; bottom:5px; left:1rem; right:1rem; height:3px; border-radius:99px; background:var(--primary-600); transform:scaleX(0); transform-origin:left; transition:transform .3s ease; }
+.mobile-nav-link:is(:hover,:focus-visible,.active)::after { transform:scaleX(1); }
 
 .mobile-nav-link:hover {
   background-color: transparent !important;
@@ -585,9 +588,9 @@ ul, ol {
   background-color: transparent !important;
   color: var(--primary-600) !important;
   font-weight: 700;
-  border-left: 4px solid var(--primary-600);
-  border-bottom: 2px solid var(--primary-600);
+  border: 0;
 }
+@media(prefers-reduced-motion:reduce) { .mobile-nav-link, .mobile-nav-link::after { transition:none; } }
 
 /* ==========================================================================
    Views Switching Container (Single-Page Experience)

@@ -93,12 +93,16 @@
   // =========================================================================
   function openMobileDrawer() {
     mobileDrawer.classList.add('open');
+    mobileDrawer.setAttribute('aria-hidden', 'false');
+    mobileToggleBtn?.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
   }
 
   function closeMobileDrawer() {
     if (mobileDrawer) {
       mobileDrawer.classList.remove('open');
+      mobileDrawer.setAttribute('aria-hidden', 'true');
+      mobileToggleBtn?.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
     }
   }
@@ -113,6 +117,7 @@
       if (target) {
         e.preventDefault();
         const view = target.getAttribute('data-view');
+        if (target.closest('.mobile-drawer')) closeMobileDrawer();
         window.location.hash = `#${view}`;
       }
     });
