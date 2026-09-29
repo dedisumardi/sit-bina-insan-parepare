@@ -6,7 +6,7 @@
     const controls = root.querySelectorAll('button, a[class*="btn"], a[class*="rounded"], a[href*="wa.me/"], .floating-whatsapp, [role="button"]');
     controls.forEach(control => {
       // Slider dots retain their compact visual navigation and accessible labels.
-      if (control.closest('.building-controls') || control.matches('.mobile-toggle-btn')) return;
+      if (control.closest('.building-controls') || control.matches('.mobile-toggle-btn, .footer-social-btn')) return;
       // Preserve nodes and listeners used by controls that update their icons later.
       control.querySelectorAll(icons).forEach(icon => {
         icon.classList.add('button-icon-hidden');
