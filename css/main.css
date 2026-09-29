@@ -410,6 +410,7 @@ ul, ol {
 
 /* Nav Menu Desktop */
 .nav-menu {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -422,7 +423,7 @@ ul, ol {
   color: var(--neutral-700);
   padding: 0.55rem 0.9rem;
   border-radius: var(--radius-md);
-  transition: all var(--trans-fast);
+  transition: color 0.3s ease, background-color 0.3s ease;
   cursor: pointer;
   position: relative;
   display: inline-flex;
@@ -448,7 +449,26 @@ ul, ol {
 }
 
 .nav-link:hover::after {
-  background-color: transparent;
+  background-color: var(--primary-600);
+}
+
+.nav-link:focus-visible::after { background-color: var(--primary-600); }
+.nav-menu.nav-indicator-ready::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--nav-line-width);
+  height: 3px;
+  border-radius: 999px;
+  background: var(--primary-600);
+  transform: translate(var(--nav-line-x), var(--nav-line-y));
+  transition: transform .38s cubic-bezier(.22,1,.36,1), width .38s cubic-bezier(.22,1,.36,1), background-color .3s ease;
+  pointer-events: none;
+}
+.nav-menu.nav-indicator-ready .nav-link.active::after { background-color: transparent !important; }
+@media (prefers-reduced-motion: reduce) {
+  .nav-menu.nav-indicator-ready::after, .nav-link, .nav-link::after { transition: none; }
 }
 
 .nav-link.active,
