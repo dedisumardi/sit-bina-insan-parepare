@@ -61,3 +61,16 @@ test('both pages load shared dialogs before application scripts; no native popup
   const admin = fs.readFileSync('js/admin.js', 'utf8');
   assert.equal((admin.match(/await SiteDialog.confirm\(/g) || []).length, 9);
 });
+
+test('all message dialog variants use the school favicon for heading and actions', async () => {
+  const { api, opened } = setup();
+  for (const kind of ['alert', 'confirm', 'copy']) {
+    const result = api[kind]('Pesan pengujian', '123');
+    await new Promise(setImmediate);
+    const dialog = opened.at(-1);
+    assert.equal((dialog.innerHTML.match(/src="\/assets\/icons\/favicon.png\?v=3"/g) || []).length, 3);
+    assert.doesNotMatch(dialog.innerHTML, />[?i✓✕]</);
+    dialog.close('no');
+    await result;
+  }
+});

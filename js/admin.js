@@ -2134,7 +2134,7 @@
     });
       broadcastRealtime('spmb_updated', spmbList);
 
-    showToast(`✓ Pembayaran diterima! Nomor Registrasi Resmi diterbitkan: ${item.regNumber}`);
+    showToast(`Pembayaran diterima! Nomor Registrasi Resmi diterbitkan: ${item.regNumber}`);
     } catch (error) {
       showToast(`Gagal menyetujui pembayaran: ${error.message}`, true);
     }
