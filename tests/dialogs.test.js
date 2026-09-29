@@ -62,15 +62,20 @@ test('both pages load shared dialogs before application scripts; no native popup
   assert.equal((admin.match(/await SiteDialog.confirm\(/g) || []).length, 9);
 });
 
-test('all message dialog variants use the school favicon for heading and actions', async () => {
+test('all message dialog variants use the favicon only in the heading with text-only actions', async () => {
   const { api, opened } = setup();
   for (const kind of ['alert', 'confirm', 'copy']) {
     const result = api[kind]('Pesan pengujian', '123');
     await new Promise(setImmediate);
     const dialog = opened.at(-1);
-    assert.equal((dialog.innerHTML.match(/src="\/assets\/icons\/favicon.png\?v=3"/g) || []).length, 3);
+    assert.equal((dialog.innerHTML.match(/src="\/assets\/icons\/favicon.png\?v=3"/g) || []).length, 1);
+    assert.doesNotMatch(dialog.innerHTML.split('class="site-dialog-actions"')[1], /<img|<svg|<i\b/);
     assert.doesNotMatch(dialog.innerHTML, />[?i✓✕]</);
     dialog.close('no');
     await result;
   }
+});
+
+test('shared button decoration skips message dialogs', () => {
+  assert.match(fs.readFileSync('js/site-theme.js', 'utf8'), /control\.closest\('\.site-dialog,/);
 });

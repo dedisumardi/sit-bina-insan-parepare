@@ -10,7 +10,7 @@
       dialog.setAttribute('aria-labelledby', 'site-dialog-title');
       dialog.setAttribute('aria-describedby', 'site-dialog-message');
       const favicon = '<img src="/assets/icons/favicon.png?v=3" alt="" aria-hidden="true" width="36" height="36">';
-      dialog.innerHTML = `<div class="site-dialog-heading"><span class="site-dialog-icon" aria-hidden="true">${favicon}</span><div><span class="site-dialog-brand">SIT BINA INSAN PAREPARE</span><h2 id="site-dialog-title">${options.confirm ? 'Konfirmasi Tindakan' : 'Informasi'}</h2></div></div><p id="site-dialog-message"></p><div class="site-dialog-actions"><button type="button" class="site-dialog-cancel">${favicon}Batal</button><button type="button" class="site-dialog-ok">${favicon}${options.confirm ? 'Ya, Lanjutkan' : 'Mengerti'}</button></div>`;
+      dialog.innerHTML = `<div class="site-dialog-heading"><span class="site-dialog-icon" aria-hidden="true">${favicon}</span><div><span class="site-dialog-brand">SIT BINA INSAN PAREPARE</span><h2 id="site-dialog-title">${options.confirm ? 'Konfirmasi Tindakan' : 'Informasi'}</h2></div></div><p id="site-dialog-message"></p><div class="site-dialog-actions"><button type="button" class="site-dialog-cancel">Batal</button><button type="button" class="site-dialog-ok">${options.confirm ? 'Ya, Lanjutkan' : 'Mengerti'}</button></div>`;
       dialog.querySelector('#site-dialog-message').textContent = String(message);
       const cancel = dialog.querySelector('.site-dialog-cancel');
       const ok = dialog.querySelector('.site-dialog-ok');

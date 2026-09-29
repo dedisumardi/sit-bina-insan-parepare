@@ -21,7 +21,6 @@
 .site-dialog-icon img { width: 36px; height: 36px; object-fit: contain; }
 .site-dialog-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
 .site-dialog-actions button[hidden] { display: none; }
-.site-dialog-actions img { width: 18px; height: 18px; flex-shrink: 0; object-fit: contain; }
 .adm-toast { display: flex; align-items: center; gap: 10px; }
 .adm-toast::before { content: ''; width: 24px; height: 24px; flex-shrink: 0; background: url('/assets/icons/favicon.png?v=3') center / contain no-repeat; }
 .site-dialog-brand { color: #64748b; font-size: 10px; font-weight: 700; letter-spacing: .06em; }

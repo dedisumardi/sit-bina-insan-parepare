@@ -15,7 +15,7 @@
   function decorate(root) {
     const controls = root.querySelectorAll('button, a.btn');
     controls.forEach(control => {
-      if (control.closest('.building-controls, .spmb-reference-page, #admin-sidebar') || control.matches('[role="tab"],.spmb-modal-tab-btn,.faq-question,.mobile-toggle-btn')) return;
+      if (control.closest('.site-dialog, .building-controls, .spmb-reference-page, #admin-sidebar') || control.matches('[role="tab"],.spmb-modal-tab-btn,.faq-question,.mobile-toggle-btn')) return;
       const text = control.textContent.trim();
       if (!text || text.length > 110) return;
       const match = rules.find(([pattern]) => pattern.test(text));
