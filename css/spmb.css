@@ -1021,7 +1021,6 @@
 }
 
 #portal-state-parents > .portal-bio-back,
-#portal-state-results > .portal-nav-bar,
 #portal-state-approved .portal-next-bio-btn { display: inline-flex; }
 @media print { .portal-step-navigation { display: none !important; } }
 
@@ -2328,10 +2327,26 @@ ol.portal-flow-steps.portal-flow-seven:not(.portal-flow-six) {
   padding: clamp(1.5rem, 4vw, 3rem);
 }
 .result-success-check {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 64px; height: 64px; border-radius: 50%;
-  background: var(--primary-700); color: white; font-size: 2.5rem; font-weight: 800;
-  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--primary-600);
+  font-size: 4.5rem;
+  line-height: 1;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 12px 28px -6px rgba(0, 47, 155, 0.35), 0 0 0 8px rgba(0, 47, 155, 0.12);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.result-success-check:hover {
+  transform: scale(1.08);
+}
+.result-success-check i {
+  display: block;
+  line-height: 1;
 }
 #portal-results-card .result-success-label { color: var(--primary-800); font-size: .8rem; font-weight: 800; letter-spacing: .08em; }
 #portal-results-card .result-success-heading { color: var(--primary-900); font-size: clamp(1.7rem, 5vw, 2.6rem); font-weight: 900; line-height: 1.2; margin: .5rem 0 1rem; }

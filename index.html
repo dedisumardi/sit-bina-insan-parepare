@@ -24,7 +24,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css?v=20260929_nav2">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/spmb.css?v=20260930_biodatabtn1">
+  <link rel="stylesheet" href="css/spmb.css?v=20260930_resultscheck1">
   <link rel="stylesheet" href="css/spmb-reference.css?v=20260930_status1">
   <!-- Font Awesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -2677,9 +2677,6 @@
             </div>
           </div>
           <div id="portal-state-results" class="portal-schedule-page" style="display:none;">
-            <div class="portal-nav-bar">
-              <button type="button" class="portal-bio-back" onclick="window.backToPaymentApproval()">← Kembali ke Langkah Pertama</button>
-            </div>
             <section class="portal-schedule-card" aria-labelledby="portal-results-heading">
               <h2 id="portal-results-heading" class="portal-schedule-heading">Pengumuman Hasil Tes &amp; Wawancara</h2>
               <p class="portal-schedule-subheading">Hasil resmi sesuai status yang ditetapkan oleh panitia SPMB.</p>
@@ -2690,7 +2687,7 @@
               </div>
               <div id="portal-results-card" class="portal-sched-box" role="status" aria-live="polite">
                 <div id="portal-results-success" hidden>
-                  <span class="result-success-check" aria-hidden="true">✓</span>
+                  <span class="result-success-check" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></span>
                   <p class="result-success-label">SELAMAT! ANDA DINYATAKAN</p>
                   <p class="result-success-heading">LULUS &amp; DITERIMA</p>
                 </div>

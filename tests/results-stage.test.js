@@ -32,6 +32,7 @@ test('results only announce explicit final admin decisions', () => {
   assert.ok(!nav.includes('window.openParentBiodata()'));
   assert.ok(!nav.includes('window.openResultsStage()'));
   assert.ok(html.includes('id="portal-state-results"'));
+  assert.ok(html.includes('<span class="result-success-check" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></span>'));
 });
 
 test('back to first step preserves registration and explicitly selects payment summary', () => {
@@ -50,5 +51,6 @@ test('back to first step preserves registration and explicitly selects payment s
   assert.deepEqual(writes, [['view', 'SPMB-TEST:payment']]);
   assert.ok(source.includes("if (view === record.regNumber + ':payment')"));
   const html = fs.readFileSync('index.html', 'utf8');
-  assert.ok(html.includes('onclick="window.backToPaymentApproval()">← Kembali ke Langkah Pertama'));
+  assert.ok(!html.includes('onclick="window.backToPaymentApproval()">← Kembali ke Langkah Pertama'));
+  assert.ok(!html.includes('Kembali ke Langkah Pertama'));
 });
