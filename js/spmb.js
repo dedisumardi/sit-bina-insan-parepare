@@ -1306,9 +1306,15 @@
   window.submitStudentBiodata = async function (event) {
     if (event?.preventDefault) event.preventDefault();
     const form = event?.currentTarget || document.getElementById('portal-student-bio-form');
-    if (form && !form.reportValidity()) return false;
     const status = document.getElementById('portal-bio-status');
     const submit = document.getElementById('portal-bio-submit');
+    if (form && !form.reportValidity()) {
+      if (status) {
+        status.textContent = 'Lengkapi data yang belum terisi.';
+        status.className = 'portal-bio-status is-error';
+      }
+      return false;
+    }
     let session;
     if (!window.StudentRegions?.isComplete()) {
       if (status) {
@@ -1451,13 +1457,21 @@
   ];
   let registrationNavigation = { step: 1, regNumber: '', approved: false, proof: false };
 
+  function notifyNavAlert(message) {
+    if (typeof SiteDialog !== 'undefined' && SiteDialog?.alert) {
+      SiteDialog.alert(message);
+    } else if (typeof alert === 'function') {
+      alert(message);
+    }
+  }
+
   function canAccessReRegistration(record) {
     return record?.status === 'Lulus Seleksi Observasi & Diterima';
   }
 
   function checkReRegistrationAccess() {
     if (registrationNavigation.canReregister) return true;
-    SiteDialog.alert('Daftar ulang baru dapat dibuka setelah admin mengumumkan Anda lulus dan diterima.');
+    notifyNavAlert('Daftar ulang baru dapat dibuka setelah admin mengumumkan Anda lulus dan diterima.');
     return false;
   }
 
@@ -1466,10 +1480,10 @@
     if (![1, -1].includes(direction) || (step === 1 && direction < 0) || (step === 6 && direction > 0)) return;
     if (document.getElementById('portal-bio-submit')?.disabled || document.getElementById('portal-parent-data-submit')?.disabled) return;
     if (direction > 0 && step === 1 && !approved && !proof) {
-      SiteDialog.alert('Unggah dan kirim bukti pembayaran terlebih dahulu.'); return;
+      notifyNavAlert('Unggah dan kirim bukti pembayaran terlebih dahulu.'); return;
     }
     if (direction > 0 && step === 2 && !approved) {
-      SiteDialog.alert('Silakan tunggu pembayaran disetujui oleh panitia.'); return;
+      notifyNavAlert('Silakan tunggu pembayaran disetujui oleh panitia.'); return;
     }
     if (direction > 0 && step === 3) {
       const studentForm = document.getElementById('portal-student-bio-form');
@@ -1479,13 +1493,13 @@
       const studentSaved = registrationNavigation.studentSaved;
       const studentDirty = studentForm?.dataset.dirty === '1';
       if (!studentSaved || studentDirty) {
-        SiteDialog.alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum melanjutkan.');
+        notifyNavAlert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum melanjutkan.');
         return;
       }
       const parentsSaved = registrationNavigation.parentsSaved;
       const parentsDirty = window.ParentBiodata?.hasUnsavedChanges();
       if (!parentsSaved || parentsDirty) {
-        SiteDialog.alert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum melanjutkan.');
+        notifyNavAlert('Simpan data terlebih dahulu menggunakan tombol Simpan Data sebelum melanjutkan.');
         return;
       }
     }

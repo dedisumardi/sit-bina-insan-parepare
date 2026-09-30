@@ -83,26 +83,123 @@
   };
   form.addEventListener('submit', async event => {
     event.preventDefault();
-    if (!form.reportValidity()) return;
+
+    if (!form.reportValidity()) {
+      status.textContent = 'Lengkapi data yang belum terisi.';
+      status.className = 'portal-bio-status is-error';
+      return;
+    }
+
     const data = Object.fromEntries(new FormData(form));
     const error = schema.validate(data);
-    if (error) { status.textContent = error; status.className = 'portal-bio-status is-error'; return; }
+    if (error) {
+      status.textContent = error || 'Lengkapi data yang belum terisi.';
+      status.className = 'portal-bio-status is-error';
+      return;
+    }
+
+    // Pastikan data siswa (Bagian 1) sudah lengkap dan tersimpan
+    const studentForm = document.getElementById('portal-student-bio-form');
+    let record = currentRecord;
+    if (!record || !record.biodataUpdatedAt) {
+      try {
+        const records = JSON.parse(localStorage.getItem('sit_bina_insan_spmb_data') || '[]');
+        const session = JSON.parse(localStorage.getItem('sit_active_parent_session') || 'null');
+        const cleanWa = String(session?.wa || '').replace(/\D/g, '');
+        const found = records.find(item => {
+          const itemWa = String(item.waAyah || '').replace(/\D/g, '');
+          return itemWa === cleanWa || (cleanWa.length >= 9 && itemWa.endsWith(cleanWa.slice(-9)));
+        });
+        if (found) {
+          record = found;
+          currentRecord = found;
+        }
+      } catch (_) {}
+    }
+
+    const isStudentSaved = Boolean(record?.biodataUpdatedAt);
+    const isStudentDirty = studentForm?.dataset.dirty === '1';
+
+    if (!isStudentSaved || isStudentDirty) {
+      const studentValid = studentForm ? studentForm.checkValidity() : false;
+      const regionsComplete = window.StudentRegions ? window.StudentRegions.isComplete() : true;
+
+      if (!studentValid || !regionsComplete) {
+        status.textContent = 'Lengkapi data yang belum terisi pada biodata siswa.';
+        status.className = 'portal-bio-status is-error';
+        const studentStatus = document.getElementById('portal-bio-status');
+        if (studentStatus) {
+          studentStatus.textContent = 'Lengkapi data yang belum terisi.';
+          studentStatus.className = 'portal-bio-status is-error';
+        }
+        window.switchBiodataSubstep?.('student');
+        studentForm?.reportValidity();
+        return;
+      }
+
+      // Jika data siswa valid tapi belum tersimpan, simpan terlebih dahulu
+      status.textContent = 'Menyimpan biodata siswa...';
+      status.className = 'portal-bio-status';
+      const studentSaved = await window.submitStudentBiodata?.();
+      if (!studentSaved) {
+        status.textContent = 'Lengkapi data yang belum terisi pada biodata siswa.';
+        status.className = 'portal-bio-status is-error';
+        window.switchBiodataSubstep?.('student');
+        return;
+      }
+
+      try {
+        const records = JSON.parse(localStorage.getItem('sit_bina_insan_spmb_data') || '[]');
+        const session = JSON.parse(localStorage.getItem('sit_active_parent_session') || 'null');
+        const cleanWa = String(session?.wa || '').replace(/\D/g, '');
+        const updated = records.find(item => {
+          const itemWa = String(item.waAyah || '').replace(/\D/g, '');
+          return itemWa === cleanWa || (cleanWa.length >= 9 && itemWa.endsWith(cleanWa.slice(-9)));
+        });
+        if (updated) currentRecord = updated;
+      } catch (_) {}
+    }
+
     const button = document.getElementById('portal-parent-data-submit');
     button.disabled = true;
     status.textContent = 'Menyimpan data orang tua dan wali...';
+    status.className = 'portal-bio-status';
     try {
       const session = JSON.parse(localStorage.getItem('sit_active_parent_session') || 'null');
       if (!session?.wa || !currentRecord?.regNumber) throw new Error('Silakan masuk kembali ke portal.');
-      const response = await fetch('api/spmb.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, action: 'save_parents', regNumber: currentRecord.regNumber, accountWa: session.wa }) });
+      const response = await fetch('api/spmb.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, action: 'save_parents', regNumber: currentRecord.regNumber, accountWa: session.wa })
+      });
       const result = await response.json();
       if (!response.ok || !result.success) throw new Error(result.message || 'Data gagal disimpan.');
-      try { localStorage.setItem('sit_bina_insan_spmb_data', JSON.stringify([result.data])); } catch (_) {}
+      try {
+        let records = JSON.parse(localStorage.getItem('sit_bina_insan_spmb_data') || '[]');
+        if (Array.isArray(records)) {
+          const idx = records.findIndex(item => item.regNumber === result.data.regNumber || item.id === result.data.id);
+          if (idx >= 0) records[idx] = result.data;
+          else records.unshift(result.data);
+        } else {
+          records = [result.data];
+        }
+        localStorage.setItem('sit_bina_insan_spmb_data', JSON.stringify(records));
+      } catch (_) {}
       dirty = false;
       window.ParentBiodata.populate(result.data);
-      window.renderParentPortal?.();
+
+      // Setelah berhasil disimpan dan lengkap, langsung berpindah ke halaman selanjutnya (Langkah 4: Tahap Jadwal)
+      if (typeof window.openScheduleStage === 'function') {
+        window.openScheduleStage(result.data.regNumber);
+      } else {
+        try { sessionStorage.setItem('sit_parent_biodata_view', result.data.regNumber + ':schedule'); } catch (_) {}
+        window.renderParentPortal?.();
+      }
     } catch (error) {
       status.textContent = error.message || 'Data gagal disimpan. Silakan coba kembali.';
       status.className = 'portal-bio-status is-error';
-    } finally { button.disabled = false; }
+    } finally {
+      button.disabled = false;
+    }
   });
 })();
