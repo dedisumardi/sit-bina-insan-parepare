@@ -697,52 +697,37 @@
                 <!-- Dropdown Jenjang -->
                 <div class="md:col-span-2">
                   <label class="sr-only" for="spmb-filter-jenjang">Jenjang Pendidikan</label>
-                  <div class="relative">
-                    <select class="w-full text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer" id="spmb-filter-jenjang">
-                      <option value="all">Semua Jenjang</option>
-                      <option value="tkit">TKIT</option>
-                      <option value="sdit">SDIT</option>
-                      <option value="smpit">SMPIT</option>
-                      <option value="smait">SMAIT</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
-                      <i class="fa-solid fa-chevron-down text-xs"></i>
-                    </div>
-                  </div>
+                  <select class="w-full text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer" id="spmb-filter-jenjang">
+                    <option value="all">Semua Jenjang</option>
+                    <option value="tkit">TKIT</option>
+                    <option value="sdit">SDIT</option>
+                    <option value="smpit">SMPIT</option>
+                    <option value="smait">SMAIT</option>
+                  </select>
                 </div>
 
                 <!-- Dropdown Gelombang -->
                 <div class="md:col-span-2">
                   <label class="sr-only" for="spmb-filter-gelombang">Gelombang Pendaftaran</label>
-                  <div class="relative">
-                    <select class="w-full text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer" id="spmb-filter-gelombang">
-                      <option value="all">Semua Gelombang</option>
-                      <option value="wave1">Gelombang 1</option>
-                      <option value="wave2">Gelombang 2</option>
-                      <option value="wave3">Gelombang 3</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
-                      <i class="fa-solid fa-chevron-down text-xs"></i>
-                    </div>
-                  </div>
+                  <select class="w-full text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer" id="spmb-filter-gelombang">
+                    <option value="all">Semua Gelombang</option>
+                    <option value="wave1">Gelombang 1</option>
+                    <option value="wave2">Gelombang 2</option>
+                    <option value="wave3">Gelombang 3</option>
+                  </select>
                 </div>
 
                 <!-- Dropdown Status Pendaftaran -->
                 <div class="md:col-span-3">
                   <label class="sr-only" for="spmb-filter-status">Status Pendaftaran</label>
-                  <div class="relative">
-                    <select class="w-full text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none cursor-pointer" id="spmb-filter-status">
-                      <option value="all">Semua Status Pendaftaran</option>
-                      <option value="menunggu_jadwal">Menunggu Verifikasi / Jadwal</option>
-                      <option value="jadwal_ditetapkan">Jadwal Ditetapkan</option>
-                      <option value="terverifikasi">Berkas Lengkap &amp; Terverifikasi</option>
-                      <option value="lulus">Lulus Seleksi Observasi &amp; Diterima</option>
-                      <option value="selesai">Pendaftaran Selesai</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
-                      <i class="fa-solid fa-chevron-down text-xs"></i>
-                    </div>
-                  </div>
+                  <select class="w-full text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer" id="spmb-filter-status">
+                    <option value="all">Semua Status Pendaftaran</option>
+                    <option value="menunggu_jadwal">Menunggu Verifikasi / Jadwal</option>
+                    <option value="jadwal_ditetapkan">Jadwal Ditetapkan</option>
+                    <option value="terverifikasi">Berkas Lengkap &amp; Terverifikasi</option>
+                    <option value="lulus">Lulus Seleksi Observasi &amp; Diterima</option>
+                    <option value="selesai">Pendaftaran Selesai</option>
+                  </select>
                 </div>
 
                 <!-- Search Input Field -->
@@ -808,7 +793,7 @@
             <div id="spmb-pagination-container" class="px-6 py-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
               <div class="flex items-center space-x-3">
                 <span class="font-medium">Menampilkan</span>
-                <select id="spmb-page-size" class="form-select text-xs font-medium border-slate-300 rounded-lg py-1 px-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                <select id="spmb-page-size" class="form-select text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg py-1 pl-2.5 pr-8 min-w-[4.25rem] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer">
                   <option value="10">10</option>
                   <option value="25" selected>25</option>
                   <option value="50">50</option>

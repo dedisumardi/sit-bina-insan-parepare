@@ -109,6 +109,19 @@ body :is(.btn,.theme-action) > :is(svg,i) { flex-shrink:0; }
   border-radius: 0.5rem !important;
 }
 
+/* Ensure select dropdown chevrons in admin panel never overlap numbers or text */
+.theme-admin select,
+.theme-admin .form-select {
+  padding-right: 2rem !important;
+  cursor: pointer;
+}
+
+#spmb-page-size {
+  padding-left: 0.625rem !important;
+  padding-right: 2rem !important;
+  min-width: 4.25rem !important;
+}
+
 @media(max-width:640px) { body .btn { white-space:normal; } .hero-heading { font-size:2.25rem; } }
 @media(prefers-reduced-motion:reduce) { body :is(.btn,.theme-action) { transition:none; } }
 @media print { .theme-action-icon { display:none; } }
