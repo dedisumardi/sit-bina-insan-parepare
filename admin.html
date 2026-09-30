@@ -113,14 +113,25 @@
       color: #ffffff !important;
       box-shadow: 0 10px 15px -3px rgba(0, 47, 155, 0.3);
     }
-    .sidebar-item-btn.active svg {
+    .sidebar-item-btn.active svg,
+    .sidebar-item-btn.active i {
       color: #ffffff !important;
+    }
+    .sidebar-item-btn.active .sidebar-badge-count {
+      background-color: rgba(255, 255, 255, 0.22) !important;
+      color: #ffffff !important;
+      border-color: rgba(255, 255, 255, 0.35) !important;
     }
     .sidebar-item-btn .sidebar-active-indicator {
       display: none;
     }
     .sidebar-item-btn.active .sidebar-active-indicator {
       display: block !important;
+    }
+    #admin-sidebar :is(button, a) :is(svg, i, .sidebar-icon, .fa-solid, .fa-regular, .fa-brands) {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
     }
 
     /* Modals & Overlay */
@@ -240,27 +251,27 @@
   <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden" aria-hidden="true"></div>
 
   <!-- BEGIN: MainSidebar (Responsive Drawer on Mobile/Tablet & Collapsible on Desktop) -->
-  <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-50 lg:static lg:z-30 w-72 max-w-[85vw] bg-[#0d172e] flex-shrink-0 flex flex-col justify-between border-r border-slate-800/80 shadow-2xl transition-all duration-300 -translate-x-full lg:translate-x-0" data-purpose="sidebar-navigation">
+  <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-50 lg:static lg:z-30 w-72 max-w-[85vw] bg-white flex-shrink-0 flex flex-col justify-between border-r border-slate-200/90 shadow-xl lg:shadow-none transition-all duration-300 -translate-x-full lg:translate-x-0" data-purpose="sidebar-navigation">
     <!-- Top Part: School Brand & Navigation -->
     <div class="flex flex-col h-full overflow-hidden">
       <!-- School Brand Header -->
-      <div class="px-5 sm:px-6 py-5 sm:py-6 border-b border-slate-800/80 flex items-center justify-between">
+      <div class="px-5 sm:px-6 py-5 sm:py-6 border-b border-slate-100 flex items-center justify-between">
         <div class="flex items-center space-x-3.5 min-w-0">
-          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white p-1.5 shadow-md flex items-center justify-center flex-shrink-0 ring-2 ring-emerald-500/20">
+          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-slate-50 p-1.5 shadow-xs border border-slate-200/80 flex items-center justify-center flex-shrink-0 ring-2 ring-emerald-500/20">
             <img alt="Logo SIT Bina Insan Parepare" class="w-full h-full object-contain" src="/assets/icons/favicon.png?v=3">
           </div>
           <div class="flex flex-col min-w-0">
-            <span class="text-sm font-bold tracking-tight text-white truncate">SIT Bina Insan</span>
-            <span class="text-[11px] text-slate-400 font-medium tracking-wide truncate">Parepare, Sulawesi Selatan</span>
+            <span class="text-sm font-bold tracking-tight text-slate-900 truncate">SIT Bina Insan</span>
+            <span class="text-[11px] text-slate-500 font-medium tracking-wide truncate">Parepare, Sulawesi Selatan</span>
             <div class="mt-1 flex items-center gap-1.5">
-              <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/30">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-300/80">
                 Administrator
               </span>
             </div>
           </div>
         </div>
         <!-- Mobile/Tablet Close Button -->
-        <button type="button" id="btn-close-sidebar" class="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors focus:outline-none" aria-label="Tutup Menu Sidebar" title="Tutup Menu">
+        <button type="button" id="btn-close-sidebar" class="lg:hidden p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none" aria-label="Tutup Menu Sidebar" title="Tutup Menu">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -269,79 +280,64 @@
 
       <!-- Main Navigation Menu -->
       <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto" data-purpose="sidebar-menu">
-        <div class="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400/80">Menu Utama</div>
+        <div class="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Menu Utama</div>
 
         <!-- Dashboard (Active) -->
-        <button type="button" class="sidebar-item-btn active w-full group relative flex items-center gap-3 px-3.5 py-3 rounded-xl font-medium text-sm text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all duration-200 text-left" data-panel="dashboard">
-          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-          <span class="flex-1 truncate">Dashboard</span>
-          <span class="sidebar-active-indicator w-2 h-2 rounded-full bg-emerald-200 animate-pulse"></span>
+        <button type="button" class="sidebar-item-btn active w-full group relative flex items-center gap-3 px-3.5 py-3 rounded-xl font-medium text-sm text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 transition-all duration-150 text-left cursor-pointer" data-panel="dashboard">
+          <i class="fa-solid fa-chart-pie text-base w-5 text-center flex-shrink-0 text-slate-400 group-hover:text-blue-600 transition-colors"></i>
+          <span class="flex-1 truncate font-semibold">Dashboard</span>
+          <span class="sidebar-active-indicator w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
         </button>
 
         <!-- Data Calon Siswa -->
-        <button type="button" class="sidebar-item-btn w-full group flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all duration-200 text-left" data-panel="spmb" onclick="window.switchSpmbSubTab && window.switchSpmbSubTab('siswa')">
+        <button type="button" class="sidebar-item-btn w-full group flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 transition-all duration-150 text-left cursor-pointer" data-panel="spmb" onclick="window.switchSpmbSubTab && window.switchSpmbSubTab('siswa')">
           <div class="flex items-center gap-3 truncate">
-            <svg class="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span class="truncate">Data Calon Siswa</span>
+            <i class="fa-solid fa-user-graduate text-base w-5 text-center flex-shrink-0 text-slate-400 group-hover:text-blue-600 transition-colors"></i>
+            <span class="truncate font-semibold">Data Calon Siswa</span>
           </div>
-          <span id="sidebar-spmb-count" class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold rounded-full bg-slate-700 text-emerald-300 border border-slate-600 group-hover:bg-emerald-500/20 group-hover:border-emerald-500/40 ml-2">
+          <span id="sidebar-spmb-count" class="sidebar-badge-count inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold rounded-full bg-blue-50 text-blue-700 border border-blue-200/80 group-hover:bg-blue-100 transition-colors ml-2">
             0
           </span>
         </button>
 
         <!-- Akun Orang Tua & Pembayaran -->
-        <button type="button" class="sidebar-item-btn w-full group flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all duration-200 text-left" data-panel="spmb-wali" onclick="window.switchPanel('spmb'); window.switchSpmbSubTab && window.switchSpmbSubTab('wali');">
+        <button type="button" class="sidebar-item-btn w-full group flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 transition-all duration-150 text-left cursor-pointer" data-panel="spmb-wali" onclick="window.switchPanel('spmb'); window.switchSpmbSubTab && window.switchSpmbSubTab('wali');">
           <div class="flex items-center gap-3 truncate">
-            <svg class="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span class="truncate">Akun Orang Tua</span>
+            <i class="fa-solid fa-user-group text-base w-5 text-center flex-shrink-0 text-slate-400 group-hover:text-amber-500 transition-colors"></i>
+            <span class="truncate font-semibold">Akun Orang Tua</span>
           </div>
-          <span id="sidebar-wali-count" class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold rounded-full bg-slate-700 text-amber-300 border border-slate-600 group-hover:bg-amber-500/20 group-hover:border-amber-500/40 ml-2">
+          <span id="sidebar-wali-count" class="sidebar-badge-count inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold rounded-full bg-amber-50 text-amber-700 border border-amber-200/80 group-hover:bg-amber-100 transition-colors ml-2">
             0
           </span>
         </button>
 
         <!-- Kelola Berita / Artikel -->
-        <button type="button" class="sidebar-item-btn w-full group flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all duration-200 text-left" data-panel="berita">
+        <button type="button" class="sidebar-item-btn w-full group flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 transition-all duration-150 text-left cursor-pointer" data-panel="berita">
           <div class="flex items-center gap-3 truncate">
-            <svg class="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span class="truncate">Kelola Berita/Artikel</span>
+            <i class="fa-solid fa-newspaper text-base w-5 text-center flex-shrink-0 text-slate-400 group-hover:text-purple-600 transition-colors"></i>
+            <span class="truncate font-semibold">Kelola Berita/Artikel</span>
           </div>
-          <span id="sidebar-news-count" class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold rounded-full bg-slate-700 text-purple-300 border border-slate-600 group-hover:bg-purple-500/20 group-hover:border-purple-500/40 ml-2">
+          <span id="sidebar-news-count" class="sidebar-badge-count inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold rounded-full bg-purple-50 text-purple-700 border border-purple-200/80 group-hover:bg-purple-100 transition-colors ml-2">
             0
           </span>
         </button>
 
         <!-- Pengaturan SPMB -->
-        <button type="button" class="sidebar-item-btn w-full group flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 transition-all duration-200 text-left" data-panel="settings">
-          <svg class="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-            <path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.38.138.75.431.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.6 6.6 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z" stroke-linecap="round" stroke-linejoin="round"></path>
-            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-          <span class="truncate">Pengaturan SPMB</span>
+        <button type="button" class="sidebar-item-btn w-full group flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 transition-all duration-150 text-left cursor-pointer" data-panel="settings">
+          <i class="fa-solid fa-sliders text-base w-5 text-center flex-shrink-0 text-slate-400 group-hover:text-blue-600 transition-colors"></i>
+          <span class="truncate font-semibold">Pengaturan SPMB</span>
         </button>
       </nav>
     </div>
 
     <!-- Bottom Actions: External link & Logout -->
-    <div class="p-4 border-t border-slate-800/80 space-y-2" data-purpose="sidebar-footer">
-      <a class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-200 bg-slate-800/90 hover:bg-slate-700/80 hover:text-white border border-slate-700 transition duration-150" href="/" target="_blank">
-        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
+    <div class="p-4 border-t border-slate-100 space-y-2" data-purpose="sidebar-footer">
+      <a class="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 hover:text-slate-900 border border-slate-200/80 transition duration-150" href="/" target="_blank">
+        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-blue-600"></i>
         <span>Buka Website Utama</span>
       </a>
-      <button id="admin-logout-btn" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-red-400 bg-red-950/30 hover:bg-red-900/40 hover:text-red-300 border border-red-900/40 transition duration-150" type="button">
-        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
+      <button id="admin-logout-btn" class="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 hover:text-rose-700 border border-rose-200/80 transition duration-150 cursor-pointer" type="button">
+        <i class="fa-solid fa-arrow-right-from-bracket text-xs text-rose-500"></i>
         <span>Keluar (Logout)</span>
       </button>
     </div>

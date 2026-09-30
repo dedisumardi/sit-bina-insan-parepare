@@ -71,13 +71,21 @@ body :is(button,.btn):disabled { opacity:.5; cursor:not-allowed; transform:none 
 .theme-action-icon { font-size:.9em; width:1em; flex-shrink:0; margin-inline-end:6px; }
 body :is(.btn,.theme-action) > :is(svg,i) { flex-shrink:0; }
 .theme-admin :is([class~="shadow-card"],[class~="shadow-sm"]) { box-shadow:0 1px 3px #0f172a08; }
-.theme-admin :is([class~="bg-white"][class*="rounded"]) { border-color:#e2e8f0; }
-.theme-admin #admin-sidebar { background:#081736; }
+.theme-admin #admin-sidebar { background:#ffffff !important; border-color:#e2e8f0 !important; }
+body #admin-sidebar :is(button, a) :is(svg, i, .sidebar-icon, .fa-solid, .fa-regular, .fa-brands) {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
 .theme-admin button.theme-action:not(.theme-primary) { border-radius:10px !important; }
 
 /* SPMB Admin Action Buttons: Pure Icon Only (Never hide SVG/icons, never show fallback text) */
 .theme-admin button svg,
 .theme-admin button i,
+#admin-sidebar button svg,
+#admin-sidebar button i,
+#admin-sidebar a svg,
+#admin-sidebar a i,
 .spmb-action-btn svg,
 .spmb-action-btn i,
 #spmb-table-body svg,
