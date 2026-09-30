@@ -62,7 +62,8 @@ body .action-solid-icon {
   margin-inline-end: .4em; vertical-align: -.05em;
 }
 body .action-icon-only .action-solid-icon { margin: 0; }
-body .action-icon-only { display: inline-flex; align-items: center; justify-content: center; }
+/* Keep each control's responsive display rules, including hidden desktop toggles. */
+body .action-icon-only { align-items: center; justify-content: center; }
 body :is(.btn,.site-dialog-actions button) > .action-solid-icon { margin-inline-end: 0; }
 body .sidebar-item-btn .action-solid-icon { font-size: 16px; }
 body .spmb-action-btn .action-solid-icon { font-size: 14px; }
