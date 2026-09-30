@@ -62,7 +62,7 @@ test('both pages load shared dialogs before application scripts; no native popup
   assert.equal((admin.match(/await SiteDialog.confirm\(/g) || []).length, 9);
 });
 
-test('all message dialog variants use the favicon only in the heading with text-only actions', async () => {
+test('all message dialog variants keep the favicon only in the heading', async () => {
   const { api, opened } = setup();
   for (const kind of ['alert', 'confirm', 'copy']) {
     const result = api[kind]('Pesan pengujian', '123');
@@ -76,11 +76,11 @@ test('all message dialog variants use the favicon only in the heading with text-
   }
 });
 
-test('shared button decoration uses text instead of injecting icons', () => {
+test('shared button decoration uses solid icons and preserves compact navigation', () => {
   const source = fs.readFileSync('js/site-theme.js', 'utf8');
-  assert.doesNotMatch(source, /createElement\('i'\)|control\.prepend\(icon\)/);
-  assert.match(source, /button-text-fallback/);
+  assert.match(source, /fa-solid/);
+  assert.match(source, /action-solid-icon/);
   assert.match(source, /characterData: true/);
-  assert.match(source, /control\.closest\('\.building-controls'\)/);
-  assert.match(source, /control\.matches\('\.mobile-toggle-btn, \.footer-social-btn, #portal-step-back, #portal-step-next'\)/);
+  assert.match(source, /control\.closest\('\.building-controls, \.date-picker-grid, \.date-picker-header'\)/);
+  assert.match(source, /control\.matches\('\.footer-social-btn, \.date-picker-trigger'\)/);
 });

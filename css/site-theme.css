@@ -55,7 +55,19 @@ body :is(.btn-primary,.btn-accent,.theme-primary,#btn-submit-parent-auth,#admin-
 body :is(.btn-primary,.btn-accent,.theme-primary):not(:disabled):hover { box-shadow:0 6px 20px #2563eb30 !important; transform:translateY(-1px); }
 body :is(.btn-outline-primary,.btn-outline-secondary,.portal-bio-back) { border:1px solid #dbeafe; background:#eff6ff; color:#1d4ed8; border-radius:12px; }
 body .btn-outline-white { background:#ffffff0d; border:1px solid #ffffff30; color:#fff; box-shadow:none; }
-body :is(button, a[class*="btn"], a[class*="rounded"], .floating-whatsapp, [role="button"]) :is(svg, i, img, .theme-action-icon, .faq-icon-toggle), .button-icon-hidden { display:none !important; }
+.button-icon-hidden { display:none !important; }
+body .action-solid-icon {
+  display: inline-block !important; width: 1.15em; flex-shrink: 0;
+  font-size: 1em; line-height: 1; text-align: center; color: inherit;
+  margin-inline-end: .4em; vertical-align: -.05em;
+}
+body .action-icon-only .action-solid-icon { margin: 0; }
+body .action-icon-only { display: inline-flex; align-items: center; justify-content: center; }
+body :is(.btn,.site-dialog-actions button) > .action-solid-icon { margin-inline-end: 0; }
+body .sidebar-item-btn .action-solid-icon { font-size: 16px; }
+body .spmb-action-btn .action-solid-icon { font-size: 14px; }
+body .faq-question .action-solid-icon { order: 2; margin-inline-start: auto; margin-inline-end: 0; }
+body .faq-item.open .faq-question .action-solid-icon { transform: rotate(180deg); }
 body .button-text-only { width:auto !important; min-width:44px; height:auto !important; min-height:32px; padding:6px 10px !important; border-radius:8px; }
 body .button-text-fallback { font-family:inherit; font-size:12px; font-weight:600; line-height:1.4; white-space:normal; }
 body #mobile-toggle-btn svg { display:block !important; }
@@ -235,5 +247,5 @@ body #admin-sidebar :is(button, a) :is(svg, i, .sidebar-icon, .fa-solid, .fa-reg
 
 @media(max-width:640px) { body .btn { white-space:normal; } .hero-heading { font-size:2.25rem; } }
 @media(prefers-reduced-motion:reduce) { body :is(.btn,.theme-action) { transition:none; } }
-@media print { .theme-action-icon { display:none; } }
+@media print { .theme-action-icon, .action-solid-icon { display:none !important; } }
 
