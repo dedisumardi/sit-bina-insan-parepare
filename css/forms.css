@@ -55,6 +55,37 @@ body input:is([type="radio"], [type="checkbox"]) {
   vertical-align: middle;
 }
 /* Keep hidden option-card radios and table checkboxes in their original layout. */
+body .form-group label:not(.option-card-label) > input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  min-height: 20px;
+  margin: 0;
+  padding: 0;
+  border: 2px solid #71839e !important;
+  border-radius: 50%;
+  background-color: #fff;
+  background-image: none;
+  cursor: pointer;
+}
+body .form-group label:not(.option-card-label) > input[type="radio"]:checked {
+  border-color: var(--field-accent) !important;
+  background-image: radial-gradient(circle, #315fca 0 5px, transparent 5.5px);
+}
+body .form-group label:not(.option-card-label) > input[type="radio"]:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+@media (forced-colors: active) {
+  body .form-group label:not(.option-card-label) > input[type="radio"] {
+    appearance: auto;
+    -webkit-appearance: auto;
+    background-image: none !important;
+  }
+}
 .form-group label:has(> input[type="radio"]):not(.option-card-label) {
   display: inline-flex;
   align-items: center;
