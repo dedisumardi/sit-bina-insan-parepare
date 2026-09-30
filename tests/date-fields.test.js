@@ -21,6 +21,6 @@ test('both pages load the shared date enhancement before their form logic', () =
   for (const [file, script] of [['index.html', 'js/spmb.js'], ['admin.html', 'js/admin.js']]) {
     const html = fs.readFileSync(file, 'utf8');
     assert.ok(html.indexOf('<script src="js/date-fields.js') < html.indexOf(`<script src="${script}`));
-    assert.match(html, /forms.css\?v=20260930_date1/);
+    assert.match(html, /forms.css\?v=20260930_calendar1/);
   }
 });

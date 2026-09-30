@@ -9,26 +9,55 @@ body input.date-field-original {
   overflow: hidden;
   white-space: nowrap;
 }
-.date-field-parts {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr) minmax(0, 1.1fr);
-  gap: 8px;
-  width: 100%;
-  min-width: 0;
+body button.date-picker-trigger {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 46px;
+  padding: 11px 14px; border: 1px solid #dce5f1; border-radius: 13px;
+  background: #f8faff; color: #334155; font: inherit; font-size: 14px;
+  text-align: left; cursor: pointer; box-shadow: none;
 }
-body .date-field-parts select {
-  width: 100%;
-  padding-left: 10px;
-  padding-right: 26px;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='m3 4.5 3 3 3-3' fill='none' stroke='%2364758b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
+body button.date-picker-trigger::before {
+  content: ''; flex: 0 0 18px; height: 18px;
+  background: center / contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='1.7' stroke-linecap='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='3'/%3E%3Cpath d='M7 3v4m10-4v4M3 11h18'/%3E%3C/svg%3E");
 }
-@media (max-width: 480px) {
-  .date-field-parts { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
-  .date-field-parts .date-field-year { grid-column: 1 / -1; }
+body .date-picker-popup {
+  position: fixed; inset: auto; margin: 0; box-sizing: border-box;
+  width: min(304px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); overflow: auto;
+  padding: 12px; border: 1px solid #e2e8f0; border-radius: 14px;
+  background: #fff; color: #334155; box-shadow: 0 12px 32px #0f172a24;
+  z-index: 100000; font-family: inherit;
 }
+.date-picker-popup[hidden] { display: none !important; }
+.date-picker-header { display: grid; grid-template-columns: 28px 1fr 82px 28px; gap: 5px; align-items: center; margin-bottom: 12px; }
+body .date-picker-header select {
+  min-height: 36px !important; padding: 6px !important; border-radius: 9px !important;
+  background-color: #fff !important; font-size: 13px !important;
+}
+body .date-picker-popup button {
+  border: 0; background: transparent; color: #334155; font: inherit; font-size: 14px;
+  border-radius: 8px; cursor: pointer; box-shadow: none; padding: 0;
+}
+body .date-picker-popup .date-picker-prev, body .date-picker-popup .date-picker-next {
+  width: 28px; height: 36px; font-size: 0;
+}
+.date-picker-prev::before, .date-picker-next::before {
+  content: ''; display: inline-block; width: 6px; height: 6px;
+  border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: rotate(135deg);
+}
+.date-picker-next::before { transform: rotate(-45deg); }
+.date-picker-weekdays, .date-picker-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+.date-picker-weekdays { margin-bottom: 5px; text-align: center; color: #8490a2; font-size: 11px; line-height: 28px; }
+body .date-picker-grid button { height: 36px; min-width: 0; }
+body .date-picker-popup button:hover:not(:disabled) { background: #eff4ff; color: #2453bb; }
+body .date-picker-popup .is-outside { color: #9ca6b4; }
+body .date-picker-popup [aria-current="date"] { background: #f1f5f9; font-weight: 700; }
+body .date-picker-popup [aria-pressed="true"] { background: #315fca !important; color: #fff !important; font-weight: 700; }
+body .date-picker-popup button:disabled { opacity: .3; cursor: not-allowed; }
+.date-picker-footer { display: flex; justify-content: space-between; padding-top: 8px; margin-top: 8px; border-top: 1px solid #edf1f7; }
+body .date-picker-footer button { padding: 5px 8px; font-size: 12px; color: #315fca; }
+body .date-picker-trigger:focus-visible, body .date-picker-popup button:focus-visible { outline: 2px solid #315fca; outline-offset: 2px; }
+body .date-picker-trigger:disabled { opacity: .6; cursor: not-allowed; }
+body .date-picker-trigger[aria-invalid="true"] { border-color: #dc6478; }
+.date-picker-error { color: #be123c; font-size: 12px; }
 :root {
   --field-surface: #f8faff;
   --field-border: #dce5f1;
