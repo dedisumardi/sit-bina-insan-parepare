@@ -458,12 +458,12 @@
           ${renderStatusBadge(item.status)}
         </td>
         <td class="py-4 px-6 whitespace-nowrap text-center">
-          <div class="inline-flex items-center justify-center gap-1.5">
-            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail Siswa">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/></svg>
+          <div class="inline-flex items-center justify-center gap-1.5 flex-nowrap">
+            <button type="button" class="w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-emerald-700 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail Siswa" aria-label="Detail Siswa">
+              <i class="fa-solid fa-eye text-xs"></i>
             </button>
-            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors" onclick="window.editApplicant('${item.regNumber}')" title="Edit Data Siswa &amp; Orang Tua">
-              <i class="ph ph-pencil-simple text-sm"></i>
+            <button type="button" class="w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-amber-600 bg-white hover:bg-amber-50 border border-slate-200 hover:border-amber-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.editApplicant('${item.regNumber}')" title="Edit Data Siswa &amp; Orang Tua" aria-label="Edit Data Siswa &amp; Orang Tua">
+              <i class="fa-solid fa-pen-to-square text-xs"></i>
             </button>
           </div>
         </td>
@@ -929,15 +929,15 @@
       if (isCompleted) {
         // Alur pendaftaran sudah selesai: tombol dinonaktifkan (tidak bisa digunakan/diklik lagi)
         primaryBtn = `
-          <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white cursor-not-allowed opacity-75 border border-emerald-600 shadow-none" disabled="disabled" title="Seluruh alur pendaftaran SPMB telah selesai (sudah tidak dapat digunakan/diklik lagi)">
-            <i class="ph ph-check-circle text-sm"></i>
+          <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white cursor-not-allowed opacity-75 border border-emerald-600 shadow-none shrink-0" disabled="disabled" title="Seluruh alur pendaftaran SPMB telah selesai (sudah tidak dapat digunakan/diklik lagi)">
+            <i class="fa-solid fa-circle-check text-xs"></i>
             <span>Selesai</span>
           </button>
         `;
       } else {
         primaryBtn = `
-          <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs cursor-pointer" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.completeApplicant(this.dataset.regNumber, this)" title="Selesaikan Alur Pendaftaran SPMB">
-            <i class="ph ph-check-circle text-sm"></i>
+          <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs cursor-pointer shrink-0" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.completeApplicant(this.dataset.regNumber, this)" title="Selesaikan Alur Pendaftaran SPMB">
+            <i class="fa-solid fa-circle-check text-xs"></i>
             <span>Selesai</span>
           </button>
         `;
@@ -945,59 +945,59 @@
     } else if (hasPassed) {
       // Row 1: Green "Lulus"
       primaryBtn = `
-        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Siswa Lulus Seleksi">
-          <i class="ph ph-check-circle text-sm"></i>
+        <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs shrink-0" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Siswa Lulus Seleksi">
+          <i class="fa-solid fa-circle-check text-xs"></i>
           <span>Lulus</span>
         </button>
       `;
     } else if (hasSched && hasData && isApproved) {
       // Ready to graduate
       primaryBtn = `
-        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.passApplicant(this.dataset.regNumber, this)" title="Luluskan Calon Siswa">
-          <i class="ph ph-check-circle text-sm"></i>
+        <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs shrink-0" data-reg-number="${escapeHtml(item.regNumber)}" onclick="window.passApplicant(this.dataset.regNumber, this)" title="Luluskan Calon Siswa">
+          <i class="fa-solid fa-circle-check text-xs"></i>
           <span>Lulus</span>
         </button>
       `;
     } else if (isApproved) {
       // Row 2: Blue "Verifikasi"
       primaryBtn = `
-        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors shadow-2xs" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Verifikasi Berkas">
-          <i class="ph ph-check text-sm"></i>
+        <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors shadow-2xs shrink-0" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Verifikasi Berkas">
+          <i class="fa-solid fa-check text-xs"></i>
           <span>Verifikasi</span>
         </button>
       `;
     } else if (hasSched || s.includes('jadwal') || s.includes('observasi')) {
       // Row 4: Indigo "Atur Jadwal"
       primaryBtn = `
-        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors shadow-2xs" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Atur Jadwal Observasi">
-          <i class="ph ph-calendar-plus text-sm"></i>
+        <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors shadow-2xs shrink-0" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Atur Jadwal Observasi">
+          <i class="fa-solid fa-calendar-plus text-xs"></i>
           <span>Atur Jadwal</span>
         </button>
       `;
     } else {
       // Row 3: Amber "Cek Berkas"
       primaryBtn = `
-        <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors shadow-2xs" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Periksa Berkas Pendaftaran">
-          <i class="ph ph-file-search text-sm"></i>
+        <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors shadow-2xs shrink-0" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Periksa Berkas Pendaftaran">
+          <i class="fa-solid fa-file-circle-check text-xs"></i>
           <span>Cek Berkas</span>
         </button>
       `;
     }
 
     return `
-      <div class="inline-flex items-center justify-center gap-1.5">
+      <div class="inline-flex items-center justify-center gap-1.5 flex-nowrap">
         ${primaryBtn}
-        <button type="button" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Lihat Detail">
-          <i class="ph ph-eye text-base"></i>
+        <button type="button" class="w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-blue-600 bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Lihat Detail" aria-label="Lihat Detail">
+          <i class="fa-solid fa-eye text-xs"></i>
         </button>
-        <button type="button" class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors border border-transparent hover:border-amber-200" onclick="window.editApplicant('${item.regNumber}')" title="Edit Data Siswa &amp; Orang Tua">
-          <i class="ph ph-pencil-simple text-base"></i>
+        <button type="button" class="w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-amber-600 bg-white hover:bg-amber-50 border border-slate-200 hover:border-amber-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.editApplicant('${item.regNumber}')" title="Edit Data Siswa &amp; Orang Tua" aria-label="Edit Data Siswa &amp; Orang Tua">
+          <i class="fa-solid fa-pen-to-square text-xs"></i>
         </button>
-        <button type="button" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200" onclick="window.printApplicantCard('${item.regNumber}')" title="Cetak Kartu Tanda Peserta">
-          <i class="fa-solid fa-print text-sm"></i>
+        <button type="button" class="w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-indigo-600 bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.printApplicantCard('${item.regNumber}')" title="Cetak Kartu Tanda Peserta" aria-label="Cetak Kartu Tanda Peserta">
+          <i class="fa-solid fa-print text-xs"></i>
         </button>
-        <button type="button" class="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus">
-          <i class="ph ph-trash text-base"></i>
+        <button type="button" class="w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-rose-600 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus" aria-label="Hapus">
+          <i class="fa-solid fa-trash-can text-xs"></i>
         </button>
       </div>
     `;
@@ -1016,14 +1016,14 @@
 
     const kkEl = hasKk
       ? `<button type="button" class="inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-bold bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 hover:border-sky-300 transition shadow-2xs cursor-pointer" onclick="window.viewApplicantDoc('${escapeHtml(item.regNumber)}', 'kk')" title="Lihat Berkas Kartu Keluarga (KK)">
-          <i class="ph ph-file-text text-xs"></i>
+          <i class="fa-solid fa-file-lines text-xs"></i>
           <span>KK</span>
         </button>`
       : `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium text-slate-400 bg-slate-50 border border-dashed border-slate-200" title="Kartu Keluarga Belum Diunggah">KK -</span>`;
 
     const aktaEl = hasAkta
       ? `<button type="button" class="inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-bold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 hover:border-indigo-300 transition shadow-2xs cursor-pointer" onclick="window.viewApplicantDoc('${escapeHtml(item.regNumber)}', 'akta')" title="Lihat Berkas Akta Kelahiran">
-          <i class="ph ph-certificate text-xs"></i>
+          <i class="fa-solid fa-certificate text-xs"></i>
           <span>Akta</span>
         </button>`
       : `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium text-slate-400 bg-slate-50 border border-dashed border-slate-200" title="Akta Kelahiran Belum Diunggah">Akta -</span>`;
@@ -2143,7 +2143,12 @@
   window.printApplicantCard = function (regNumber) {
     // Open main page and trigger print ticket
     window.open(`index.html#spmb`, '_blank');
-    SiteDialog.alert(`Untuk mencetak kartu ${regNumber}, silakan buka menu 'Cek Status Pendaftaran' di tab website yang terbuka dan masukkan nomor registrasi tersebut.`);
+    const printMsg = `Untuk mencetak kartu ${regNumber}, silakan buka menu 'Cek Status Pendaftaran' di tab website yang terbuka dan masukkan nomor registrasi tersebut.`;
+    if (typeof SiteDialog !== 'undefined' && SiteDialog && typeof SiteDialog.alert === 'function') {
+      SiteDialog.alert(printMsg);
+    } else if (typeof alert === 'function') {
+      alert(printMsg);
+    }
   };
 
   function getApplicantProgressStatus(item, schoolSettings) {
@@ -2169,7 +2174,11 @@
       showToast('Pastikan pembayaran disetujui serta biodata siswa dan orang tua/wali lengkap.', true);
       return;
     }
-    if (!await SiteDialog.confirm('Luluskan ' + (item.namaSiswa || regNumber) + ' (' + regNumber + ')? Hasil lulus dan diterima akan tampil di halaman pengumuman orang tua.')) return;
+    const passPrompt = 'Luluskan ' + (item.namaSiswa || regNumber) + ' (' + regNumber + ')? Hasil lulus dan diterima akan tampil di halaman pengumuman orang tua.';
+    const isConfirmed = typeof SiteDialog !== 'undefined' && SiteDialog && typeof SiteDialog.confirm === 'function'
+      ? await SiteDialog.confirm(passPrompt)
+      : (typeof confirm === 'function' ? confirm(passPrompt) : true);
+    if (!isConfirmed) return;
     passingApplicants.add(regNumber);
     if (button) button.disabled = true;
     try {
@@ -2215,7 +2224,11 @@
     if (completingApplicants.has(regNumber)) return;
 
     const studentName = item.namaSiswa || regNumber;
-    if (!await SiteDialog.confirm(`Selesaikan seluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber})?\n\nTindakan ini menandai bahwa seluruh alur pendaftaran dan daftar ulang calon siswa telah selesai/berakhir.`)) {
+    const confirmMessage = `Selesaikan seluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber})?\n\nTindakan ini menandai bahwa seluruh alur pendaftaran dan daftar ulang calon siswa telah selesai/berakhir.`;
+    const isConfirmed = typeof SiteDialog !== 'undefined' && SiteDialog && typeof SiteDialog.confirm === 'function'
+      ? await SiteDialog.confirm(confirmMessage)
+      : (typeof confirm === 'function' ? confirm(confirmMessage) : true);
+    if (!isConfirmed) {
       return;
     }
 
@@ -2235,7 +2248,11 @@
       renderDashboard();
       broadcastRealtime('spmb_updated', spmbList);
 
-      SiteDialog.alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
+      if (typeof SiteDialog !== 'undefined' && SiteDialog && typeof SiteDialog.alert === 'function') {
+        SiteDialog.alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
+      } else if (typeof alert === 'function') {
+        alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
+      }
       showToast(thankYouMessage);
     } catch (error) {
       item.status = completedStatus;
@@ -2243,7 +2260,11 @@
       renderSpmbTable();
       renderDashboard();
       broadcastRealtime('spmb_updated', spmbList);
-      SiteDialog.alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
+      if (typeof SiteDialog !== 'undefined' && SiteDialog && typeof SiteDialog.alert === 'function') {
+        SiteDialog.alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
+      } else if (typeof alert === 'function') {
+        alert(`${thankYouMessage}\n\nSeluruh alur pendaftaran SPMB untuk ${studentName} (${regNumber}) telah resmi selesai/berakhir.`);
+      }
       showToast(thankYouMessage);
     } finally {
       completingApplicants.delete(regNumber);
