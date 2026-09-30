@@ -25,7 +25,15 @@ body :is(h1,h2,h3) { letter-spacing:-.025em; }
 .hero-stats-grid { background:#ffffff08; border:1px solid #ffffff20; box-shadow:none; }
 .section-title { color:#0f172a; font-weight:800; }
 .section-subtitle { color:#64748b; }
-.section-badge { background:#eff6ff; color:#1d4ed8; border:1px solid #dbeafe; }
+.section-badge { color:#1d4ed8; }
+/* Section eyebrows are plain text; payment/status badges keep their colors. */
+.section-title-wrap .badge-tag, .section-eyebrow, .section-badge {
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  padding-inline:0 !important;
+}
 body :is(.pillar-card,.level-card,.program-card,.ekskul-card,.news-card,.testimonial-card,.faq-item,.hero-card-featured,.portal-bio-form,.spmb-form-card) {
   border:1px solid #e2e8f0;
   border-radius:16px;
