@@ -1153,81 +1153,93 @@
     const countEl = document.getElementById('wali-filter-count');
     if (countEl) countEl.textContent = `Menampilkan ${parents.length} dari ${spmbList.length} akun orang tua/wali`;
 
+    const totalEl = document.getElementById('wali-total-count');
+    if (totalEl) totalEl.textContent = `${parents.length}`;
+
     if (parents.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada akun orang tua yang cocok dengan filter.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada akun orang tua yang cocok dengan filter.</td></tr>`;
       return;
     }
 
-    tableBody.innerHTML = parents.map(item => {
+    tableBody.innerHTML = parents.map((item, index) => {
       const isApproved = isPaymentApproved(item);
       const isPassed = isApplicantPassed(item);
       const hasProof = !!item.buktiPembayaran;
+      const rowNum = index + 1;
+      const dateVal = formatDaftarDate(item.tanggalDaftar || item.createdAt);
+      const timeVal = formatDaftarTime(item.tanggalDaftar || item.createdAt);
 
       let statusBadge = '';
       if (isPassed) {
-        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300"><i class="fa-solid fa-graduation-cap text-amber-600"></i> Lulus &amp; Lunas</span>`;
+        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-300"><i class="fa-solid fa-graduation-cap text-amber-600"></i> Lulus &amp; Lunas</span>`;
       } else if (isApproved) {
-        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200"><i class="fa-solid fa-circle-check text-emerald-600"></i> Lunas &amp; Disetujui</span>`;
+        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><i class="fa-solid fa-circle-check text-emerald-600"></i> Lunas &amp; Disetujui</span>`;
       } else if (hasProof) {
-        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 animate-pulse"><i class="fa-solid fa-credit-card text-amber-700"></i> Bukti Diupload</span>`;
+        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-300 animate-pulse"><i class="fa-solid fa-clock text-amber-600"></i> Bukti Diupload</span>`;
       } else {
-        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200"><i class="fa-solid fa-clock text-rose-500"></i> Menunggu Bayar</span>`;
+        statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200"><i class="fa-solid fa-circle-xmark text-rose-500"></i> Menunggu Bayar</span>`;
       }
 
       let proofThumb = '';
       if (hasProof) {
         proofThumb = `
-          <button type="button" onclick="window.viewPaymentProof('${item.regNumber}')" class="group relative inline-flex items-center gap-1.5 p-1 rounded-lg border border-amber-300 hover:border-amber-400 bg-amber-50 hover:bg-amber-100 transition cursor-pointer" title="Klik untuk lihat bukti transfer">
-            <img src="${item.buktiPembayaran}" alt="Bukti" class="w-8 h-8 rounded object-cover border border-amber-200">
-            <span class="text-[11px] font-bold text-amber-800 pr-1">Lihat Foto</span>
+          <button type="button" onclick="window.viewPaymentProof('${item.regNumber}')" class="group inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-bold bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 hover:border-amber-300 transition shadow-2xs cursor-pointer" title="Lihat Bukti Transfer">
+            <i class="fa-solid fa-image text-xs"></i>
+            <span>Lihat Bukti</span>
           </button>
         `;
       } else {
-        proofThumb = `<span class="text-xs text-slate-400 italic">Belum Upload</span>`;
+        proofThumb = `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium text-slate-400 bg-slate-50 border border-dashed border-slate-200">Belum Upload</span>`;
       }
 
       return `
-      <tr class="hover:bg-slate-50/80 transition duration-150">
-        <td class="py-4 px-6 whitespace-nowrap font-mono text-xs font-bold ${isApproved ? 'text-emerald-700' : 'text-slate-700'}">
-          ${escapeHtml(item.regNumber)}
+      <tr class="hover:bg-slate-50/90 transition-colors">
+        <td class="py-4 px-3 text-center font-medium text-slate-600">
+          ${rowNum}
         </td>
-        <td class="py-4 px-6 whitespace-nowrap">
-          <div class="font-bold text-slate-900">${escapeHtml(item.namaAyah || item.namaSiswa || 'Orang Tua / Wali')}</div>
-          <span class="text-xs text-slate-400">Pendaftar Akun SPMB</span>
+        <td class="py-4 px-3">
+          <span class="font-mono text-slate-700 font-semibold bg-slate-100 px-2 py-1 rounded border border-slate-200 inline-block text-[11px]">${escapeHtml(item.regNumber)}</span>
         </td>
-        <td class="py-4 px-6 whitespace-nowrap">
-          <a href="https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent(`Assalamu'alaikum Bapak/Ibu ${item.namaAyah || ''}, kami dari Panitia SPMB SIT Bina Insan Parepare terkait akun pendaftaran ${item.regNumber}.`)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-200" title="Chat WhatsApp Orang Tua">
-            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.573 1.761.854 2.806.854 3.18 0 5.767-2.587 5.768-5.766.001-3.182-2.585-5.769-5.768-5.769zm10.024 5.828c0 5.549-4.512 10.063-10.063 10.063-1.745 0-3.385-.45-4.821-1.242l-5.171 1.357 1.381-5.042c-.878-1.488-1.389-3.23-1.389-5.136 0-5.551 4.514-10.063 10.063-10.063 5.551 0 10.063 4.512 10.063 10.063z"/></svg>
+        <td class="py-4 px-4">
+          <div class="font-bold text-slate-900 text-sm">${escapeHtml(item.namaAyah || item.namaSiswa || 'Orang Tua / Wali')}</div>
+          <div class="text-[11px] text-slate-500 font-medium mt-0.5">Pendaftar Akun SPMB</div>
+        </td>
+        <td class="py-4 px-3">
+          <a class="inline-flex items-center gap-1.5 text-emerald-700 hover:text-emerald-800 font-medium text-xs group" href="https://wa.me/${formatWa(item.waAyah)}?text=${encodeURIComponent(`Assalamu'alaikum Bapak/Ibu ${item.namaAyah || ''}, kami dari Panitia SPMB SIT Bina Insan Parepare terkait akun pendaftaran ${item.regNumber}.`)}" target="_blank" rel="noopener noreferrer" title="Chat WhatsApp Orang Tua">
+            <i class="fa-brands fa-whatsapp text-emerald-600 text-sm group-hover:scale-110 transition-transform"></i>
             <span class="font-mono">${escapeHtml(item.waAyah || '-')}</span>
           </a>
         </td>
-        <td class="py-4 px-6 whitespace-nowrap text-xs font-bold text-slate-800">
+        <td class="py-4 px-3 font-semibold text-slate-800 text-xs">
           Rp 150.000
         </td>
-        <td class="py-4 px-6 whitespace-nowrap">
+        <td class="py-4 px-3 text-center">
           ${proofThumb}
         </td>
-        <td class="py-4 px-6 whitespace-nowrap">
-          ${statusBadge}
+        <td class="py-4 px-4">
+          <div class="flex flex-col items-start gap-1">
+            ${statusBadge}
+          </div>
         </td>
-        <td class="py-4 px-6 whitespace-nowrap text-xs text-slate-600">
-          <span class="font-medium text-slate-800">${escapeHtml(item.tanggalDaftar || '-')}</span>
+        <td class="py-4 px-3 text-slate-600">
+          <div class="font-medium text-slate-800 text-xs">${escapeHtml(dateVal)}</div>
+          ${timeVal ? `<div class="text-[11px] text-slate-500 font-mono">${escapeHtml(timeVal)}</div>` : ''}
         </td>
-        <td class="py-4 px-6 whitespace-nowrap text-center">
+        <td class="py-4 px-5 text-center whitespace-nowrap">
           <div class="flex items-center justify-center gap-1.5">
             ${!isApproved ? `
-              <button type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-sm flex items-center gap-1" onclick="window.approvePayment('${item.regNumber}')" title="Setujui Pembayaran &amp; Terbitkan Kode Siswa Resmi">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-2xs active:scale-95 cursor-pointer" onclick="window.approvePayment('${item.regNumber}')" title="Setujui Pembayaran &amp; Terbitkan Nomor Registrasi Resmi">
+                <i class="fa-solid fa-check text-xs"></i>
                 <span>Approve</span>
               </button>
             ` : `
-              <span class="text-xs text-emerald-600 font-bold flex items-center gap-1 px-2 py-1 bg-emerald-50 rounded border border-emerald-200">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              <span class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200">
+                <i class="fa-solid fa-circle-check text-xs"></i>
                 ${isPassed ? 'Lulus' : 'Disetujui'}
               </span>
             `}
-            <button type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus Akun Pendaftar">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+            <button type="button" class="spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-rose-600 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus Akun Pendaftar" aria-label="Hapus Akun Pendaftar">
+              <svg class="w-4 h-4 text-rose-600 shrink-0 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
             </button>
           </div>
         </td>
@@ -1397,7 +1409,7 @@
       renderWaliTable();
     });
 
-    waliExport?.addEventListener('click', exportWaliToCsv);
+    waliExport?.addEventListener('click', exportWaliToExcel);
   }
 
   // Export CSV Siswa
@@ -1427,39 +1439,136 @@
     }
   }
 
-  // Export CSV Akun Wali
-  function exportWaliToCsv() {
-    if (spmbList.length === 0) {
-      SiteDialog.alert('Tidak ada data akun orang tua untuk diekspor.');
-      return;
+  // Export Excel Akun Wali
+  async function exportWaliToExcel() {
+    const button = document.getElementById('wali-export-btn');
+    if (button) button.disabled = true;
+    try {
+      if (spmbList.length === 0) {
+        SiteDialog.alert('Tidak ada data akun orang tua untuk diekspor.');
+        return;
+      }
+
+      let downloaded = false;
+      try {
+        const response = await fetch('api/export-wali', { cache: 'no-store' });
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `DATA_AKUN_WALI_SPMB_${new Date().toISOString().slice(0, 10)}.xlsx`;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 10000);
+          showToast('File Excel Akun Orang Tua berhasil diunduh!');
+          downloaded = true;
+        }
+      } catch (e) {
+        console.warn('API export-wali fallback to client-side excel generator', e);
+      }
+
+      if (!downloaded) {
+        downloadClientSideExcelWali(spmbList);
+        showToast('File Excel Akun Orang Tua berhasil diunduh!');
+      }
+    } catch (error) {
+      SiteDialog.alert('Unduhan gagal: ' + (error.message || 'Silakan coba kembali.'));
+    } finally {
+      if (button) button.disabled = false;
     }
+  }
 
-    const headers = [
-      'ID/No. Registrasi', 'Nama Orang Tua / Wali', 'No WhatsApp', 'Nominal Pembayaran', 'Status Pembayaran', 'Ada Bukti Transfer', 'Tanggal Registrasi'
-    ];
+  function downloadClientSideExcelWali(list) {
+    const escapeXml = (unsafe) => String(unsafe || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
 
-    const rows = spmbList.map(s => {
-      const isApproved = isPaymentApproved(s);
-      return [
-        s.regNumber,
-        `"${(s.namaAyah || s.namaSiswa || '').replace(/"/g, '""')}"`,
-        `'${s.waAyah || ''}'`,
-        s.nominalPembayaran || 150000,
-        `"${(s.status || '').replace(/"/g, '""')}"`,
-        s.buktiPembayaran ? 'Ya' : 'Belum',
-        `"${(s.tanggalDaftar || '').replace(/"/g, '""')}"`
-      ];
-    });
+    const rows = list.map((item, index) => {
+      const isApproved = isPaymentApproved(item);
+      const isPassed = isApplicantPassed(item);
+      const hasProof = !!item.buktiPembayaran;
 
-    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
+      let statusText = 'Menunggu Bayar';
+      if (isPassed) statusText = 'Lulus & Lunas';
+      else if (isApproved) statusText = 'Lunas & Disetujui';
+      else if (hasProof) statusText = 'Bukti Diupload (Menunggu Approval)';
+
+      const dateVal = formatDaftarDate(item.tanggalDaftar || item.createdAt) || '-';
+      const timeVal = formatDaftarTime(item.tanggalDaftar || item.createdAt) || '';
+      const waktuDaftar = timeVal ? `${dateVal} ${timeVal}` : dateVal;
+
+      return `
+    <Row>
+      <Cell ss:StyleID="Center"><Data ss:Type="Number">${index + 1}</Data></Cell>
+      <Cell ss:StyleID="Center"><Data ss:Type="String">${escapeXml(item.regNumber || '-')}</Data></Cell>
+      <Cell><Data ss:Type="String">${escapeXml(item.namaAyah || item.namaSiswa || 'Orang Tua / Wali')}</Data></Cell>
+      <Cell><Data ss:Type="String">${escapeXml(item.waAyah || '-')}</Data></Cell>
+      <Cell ss:StyleID="Right"><Data ss:Type="String">Rp 150.000</Data></Cell>
+      <Cell ss:StyleID="Center"><Data ss:Type="String">${escapeXml(statusText)}</Data></Cell>
+      <Cell ss:StyleID="Center"><Data ss:Type="String">${hasProof ? 'Sudah Upload' : 'Belum Upload'}</Data></Cell>
+      <Cell ss:StyleID="Center"><Data ss:Type="String">${escapeXml(waktuDaftar)}</Data></Cell>
+    </Row>`;
+    }).join('');
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <Styles>
+  <Style ss:ID="Header">
+   <Font ss:Bold="1" ss:Color="#FFFFFF"/>
+   <Interior ss:Color="#123B76" ss:Pattern="Solid"/>
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+  </Style>
+  <Style ss:ID="Center">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+  </Style>
+  <Style ss:ID="Right">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Akun Orang Tua &amp; Pembayaran">
+  <Table>
+   <Column ss:Width="40"/>
+   <Column ss:Width="140"/>
+   <Column ss:Width="180"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="100"/>
+   <Column ss:Width="180"/>
+   <Column ss:Width="110"/>
+   <Column ss:Width="140"/>
+   <Row ss:Height="28" ss:StyleID="Header">
+    <Cell><Data ss:Type="String">No.</Data></Cell>
+    <Cell><Data ss:Type="String">ID / No. Registrasi</Data></Cell>
+    <Cell><Data ss:Type="String">Nama Orang Tua / Wali</Data></Cell>
+    <Cell><Data ss:Type="String">Nomor WhatsApp</Data></Cell>
+    <Cell><Data ss:Type="String">Biaya Formulir</Data></Cell>
+    <Cell><Data ss:Type="String">Status Pembayaran</Data></Cell>
+    <Cell><Data ss:Type="String">Bukti Transfer</Data></Cell>
+    <Cell><Data ss:Type="String">Waktu Daftar</Data></Cell>
+   </Row>
+   ${rows}
+  </Table>
+ </Worksheet>
+</Workbook>`;
+
+    const blob = new Blob([xml], { type: 'application/vnd.ms-excel;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `DATA_AKUN_WALI_SPMB_${new Date().toISOString().slice(0,10)}.csv`);
+    link.href = url;
+    link.download = `DATA_AKUN_WALI_SPMB_${new Date().toISOString().slice(0, 10)}.xls`;
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
-    showToast('File CSV Akun Orang Tua berhasil diunduh!');
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
   }
 
   // Modal Detail & Verifikasi Siswa

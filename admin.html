@@ -811,44 +811,59 @@
 
           <!-- VIEW TAB 2: AKUN ORANG TUA / WALI & PEMBAYARAN -->
           <div id="spmb-view-wali" style="display: none;">
+            <!-- Header bar with Title, Count and Action Buttons -->
             <div class="p-6 pb-4 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               <div>
                 <h2 class="text-base font-bold text-slate-900 tracking-tight">Akun Orang Tua / Wali &amp; Bukti Pembayaran Form (Rp 150.000)</h2>
                 <div id="wali-filter-count" class="text-xs text-slate-500 mt-0.5">Memuat data akun orang tua...</div>
               </div>
               <div class="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
-                <select id="wali-filter-status" class="text-xs font-semibold rounded-xl border-slate-200 py-2 px-3 focus:ring-blue-500 focus:border-blue-500 bg-slate-50 flex-1 sm:flex-none min-w-[140px]">
+                <select id="wali-filter-status" class="text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer flex-1 sm:flex-none min-w-[170px]">
                   <option value="all">Semua Status Bayar</option>
                   <option value="pending_proof">Bukti Diupload (Menunggu Approval)</option>
                   <option value="unpaid">Belum Bayar / Belum Upload</option>
                   <option value="approved">Pembayaran Disetujui (Lunas)</option>
                 </select>
-                <input type="search" id="wali-search-input" class="text-xs rounded-xl border-slate-200 py-2 px-3 focus:ring-blue-500 focus:border-blue-500 w-full sm:w-48 lg:w-64" placeholder="Cari nama orang tua, WhatsApp...">
-                <button type="button" id="wali-export-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-blue-700 hover:bg-blue-800 shadow-sm transition duration-150">
-                  <i class="fa-solid fa-file-excel text-emerald-400 text-sm"></i>
-                  <span>Export Akun Wali</span>
+                <div class="relative w-full sm:w-64 lg:w-72">
+                  <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                  </div>
+                  <input type="search" id="wali-search-input" class="w-full text-xs font-normal text-slate-800 placeholder-slate-400 bg-white border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Cari nama orang tua, WhatsApp...">
+                </div>
+                <button type="button" id="wali-export-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-lg text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 hover:border-emerald-400 shadow-2xs transition duration-150 cursor-pointer">
+                  <i class="fa-solid fa-file-excel text-emerald-600 text-sm"></i>
+                  <span>Export Akun Wali (Excel)</span>
                 </button>
               </div>
             </div>
 
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse min-w-[760px]">
-                <thead>
-                  <tr class="border-b border-slate-100 bg-slate-50/75 text-[11px] uppercase tracking-wider font-bold text-slate-500">
-                    <th class="py-3.5 px-6">ID / Kode Registrasi</th>
-                    <th class="py-3.5 px-6">Nama Orang Tua / Wali</th>
-                    <th class="py-3.5 px-6">Nomor WhatsApp</th>
-                    <th class="py-3.5 px-6">Biaya Formulir</th>
-                    <th class="py-3.5 px-6">Bukti Transfer</th>
-                    <th class="py-3.5 px-6">Status Pembayaran</th>
-                    <th class="py-3.5 px-6">Waktu Daftar</th>
-                    <th class="py-3.5 px-6 text-center">Aksi</th>
+            <!-- Table Container -->
+            <div class="border-t border-slate-200 overflow-x-auto w-full">
+              <table class="w-full min-w-[1100px] text-left border-collapse text-xs">
+                <thead class="bg-slate-50/80 text-slate-500 font-bold uppercase tracking-wider text-[11px] border-b border-slate-200">
+                  <tr>
+                    <th class="py-3.5 px-3 w-12 text-center shrink-0 font-bold" scope="col">No.</th>
+                    <th class="py-3.5 px-3 min-w-[145px]" scope="col">ID / Kode Registrasi</th>
+                    <th class="py-3.5 px-4 min-w-[200px]" scope="col">Nama Orang Tua / Wali</th>
+                    <th class="py-3.5 px-3 min-w-[160px]" scope="col">Nomor WhatsApp</th>
+                    <th class="py-3.5 px-3 min-w-[125px]" scope="col">Biaya Formulir</th>
+                    <th class="py-3.5 px-3 text-center min-w-[130px]" scope="col">Bukti Transfer</th>
+                    <th class="py-3.5 px-4 min-w-[180px]" scope="col">Status Pembayaran</th>
+                    <th class="py-3.5 px-3 min-w-[145px]" scope="col">Waktu Daftar</th>
+                    <th class="text-center py-3.5 px-5 min-w-[140px] font-bold text-slate-600 uppercase tracking-wider text-[11px]" scope="col">Aksi</th>
                   </tr>
                 </thead>
-                <tbody id="wali-table-body" class="divide-y divide-slate-100 text-sm">
+                <tbody id="wali-table-body" class="divide-y divide-slate-100 bg-white">
                   <!-- Dynamically populated via js/admin.js -->
                 </tbody>
               </table>
+            </div>
+
+            <!-- Table Footer -->
+            <div id="wali-pagination-container" class="px-6 py-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+              <div class="flex items-center space-x-2">
+                <span class="font-medium">Total: <strong id="wali-total-count" class="text-slate-900 font-bold">0</strong> akun orang tua / wali terdaftar</span>
+              </div>
             </div>
           </div>
           <!-- END: VIEW TAB 2 -->
