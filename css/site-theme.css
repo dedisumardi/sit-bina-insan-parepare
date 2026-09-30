@@ -59,6 +59,7 @@ body :is(button, a[class*="btn"], a[class*="rounded"], .floating-whatsapp, [role
 body .button-text-only { width:auto !important; min-width:44px; height:auto !important; min-height:32px; padding:6px 10px !important; border-radius:8px; }
 body .button-text-fallback { font-family:inherit; font-size:12px; font-weight:600; line-height:1.4; white-space:normal; }
 body #mobile-toggle-btn svg { display:block !important; }
+body #portal-step-back i, body #portal-step-next i { display:inline-block !important; font-size:0.9em; }
 body .footer-social-links a.footer-social-btn svg { display:block !important; width:20px; height:20px; fill:currentColor; }
 body a.footer-social-btn { width:42px; height:42px; border-radius:12px; }
 body .mobile-toggle-btn { color:#1d4ed8; padding:8px; border:1px solid #dbeafe; border-radius:10px; background:#eff6ff; }

@@ -82,5 +82,5 @@ test('shared button decoration uses text instead of injecting icons', () => {
   assert.match(source, /button-text-fallback/);
   assert.match(source, /characterData: true/);
   assert.match(source, /control\.closest\('\.building-controls'\)/);
-  assert.match(source, /control\.matches\('\.mobile-toggle-btn, \.footer-social-btn'\)/);
+  assert.match(source, /control\.matches\('\.mobile-toggle-btn, \.footer-social-btn, #portal-step-back, #portal-step-next'\)/);
 });
