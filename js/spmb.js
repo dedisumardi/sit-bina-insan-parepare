@@ -1255,7 +1255,7 @@
     const status = document.getElementById('portal-bio-status');
     const submit = document.getElementById('portal-bio-submit');
     if (status) {
-      status.textContent = complete ? '✓ Biodata siswa sudah tersimpan di database.' : 'Pastikan seluruh data wajib sudah benar.';
+      status.textContent = complete ? 'Biodata siswa sudah tersimpan di database.' : 'Pastikan seluruh data wajib sudah benar.';
       status.className = `portal-bio-status${complete ? ' is-success' : ''}`;
     }
     if (submit) submit.innerHTML = 'Isi Data Selanjutnya <span aria-hidden="true">→</span>';
@@ -1377,7 +1377,7 @@
       if (form) form.dataset.dirty = '0';
       populateStudentBioForm(result.data);
       if (status) {
-        status.textContent = '✓ Biodata siswa berhasil disimpan ke database.';
+        status.textContent = 'Biodata siswa sudah tersimpan di database.';
         status.className = 'portal-bio-status is-success';
       }
       renderParentPortal();

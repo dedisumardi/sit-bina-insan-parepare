@@ -206,4 +206,16 @@ test('parents form submission blocks incomplete data and navigates to next stage
     assert.equal(ctx.isFetchCalled(), true);
     assert.equal(ctx.getScheduleStageOpened(), 'SPMB-2026-001');
   }
+
+  // Case 5: Verify layout alignment and checkmark removal from student status label
+  {
+    const html = fs.readFileSync('index.html', 'utf8');
+    assert.ok(!html.includes('Kembali ke Data Siswa'), 'Kembali ke Data Siswa button should be removed');
+    const studentBioSection = html.slice(html.indexOf('id="portal-section-student-bio"'), html.indexOf('id="portal-state-parents"'));
+    assert.ok(studentBioSection.includes('justify-content: space-between;'), 'Student bio actions should be aligned with justify-content: space-between');
+
+    const spmbJs = fs.readFileSync('js/spmb.js', 'utf8');
+    assert.ok(!spmbJs.includes('✓ Biodata siswa'), 'Student bio status should not include checkmark');
+    assert.ok(spmbJs.includes("'Biodata siswa sudah tersimpan di database.'"));
+  }
 });
