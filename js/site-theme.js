@@ -35,7 +35,7 @@
       [/tolak|reject/, 'circle-xmark'],
       [/tambah|buat baru|add-article/, 'plus'],
       [/(?:lihat|buka)\s+(?:web|website|situs)/, 'arrow-up-right-from-square'],
-      [/lihat|detail|profil/, 'eye'],
+      [/lihat|detail|profil/, 'arrow-right'],
       [/daftar|isi.*form|biodata/, 'user-plus'],
       [/cari|search/, 'magnifying-glass'],
       [/bold|tebal/, 'bold'], [/italic|miring/, 'italic'], [/underline|garis bawah/, 'underline'],
@@ -46,7 +46,7 @@
       [/pengaturan|settings/, 'gear'], [/dashboard/, 'chart-pie'],
       [/orang tua|wali/, 'users'], [/siswa|siswa$/, 'graduation-cap'],
       [/berita|artikel/, 'newspaper'], [/faq|pertanyaan/, 'circle-question'],
-      [/aktifkan|activate|gelombang/, 'power-off'], [/lihat|detail|profil|buka/, 'eye']
+      [/aktifkan|activate|gelombang/, 'power-off'], [/lihat|detail|profil|buka/, 'arrow-right']
     ];
     for (const [pattern, icon] of rules) if (pattern.test(text)) return 'fa-solid fa-' + icon;
     const existing = original && Array.from(original.classList).find(name => /^fa-/.test(name) && !/^(fa-solid|fa-regular|fa-brands|fa-fw|fa-spin|fa-pulse|fa-[0-9]+x|fa-xs|fa-sm|fa-lg|fa-xl|fa-2xl)$/.test(name));
