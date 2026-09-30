@@ -7,6 +7,7 @@
     controls.forEach(control => {
       // Slider dots retain their compact visual navigation and accessible labels.
       if (control.closest('.building-controls') || control.matches('.mobile-toggle-btn, .footer-social-btn, #portal-step-back, #portal-step-next')) return;
+      if (document.body.classList.contains('theme-admin') || control.closest('#admin-sidebar, #spmb-table-body, #wali-table-body, #dashboard-recent-table, table') || control.matches('.spmb-action-btn, [data-action-btn]')) return;
       // Preserve nodes and listeners used by controls that update their icons later.
       control.querySelectorAll(icons).forEach(icon => {
         icon.classList.add('button-icon-hidden');

@@ -74,6 +74,42 @@ body :is(.btn,.theme-action) > :is(svg,i) { flex-shrink:0; }
 .theme-admin :is([class~="bg-white"][class*="rounded"]) { border-color:#e2e8f0; }
 .theme-admin #admin-sidebar { background:#081736; }
 .theme-admin button.theme-action:not(.theme-primary) { border-radius:10px !important; }
+
+/* SPMB Admin Action Buttons: Pure Icon Only (Never hide SVG/icons, never show fallback text) */
+.theme-admin button svg,
+.theme-admin button i,
+.spmb-action-btn svg,
+.spmb-action-btn i,
+#spmb-table-body svg,
+#spmb-table-body i,
+#dashboard-recent-table svg,
+#dashboard-recent-table i,
+#wali-table-body svg,
+#wali-table-body i {
+  display: inline-block !important;
+}
+
+.theme-admin .spmb-action-btn .button-text-fallback,
+.theme-admin #spmb-table-body .button-text-fallback,
+.theme-admin #dashboard-recent-table .button-text-fallback,
+.theme-admin #wali-table-body .button-text-fallback,
+.spmb-action-btn .button-text-fallback,
+.spmb-action-btn.button-text-only .button-text-fallback {
+  display: none !important;
+}
+
+.spmb-action-btn.button-text-only {
+  width: 2rem !important;
+  min-width: 2rem !important;
+  max-width: 2rem !important;
+  height: 2rem !important;
+  min-height: 2rem !important;
+  max-height: 2rem !important;
+  padding: 0 !important;
+  border-radius: 0.5rem !important;
+}
+
 @media(max-width:640px) { body .btn { white-space:normal; } .hero-heading { font-size:2.25rem; } }
 @media(prefers-reduced-motion:reduce) { body :is(.btn,.theme-action) { transition:none; } }
 @media print { .theme-action-icon { display:none; } }
+

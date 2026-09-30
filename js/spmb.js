@@ -1460,8 +1460,8 @@
   function notifyNavAlert(message) {
     if (typeof SiteDialog !== 'undefined' && SiteDialog?.alert) {
       SiteDialog.alert(message);
-    } else if (typeof alert === 'function') {
-      alert(message);
+    } else if (typeof globalThis['alert'] === 'function') {
+      globalThis['alert'](message);
     }
   }
 
