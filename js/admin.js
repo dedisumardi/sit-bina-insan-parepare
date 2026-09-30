@@ -51,15 +51,15 @@
 
   // Solid SVG Icon Templates (Professional UI)
   const ICONS = {
-    eye: `<svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" /><path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.257 0-7.893-2.66-9.336-6.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" clip-rule="evenodd" /></svg>`,
-    pencil: `<svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z" /><path d="M3.5 5.75c0-.414.336-.75.75-.75H10a.75.75 0 0 1 0 1.5H4.25a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V11a.75.75 0 0 1 1.5 0v3.25a1.75 1.75 0 0 1-1.75 1.75H4.25A1.75 1.75 0 0 1 2.5 14.25V5.75Z" /></svg>`,
-    printer: `<svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 2.75C5 1.784 5.784 1 6.75 1h6.5c.966 0 1.75.784 1.75 1.75v3.5A1.75 1.75 0 0 1 13.25 8H6.75A1.75 1.75 0 0 1 5 6.25v-3.5Zm1.5 0v3.5c0 .138.112.25.25.25h6.5a.25.25 0 0 0 .25-.25v-3.5a.25.25 0 0 0-.25-.25h-6.5a.25.25 0 0 0-.25.25Z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M2.5 7A2.5 2.5 0 0 0 0 9.5v5A2.5 2.5 0 0 0 2.5 17h1.75v-3.25a.75.75 0 0 1 .75-.75h10a.75.75 0 0 1 .75.75V17h1.75a2.5 2.5 0 0 0 2.5-2.5v-5A2.5 2.5 0 0 0 17.5 7H2.5ZM5.75 14.5v3.75c0 .414.336.75.75.75h7a.75.75 0 0 0 .75-.75V14.5H5.75ZM15.5 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/></svg>`,
-    trash: `<svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clip-rule="evenodd" /></svg>`,
-    whatsapp: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.573 1.761.854 2.806.854 3.18 0 5.767-2.587 5.768-5.766.001-3.182-2.585-5.769-5.768-5.769zm10.024 5.828c0 5.549-4.512 10.063-10.063 10.063-1.745 0-3.385-.45-4.821-1.242l-5.171 1.357 1.381-5.042c-.878-1.488-1.389-3.23-1.389-5.136 0-5.551 4.514-10.063 10.063-10.063 5.551 0 10.063 4.512 10.063 10.063zm-5.077 3.563c-.22-.11-1.3-.641-1.501-.715-.201-.073-.347-.11-.494.11-.146.22-.567.715-.695.861-.128.147-.256.165-.476.055-.22-.11-.931-.343-1.774-1.094-.656-.585-1.099-1.308-1.227-1.528-.128-.22-.014-.339.096-.449.099-.098.22-.256.33-.385.11-.128.146-.22.22-.366.073-.147.037-.275-.018-.385-.055-.11-.494-1.191-.677-1.631-.178-.429-.359-.371-.494-.378l-.421-.007c-.146 0-.384.055-.585.275-.202.22-.769.751-.769 1.831s.787 2.124.897 2.271c.11.147 1.549 2.366 3.753 3.318.524.227.933.362 1.252.464.526.167 1.005.144 1.383.087.422-.063 1.3-.532 1.483-1.044.183-.513.183-.952.128-1.044-.055-.092-.201-.147-.421-.257z"/></svg>`,
-    checkCircle: `<svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg>`,
-    clock: `<svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clip-rule="evenodd"/></svg>`,
-    hourglass: `<svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/></svg>`,
-    xCircle: `<svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd"/></svg>`
+    eye: `<i class="fa-solid fa-eye " style="font-size: 15px; text-align: center;" aria-hidden="true"></i>`,
+    pencil: `<i class="fa-solid fa-pen-to-square " style="font-size: 15px; text-align: center;" aria-hidden="true"></i>`,
+    printer: `<i class="fa-solid fa-print " style="font-size: 15px; text-align: center;" aria-hidden="true"></i>`,
+    trash: `<i class="fa-solid fa-trash-can " style="font-size: 15px; text-align: center;" aria-hidden="true"></i>`,
+    whatsapp: `<i class="fa-brands fa-whatsapp " style="font-size: 14px; text-align: center;" aria-hidden="true"></i>`,
+    checkCircle: `<i class="fa-solid fa-circle-check " style="font-size: 13px; text-align: center;" aria-hidden="true"></i>`,
+    clock: `<i class="fa-solid fa-clock " style="font-size: 13px; text-align: center;" aria-hidden="true"></i>`,
+    hourglass: `<i class="fa-solid fa-hourglass-half " style="font-size: 13px; text-align: center;" aria-hidden="true"></i>`,
+    xCircle: `<i class="fa-solid fa-circle-xmark " style="font-size: 13px; text-align: center;" aria-hidden="true"></i>`
   };
 
   // DOM Elements
@@ -460,10 +460,10 @@
         <td class="py-4 px-6 whitespace-nowrap text-center">
           <div class="inline-flex items-center justify-center gap-1.5 flex-nowrap">
             <button type="button" class="spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-emerald-700 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Detail Siswa" aria-label="Detail Siswa">
-              <svg class="w-4 h-4 text-emerald-600 shrink-0 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <i class="fa-solid fa-eye w-4 h-4 text-emerald-600 shrink-0 pointer-events-none" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
             </button>
             <button type="button" class="spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-amber-600 bg-white hover:bg-amber-50 border border-slate-200 hover:border-amber-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.editApplicant('${item.regNumber}')" title="Edit Data Siswa &amp; Orang Tua" aria-label="Edit Data Siswa &amp; Orang Tua">
-              <svg class="w-4 h-4 text-amber-600 shrink-0 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
+              <i class="fa-solid fa-pen-to-square w-4 h-4 text-amber-600 shrink-0 pointer-events-none" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
             </button>
           </div>
         </td>
@@ -815,7 +815,7 @@
     if (isCompleted) {
       return `
         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-          <i class="fa-regular fa-circle-check text-emerald-600"></i>
+          <i class="fa-solid fa-circle-check text-emerald-600"></i>
           <span>Lulus &amp; Pendaftaran Selesai</span>
         </span>
         <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -836,13 +836,13 @@
         `
         : `
         <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-sky-50 text-sky-800 border border-sky-200">
-          <i class="fa-regular fa-calendar-check text-sky-600"></i>
+          <i class="fa-solid fa-calendar-check text-sky-600"></i>
           <span>Jadwal Ditetapkan</span>
         </span>
         `;
       return `
         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-800 border border-blue-200/80">
-          <i class="fa-regular fa-circle-check text-blue-600"></i>
+          <i class="fa-solid fa-circle-check text-blue-600"></i>
           <span>Lulus Seleksi Observasi &amp; Diterima</span>
         </span>
         ${subBadge}
@@ -853,7 +853,7 @@
     if (isApproved) {
       return `
         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-          <i class="fa-regular fa-circle-check text-emerald-600"></i>
+          <i class="fa-solid fa-circle-check text-emerald-600"></i>
           <span>Berkas Lengkap &amp; Terverifikasi</span>
         </span>
         <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-purple-50 text-purple-800 border border-purple-200">
@@ -885,7 +885,7 @@
       }
       return `
         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-sky-50 text-sky-800 border border-sky-200">
-          <i class="fa-regular fa-calendar-days text-sky-600"></i>
+          <i class="fa-solid fa-calendar-days text-sky-600"></i>
           <span>${escapeHtml(schedLabel)}</span>
         </span>
         <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -899,7 +899,7 @@
     if (s.includes('tidak') || s.includes('tolak') || s.includes('belum')) {
       return `
         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">
-          <i class="fa-regular fa-circle-xmark text-rose-500"></i>
+          <i class="fa-solid fa-circle-xmark text-rose-500"></i>
           <span>Belum Lulus</span>
         </span>
         <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
@@ -912,7 +912,7 @@
     // Fallback default
     return `
       ${renderStatusBadge(item.status)}
-      ${hasSched ? `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-sky-50 text-sky-800 border border-sky-200"><i class="fa-regular fa-calendar-check text-sky-600"></i><span>Jadwal Ditetapkan</span></span>` : ''}
+      ${hasSched ? `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-sky-50 text-sky-800 border border-sky-200"><i class="fa-solid fa-calendar-check text-sky-600"></i><span>Jadwal Ditetapkan</span></span>` : ''}
     `;
   }
 
@@ -991,16 +991,16 @@
       <div class="inline-flex items-center justify-center gap-1.5 flex-nowrap">
         ${primaryBtn}
         <button type="button" class="spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-blue-600 bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.viewApplicantDetail('${item.regNumber}')" title="Lihat Detail" aria-label="Lihat Detail">
-          <svg class="w-4 h-4 text-blue-600 shrink-0 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <i class="fa-solid fa-eye w-4 h-4 text-blue-600 shrink-0 pointer-events-none" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
         </button>
         <button type="button" class="spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-amber-600 bg-white hover:bg-amber-50 border border-slate-200 hover:border-amber-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.editApplicant('${item.regNumber}')" title="Edit Data Siswa &amp; Orang Tua" aria-label="Edit Data Siswa &amp; Orang Tua">
-          <svg class="w-4 h-4 text-amber-600 shrink-0 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
+          <i class="fa-solid fa-pen-to-square w-4 h-4 text-amber-600 shrink-0 pointer-events-none" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
         </button>
         <button type="button" class="spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-indigo-600 bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.printApplicantCard('${item.regNumber}')" title="Cetak Kartu Tanda Peserta" aria-label="Cetak Kartu Tanda Peserta">
-          <svg class="w-4 h-4 text-indigo-600 shrink-0 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z"/></svg>
+          <i class="fa-solid fa-print w-4 h-4 text-indigo-600 shrink-0 pointer-events-none" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
         </button>
         <button type="button" class="spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-rose-600 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus" aria-label="Hapus">
-          <svg class="w-4 h-4 text-rose-600 shrink-0 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+          <i class="fa-solid fa-trash-can w-4 h-4 text-rose-600 shrink-0 pointer-events-none" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
         </button>
       </div>
     `;
@@ -1084,7 +1084,7 @@
         <td class="py-4 px-4">
           <div class="font-bold text-slate-900 text-sm">${escapeHtml(item.namaSiswa || '-')}</div>
           <div class="text-[11px] text-slate-500 font-mono mt-0.5 flex items-center gap-1">
-            <i class="fa-regular fa-id-card text-slate-400"></i>
+            <i class="fa-solid fa-id-card text-slate-400"></i>
             <span>NIK: ${escapeHtml(item.nik || '-')}</span>
           </div>
         </td>
@@ -1265,7 +1265,7 @@
               </span>
             `}
             <button type="button" class="spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-rose-600 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.deleteApplicant('${item.regNumber}')" title="Hapus Akun Pendaftar" aria-label="Hapus Akun Pendaftar">
-              <svg class="w-4 h-4 text-rose-600 shrink-0 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+              <i class="fa-solid fa-trash-can w-4 h-4 text-rose-600 shrink-0 pointer-events-none" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
             </button>
           </div>
         </td>
@@ -1928,7 +1928,7 @@
 
     if (bioStatusBadge) {
       if (hasData) {
-        bioStatusBadge.textContent = '✓ Data Siswa & Ortu Lengkap';
+        bioStatusBadge.innerHTML = '<i class="fa-solid fa-circle-check" aria-hidden="true"></i> Data Siswa & Ortu Lengkap';
         bioStatusBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
       } else if (item.biodataUpdatedAt) {
         bioStatusBadge.textContent = 'Data Siswa Saja (Ortu Belum)';
@@ -1954,7 +1954,7 @@
         reregBox.style.display = 'block';
         if (item.berkasKk && item.berkasAkta) {
           if (reregStatus) {
-            reregStatus.textContent = '✓ Berkas Lengkap';
+            reregStatus.innerHTML = '<i class="fa-solid fa-circle-check" aria-hidden="true"></i> Berkas Lengkap';
             reregStatus.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
           }
         } else if (hasReregDocs) {
@@ -2664,10 +2664,10 @@
         <td class="py-4 px-6 whitespace-nowrap text-center">
           <div class="flex items-center justify-center gap-1.5">
             <button type="button" class="spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-amber-600 bg-white hover:bg-amber-50 border border-slate-200 hover:border-amber-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.editArticle(${item.id})" title="Sunting Berita" aria-label="Sunting Berita" data-action-btn="true">
-              <svg class="w-4 h-4 text-amber-600 shrink-0 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+              <i class="fa-solid fa-pen-to-square w-4 h-4 text-amber-600 shrink-0 pointer-events-none" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
             </button>
             <button type="button" class="spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-rose-600 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-200 shadow-2xs hover:shadow-xs transition-all duration-150 active:scale-95 cursor-pointer" onclick="window.deleteArticle(${item.id})" title="Hapus Berita" aria-label="Hapus Berita" data-action-btn="true">
-              <svg class="w-4 h-4 text-rose-600 shrink-0 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+              <i class="fa-solid fa-trash-can w-4 h-4 text-rose-600 shrink-0 pointer-events-none" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
             </button>
           </div>
         </td>
@@ -3492,16 +3492,16 @@
   function renderStatusBadge(status) {
     const s = (status || '').toLowerCase();
     if (s.includes('lulus') || s.includes('diterima')) {
-      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-800 border border-blue-200/80"><i class="fa-regular fa-circle-check text-blue-600"></i><span>${escapeHtml(status)}</span></span>`;
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-800 border border-blue-200/80"><i class="fa-solid fa-circle-check text-blue-600"></i><span>${escapeHtml(status)}</span></span>`;
     }
     if (s.includes('terverifikasi') || s.includes('lengkap')) {
-      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200"><i class="fa-regular fa-circle-check text-emerald-600"></i><span>${escapeHtml(status)}</span></span>`;
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200"><i class="fa-solid fa-circle-check text-emerald-600"></i><span>${escapeHtml(status)}</span></span>`;
     }
     if (s.includes('menunggu') || s.includes('pembayaran') || s.includes('jadwal')) {
       return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200"><i class="fa-solid fa-hourglass-half text-amber-600"></i><span>${escapeHtml(status)}</span></span>`;
     }
     if (s.includes('tidak') || s.includes('tolak') || s.includes('belum')) {
-      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200"><i class="fa-regular fa-circle-xmark text-rose-500"></i><span>${escapeHtml(status)}</span></span>`;
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200"><i class="fa-solid fa-circle-xmark text-rose-500"></i><span>${escapeHtml(status)}</span></span>`;
     }
     return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200"><span>${escapeHtml(status)}</span></span>`;
   }

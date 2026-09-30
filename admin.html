@@ -16,11 +16,8 @@
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   
-  <!-- Font Awesome & Phosphor Icons -->
+  <!-- Flat solid interface icons (Font Awesome) -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
 
   <!-- Tailwind CSS v3 with Plugins -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -244,7 +241,7 @@
 
       <div class="mt-6 p-3.5 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-500 text-center">
         <div class="font-bold text-slate-700 mb-1 flex items-center justify-center gap-1.5">
-          <svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" /></svg>
+          <i class="fa-solid fa-key w-3.5 h-3.5 text-amber-500" style="font-size: 0.875rem; text-align: center;" aria-hidden="true"></i>
           Akses Administrator
         </div>
         Gunakan akun yang diberikan pengelola sekolah. Data dikelola melalui koneksi database yang terlindungi sesi admin.
@@ -277,9 +274,7 @@
         </div>
         <!-- Mobile/Tablet Close Button -->
         <button type="button" id="btn-close-sidebar" class="lg:hidden p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none" aria-label="Tutup Menu Sidebar" title="Tutup Menu">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <i class="fa-solid fa-xmark w-5 h-5" style="font-size: 1.25rem; text-align: center;" aria-hidden="true"></i>
         </button>
       </div>
 
@@ -357,9 +352,7 @@
       <div class="flex items-center gap-2.5 sm:gap-4 min-w-0">
         <!-- Hamburger Menu Button (Drawer on Mobile/Tablet & Collapse on Desktop) -->
         <button type="button" id="btn-toggle-sidebar" class="inline-flex items-center justify-center w-10 h-10 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/90 transition duration-150 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-emerald-500" aria-label="Toggle Menu Sidebar" title="Buka / Sembunyikan Menu Sidebar">
-          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>
+          <i class="fa-solid fa-bars w-5 h-5 sm:w-6 sm:h-6" style="font-size: 1.25rem; text-align: center;" aria-hidden="true"></i>
         </button>
 
         <!-- Page Title & Subtitle -->
@@ -379,9 +372,7 @@
       <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
         <!-- Quick View Site Button -->
         <a class="hidden sm:inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 rounded-lg transition duration-150" href="/" target="_blank">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
+          <i class="fa-solid fa-arrow-up-right-from-square w-4 h-4" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
           <span class="hidden md:inline">Lihat Website</span>
         </a>
         <div class="hidden sm:block h-6 sm:h-8 w-px bg-slate-200"></div>
@@ -414,18 +405,14 @@
             <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all duration-200 flex items-start justify-between relative overflow-hidden group">
               <div class="space-y-3">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center ring-1 ring-emerald-500/20 group-hover:scale-105 transition-transform duration-200">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
+                  <i class="fa-solid fa-user w-6 h-6" style="font-size: 1.5rem; text-align: center;" aria-hidden="true"></i>
                 </div>
                 <div>
                   <div class="text-3xl font-extrabold text-slate-900 tracking-tight leading-none" id="stat-total-spmb">2</div>
                   <p class="text-xs font-semibold text-slate-500 mt-1">Total Pendaftar SPMB</p>
                 </div>
                 <div class="flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 bg-emerald-50/80 px-2.5 py-0.5 rounded-md inline-flex border border-emerald-100">
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
+                  <i class="fa-solid fa-arrow-up w-3 h-3" style="font-size: 0.75rem; text-align: center;" aria-hidden="true"></i>
                   <span>Pendaftar Masuk Online</span>
                 </div>
               </div>
@@ -436,9 +423,7 @@
             <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all duration-200 flex items-start justify-between relative overflow-hidden group">
               <div class="space-y-3">
                 <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center ring-1 ring-purple-500/20 group-hover:scale-105 transition-transform duration-200">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
+                  <i class="fa-solid fa-file-lines w-6 h-6" style="font-size: 1.5rem; text-align: center;" aria-hidden="true"></i>
                 </div>
                 <div>
                   <div class="text-3xl font-extrabold text-slate-900 tracking-tight leading-none" id="stat-articles">5</div>
@@ -459,9 +444,7 @@
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center ring-1 ring-amber-500/20 group-hover:scale-105 transition-transform duration-200">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
+                    <i class="fa-solid fa-globe w-5 h-5" style="font-size: 1.25rem; text-align: center;" aria-hidden="true"></i>
                   </div>
                   <div>
                     <span class="text-xs font-bold text-slate-900 tracking-tight block">TKIT Bina Insan</span>
@@ -485,9 +468,7 @@
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center ring-1 ring-emerald-500/20 group-hover:scale-105 transition-transform duration-200">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
+                    <i class="fa-solid fa-graduation-cap w-5 h-5" style="font-size: 1.25rem; text-align: center;" aria-hidden="true"></i>
                   </div>
                   <div>
                     <span class="text-xs font-bold text-slate-900 tracking-tight block">SDIT Bina Insan</span>
@@ -511,9 +492,7 @@
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center ring-1 ring-sky-500/20 group-hover:scale-105 transition-transform duration-200">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
+                    <i class="fa-solid fa-book-open w-5 h-5" style="font-size: 1.25rem; text-align: center;" aria-hidden="true"></i>
                   </div>
                   <div>
                     <span class="text-xs font-bold text-slate-900 tracking-tight block">SMPIT Bina Insan</span>
@@ -561,9 +540,7 @@
             <div class="flex items-center gap-3">
               <button type="button" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3.5 py-2 rounded-lg transition duration-150" onclick="document.querySelector('.sidebar-item-btn[data-panel=\'spmb\']').click()">
                 <span>Lihat Semua Pendaftar</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                  <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
+                <i class="fa-solid fa-arrow-right w-4 h-4" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
               </button>
             </div>
           </div>
@@ -913,7 +890,7 @@
               <p class="text-xs text-slate-500 mt-0.5">Artikel yang disimpan di sini langsung tampil di halaman berita website utama.</p>
             </div>
             <button type="button" id="btn-add-article" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition duration-150">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+              <i class="fa-solid fa-plus w-4 h-4" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
               <span>Tulis Berita Baru</span>
             </button>
           </div>
@@ -1024,7 +1001,7 @@
                     </div>
                     <div class="pt-2 border-t border-slate-100">
                       <button type="button" id="btn-toggle-wave-1" onclick="window.activateWaveQuick('wave1')" class="w-full py-2 px-3 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-sm flex items-center justify-center gap-1.5 transition">
-                        ✓ Sedang Aktif (Buka)
+                        <i class="fa-solid fa-circle-check" aria-hidden="true"></i> Sedang Aktif (Buka)
                       </button>
                     </div>
                   </div>
@@ -1239,7 +1216,7 @@
           <p class="text-xs text-slate-500">No. Registrasi: <strong class="text-emerald-700 font-mono" id="modal-app-reg"></strong></p>
         </div>
         <button type="button" class="adm-modal-close text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          <i class="fa-solid fa-xmark w-5 h-5" style="font-size: 1.25rem; text-align: center;" aria-hidden="true"></i>
         </button>
       </div>
 
@@ -1339,7 +1316,7 @@
           <div id="modal-app-approve-direct-box" style="display:none;" class="mt-2 pt-2 border-t border-amber-200/80 flex items-center justify-between">
             <span class="text-xs text-amber-900 font-medium">Verifikasi pembayaran pendaftaran siswa ini:</span>
             <button type="button" id="modal-app-approve-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition">
-              ✓ Setujui (Approve) Pembayaran
+              <i class="fa-solid fa-circle-check" aria-hidden="true"></i> Setujui (Approve) Pembayaran
             </button>
           </div>
         </div>
@@ -1392,12 +1369,12 @@
       <!-- Modal Footer -->
       <div class="px-4 sm:px-6 py-3 sm:py-3.5 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3">
         <a id="modal-app-wa-btn" href="#" target="_blank" rel="noopener" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.573 1.761.854 2.806.854 3.18 0 5.767-2.587 5.768-5.766.001-3.182-2.585-5.769-5.768-5.769zm10.024 5.828c0 5.549-4.512 10.063-10.063 10.063-1.745 0-3.385-.45-4.821-1.242l-5.171 1.357 1.381-5.042c-.878-1.488-1.389-3.23-1.389-5.136 0-5.551 4.514-10.063 10.063-10.063 5.551 0 10.063 4.512 10.063 10.063z"/></svg>
+          <i class="fa-brands fa-whatsapp w-4 h-4" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
           <span>Chat WhatsApp Wali</span>
         </a>
         <div class="w-full sm:w-auto flex items-center justify-end gap-2 flex-wrap">
           <button type="button" id="modal-app-edit-btn" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 border border-amber-300 transition text-center cursor-pointer" onclick="window.editApplicant(document.getElementById('modal-app-reg').textContent)">
-            <i class="ph ph-pencil-simple text-sm"></i>
+            <i class="fa-solid fa-pen-to-square text-sm"></i>
             <span>Edit Data Siswa &amp; Orang Tua</span>
           </button>
           <button type="button" class="adm-modal-close flex-1 sm:flex-none px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 transition text-center">Tutup</button>
@@ -1415,7 +1392,7 @@
       <div class="px-5 sm:px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold shrink-0">
-            <i class="fa-regular fa-newspaper text-sm"></i>
+            <i class="fa-solid fa-newspaper text-sm"></i>
           </div>
           <div>
             <h3 class="text-base font-bold text-slate-900" id="editor-modal-title">Tulis Berita / Artikel Baru</h3>
@@ -1423,7 +1400,7 @@
           </div>
         </div>
         <button type="button" class="adm-modal-close text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200/70 transition" title="Tutup">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          <i class="fa-solid fa-xmark w-5 h-5" style="font-size: 1.25rem; text-align: center;" aria-hidden="true"></i>
         </button>
       </div>
 
@@ -1605,7 +1582,7 @@
             <textarea id="article-content" class="hidden"></textarea>
 
             <p class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1.5">
-              <i class="fa-regular fa-lightbulb text-amber-500 text-xs"></i>
+              <i class="fa-solid fa-lightbulb text-amber-500 text-xs"></i>
               <span>Ketik langsung isi artikel seperti di Word. Klik <strong>1. 2. 3.</strong> untuk penomoran otomatis, atau gunakan <em>Ctrl+I</em> untuk tulisan miring tanpa perlu tag HTML.</span>
             </p>
           </div>
@@ -1635,7 +1612,7 @@
           <p class="text-xs text-slate-500">Biaya Pendaftaran: <strong class="text-emerald-700 font-bold">Rp 150.000</strong></p>
         </div>
         <button type="button" class="adm-modal-close text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition" onclick="document.getElementById('modal-payment-proof').classList.remove('open')">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          <i class="fa-solid fa-xmark w-5 h-5" style="font-size: 1.25rem; text-align: center;" aria-hidden="true"></i>
         </button>
       </div>
 
@@ -1659,7 +1636,7 @@
           Tutup
         </button>
         <button type="button" id="proof-modal-approve-btn" class="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-900/10 transition flex items-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          <i class="fa-solid fa-check w-4 h-4" style="font-size: 1rem; text-align: center;" aria-hidden="true"></i>
           <span>Setujui (Approve) Pembayaran</span>
         </button>
       </div>
@@ -1675,7 +1652,7 @@
       <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-base shadow-2xs">
-            <i class="ph ph-pencil-simple text-lg"></i>
+            <i class="fa-solid fa-pen-to-square text-lg"></i>
           </div>
           <div>
             <h3 class="text-base font-bold text-slate-900">Edit Data Calon Siswa &amp; Orang Tua</h3>
@@ -1683,7 +1660,7 @@
           </div>
         </div>
         <button type="button" class="adm-modal-close text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition" onclick="document.getElementById('modal-edit-applicant').classList.remove('open')">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          <i class="fa-solid fa-xmark w-5 h-5" style="font-size: 1.25rem; text-align: center;" aria-hidden="true"></i>
         </button>
       </div>
 
@@ -2167,6 +2144,6 @@
   <script src="js/parent-fields.js?v=20260924_schooladdress1"></script>
   <script src="js/student-export.js?v=20260928_biodataonly"></script>
   <script src="js/registration-chart.js?v=20260928_separate1"></script>
-  <script src="js/admin.js?v=20260929_dialog2"></script>
+  <script src="js/admin.js?v=20260930_flatsolid1"></script>
 </body>
 </html>
