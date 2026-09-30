@@ -28,9 +28,9 @@ test('results only announce explicit final admin decisions', () => {
   assert.equal(refreshes, 1);
   const html = fs.readFileSync('index.html', 'utf8');
   const nav = html.slice(html.indexOf('id="portal-state-schedule"'), html.indexOf('<!-- Dynamic Status Tag -->'));
-  assert.equal((nav.match(/<button /g) || []).length, 2);
-  assert.ok(nav.includes('window.openParentBiodata()'));
-  assert.ok(nav.includes('window.openResultsStage()'));
+  assert.equal((nav.match(/<button /g) || []).length, 0);
+  assert.ok(!nav.includes('window.openParentBiodata()'));
+  assert.ok(!nav.includes('window.openResultsStage()'));
   assert.ok(html.includes('id="portal-state-results"'));
 });
 

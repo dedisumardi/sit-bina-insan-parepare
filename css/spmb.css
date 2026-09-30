@@ -1021,7 +1021,6 @@
 }
 
 #portal-state-parents > .portal-bio-back,
-#portal-state-schedule > .portal-nav-bar,
 #portal-state-results > .portal-nav-bar,
 #portal-state-approved .portal-next-bio-btn { display: inline-flex; }
 @media print { .portal-step-navigation { display: none !important; } }

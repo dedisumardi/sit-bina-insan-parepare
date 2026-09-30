@@ -1903,7 +1903,7 @@
           if (titleEl) titleEl.textContent = 'Jadwal Tes Calon Murid Baru & Wawancara Ditetapkan';
           if (subtitleEl) subtitleEl.textContent = `Alhamdulillah, Panitia SPMB SIT Bina Insan Parepare telah menetapkan jadwal seleksi calon murid baru dan wawancara orang tua untuk ananda ${record.namaSiswa || ''}.`;
           if (statusPill) {
-            statusPill.textContent = '✓ Jadwal Ditetapkan';
+            statusPill.innerHTML = '<i class="fa-solid fa-circle-check" aria-hidden="true" style="margin-right:0.25rem;"></i> Jadwal Ditetapkan';
             statusPill.style.color = 'var(--primary-700)';
           }
           if (waitingView) waitingView.style.display = 'none';
