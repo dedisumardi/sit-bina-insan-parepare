@@ -1046,11 +1046,8 @@
       records = [];
     }
 
-    // Look for matching record by WhatsApp
-    let existing = records.find(r => {
-      const rw = (r.waAyah || '').replace(/[^0-9]/g, '');
-      return rw === cleanWa || (cleanWa.length >= 9 && rw.endsWith(cleanWa.slice(-9)));
-    });
+    // The server decides whether a number is registered, never the local cache.
+    let existing;
 
     if (spmbModalMode === 'login') {
       // Try checking database API
@@ -1089,7 +1086,7 @@
       return;
     }
 
-    // REGISTER MODE: Create or update parent record
+    // REGISTER MODE: Create a new parent record only.
     if (!existing) {
       const tempReg = 'PENDING-' + cleanWa.slice(-4) + '-' + Math.floor(100 + Math.random() * 900);
       existing = {
@@ -1117,9 +1114,6 @@
         jadwalObservasi: 'Menunggu verifikasi pembayaran'
       };
       records.unshift(existing);
-    } else {
-      // Update name if changed
-      if (nama) existing.namaAyah = nama;
     }
 
     try {
@@ -1129,6 +1123,16 @@
         body: JSON.stringify(existing)
       });
       const result = await response.json();
+      if (response.status === 409 && result?.message === 'Nomor WhatsApp sudah terdaftar. Silakan masuk ke portal.') {
+        await SiteDialog.alert(result.message);
+        window.setSpmbModalMode('login');
+        const waInput = document.getElementById('spmb-input-wa');
+        if (waInput) {
+          waInput.value = rawWa;
+          waInput.focus();
+        }
+        return;
+      }
       if (!response.ok || !result || !result.success || !result.data) {
         throw new Error(result?.message || 'Pendaftaran gagal disimpan ke database.');
       }

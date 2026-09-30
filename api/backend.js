@@ -212,6 +212,10 @@ async function handler(req, res) {
             fail(403, registrationPolicy.message(registrationSettings.rows[0]?.data));
           }
           await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [wa]);
+          if (!complete) {
+            const registered = await client.query('SELECT id FROM sipintu_applicants WHERE wa=$1 LIMIT 1', [wa]);
+            if (registered.rowCount) fail(409, 'Nomor WhatsApp sudah terdaftar. Silakan masuk ke portal.');
+          }
           // Promote the parent's preliminary row, keeping its payment and admin decisions.
           if (complete) {
             result = await client.query(`UPDATE sipintu_applicants SET nik=$1, data=data || $2::jsonb

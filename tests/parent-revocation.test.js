@@ -44,7 +44,7 @@ test('late response cannot log out a different newly signed in account', async (
   assert.equal(state.notices.length, 0);
 });
 test('login does not fall back to local records', () => {
-  const login = source.slice(source.indexOf("    if (spmbModalMode === 'login') {", source.indexOf('// Look for matching record by WhatsApp')), source.indexOf('// REGISTER MODE:'));
+  const login = source.slice(source.indexOf("    if (spmbModalMode === 'login') {", source.indexOf('// The server decides')), source.indexOf('// REGISTER MODE:'));
   assert.ok(login.includes("cache: 'no-store'"));
   assert.doesNotMatch(login, /else if \(existing\)|if \(existing\)/);
 });
