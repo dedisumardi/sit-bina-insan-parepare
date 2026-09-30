@@ -486,6 +486,8 @@
   let waliFilterStatus = 'all';
   let waliSearchQuery = '';
   const waliSelectedRows = new Set();
+  let waliCurrentPage = 1;
+  let waliPageSize = 25;
 
   function formatDaftarDate(str) {
     if (!str || str === '-') return '-';
@@ -1152,27 +1154,41 @@
     }
 
     const countEl = document.getElementById('wali-filter-count');
-    if (countEl) countEl.textContent = `Menampilkan ${parents.length} baris dari total ${spmbList.length} baris data akun orang tua/wali`;
-
     const showingEl = document.getElementById('wali-showing-rows');
-    if (showingEl) showingEl.textContent = `${parents.length}`;
-
     const totalEl = document.getElementById('wali-total-count');
-    if (totalEl) totalEl.textContent = `${spmbList.length}`;
+
+    if (totalEl) totalEl.textContent = `${parents.length}`;
 
     if (parents.length === 0) {
+      if (countEl) countEl.textContent = 'Menampilkan 0 baris data akun orang tua/wali';
+      if (showingEl) showingEl.textContent = '0';
       tableBody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada baris data akun orang tua yang cocok dengan filter.</td></tr>`;
       updateWaliSelectAllCheckbox([]);
       updateWaliBulkActionBar();
+      renderWaliPaginationControls(0, 1, waliPageSize);
       return;
     }
 
-    tableBody.innerHTML = parents.map((item, index) => {
+    const totalPages = Math.max(1, Math.ceil(parents.length / waliPageSize));
+    if (waliCurrentPage > totalPages) waliCurrentPage = totalPages;
+    if (waliCurrentPage < 1) waliCurrentPage = 1;
+
+    const startIndex = (waliCurrentPage - 1) * waliPageSize;
+    const paginatedParents = parents.slice(startIndex, startIndex + waliPageSize);
+
+    if (countEl) {
+      countEl.textContent = `Menampilkan ${startIndex + 1}-${Math.min(startIndex + waliPageSize, parents.length)} dari total ${parents.length} baris data akun orang tua/wali`;
+    }
+    if (showingEl) {
+      showingEl.textContent = `${paginatedParents.length}`;
+    }
+
+    tableBody.innerHTML = paginatedParents.map((item, index) => {
       const isSelected = waliSelectedRows.has(item.regNumber);
       const isApproved = isPaymentApproved(item);
       const isPassed = isApplicantPassed(item);
       const hasProof = !!item.buktiPembayaran;
-      const rowNum = index + 1;
+      const rowNum = startIndex + index + 1;
       const dateVal = formatDaftarDate(item.tanggalDaftar || item.createdAt);
       const timeVal = formatDaftarTime(item.tanggalDaftar || item.createdAt);
 
@@ -1257,9 +1273,85 @@
       `;
     }).join('');
 
-    updateWaliSelectAllCheckbox(parents);
+    updateWaliSelectAllCheckbox(paginatedParents);
     updateWaliBulkActionBar();
+    renderWaliPaginationControls(parents.length, waliCurrentPage, waliPageSize);
   }
+
+  function renderWaliPaginationControls(totalItems, currentPage, pageSize) {
+    const nav = document.getElementById('wali-pagination-nav');
+    if (!nav) return;
+    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+    if (totalItems === 0 || totalPages <= 1) {
+      nav.innerHTML = `
+        <button type="button" class="px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg cursor-not-allowed inline-flex items-center gap-1.5" disabled>
+          <i class="fa-solid fa-chevron-left text-[10px]"></i>
+          <span>Sebelumnya</span>
+        </button>
+        <button type="button" class="px-3 py-1.5 text-xs font-bold text-white bg-blue-700 rounded-lg shadow-2xs">1</button>
+        <button type="button" class="px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg cursor-not-allowed inline-flex items-center gap-1.5" disabled>
+          <span>Selanjutnya</span>
+          <i class="fa-solid fa-chevron-right text-[10px]"></i>
+        </button>
+      `;
+      return;
+    }
+
+    let buttonsHtml = '';
+    // Tombol Sebelumnya
+    if (currentPage > 1) {
+      buttonsHtml += `
+        <button type="button" onclick="window.changeWaliPage(${currentPage - 1})" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg transition-colors inline-flex items-center gap-1.5">
+          <i class="fa-solid fa-chevron-left text-[10px]"></i>
+          <span>Sebelumnya</span>
+        </button>
+      `;
+    } else {
+      buttonsHtml += `
+        <button type="button" class="px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg cursor-not-allowed inline-flex items-center gap-1.5" disabled>
+          <i class="fa-solid fa-chevron-left text-[10px]"></i>
+          <span>Sebelumnya</span>
+        </button>
+      `;
+    }
+
+    // Nomor Halaman
+    for (let p = 1; p <= totalPages; p++) {
+      if (p === 1 || p === totalPages || (p >= currentPage - 1 && p <= currentPage + 1)) {
+        if (p === currentPage) {
+          buttonsHtml += `<button type="button" class="px-3 py-1.5 text-xs font-bold text-white bg-blue-700 rounded-lg shadow-2xs">${p}</button>`;
+        } else {
+          buttonsHtml += `<button type="button" onclick="window.changeWaliPage(${p})" class="px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors">${p}</button>`;
+        }
+      } else if (p === currentPage - 2 || p === currentPage + 2) {
+        buttonsHtml += `<span class="px-1 text-slate-400">...</span>`;
+      }
+    }
+
+    // Tombol Selanjutnya
+    if (currentPage < totalPages) {
+      buttonsHtml += `
+        <button type="button" onclick="window.changeWaliPage(${currentPage + 1})" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg transition-colors inline-flex items-center gap-1.5">
+          <span>Selanjutnya</span>
+          <i class="fa-solid fa-chevron-right text-[10px]"></i>
+        </button>
+      `;
+    } else {
+      buttonsHtml += `
+        <button type="button" class="px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg cursor-not-allowed inline-flex items-center gap-1.5" disabled>
+          <span>Selanjutnya</span>
+          <i class="fa-solid fa-chevron-right text-[10px]"></i>
+        </button>
+      `;
+    }
+
+    nav.innerHTML = buttonsHtml;
+  }
+
+  window.changeWaliPage = function(p) {
+    waliCurrentPage = p;
+    renderWaliTable();
+  };
 
   function updateWaliSelectAllCheckbox(visibleParents) {
     const selectAll = document.getElementById('wali-select-all');
@@ -1447,16 +1539,25 @@
     const waliFilter = document.getElementById('wali-filter-status');
     const waliSearch = document.getElementById('wali-search-input');
     const waliExport = document.getElementById('wali-export-btn');
+    const waliPageSizeSelect = document.getElementById('wali-page-size');
     const waliSelectAll = document.getElementById('wali-select-all');
     const waliTableBody = document.getElementById('wali-table-body');
 
     waliFilter?.addEventListener('change', (e) => {
       waliFilterStatus = e.target.value;
+      waliCurrentPage = 1;
       renderWaliTable();
     });
 
     waliSearch?.addEventListener('input', (e) => {
       waliSearchQuery = e.target.value;
+      waliCurrentPage = 1;
+      renderWaliTable();
+    });
+
+    waliPageSizeSelect?.addEventListener('change', (e) => {
+      waliPageSize = parseInt(e.target.value, 10) || 25;
+      waliCurrentPage = 1;
       renderWaliTable();
     });
 

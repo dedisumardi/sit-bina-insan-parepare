@@ -29,11 +29,13 @@ test('admin.html has standardized TAB 2 Akun Orang Tua table matching TAB 1 stru
   assert.ok(html.includes('>Waktu Daftar</th>'), 'Contains Waktu Daftar');
   assert.ok(html.includes('>Aksi</th>'), 'Contains Aksi');
 
-  // Must contain footer showing total baris
+  // Must contain footer showing total baris & pagination controls
   assert.ok(html.includes('id="wali-pagination-container"'), 'Contains #wali-pagination-container');
   assert.ok(html.includes('id="wali-showing-rows"'), 'Contains #wali-showing-rows');
   assert.ok(html.includes('id="wali-total-count"'), 'Contains #wali-total-count');
-  assert.ok(html.includes('baris data akun orang tua / wali'), 'Mentions baris data in footer');
+  assert.ok(html.includes('id="wali-page-size"'), 'Contains #wali-page-size');
+  assert.ok(html.includes('id="wali-pagination-nav"'), 'Contains #wali-pagination-nav');
+  assert.ok(html.includes('data akun orang tua / wali'), 'Mentions data akun orang tua / wali in footer');
 });
 
 test('js/admin.js connects Excel export and formats Wali table rows properly', () => {
@@ -44,12 +46,14 @@ test('js/admin.js connects Excel export and formats Wali table rows properly', (
   assert.ok(js.includes('async function exportWaliToExcel'), 'Defines exportWaliToExcel');
   assert.ok(js.includes('function downloadClientSideExcelWali'), 'Defines downloadClientSideExcelWali fallback');
 
-  // Checkbox, selection and row number are rendered
+  // Checkbox, selection, pagination, and row number are rendered
   assert.ok(js.includes('waliSelectedRows'), 'Uses waliSelectedRows Set for multi-selection');
   assert.ok(js.includes('wali-row-checkbox'), 'Renders wali-row-checkbox per row');
   assert.ok(js.includes('updateWaliSelectAllCheckbox'), 'Updates select-all state');
   assert.ok(js.includes('updateWaliBulkActionBar'), 'Updates bulk action bar');
-  assert.ok(js.includes('const rowNum = index + 1;'), 'Calculates rowNum');
+  assert.ok(js.includes('rowNum = startIndex + index + 1') || js.includes('const rowNum = index + 1;'), 'Calculates rowNum');
+  assert.ok(js.includes('renderWaliPaginationControls'), 'Defines renderWaliPaginationControls');
+  assert.ok(js.includes('changeWaliPage'), 'Defines window.changeWaliPage');
   assert.ok(js.includes('formatDaftarDate'), 'Formats daftar date');
   assert.ok(js.includes('formatDaftarTime'), 'Formats daftar time');
   assert.ok(js.includes('spmb-action-btn'), 'Uses standardized spmb-action-btn styling');
