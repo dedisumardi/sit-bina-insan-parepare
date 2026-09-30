@@ -875,11 +875,24 @@
 
 .modal-article-prose ul {
   margin-block-end: 1.25rem;
-  padding-inline-start: 1.25rem;
+  padding-inline-start: 1.5rem;
+  list-style-type: disc;
+}
+
+.modal-article-prose ol {
+  margin-block-end: 1.25rem;
+  padding-inline-start: 1.5rem;
+  list-style-type: decimal;
 }
 
 .modal-article-prose li {
   margin-block-end: 0.5rem;
+  display: list-item;
+}
+
+.modal-article-prose em,
+.modal-article-prose i {
+  font-style: italic;
 }
 
 .modal-article-prose blockquote {

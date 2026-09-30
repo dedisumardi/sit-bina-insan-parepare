@@ -123,6 +123,103 @@ body #admin-sidebar :is(button, a) :is(svg, i, .sidebar-icon, .fa-solid, .fa-reg
   border-radius: 0.5rem !important;
 }
 
+/* Allow icons inside modal editor toolbar */
+#modal-article-editor :is(button, a) :is(svg, i, .fa-solid, .fa-regular),
+.editor-toolbar :is(button, a) :is(svg, i, .fa-solid, .fa-regular),
+#form-article-editor :is(button, a) :is(svg, i, .fa-solid, .fa-regular) {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Word-style Visual Article Editor typography */
+#article-editor-visual {
+  min-height: 220px;
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #1e293b;
+  outline: none;
+}
+
+#article-editor-visual:empty::before {
+  content: attr(placeholder);
+  color: #94a3b8;
+  pointer-events: none;
+  display: block;
+}
+
+#article-editor-visual p {
+  margin-bottom: 0.75rem;
+}
+
+#article-editor-visual h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+#article-editor-visual h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-top: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+#article-editor-visual h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #334155;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+#article-editor-visual ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin: 0.5rem 0 !important;
+}
+
+#article-editor-visual ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+  margin: 0.5rem 0 !important;
+}
+
+#article-editor-visual li {
+  margin-bottom: 0.25rem !important;
+  display: list-item !important;
+}
+
+#article-editor-visual blockquote {
+  border-left: 4px solid #10b981;
+  padding: 0.5rem 0.75rem;
+  font-style: italic;
+  color: #475569;
+  background-color: #f8fafc;
+  border-radius: 0 0.5rem 0.5rem 0;
+  margin: 0.75rem 0;
+}
+
+#article-editor-visual em,
+#article-editor-visual i {
+  font-style: italic !important;
+}
+
+#article-editor-visual strong,
+#article-editor-visual b {
+  font-weight: 700 !important;
+}
+
+#article-editor-visual u {
+  text-decoration: underline !important;
+}
+
 /* Ensure select dropdown chevrons in admin panel never overlap numbers or text */
 .theme-admin select,
 .theme-admin .form-select {

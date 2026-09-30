@@ -25,3 +25,37 @@ test('articles management table action buttons have visible styling and icon ove
   assert.ok(adminJs.includes('spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-amber-600'), 'Edit button must have standardized visible styling');
   assert.ok(adminJs.includes('spmb-action-btn w-8 h-8 rounded-lg inline-flex items-center justify-center shrink-0 text-slate-500 hover:text-rose-600'), 'Delete button must have standardized visible styling');
 });
+
+test('article editor supports banner upload, preview, and Word-style visual rich text editing', () => {
+  const adminHtml = fs.readFileSync('admin.html', 'utf8');
+  const siteThemeCss = fs.readFileSync('css/site-theme.css', 'utf8');
+  const componentsCss = fs.readFileSync('css/components.css', 'utf8');
+  const adminJs = fs.readFileSync('js/admin.js', 'utf8');
+
+  // Verify Banner Upload & Preview
+  assert.ok(adminHtml.includes('id="article-banner-input"'), 'admin.html must contain banner file input');
+  assert.ok(adminHtml.includes('id="article-image-preset"'), 'admin.html must contain preset dropdown');
+  assert.ok(adminHtml.includes('id="banner-preview-img"'), 'admin.html must contain live banner preview image');
+  assert.ok(adminHtml.includes('id="tab-banner-upload"'), 'admin.html must contain upload tab');
+
+  // Verify Word-Style WYSIWYG Editor in admin.html
+  assert.ok(adminHtml.includes('id="article-editor-visual"'), 'admin.html must contain visual contenteditable editor');
+  assert.ok(adminHtml.includes('data-cmd="insertOrderedList"'), 'Toolbar must have numbered list (1. 2. 3.) command');
+  assert.ok(adminHtml.includes('data-cmd="italic"'), 'Toolbar must have italic command');
+  assert.ok(adminHtml.includes('data-cmd="bold"'), 'Toolbar must have bold command');
+
+  // Verify CSS typography for Word-style editor
+  assert.ok(siteThemeCss.includes('#article-editor-visual'), 'site-theme.css must style visual editor canvas');
+  assert.ok(siteThemeCss.includes('#article-editor-visual ol'), 'site-theme.css must support ordered list numbering');
+  assert.ok(siteThemeCss.includes('#article-editor-visual em'), 'site-theme.css must support italic rendering');
+
+  // Verify Public Reader CSS supports ordered list and italics
+  assert.ok(componentsCss.includes('.modal-article-prose ol'), 'components.css must style ordered lists with decimal numbers');
+  assert.ok(componentsCss.includes('.modal-article-prose em'), 'components.css must style italic text');
+
+  // Verify js/admin.js logic
+  assert.ok(adminJs.includes('setVisualEditorContent'), 'admin.js must provide visual editor content setter');
+  assert.ok(adminJs.includes('syncVisualToRaw'), 'admin.js must provide visual editor syncing to raw form value');
+  assert.ok(adminJs.includes('article-banner-input'), 'admin.js must handle banner file upload events');
+});
+

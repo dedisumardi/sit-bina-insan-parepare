@@ -2678,26 +2678,202 @@
   function initArticleEditor() {
     const addBtn = document.getElementById('btn-add-article');
     const editorForm = document.getElementById('form-article-editor');
+    const visualEditor = document.getElementById('article-editor-visual');
+    const rawContent = document.getElementById('article-content');
+    const formatSelect = document.getElementById('editor-format-block');
+
+    const hiddenImage = document.getElementById('article-image');
+    const presetSelect = document.getElementById('article-image-preset');
+    const bannerFileInput = document.getElementById('article-banner-input');
+    const tabUpload = document.getElementById('tab-banner-upload');
+    const tabPreset = document.getElementById('tab-banner-preset');
+    const panelUpload = document.getElementById('banner-upload-panel');
+    const panelPreset = document.getElementById('banner-preset-panel');
+    const previewImg = document.getElementById('banner-preview-img');
+    const previewTitle = document.getElementById('banner-preview-title');
+    const previewDesc = document.getElementById('banner-preview-desc');
+    const resetBannerBtn = document.getElementById('btn-reset-banner');
+
+    function syncVisualToRaw() {
+      if (!visualEditor || !rawContent) return;
+      const html = visualEditor.innerHTML;
+      if (!html || html === '<p><br></p>' || html === '<p></p>' || html === '<br>' || html === '<div><br></div>') {
+        rawContent.value = '';
+      } else {
+        rawContent.value = html.trim();
+      }
+    }
+
+    function setVisualEditorContent(content) {
+      if (!visualEditor || !rawContent) return;
+      if (!content) {
+        visualEditor.innerHTML = '';
+        rawContent.value = '';
+        return;
+      }
+      // If content is plain text without HTML tags
+      if (!/<[a-z][\s\S]*>/i.test(content)) {
+        const lines = content.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        let inList = false;
+        const parts = [];
+        for (const line of lines) {
+          const numMatch = line.match(/^(\d+)[\.\)]\s*(.+)$/);
+          if (numMatch) {
+            if (!inList) { parts.push('<ol>'); inList = true; }
+            parts.push(`<li>${escapeHtml(numMatch[2])}</li>`);
+          } else {
+            if (inList) { parts.push('</ol>'); inList = false; }
+            parts.push(`<p>${escapeHtml(line)}</p>`);
+          }
+        }
+        if (inList) parts.push('</ol>');
+        visualEditor.innerHTML = parts.join('');
+      } else {
+        visualEditor.innerHTML = content;
+      }
+      syncVisualToRaw();
+    }
+
+    // Toolbar buttons click
+    document.querySelectorAll('.editor-toolbar .editor-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const cmd = btn.dataset.cmd;
+        const val = btn.dataset.val || null;
+        if (!cmd || !visualEditor) return;
+        visualEditor.focus();
+        document.execCommand(cmd, false, val);
+        syncVisualToRaw();
+      });
+    });
+
+    formatSelect?.addEventListener('change', () => {
+      if (!visualEditor) return;
+      visualEditor.focus();
+      document.execCommand('formatBlock', false, formatSelect.value);
+      syncVisualToRaw();
+    });
+
+    visualEditor?.addEventListener('input', syncVisualToRaw);
+    visualEditor?.addEventListener('blur', syncVisualToRaw);
+
+    // Keyboard support: Ctrl+B, Ctrl+I, Ctrl+U
+    visualEditor?.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && ['b', 'i', 'u', 'z', 'y'].includes(e.key.toLowerCase())) {
+        setTimeout(syncVisualToRaw, 10);
+      }
+    });
+
+    // Banner image helpers
+    function setBanner(url, title, desc) {
+      if (hiddenImage) hiddenImage.value = url;
+      if (previewImg) previewImg.src = url;
+      if (previewTitle && title) previewTitle.textContent = title;
+      if (previewDesc && desc) previewDesc.textContent = desc;
+    }
+
+    function switchBannerTab(isUpload) {
+      if (isUpload) {
+        tabUpload?.classList.add('bg-white', 'text-emerald-700', 'font-bold', 'shadow-2xs');
+        tabUpload?.classList.remove('text-slate-600', 'font-medium');
+        tabPreset?.classList.remove('bg-white', 'text-emerald-700', 'font-bold', 'shadow-2xs');
+        tabPreset?.classList.add('text-slate-600', 'font-medium');
+        panelUpload?.classList.remove('hidden');
+        panelPreset?.classList.add('hidden');
+      } else {
+        tabPreset?.classList.add('bg-white', 'text-emerald-700', 'font-bold', 'shadow-2xs');
+        tabPreset?.classList.remove('text-slate-600', 'font-medium');
+        tabUpload?.classList.remove('bg-white', 'text-emerald-700', 'font-bold', 'shadow-2xs');
+        tabUpload?.classList.add('text-slate-600', 'font-medium');
+        panelPreset?.classList.remove('hidden');
+        panelUpload?.classList.add('hidden');
+      }
+    }
+
+    tabUpload?.addEventListener('click', () => switchBannerTab(true));
+    tabPreset?.addEventListener('click', () => switchBannerTab(false));
+
+    presetSelect?.addEventListener('change', () => {
+      const selected = presetSelect.options[presetSelect.selectedIndex];
+      const title = selected ? selected.text.split(' (')[0] : 'Banner Sekolah';
+      setBanner(presetSelect.value, title, presetSelect.value);
+    });
+
+    resetBannerBtn?.addEventListener('click', () => {
+      const defaultUrl = '/assets/images/hero_school.jpg?v=2';
+      if (presetSelect) presetSelect.value = defaultUrl;
+      setBanner(defaultUrl, 'Foto Gedung Utama Sekolah', defaultUrl);
+      if (bannerFileInput) bannerFileInput.value = '';
+      switchBannerTab(false);
+    });
+
+    bannerFileInput?.addEventListener('change', () => {
+      const file = bannerFileInput.files?.[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        showToast('File yang dipilih harus berupa file gambar (JPG, PNG, WebP).', true);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxWidth = 1280;
+          const maxHeight = 720;
+          let { width, height } = img;
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.84);
+
+          setBanner(compressedDataUrl, file.name, `Gambar Upload (${Math.round(compressedDataUrl.length * 0.75 / 1024)} KB)`);
+          showToast('Gambar banner berhasil dimuat dan siap disimpan.');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
 
     addBtn?.addEventListener('click', () => {
       currentEditingArticleId = null;
       document.getElementById('editor-modal-title').textContent = 'Tulis Berita / Artikel Baru';
       editorForm.reset();
       document.getElementById('article-date').value = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-      document.getElementById('article-image').value = '/assets/images/hero_school.jpg?v=2';
+      const defaultImg = '/assets/images/hero_school.jpg?v=2';
+      if (presetSelect) presetSelect.value = defaultImg;
+      setBanner(defaultImg, 'Foto Gedung Utama Sekolah', defaultImg);
+      switchBannerTab(true);
+      setVisualEditorContent('');
       articleModal.classList.add('open');
     });
 
     editorForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
+      syncVisualToRaw();
+
       const title = document.getElementById('article-title').value.trim();
       const category = document.getElementById('article-category').value;
       const author = document.getElementById('article-author').value.trim();
       const date = document.getElementById('article-date').value.trim();
       const readTime = document.getElementById('article-readtime').value.trim() || '3 menit baca';
-      const image = document.getElementById('article-image').value.trim();
+      const image = (hiddenImage?.value || '').trim() || '/assets/images/hero_school.jpg?v=2';
       const excerpt = document.getElementById('article-excerpt').value.trim();
-      const content = document.getElementById('article-content').value.trim();
+      const content = (rawContent?.value || '').trim();
+
+      if (!content) {
+        showToast('Konten lengkap berita tidak boleh kosong. Silakan tuliskan isi berita.', true);
+        visualEditor?.focus();
+        return;
+      }
 
       let categoryClass = 'badge-kegiatan';
       if (category === 'Info SPMB') categoryClass = 'badge-spmb';
@@ -2740,6 +2916,10 @@
         if (submitButton) submitButton.disabled = false;
       }
     });
+
+    window._setVisualEditorContent = setVisualEditorContent;
+    window._setArticleBanner = setBanner;
+    window._switchBannerTab = switchBannerTab;
   }
 
   window.editArticle = function (id) {
@@ -2748,14 +2928,46 @@
 
     currentEditingArticleId = id;
     document.getElementById('editor-modal-title').textContent = 'Sunting Berita / Artikel';
-    document.getElementById('article-title').value = item.title;
-    document.getElementById('article-category').value = item.category;
-    document.getElementById('article-author').value = item.author;
-    document.getElementById('article-date').value = item.date;
-    document.getElementById('article-readtime').value = item.readTime;
-    document.getElementById('article-image').value = item.image;
-    document.getElementById('article-excerpt').value = item.excerpt;
-    document.getElementById('article-content').value = item.content;
+    document.getElementById('article-title').value = item.title || '';
+    document.getElementById('article-category').value = item.category || 'Info SPMB';
+    document.getElementById('article-author').value = item.author || 'Humas & Panitia SPMB';
+    document.getElementById('article-date').value = item.date || '';
+    document.getElementById('article-readtime').value = item.readTime || '3 menit baca';
+    document.getElementById('article-excerpt').value = item.excerpt || '';
+
+    // Set banner
+    const bannerUrl = item.image || '/assets/images/hero_school.jpg?v=2';
+    const presetSelect = document.getElementById('article-image-preset');
+    let matchedPreset = false;
+    if (presetSelect) {
+      for (let i = 0; i < presetSelect.options.length; i++) {
+        if (presetSelect.options[i].value === bannerUrl || presetSelect.options[i].value.split('?')[0] === bannerUrl.split('?')[0]) {
+          presetSelect.selectedIndex = i;
+          matchedPreset = true;
+          if (window._setArticleBanner) {
+            window._setArticleBanner(bannerUrl, presetSelect.options[i].text.split(' (')[0], bannerUrl);
+          }
+          if (window._switchBannerTab) window._switchBannerTab(false);
+          break;
+        }
+      }
+    }
+    if (!matchedPreset) {
+      if (window._setArticleBanner) {
+        window._setArticleBanner(bannerUrl, 'Gambar Banner Berita', bannerUrl.startsWith('data:') ? 'Gambar Berita Kustom (Upload)' : bannerUrl);
+      }
+      if (window._switchBannerTab) window._switchBannerTab(true);
+    }
+
+    // Set visual editor content (renders formatted without HTML tags)
+    if (window._setVisualEditorContent) {
+      window._setVisualEditorContent(item.content || '');
+    } else {
+      const visual = document.getElementById('article-editor-visual');
+      const raw = document.getElementById('article-content');
+      if (visual) visual.innerHTML = item.content || '';
+      if (raw) raw.value = item.content || '';
+    }
 
     articleModal.classList.add('open');
   };
