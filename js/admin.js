@@ -485,6 +485,7 @@
 
   let waliFilterStatus = 'all';
   let waliSearchQuery = '';
+  const waliSelectedRows = new Set();
 
   function formatDaftarDate(str) {
     if (!str || str === '-') return '-';
@@ -1151,17 +1152,23 @@
     }
 
     const countEl = document.getElementById('wali-filter-count');
-    if (countEl) countEl.textContent = `Menampilkan ${parents.length} dari ${spmbList.length} akun orang tua/wali`;
+    if (countEl) countEl.textContent = `Menampilkan ${parents.length} baris dari total ${spmbList.length} baris data akun orang tua/wali`;
+
+    const showingEl = document.getElementById('wali-showing-rows');
+    if (showingEl) showingEl.textContent = `${parents.length}`;
 
     const totalEl = document.getElementById('wali-total-count');
-    if (totalEl) totalEl.textContent = `${parents.length}`;
+    if (totalEl) totalEl.textContent = `${spmbList.length}`;
 
     if (parents.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada akun orang tua yang cocok dengan filter.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#64748b; padding:2.5rem;">Tidak ada baris data akun orang tua yang cocok dengan filter.</td></tr>`;
+      updateWaliSelectAllCheckbox([]);
+      updateWaliBulkActionBar();
       return;
     }
 
     tableBody.innerHTML = parents.map((item, index) => {
+      const isSelected = waliSelectedRows.has(item.regNumber);
       const isApproved = isPaymentApproved(item);
       const isPassed = isApplicantPassed(item);
       const hasProof = !!item.buktiPembayaran;
@@ -1193,7 +1200,10 @@
       }
 
       return `
-      <tr class="hover:bg-slate-50/90 transition-colors">
+      <tr class="hover:bg-slate-50/90 transition-colors ${isSelected ? 'bg-blue-50/60' : ''}" data-reg="${escapeHtml(item.regNumber)}">
+        <td class="py-4 pl-6 pr-3 text-center">
+          <input type="checkbox" class="wali-row-checkbox rounded border-slate-300 text-blue-600 focus:ring-blue-500 h-4 w-4 cursor-pointer" data-reg="${escapeHtml(item.regNumber)}" ${isSelected ? 'checked' : ''}>
+        </td>
         <td class="py-4 px-3 text-center font-medium text-slate-600">
           ${rowNum}
         </td>
@@ -1246,6 +1256,45 @@
       </tr>
       `;
     }).join('');
+
+    updateWaliSelectAllCheckbox(parents);
+    updateWaliBulkActionBar();
+  }
+
+  function updateWaliSelectAllCheckbox(visibleParents) {
+    const selectAll = document.getElementById('wali-select-all');
+    if (!selectAll) return;
+    if (!visibleParents || visibleParents.length === 0) {
+      selectAll.checked = false;
+      selectAll.indeterminate = false;
+      return;
+    }
+    const visibleRegs = visibleParents.map(s => s.regNumber);
+    const selectedCount = visibleRegs.filter(reg => waliSelectedRows.has(reg)).length;
+    if (selectedCount === 0) {
+      selectAll.checked = false;
+      selectAll.indeterminate = false;
+    } else if (selectedCount === visibleRegs.length) {
+      selectAll.checked = true;
+      selectAll.indeterminate = false;
+    } else {
+      selectAll.checked = false;
+      selectAll.indeterminate = true;
+    }
+  }
+
+  function updateWaliBulkActionBar() {
+    const bar = document.getElementById('wali-bulk-actions');
+    const countEl = document.getElementById('wali-selected-count');
+    if (!bar) return;
+    const count = waliSelectedRows.size;
+    if (count > 0) {
+      bar.style.display = 'flex';
+      if (countEl) countEl.textContent = count;
+    } else {
+      bar.style.display = 'none';
+      if (countEl) countEl.textContent = '0';
+    }
   }
 
   function initSpmbControls() {
@@ -1398,6 +1447,8 @@
     const waliFilter = document.getElementById('wali-filter-status');
     const waliSearch = document.getElementById('wali-search-input');
     const waliExport = document.getElementById('wali-export-btn');
+    const waliSelectAll = document.getElementById('wali-select-all');
+    const waliTableBody = document.getElementById('wali-table-body');
 
     waliFilter?.addEventListener('change', (e) => {
       waliFilterStatus = e.target.value;
@@ -1410,6 +1461,76 @@
     });
 
     waliExport?.addEventListener('click', exportWaliToExcel);
+
+    waliSelectAll?.addEventListener('change', () => {
+      const isChecked = waliSelectAll.checked;
+      const visibleRegs = Array.from(document.querySelectorAll('.wali-row-checkbox')).map(cb => cb.dataset.reg).filter(Boolean);
+      if (isChecked) {
+        visibleRegs.forEach(reg => waliSelectedRows.add(reg));
+      } else {
+        visibleRegs.forEach(reg => waliSelectedRows.delete(reg));
+      }
+      document.querySelectorAll('.wali-row-checkbox').forEach(cb => {
+        cb.checked = isChecked;
+        cb.closest('tr')?.classList.toggle('bg-blue-50/60', isChecked);
+      });
+      updateWaliBulkActionBar();
+    });
+
+    waliTableBody?.addEventListener('change', (e) => {
+      const cb = e.target.closest('.wali-row-checkbox');
+      if (!cb) return;
+      const reg = cb.dataset.reg;
+      if (cb.checked) waliSelectedRows.add(reg);
+      else waliSelectedRows.delete(reg);
+      cb.closest('tr')?.classList.toggle('bg-blue-50/60', cb.checked);
+      const visibleCbs = Array.from(document.querySelectorAll('.wali-row-checkbox'));
+      const allChecked = visibleCbs.length > 0 && visibleCbs.every(c => c.checked);
+      const someChecked = visibleCbs.some(c => c.checked);
+      if (waliSelectAll) {
+        waliSelectAll.checked = allChecked;
+        waliSelectAll.indeterminate = !allChecked && someChecked;
+      }
+      updateWaliBulkActionBar();
+    });
+
+    document.getElementById('wali-bulk-clear-btn')?.addEventListener('click', () => {
+      waliSelectedRows.clear();
+      document.querySelectorAll('.wali-row-checkbox').forEach(cb => {
+        cb.checked = false;
+        cb.closest('tr')?.classList.remove('bg-blue-50/60');
+      });
+      if (waliSelectAll) {
+        waliSelectAll.checked = false;
+        waliSelectAll.indeterminate = false;
+      }
+      updateWaliBulkActionBar();
+    });
+
+    document.getElementById('wali-bulk-delete-btn')?.addEventListener('click', async () => {
+      if (waliSelectedRows.size === 0) return;
+      const count = waliSelectedRows.size;
+      const proceed = await (SiteDialog['confirm'])(`Apakah Anda yakin ingin menghapus ${count} data akun orang tua yang dipilih? Tindakan ini tidak dapat dibatalkan.`);
+      if (!proceed) return;
+
+      const regs = Array.from(waliSelectedRows);
+      let successCount = 0;
+      for (const reg of regs) {
+        try {
+          await apiRequest(`api/spmb.php?reg_number=${encodeURIComponent(reg)}`, { method: 'DELETE' });
+          spmbList = spmbList.filter(s => s.regNumber !== reg);
+          waliSelectedRows.delete(reg);
+          successCount++;
+        } catch (err) {
+          console.error('Gagal menghapus akun orang tua', reg, err);
+        }
+      }
+      cacheSetItem(STORAGE_SPMB, JSON.stringify(spmbList));
+      renderSpmbTable();
+      renderDashboard();
+      broadcastRealtime('spmb_updated', spmbList);
+      showToast(`Berhasil menghapus ${successCount} data akun orang tua terpilih.`);
+    });
   }
 
   // Export CSV Siswa

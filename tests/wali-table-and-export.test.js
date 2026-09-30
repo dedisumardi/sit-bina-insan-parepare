@@ -13,9 +13,12 @@ test('admin.html has standardized TAB 2 Akun Orang Tua table matching TAB 1 stru
   assert.ok(html.includes('id="wali-filter-status"'), 'Contains #wali-filter-status');
   assert.ok(html.includes('id="wali-search-input"'), 'Contains #wali-search-input');
   assert.ok(html.includes('id="wali-export-btn"'), 'Contains #wali-export-btn');
+  assert.ok(html.includes('bg-blue-700'), 'Wali export button is styled with blue background');
   assert.ok(html.includes('fa-magnifying-glass'), 'Contains search magnifying glass icon');
 
-  // Must contain No. column and match standard table header
+  // Must contain Checkbox and No. columns
+  assert.ok(html.includes('id="wali-select-all"'), 'Contains #wali-select-all checkbox');
+  assert.ok(html.includes('id="wali-bulk-actions"'), 'Contains #wali-bulk-actions bar');
   assert.ok(html.includes('>No.</th>'), 'Contains No. column header');
   assert.ok(html.includes('>ID / Kode Registrasi</th>'), 'Contains ID / Kode Registrasi');
   assert.ok(html.includes('>Nama Orang Tua / Wali</th>'), 'Contains Nama Orang Tua / Wali');
@@ -26,9 +29,11 @@ test('admin.html has standardized TAB 2 Akun Orang Tua table matching TAB 1 stru
   assert.ok(html.includes('>Waktu Daftar</th>'), 'Contains Waktu Daftar');
   assert.ok(html.includes('>Aksi</th>'), 'Contains Aksi');
 
-  // Must contain footer
+  // Must contain footer showing total baris
   assert.ok(html.includes('id="wali-pagination-container"'), 'Contains #wali-pagination-container');
+  assert.ok(html.includes('id="wali-showing-rows"'), 'Contains #wali-showing-rows');
   assert.ok(html.includes('id="wali-total-count"'), 'Contains #wali-total-count');
+  assert.ok(html.includes('baris data akun orang tua / wali'), 'Mentions baris data in footer');
 });
 
 test('js/admin.js connects Excel export and formats Wali table rows properly', () => {
@@ -39,7 +44,11 @@ test('js/admin.js connects Excel export and formats Wali table rows properly', (
   assert.ok(js.includes('async function exportWaliToExcel'), 'Defines exportWaliToExcel');
   assert.ok(js.includes('function downloadClientSideExcelWali'), 'Defines downloadClientSideExcelWali fallback');
 
-  // Row number is rendered
+  // Checkbox, selection and row number are rendered
+  assert.ok(js.includes('waliSelectedRows'), 'Uses waliSelectedRows Set for multi-selection');
+  assert.ok(js.includes('wali-row-checkbox'), 'Renders wali-row-checkbox per row');
+  assert.ok(js.includes('updateWaliSelectAllCheckbox'), 'Updates select-all state');
+  assert.ok(js.includes('updateWaliBulkActionBar'), 'Updates bulk action bar');
   assert.ok(js.includes('const rowNum = index + 1;'), 'Calculates rowNum');
   assert.ok(js.includes('formatDaftarDate'), 'Formats daftar date');
   assert.ok(js.includes('formatDaftarTime'), 'Formats daftar time');
