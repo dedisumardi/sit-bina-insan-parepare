@@ -93,7 +93,11 @@ body #admin-sidebar :is(button, a) :is(svg, i, .sidebar-icon, .fa-solid, .fa-reg
 #dashboard-recent-table svg,
 #dashboard-recent-table i,
 #wali-table-body svg,
-#wali-table-body i {
+#wali-table-body i,
+#articles-table-body svg,
+#articles-table-body i,
+#panel-berita button svg,
+#panel-berita button i {
   display: inline-block !important;
 }
 
@@ -101,6 +105,8 @@ body #admin-sidebar :is(button, a) :is(svg, i, .sidebar-icon, .fa-solid, .fa-reg
 .theme-admin #spmb-table-body .button-text-fallback,
 .theme-admin #dashboard-recent-table .button-text-fallback,
 .theme-admin #wali-table-body .button-text-fallback,
+.theme-admin #articles-table-body .button-text-fallback,
+.theme-admin #panel-berita .button-text-fallback,
 .spmb-action-btn .button-text-fallback,
 .spmb-action-btn.button-text-only .button-text-fallback {
   display: none !important;
