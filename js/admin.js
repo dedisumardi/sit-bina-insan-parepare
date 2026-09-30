@@ -1023,7 +1023,7 @@
 
     const aktaEl = hasAkta
       ? `<button type="button" class="inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-bold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 hover:border-indigo-300 transition shadow-2xs cursor-pointer" onclick="window.viewApplicantDoc('${escapeHtml(item.regNumber)}', 'akta')" title="Lihat Berkas Akta Kelahiran">
-          <i class="fa-solid fa-certificate text-xs"></i>
+          <i class="fa-solid fa-file-lines text-xs"></i>
           <span>Akta</span>
         </button>`
       : `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium text-slate-400 bg-slate-50 border border-dashed border-slate-200" title="Akta Kelahiran Belum Diunggah">Akta -</span>`;
