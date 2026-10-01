@@ -44,7 +44,13 @@ body :is(.pillar-card,.level-card,.program-card,.ekskul-card,.news-card):hover {
 .pillar-card::before,.ekskul-card::before { background:#2563eb; }
 .level-hero-img-wrap { border-radius:16px; border:1px solid #ffffff30; }
 .header-main { border-bottom:1px solid #e2e8f0; box-shadow:0 1px 3px #0f172a05; }
-.footer-main { background:#081736; }
+.footer-main {
+  background:#081736;
+  /* Blue button palette, with lighter text accents on the dark footer. */
+  --accent-400:#60a5fa;
+  --accent-500:var(--primary-600);
+}
+.footer-main a:focus-visible { outline-color:#60a5fa; }
 /* Consistent button anatomy; semantic danger and disabled states stay intact. */
 body :is(button,.btn,[role="button"]) { font-family:inherit; }
 body :is(.btn,.theme-action,.site-dialog-actions button) {
