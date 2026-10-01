@@ -55,6 +55,7 @@
   function decorate(root) {
     const controls = root.querySelectorAll('button, a[class*="btn"], a[class*="rounded"], a[href*="wa.me/"], .floating-whatsapp, [role="button"]');
     controls.forEach(control => {
+      if (control.hasAttribute('data-no-action-icon')) return;
       // Slider dots retain their compact visual navigation and accessible labels.
       if (control.closest('.building-controls, .date-picker-grid, .date-picker-header') || control.matches('.footer-social-btn, .date-picker-trigger')) return;
       // Numeric page selectors and calendar dates remain compact navigation controls.
