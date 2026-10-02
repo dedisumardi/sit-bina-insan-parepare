@@ -638,22 +638,40 @@
 }
 
 .news-search-box {
+  position: relative;
   display: flex;
   align-items: center;
-  background: var(--neutral-100);
-  border: 1px solid var(--neutral-300);
-  border-radius: var(--radius-full);
-  padding: 0.4rem 1rem;
   min-width: 260px;
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 
 .news-search-box input {
-  border: none;
-  background: transparent;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
-  outline: none;
   width: 100%;
+  padding: 0.85rem 1rem 0.85rem 2.75rem;
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  outline: none;
+  transition: all var(--trans-fast);
+}
+
+.news-search-box input::placeholder {
+  color: #94a3b8;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  letter-spacing: 0.025em;
+}
+
+.news-search-box input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
 }
 
 .news-grid {

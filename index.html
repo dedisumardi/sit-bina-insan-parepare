@@ -1747,9 +1747,11 @@
               <button type="button" class="news-cat-btn" data-category="Kegiatan Sekolah">Kegiatan Sekolah</button>
               <button type="button" class="news-cat-btn" data-category="Opini Islami">Opini & Parenting</button>
             </div>
-            <div class="news-search-box">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input type="search" id="news-search-input" placeholder="Cari judul berita atau artikel..." aria-label="Cari artikel">
+            <div class="news-search-box relative w-full sm:w-80 md:w-96 flex-grow sm:flex-grow-0">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
+                <i class="fa-solid fa-magnifying-glass text-sm"></i>
+              </span>
+              <input type="search" id="news-search-input" aria-label="Cari judul berita atau artikel" class="w-full pl-11 pr-4 py-3.5 bg-white text-slate-800 placeholder:text-slate-400 placeholder:font-medium placeholder:text-xs sm:placeholder:text-sm rounded-xl border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-semibold tracking-wide transition-all" placeholder="KETIK JUDUL BERITA ATAU ARTIKEL...">
             </div>
           </div>
 
